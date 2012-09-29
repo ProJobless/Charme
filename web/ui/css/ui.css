@@ -1,0 +1,174 @@
+.uiBlock
+{
+		position:fixed;
+		width:100%;
+		height:100%;
+		display:none;
+		background-color:#fff;
+		z-index:9999998;
+		
+}
+.collection
+{
+	width:100px; 
+	height:100px;
+	border:1px silver solid;
+	background-color: #E6E6E6;
+	margin:32px;
+	display:block;
+	
+}
+.fixedBox
+{
+	position:fixed;
+	width:300px;
+	padding:32px;
+	background-color:#fff;
+	border:2px #900 solid;
+	margin: 0 auto;
+	left:50%;
+	margin-left:-150px;
+	z-index:9999999;
+	
+	
+}
+
+.collection .square
+{
+	
+	width:100px;
+	height:100px;
+	background-color:red;
+	margin: 8px;
+	float:left;
+	
+}
+
+
+.tdinfo
+{
+	
+width:100px;
+vertical-align:top;
+
+
+}
+table td
+{
+	padding:8px 0;
+}
+h1
+{
+	
+font-size:14px;
+
+border-bottom:1px silver solid;
+padding:16px 0;
+margin-top:0;
+margin-bottom:16px;
+margin-top:16px;
+}
+h1:first-child
+{
+	
+margin-top:0;
+padding-top:0;
+}
+.tabBar ul
+{
+	padding:0;
+	list-style-type:none;
+	border-top:1px solid silver;
+	position:relative;margin:0;
+	position:relative;
+}
+.tabBar ul li A
+{
+	
+display:block;padding:8px; cursor:pointer;
+}
+.tabBar ul li
+{
+	
+border-bottom:1px silver solid;
+
+
+
+position:relative;
+
+background-color:#eee;
+}
+.tabBar ul li.active
+{
+	background-color:#fff;
+	z-index:1000;
+	left:-1px;
+	}
+.p32
+{
+	
+padding:32px;
+overflow:auto;
+}
+.box
+{
+	
+padding:4px;
+border:1px silver solid;
+border-radius:4px;margin:0;
+}
+.profilePic
+{
+	
+float:left;
+margin-right:16px;
+}
+textarea
+{
+	 -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+a:hover
+{
+	
+color:#000;
+}
+a 
+{
+	
+	color:#ba2323;
+	cursor:pointer;
+	text-decoration:none;
+	font-weight:bold;
+}
+.lightLink a
+{
+	color:#333;
+	text-decoration:none;
+	font-weight:normal;
+}
+.button {
+
+    padding:8px;
+    position:relative;
+margin:0;
+    text-decoration:none;
+    color:#fff;
+    border: solid 1px #831212;
+  
+    border-radius: 4px;
+	display:inline-block;
+	cursor:pointer;
+	font-weight:bold;
+
+}
+ 
+ 
+
+.button:hover {
+
+   color:#fff;
+
+
+}

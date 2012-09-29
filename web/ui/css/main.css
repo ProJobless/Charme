@@ -1,0 +1,206 @@
+.actionCont
+{
+	width:298px;
+
+	background-color:#fff;
+	position:fixed;
+	border:1px silver solid;
+	
+	
+	z-index:9999;
+	border-top:0;
+	top:-205px;
+}
+.actionBar a.active
+{
+	
+	
+}
+
+a.actionButton
+{
+	background-image:url(actions.png);
+	width:30px;
+	height:31px;
+	display:inline-block;
+	cursor:pointer;
+
+	
+}
+.actionBar
+{
+	height:30px; background-color:#BA2323; border-bottom:1px #72070B solid; 
+	z-index:999999;
+	position: relative;
+	overflow:visible;
+	height:30px;
+}
+#whitebg
+{
+	height:100%;
+	width:850px;
+	margin:0px auto;
+	left:50%;
+	margin-left:-350px; /* 850/2-75 = */
+	background-color:#fff;
+	position:fixed;
+	z-index:-9999;
+	
+}
+.meta
+{
+	
+display:none;
+}
+.cb
+{
+	
+clear:both;}
+.sbAlpha ul a:active
+{
+	
+color:#DEDEDE;
+background-color:#c50000;
+}
+.sbBeta .active a:active
+{
+	
+color:#000;
+background-color:#efefef;
+}
+.containerAll
+{
+	
+width: 1000px;
+
+margin:0px auto;
+
+}
+.sidebar
+{
+width: 150px;
+float:left;
+}
+.sidebar ul 
+{
+padding:0;
+margin:0;
+list-style-type:none;
+margin-bottom:0px;
+}
+.sidebar ul li a
+{
+	display:block;
+	padding:8px;
+	color:#fff;
+	cursor:pointer;
+	font-weight:bold;
+	text-decoration:none;
+	
+}
+.sidebar ul li a:hover
+{
+	
+}
+.sidebar span.count
+{
+	
+float:right;
+display:inline-block;
+padding:3px;
+background-color:#fff;
+color:#000;
+position:relative;
+top:-1px;
+right: -1px;
+font-size:9px;
+border-radius: 2px;
+
+}
+.sidebar ul li
+{
+	
+	
+	color:#fff;
+	margin-bottom:1px;
+}
+.sbBeta ul li.active
+{
+	
+background-color:#fff;
+
+}
+.sbBeta ul li.active a
+{
+	color:#000;
+}
+.sbBeta ul li.active .count
+{
+display:none;
+	
+}
+.sbAlpha ul li.active
+{
+	
+background-color:#950202;
+}
+.sbBetaCont
+{
+	background-color:#950202;
+float:left;
+margin-left:150px;
+
+border-right:1px silver solid;
+border-left:1px silver solid;
+
+}
+
+
+.sbBeta
+{
+	width:150px;
+	position:fixed;
+	background-color:#950202;
+
+
+
+}
+.sbAlpha
+{
+	
+color:#fff;
+position:fixed;
+margin-left:1px;
+}
+.sbAlpha  ul li
+{
+	background-color:#d60000;
+}
+.sbBeta  ul li
+{
+
+
+}
+
+.content
+{
+	
+background-color:#fff;
+float:left;
+width:708px;
+overflow:auto;
+margin-left:150px;
+
+
+
+
+}
+
+body
+{
+	margin:0px;
+	background-color:#EEE;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-size:12px;
+	
+	}
