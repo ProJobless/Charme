@@ -4,14 +4,31 @@
 
 //1142AA	2A4580	06276F	4573D5	6C8DD5
 $colors = array(
+
+array(
 "link" => "#1142AA",
 "darker" => "#06276F",
 "darkest" => "#05165E"
+),
+
+array(
+"link" => "#a60000",
+"darker" => "#770000",
+"darkest" => "#4E0000"
+),
+
+array(
+"link" => "#3E6D00",
+"darker" => "#375214",
+"darkest" => "#284700"
+),
+
 );
-if ($_GET["color"] == 1)
-{
-	
-}
+
+
+
+$colors = $colors[$_GET["color"]];
+
 
 
 echo "a {color: $colors[link];}";

@@ -12,7 +12,7 @@ foreach (glob("modules/*.php") as $filename)
 }
 //echo "You typed".$_POST["command"];
 
-$cmdarray = split(' ', $_POST["command"]);
+$cmdarray = preg_split('/ /', $_POST["command"]);
 $command =  array_shift($cmdarray) ;
 
 if ($_SESSION["admin_nextfunction"] != "")

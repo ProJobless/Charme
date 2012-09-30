@@ -48,7 +48,7 @@ echo "<div class='p32'>";
 			echo "</div>";
 		}
 		
-		echo "<a href='#'>Comment</a> - <a href='#'>Love</a> - <a href='#'>Share</a> - <a href='#'>Follow</a><br class='cb'>";
+		echo "<a data-page=\"post\" data-pagearg='".$streamitem["postId"]."' >Comment</a> - <a href='#'>Love</a> - <a href='#'>Share</a> - <a href='#'>Follow</a><br class='cb'>";
 		echo "</div></div>";	
 	}
 	

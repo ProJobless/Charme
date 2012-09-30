@@ -2,7 +2,7 @@
 //This file will be called from welcome.php or mainframe.php and is used for login and logout.
 session_start();
 
-if ($_GET["logout"] == "1")
+if (isset($_GET["logout"]) && $_GET["logout"] == "1")
 {
 	session_destroy();
 	header("Location: /index.php");
@@ -10,8 +10,10 @@ if ($_GET["logout"] == "1")
 else
 {
 
+/*
 $_POST["username"];
 $_POST["password"];
+*/
 
 $_SESSION["charme_user"] = "schuldie@charme.local";
 

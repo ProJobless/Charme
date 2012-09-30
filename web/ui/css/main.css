@@ -168,18 +168,19 @@ border-left:1px silver solid;
 .sbAlpha
 {
 	
-color:#fff;
+
 position:fixed;
 margin-left:1px;
+
 }
 .sbAlpha  ul li
 {
 	background-color:#d60000;
 }
-.sbBeta  ul li
+.sbAlpha  ul 
 {
 
-
+margin-bottom: 8px;
 }
 
 .content

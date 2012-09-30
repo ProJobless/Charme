@@ -34,6 +34,8 @@ function login()
 	
 	$('#login_error').hide();
 	$.post("ui/actions/login.php", {user:u, password:p}, function(d){
+		
+		
 		if (d == 1)
 		{$('#login_error').show();
 		$('#login_user').focus().select();}
@@ -51,12 +53,12 @@ function login()
 <body style="background-color:#EEE">
 
 <?
-if ($_GET[p])
+if (isset($_GET["p"]))
 {
 	echo '<div style="width:850px; margin:32px auto; " >
 	<div style="padding:32px; background-color:#fff;border-bottom:1px silver solid;"><a href="/">&laquo; Back to Charme Homepage</a></div>
 	<div style="padding:32px;background-color:#fff;"> ';
-	include("ui/pages/".$_GET[p].".php");
+	include("ui/pages/".$_GET["p"].".php");
 echo "</div>";
 echo '<div style="text-align:right;margin-top:16px;" class="lightLink"><a href="?p=about">About</a></div></div>';
 }

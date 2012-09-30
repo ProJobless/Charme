@@ -1,4 +1,5 @@
 <?
+
 session_start();
 //URL Style ?p=user&arg1=...
 //

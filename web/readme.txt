@@ -10,6 +10,8 @@ http://www.mschultheiss.com
 1) INSTALLATION
 -----------------------------------------------
 - Install PHP
+- Make sure short_open_tag is set to true in php.ini, otherwise 
+  PHP will not parse php files. 
 - Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
 - Upload the files on your Server, do not upload the dev folder.
 - Open "/install" and follow instructions

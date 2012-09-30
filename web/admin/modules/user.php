@@ -8,7 +8,7 @@ userlist
 userinfo";
 
 $helparray2["useradd"] = array("String username, String email, String servername, String password, String firstname, String lastname", "Adds an user with the specified parameters.");
-$helparray2["useradd"] = array("", "View all users.");
+$helparray2["useradd"] = array("String username, String email, String servername,String password, String firstname,String lastname", "Add new user. ");
  
 function charme_admin_useradd($username, $email, $servername,$password, $firstname,$lastname )
 {

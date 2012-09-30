@@ -1,6 +1,8 @@
 <?
 //if needseesion:
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 
+//include db
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -12,11 +14,11 @@
 <link rel="stylesheet" type="text/css" href="/ui/css/ui.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/stream.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/css.php?color=<?
-	$m = new Mongo();
-	$db = $m->charme;
-	$collection = $db->users;
-	$cursor = $collection->findOne(array("userid" => $_SESSION["charme_user"]), array("color"));
-	echo $cursor["color"];
+
+if (isset($_POST["st_color"]))
+echo $_POST["st_color"];
+else
+	echo db_getUserField("color");
 
 	
 	
@@ -71,7 +73,7 @@ array("Properties", "config"),
  
  foreach ($items as $item)
  {
-	 if ($_GET[p] == $item[1] ||(!$_GET[p] && $item[1] == "stream"))
+	 if ((isset($_GET["p"]) && $_GET["p"] == $item[1]) ||(!isset($_GET["p"]) && $item[1] == "stream"))
 	 echo '<li class="active"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
 else
  echo '<li><a ref="'.$item[1].'">'.$item[0].'</a></li>';
@@ -84,7 +86,7 @@ else
 </ul>
 
 
-About - Blog - 
+<a data-page="about">About</a> - <a data-page="about">Help</a>
 </div>
 
 
@@ -103,14 +105,14 @@ About - Blog -
         <div class="content">
         <div class="page" style="padding:0px; " id="page">
         <?
-		if (!$_GET[p])
+		if (!isset($_GET["p"]))
 		{
 		include("ui/pages/stream.php");	
 		}
 		else
 		{
-		if (file_exists("ui/pages/".$_GET[p].".php"))
-			include("ui/pages/".$_GET[p].".php");
+		if (file_exists("ui/pages/".$_GET["p"].".php"))
+			include("ui/pages/".$_GET["p"].".php");
 		}?>
        
         </div>

@@ -2,13 +2,19 @@
 include_once($_SERVER['DOCUMENT_ROOT']."/ui/framework/framework.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/fs/images.php");
 
-if ($_FILES["pic"]['name'] != "")
+
+if (isset($_FILES["pic"]) && $_FILES["pic"]["name"] != "")
 {
 	storeProfileImage("pic", $_SESSION["charme_user"]);	
 	header("Location: ?q=5&m=1");
 	die();
 }
-	
+
+if (isset($_POST["st_color"]))
+{
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	db_setUserField("color", $_POST["st_color"]); //TODO:Validate input!
+}
 	
 //This is a page template
 
@@ -26,17 +32,17 @@ subMenuActionAdd("Privacy","4"),
 subMenuActionAdd("Customize","6"),
 )
 );
-if ($_GET[q] == 6){
+if (isset($_GET ["q"]) && $_GET["q"] == 6){
 //SELECT A COLOR:
 fw_load("forms");
 echo "<div class='p32'><h1>Color Scheme</h1>";
 	
 $fc = new formCollection();
 
-$fd = new formDrop("st_color", "Color", $_POST["st_color"]);
-$fd->addOption(3, "Blue");
+$fd = new formDrop("st_color", "Color", isset($_POST["st_color"]) ? $_POST["st_color"] : "");
+$fd->addOption(0, "Blue");
+$fd->addOption(1, "Red");
 $fd->addOption(2, "Green");
-$fd->addOption(1, "Yellow");
 
 $fc->add($fd);
 $fc->printOut("");
@@ -44,9 +50,9 @@ $fc->printOut("");
 echo "</div>";
 }
 
-else if ($_GET[q] == 5){
+else if (isset($_GET ["q"]) && $_GET["q"] == 5){
 	
-	if ($_GET[m] == 1)
+	if (isset($_GET ["m"]) && $_GET["m"] == 1)
 	echo "Image changed succesfully.";
 	
 

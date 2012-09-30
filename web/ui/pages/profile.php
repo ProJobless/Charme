@@ -8,6 +8,8 @@ fw_load("page");
 page_init("Stream", 0);
 
 
+
+if (isset($_GET["userId"]))
 $userId = $_GET["userId"];
 
 
@@ -32,7 +34,7 @@ array("Subscribers", "subscribers")
  
  foreach ($items as $item)
  {
-	 if ($_GET[q] == $item[1] ||(!$_GET[q] && $item[1] == "collections"))
+	 if ((isset($_GET["q"]) && $_GET["q"] == $item[1]) ||(!isset($_GET["q"]) && $item[1] == "collections"))
 	 echo '<li class="active"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
 else
  echo '<li><a ref="'.$item[1].'">'.$item[0].'</a></li>';
@@ -47,13 +49,13 @@ else
 
 
 
- if ($_GET[q] =="about"){
+ if (isset($_GET["q"]) && $_GET["q"] =="about"){
 echo "about";
 	
 }
 else
 {
-if ($_GET[id])
+if (isset($_GET["id"]) && $_GET["id"])
 	echo "discplay collection - follow - new entry";
 else
 {
