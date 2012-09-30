@@ -23,6 +23,12 @@ array(
 "darkest" => "#284700"
 ),
 
+array(
+"link" => "#69008E",
+"darker" => "#561B6B",
+"darkest" => "#2C003B"
+),
+
 );
 
 

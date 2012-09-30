@@ -43,7 +43,7 @@ $fd = new formDrop("st_color", "Color", isset($_POST["st_color"]) ? $_POST["st_c
 $fd->addOption(0, "Blue");
 $fd->addOption(1, "Red");
 $fd->addOption(2, "Green");
-
+$fd->addOption(3, "Purple");
 $fc->add($fd);
 $fc->printOut("");
 	

@@ -134,9 +134,9 @@ function initPage(level)
 	$('.functionButton').click(function(){ (eval(this.id+"("+$(this).data("fargs")+");"));	});
 
 	$('.sbBeta a').each (function(index)
-  {$(this).click(function(){ pageLoadWithHistoryBeta($(this).attr("ref"));	});});
+  {$(this).click(function(){ pageLoadWithHistoryBeta($(this).attr("ref"), 0);	});});
 	
-	$('.tabBar a').each (function(index)  {	$(this).click(function(){   pageLoadWithHistoryBeta($(this).attr("ref"));});});
+	$('.tabBar a').each (function(index)  {	$(this).click(function(){   pageLoadWithHistoryBeta($(this).attr("ref"), 1);});});
 	
 	$('.sbAlpha li').removeClass("active");
 	$('.sbAlpha li a[ref='+ $.urlParam("p",location.href )+']').parent().addClass("active");
@@ -155,14 +155,22 @@ function initPage(level)
 	$('.sbBeta li a[ref='+qq+']').parent().addClass("active");
 }
 
-function pageLoadWithHistoryBeta(q)
+function pageLoadWithHistoryBeta(q, dest)
 {
 	var p = $.urlParam("p",location.href );
 	if (p=="")
 		p="stream";
 	console.log("ui/pages/"+p+".php?q="+q+"&");
 	history.pushState({ page: "ui/pages/"+p+".php?q="+q+"&"}, "", "?p="+p+"&q="+q);
-	pageLoad(p,"&q="+q, 1);
+
+	if (dest == 1){
+	pageLoad(p,"&q="+q, 3);
+$('.tabBar li').removeClass("active");
+$('.tabBar li[data-name='+q+']').addClass("active");
+
+}
+	else
+		pageLoad(p,"&q="+q, 1);
 }
 function pageLoadWithHistory(pagename, args)
 {
@@ -178,18 +186,21 @@ function pageLoad(pagename, args, level)
 function pageLoadURL(url, level)
 {
 
-	var p = '#page';
+	//var p = '#page';
 	//Problem: wenn back und nur in tabpagecontent laden?
-	if ($('#tabPageContent').length > 0)
- 		p = '.tabPageContent';
+	//if ($('#tabPageContent').length > 0)
+ 	//	p = '.tabPageContent';
 		
-	
+	var t = '#page';
+if (level == 3)
+t = '#page3';
 
-		$('#page').load(url, function() {
+		$(t).load(url, {level:level},function() {
 			
 	
-		
-	
-		initPage(level);});
+		if (level == 3)
+	level = 0;
+		initPage(level);
+	});
 	
 }

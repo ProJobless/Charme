@@ -12,7 +12,9 @@ page_init("Stream", 0);
 if (isset($_GET["userId"]))
 $userId = $_GET["userId"];
 
-
+//START: IF NOT DYNAMICALY LOADED
+if (!isset($_POST["level"]) || $_POST["level"] !=3 )
+{
 ?>
 <div style="overflow:auto;">
 
@@ -35,9 +37,9 @@ array("Subscribers", "subscribers")
  foreach ($items as $item)
  {
 	 if ((isset($_GET["q"]) && $_GET["q"] == $item[1]) ||(!isset($_GET["q"]) && $item[1] == "collections"))
-	 echo '<li class="active"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
+	 echo '<li data-name="'.$item[1].'" class="active"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
 else
- echo '<li><a ref="'.$item[1].'">'.$item[0].'</a></li>';
+ echo '<li data-name="'.$item[1].'"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
 	 
 }
 ?>
@@ -45,7 +47,9 @@ else
 </ul>
 </div>
 </div>
+<div id="page3">
 <?
+} //END: IF NOT DYNAMICALY LOADED
 
 
 
@@ -97,4 +101,4 @@ echo "</div>";
 
 ?>
 
-<br style="clear:both;" /></div>
+<br style="clear:both;" /></div></div>
