@@ -10,10 +10,13 @@ $CHARME_SETTINGS["passwordSalt"] ="q3fsknjdakfbk1";
 $CHARME_SETTINGS["serverURL"] ="charme.local";
 
 //To interact with other Charme Servers, type CHARME here.
-//To join the CHARME network you have to agree our terms and conditions at www.joincharme.com/terms.txt.
+//To join the CHARME network you have to agree our terms and conditions.
+//See license_charme.txt for more information
 //If you want to create a private network leave this empty
 $CHARME_SETTINGS["NETWORK_ID"] ="";
 
-//Will be updated automatically to block evil servers
-$CHARME_SETTINGS["blacklist"] ="http://www.joincharme.com/blacklist";
+//Will be updated automatically to block evil servers or users
+//you should leave this empty if your not part of the CHARME network
+$CHARME_SETTINGS["blacklist"] ="http://www.charmeproject.com/blacklist.php";
+
 ?>

@@ -1,0 +1,26 @@
+Charme Network License
+
+If your NETWORK_ID in config.php is "CHARME" 
+or starts with "CHARME" you agree to the following
+terms and conditions. If you use a different NETWORK_ID this 
+license does not count for you.
+
+
+1) You do not send any kind of advertisments to other servers in the Charme network.
+
+2) You do not edit or remove the export function for user profiles.
+
+3) You do not give away or sell user data to any kind of person or institution.
+
+4) You do not remove or edit the delete profile function.
+
+5) You ensure that you delete racist, pornographic and offensive content.
+
+6) Content produced with Charme is public. 
+
+7) You do not modify the license selector. The license of produced content can 
+be choosen by the author only. You do not have the right to resell any kind
+of content produced by the user.
+
+
+Any infrigement of these terms can result in a global ban (blacklist).

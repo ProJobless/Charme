@@ -118,10 +118,10 @@ class formCollection
 	{
 	 	$this->forms[] = $item;
 	}
-	public function printOut($url, $submit = true)
+	public function printOut($url, $submit = true, $ajax = false)
 	{
 		
-		echo "<form id='fbform' action='$url' method='post'><table cellspacing=0 cellpadding=0>";
+		echo "<form  action='$url' method='post'><table cellspacing=0 cellpadding=0>";
 		foreach ($this->forms as $item)
 		{
 			echo "".$item->render()."";

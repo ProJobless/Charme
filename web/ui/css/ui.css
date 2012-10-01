@@ -8,15 +8,23 @@
 		z-index:9999998;
 		
 }
+.collection:active
+{
+	background-color: #ccc;
+}
 .collection
 {
 	width:100px; 
 	height:100px;
 	border:1px silver solid;
 	background-color: #E6E6E6;
-	margin:32px;
+	margin:16px;
 	display:block;
-	
+	word-wrap: break-word;
+	font-size: 14px;
+	padding: 8px;
+	float:left;
+	overflow: hidden;
 }
 .fixedBox
 {
@@ -59,14 +67,13 @@ table td
 }
 h1
 {
-	
-font-size:14px;
 
-border-bottom:1px silver solid;
-padding:16px 0;
-margin-top:0;
-margin-bottom:16px;
-margin-top:16px;
+	font-size:14px;
+	border-bottom:1px silver solid;
+	padding:16px 0;
+	margin-top:0;
+	margin-bottom:16px;
+	margin-top:16px;
 }
 h1:first-child
 {
@@ -89,14 +96,9 @@ display:block;padding:8px; cursor:pointer;
 }
 .tabBar ul li
 {
-	
-border-bottom:1px silver solid;
-
-
-
-position:relative;
-
-background-color:#eee;
+	border-bottom:1px silver solid;
+	position:relative;
+	background-color:#eee;
 }
 .tabBar ul li.active
 {
@@ -106,9 +108,13 @@ background-color:#eee;
 	}
 .p32
 {
-	
-padding:32px;
-overflow:auto;
+	padding:32px;
+	overflow:auto;
+}
+.p16
+{	
+	padding:16px;
+	overflow:auto;
 }
 .box
 {

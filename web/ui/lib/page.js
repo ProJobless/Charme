@@ -11,10 +11,11 @@ $(document).ready(function() {
   
   if (p=="")
   	p="stream";
-  if (sus.length ==1)
-  	ar = "";
-  else
- 	 ar = sus[1];
+
+
+
+	ar = (sus.length ==1) ?   "" :  sus[1];
+
   
   history.replaceState({ page: "ui/pages/"+p+".php?foo=1&"+ar}, "", "?p="+p+"&"+ar);
 
@@ -22,7 +23,9 @@ $(document).ready(function() {
   {$(this).click(function(){pageLoadWithHistory($(this).attr("ref"), "")});});
 
 
+
 $("#button_notifications").click(function(){
+
 	actionwindow($(this));
 });
 
@@ -107,7 +110,9 @@ function initPage(level)
 	$('.sbBeta a').unbind('click');
 	$('a[data-page]').unbind('click');
 	
-	$('.actionButton').unbind('click');
+
+	//Problem: actionbuttons initlized before, change to "sbBeta .actionbutton"?
+	//$('.actionButton').unbind('click');
 	
 	
 	$('textarea:not(.noAutoHeight)').autosize();

@@ -29,6 +29,10 @@ function ui_closeBoxButton()
 {
 return "<a href='javascript:ui_closeBox();'>Close</a>";	
 }
+function ui_Button(name, func)
+{
+return "<a class='button' href='javascript:"+func+";'>"+name+"</a>";	
+}
 
 function ui_closeBox(content)
 {

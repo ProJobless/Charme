@@ -69,7 +69,10 @@ else
 	echo "<div style='margin-right:264px;'><div class='p32'>";
 	forms_doPostField();
 	
-	
+		echo "<br class='cb'><a class='functionButton' id='but_addCollection'>Add Collection</a> - ";
+	echo "<a data-page='profile' data-pagearg='&q=collections&id=1'>Collection 1</a>";	
+	echo "</div>";
+		echo "</div><div class='p16'>";
 	foreach ($items as $item)
 	{
 		//if: is collection
@@ -81,12 +84,12 @@ else
 		
 		
 	}
+	echo "</div>";
 	
 	
-	echo "<br class='cb'><a class='functionButton' id='but_addCollection'>Add Collection</a> - ";
-	echo "<a data-page='profile' data-pagearg='&q=collections&id=1'>Collection 1</a>";	
+
 	
-	echo "</div></div>";
+
 }
 
 

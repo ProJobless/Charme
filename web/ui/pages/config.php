@@ -1,7 +1,7 @@
 <?
 include_once($_SERVER['DOCUMENT_ROOT']."/ui/framework/framework.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/fs/images.php");
-
+needSession();
 
 if (isset($_FILES["pic"]) && $_FILES["pic"]["name"] != "")
 {
@@ -38,6 +38,10 @@ fw_load("forms");
 echo "<div class='p32'><h1>Color Scheme</h1>";
 	
 $fc = new formCollection();
+
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+if (!isset($_POST["st_color"]))
+$_POST["st_color"] = db_getUserField("color");
 
 $fd = new formDrop("st_color", "Color", isset($_POST["st_color"]) ? $_POST["st_color"] : "");
 $fd->addOption(0, "Blue");
