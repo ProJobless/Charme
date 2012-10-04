@@ -18,21 +18,31 @@ http://www.mschultheiss.com
 
 
 -----------------------------------------------
-2) QUESTIONS
+2) QUESTIONS?
 -----------------------------------------------
-- TODO!
-
+See our website http://charmeproject.com
+for more information.
 
 -----------------------------------------------
 3) LICENSE
 -----------------------------------------------
 Charme is basically MIT licensed, but you are not
-allowed to remove certain parts of the about page.
+allowed to remove the author parts of the about page.
 See license.txt for more information.
 
+The third party includes have their own license.
+You have to accept their terms or remove
+them.
 
 -----------------------------------------------
-4) Third Party Apps
+4) Third Party Includes
 -----------------------------------------------
-Charme comes with Rockmongo and WideImage
-which are GPL and BSD licensed.
+
+Name			 | License        | Filepath
+-----------------------------------------------
+Rockmongo 		  BSD				/admin/rockmongo
+WideImage 		  GNU LGPL 2.1.		/tparty/wideimage
+jQuery Terminal   GNU LGPL			/admin/terminal.js
+
+The full license files can be found in the 
+specified filepath.

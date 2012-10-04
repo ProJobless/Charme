@@ -1,3 +1,10 @@
+.actionIcon
+{
+
+width: 32px;
+height: 32px;
+}
+
 .uiBlock
 {
 		position:fixed;
@@ -8,24 +15,7 @@
 		z-index:9999998;
 		
 }
-.collection:active
-{
-	background-color: #ccc;
-}
-.collection
-{
-	width:100px; 
-	height:100px;
-	border:1px silver solid;
-	background-color: #E6E6E6;
-	margin:16px;
-	display:block;
-	word-wrap: break-word;
-	font-size: 14px;
-	padding: 8px;
-	float:left;
-	overflow: hidden;
-}
+
 .fixedBox
 {
 	position:fixed;

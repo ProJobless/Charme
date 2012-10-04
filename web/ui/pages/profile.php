@@ -12,6 +12,7 @@ page_init("Stream", 0);
 if (isset($_GET["userId"]))
 $userId = $_GET["userId"];
 
+$username = "Manuel";
 //START: IF NOT DYNAMICALY LOADED
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 {
@@ -47,7 +48,7 @@ else
 </ul>
 </div>
 </div>
-<div id="page3">
+<div id="page3" style='margin-right:264px;'>
 <?
 } //END: IF NOT DYNAMICALY LOADED
 
@@ -59,24 +60,75 @@ echo "about";
 }
 else
 {
-if (isset($_GET["id"]) && $_GET["id"])
-	echo "discplay collection - follow - new entry";
-else
+
+
 {
+
+	echo "<div>";
+	//Build header
+
+
+	echo "<div class='profile_header'>";
+
+
+	//GET parents, if > 4 -> dont display this, also do not display when its not my profile
+echo "<a style='float:right;' class='functionButton' id='but_addCollection'>Add Collection</a>";
+
+	echo "$username"."<br>";
+
+
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
-	$items = getCollection($_SESSION["charme_user"], "");
-	fw_load("forms");
-	echo "<div style='margin-right:264px;'><div class='p32'>";
-	forms_doPostField();
+	if (isset($_GET["id"]) && $_GET["id"])
+	{
+ 		echo "<a  data-page2='profile' data-pagearg='&q=collections'>Collections</a>";
+		$list = getParentList($_GET["id"]);
+
+
+		foreach ($list as $value) {
+
+
+		if ($_GET["id"] != $value["id"])
+			echo " -> <a  data-page2='profile' data-pagearg='&q=collections&id=".$value["id"]. "'>".$value["name"]. "</a>";
+		else
+			echo " -> ".$value["name"]. "";
+		}
+		//echo " -> Collections";
+
+		//2do: output as long as predesessor, but not longer then 4 times
+	//	echo "-> Collection Name";
 	
-		echo "<br class='cb'><a class='functionButton' id='but_addCollection'>Add Collection</a> - ";
-	echo "<a data-page='profile' data-pagearg='&q=collections&id=1'>Collection 1</a>";	
+	}
+	else
+	 echo "Collections ";
+
+
 	echo "</div>";
-		echo "</div><div class='p16'>";
+
+
+
+	
+	
+	fw_load("forms");
+	
+
+
+	if (isset($_GET["id"]) && $_GET["id"])
+	{
+		echo "<div class='p32'>";
+		forms_doPostField();
+		echo "</div>";
+	}
+	
+	
+
+		echo "<div class='p16'>";
+
+	$items = getCollection($_SESSION["charme_user"], getget("id"));
 	foreach ($items as $item)
 	{
 		//if: is collection
-		echo "<a class='collection' data-page='profile' data-pagearg='&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
+		echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
 	
 		//if is post
 		
@@ -84,9 +136,26 @@ else
 		
 		
 	}
+
+	fw_load("post");
+	$items = getCollectionPosts($_SESSION["charme_user"], getget("id"));
+	
+	foreach ($items as $item)
+	{
+	
+		post_format($item);
+		//if is post
+		
+		//if isphoto
+		
+		
+	}
+
+
+
+	echo "</div>";
 	echo "</div>";
 	
-	
 
 	
 
@@ -95,7 +164,9 @@ else
 
 }
 
-echo "</div>";
+echo "</div></div>";
+
+echo "</div>";//ADDED
 ?>
 
 

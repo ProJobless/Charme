@@ -13,6 +13,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 <link rel="stylesheet" type="text/css" href="/ui/css/main.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/ui.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/stream.css">
+<link rel="stylesheet" type="text/css" href="/ui/css/profile.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/css.php?color=<?
 
 if (isset($_POST["st_color"]))

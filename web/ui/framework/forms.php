@@ -1,8 +1,10 @@
 <?
-function forms_doPostField()
+
+
+function forms_doPostField($collectionId=0)
 {
 	echo "<div><textarea class='box' style='margin-bottom:8px; width:100%;'></textarea>
-<a type='button' class='button' value='Post'>Post</a> in
+<a type='button' class='button but_postCol' value='Post'>Post</a> in
 <select>
 <option>Private</option>
 <option>+ Art</option>
@@ -14,7 +16,7 @@ function forms_doPostField()
 
 
 </select>
-  - <a href='javascript:makeAttachment()'>Add Attachment</a> <br class='cb'>";
+  - <a href='javascript:makeAttachment()'>Add Attachment</a> <br class='cb'></div>";
 
 }
 	

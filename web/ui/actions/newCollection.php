@@ -10,7 +10,7 @@ if (isset($_POST["col_name"]))
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	//0 should be parent colleciton id.
-	addCollection($_SESSION["charme_user"] , $_POST["col_name"], $_POST["col_description"], 0);
+	addCollection($_SESSION["charme_user"] , $_POST["col_name"], $_POST["col_description"], $_GET["id"]);
 }
 else
 {

@@ -19,7 +19,7 @@ page_init("Stream", 1);
 echo "<div class='p32'>";
 	
 	forms_doPostField();
-	echo "</div></div>";
+	echo "</div>";
 	echo "<div class='stream'>";
 	$arr = StreamAsArray(123);
 	foreach ($arr as $streamitem)

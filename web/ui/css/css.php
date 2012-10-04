@@ -40,7 +40,7 @@ $colors = $colors[$_GET["color"]];
 echo "a {color: $colors[link];}";
 
 echo ".button {background-color: $colors[link];border-color: $colors[darkest];}";
-echo ".button:active {background-color: $colors[darkest];}";
+echo ".button:active {background-color: $colors[link];  box-shadow: inset 0 0 10px #000;}";
 
 echo ".sbAlpha ul li.active {background-color: $colors[link];}";
 echo ".sbAlpha ul li {background-color: $colors[darker];}";

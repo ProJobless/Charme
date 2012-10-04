@@ -14,10 +14,14 @@ $(document).ready(function() {
 
 
 
-	ar = (sus.length ==1) ?   "" :  sus[1];
 
-  
-  history.replaceState({ page: "ui/pages/"+p+".php?foo=1&"+ar}, "", "?p="+p+"&"+ar);
+	ar = location.href.substr(location.href.indexOf('&')+1);
+
+  //alert(sus[1]);
+  //Problem here: if more args then p and q -> problem!
+  //history.replaceState({ page: "ui/pages/"+p+".php?foo=1&"+ar}, "", "?p="+p+"&"+ar);
+	history.replaceState({ page: "ui/pages/"+p+".php?foo=1&"+ar}, "", "?p="+p+"&"+ar);
+
 
   $('.sbAlpha ul a').each (function(index)
   {$(this).click(function(){pageLoadWithHistory($(this).attr("ref"), "")});});
@@ -31,7 +35,7 @@ $("#button_notifications").click(function(){
 
 
 
-$(".actionBar a").mousedown(function(){
+$(".actionBar a, .actionIcon").mousedown(function(){
 	var x = $(this).data("bgpos");
 
 	if (!$(this).hasClass("active"))
@@ -148,7 +152,10 @@ function initPage(level)
 	
 	$('.sbBeta li').removeClass("active");
 	
-		$('a[data-page]').each (function(index)  {	$(this).click(function(){   pageLoadWithHistory($(this).attr("data-page"),$(this).attr("data-pagearg"));});});
+	//loads into #page div
+	$('a[data-page]').each (function(index)  {	$(this).click(function(){   pageLoadWithHistory($(this).attr("data-page"),$(this).attr("data-pagearg"));});});
+	//loads into #page3 div
+	$('a[data-page2]').each (function(index)  {	$(this).click(function(){   pageLoadWithHistoryBetaArg($(this).attr("data-page"),$(this).attr("data-pagearg"));});});
 		
 		
 	
@@ -158,8 +165,19 @@ function initPage(level)
 	$('.sbBeta li a').first().parent().addClass("active");
 	else
 	$('.sbBeta li a[ref='+qq+']').parent().addClass("active");
-}
 
+
+	initProfile();
+	
+}
+function pageLoadWithHistoryBetaArg(p, args)
+{
+	var p = $.urlParam("p",location.href );
+
+
+	history.pushState({ page: "ui/pages/"+p+".php?foo=1"+args}, "", "?p="+p+""+args);
+	pageLoad(p,args, 3);
+}
 function pageLoadWithHistoryBeta(q, dest)
 {
 	var p = $.urlParam("p",location.href );
@@ -168,8 +186,8 @@ function pageLoadWithHistoryBeta(q, dest)
 	console.log("ui/pages/"+p+".php?q="+q+"&");
 	history.pushState({ page: "ui/pages/"+p+".php?q="+q+"&"}, "", "?p="+p+"&q="+q);
 
-	if (dest == 1){
-	pageLoad(p,"&q="+q, 3);
+	if (dest == 1){ //Called from profile navigation
+	pageLoad(p,"&q="+q, 0);
 $('.tabBar li').removeClass("active");
 $('.tabBar li[data-name='+q+']').addClass("active");
 
@@ -196,15 +214,16 @@ function pageLoadURL(url, level)
 	//if ($('#tabPageContent').length > 0)
  	//	p = '.tabPageContent';
 		
+
 	var t = '#page';
-if (level == 3)
+if ($('#page3').length > 0 && level == 3)
 t = '#page3';
+
+
 
 		$(t).load(url, {level:level},function() {
 			
 	
-		if (level == 3)
-	level = 0;
 		initPage(level);
 	});
 	
