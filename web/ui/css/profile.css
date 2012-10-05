@@ -1,12 +1,31 @@
+.collectionPost
+{
+border-bottom:1px silver solid;
+	border-top:1px silver solid;
+	margin:16px 0;
+	padding:16px 0;
+}
+
 .profile_header
 {
 padding:32px;
-font-size: 16px;
+
 padding-bottom: 0;
 
 
 }
+.photodrop
+{
+background-color: #DEDEDE;
+	padding:32px;
+box-shadow:         inset 0 0 10px #aaa;
 
+}
+.profile_header div
+{
+font-size: 20px;
+padding-bottom:8px;
+}
 .collection:active
 {
 	
@@ -14,8 +33,8 @@ padding-bottom: 0;
 }
 .collection
 {
-	width:100px; 
-	height:100px;
+	width:80px; 
+	height:80px;
 	border:1px silver solid;
 	background-color: #E6E6E6;
 	margin:16px;

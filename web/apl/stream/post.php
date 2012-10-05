@@ -3,6 +3,7 @@
 function postToCollection($collection, $content, $attachments=array())
 {
 
+
 	global $db_charme;
 	//todo: validate strings!!
 	$obj = ($collection==0) ? NULL : new MongoId($collection);
@@ -18,7 +19,7 @@ $name = "testname";
 		
 			));
 
-
+	//TODO: notify followers!
 
 	/*
 $st = array(

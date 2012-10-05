@@ -72,9 +72,11 @@ else
 
 
 	//GET parents, if > 4 -> dont display this, also do not display when its not my profile
-echo "<a style='float:right;' class='functionButton' id='but_addCollection'>Add Collection</a>";
+echo "<a style='float:right; background-position:-48px 0;' data-bgpos='-48'  class='functionButton actionIcon' id='but_addCollection'> </a>";
+echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' id='but_addCollection'> </a>";
 
-	echo "$username"."<br>";
+
+	echo "<div>$username"."</div>";
 
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
@@ -115,9 +117,27 @@ echo "<a style='float:right;' class='functionButton' id='but_addCollection'>Add 
 
 	if (isset($_GET["id"]) && $_GET["id"])
 	{
-		echo "<div class='p32'>";
+
+
+		echo "<br class='cb'><div class='p32' style='padding-bottom:0; padding-top:16px;'>";
+		echo "<a class='switcher' data-pos='1'>Post</a> - <a class='switcher' data-pos='2'>Photo</a>";
+
+echo "<div class='switch switch1'>";
 		forms_doPostField();
 		echo "</div>";
+
+			echo "<div class='photodrop switch switch2'>";
+
+			echo '<form id="upload" action="upload.php" method="POST" enctype="multipart/form-data"> ';
+			echo '<input type="file" id="files" name="files[]" multiple />';
+			echo "<div class='list'>list</div>";
+			echo '</form>
+			</div>';
+
+
+	echo "</div>";
+
+
 	}
 	
 	
@@ -125,9 +145,14 @@ echo "<a style='float:right;' class='functionButton' id='but_addCollection'>Add 
 		echo "<div class='p16'>";
 
 	$items = getCollection($_SESSION["charme_user"], getget("id"));
+
+	echo "<h1>Collections</h1>";
 	foreach ($items as $item)
 	{
 		//if: is collection
+
+
+
 		echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
 	
 		//if is post
@@ -136,21 +161,22 @@ echo "<a style='float:right;' class='functionButton' id='but_addCollection'>Add 
 		
 		
 	}
-
+echo "<br class='cb'><h1>Posts</h1>";
 	fw_load("post");
-	$items = getCollectionPosts($_SESSION["charme_user"], getget("id"));
-	
-	foreach ($items as $item)
-	{
-	
-		post_format($item);
-		//if is post
+	echo "<div class='p16'>";
+		$items = getCollectionPosts($_SESSION["charme_user"], getget("id"));
 		
-		//if isphoto
+		foreach ($items as $item)
+		{
 		
-		
-	}
-
+			post_format($item);
+			//if is post
+			
+			//if isphoto
+			
+			
+		}
+	echo "</div>";
 
 
 	echo "</div>";

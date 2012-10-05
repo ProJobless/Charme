@@ -1,8 +1,15 @@
 .actionIcon
 {
 
-width: 32px;
-height: 32px;
+width: 48px;
+height: 48px;
+
+	background-image:url(actions2.png);
+
+	display:inline-block;
+	cursor:pointer;
+
+
 }
 
 .uiBlock

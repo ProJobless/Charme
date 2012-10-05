@@ -35,7 +35,7 @@ $("#button_notifications").click(function(){
 
 
 
-$(".actionBar a, .actionIcon").mousedown(function(){
+$(".actionBar a").mousedown(function(){
 	var x = $(this).data("bgpos");
 
 	if (!$(this).hasClass("active"))
@@ -72,7 +72,7 @@ function actionwindow(obj)
 		
 	$('.actionCont').animate({
 
-    top: '-205'}, 100, function() {
+    top: '-205'}, 200, function() {
 		
     
   });
@@ -82,7 +82,7 @@ function actionwindow(obj)
 	
 	$('.actionCont').animate({
     opacity: 1.0,
-    top: '30'}, 100, function() {
+    top: '30'}, 200, function() {
    
   });
 	}
@@ -109,6 +109,20 @@ function initPage(level)
 {
 	
 	
+	$(".actionIcon").mousedown(function(){
+	var x = $(this).data("bgpos");
+
+	if (!$(this).hasClass("active"))
+	$(this).css("background-position",x+"px -48px");
+}).mouseout(function(){
+	var x = $(this).data("bgpos");
+	if (!$(this).hasClass("active"))
+	$(this).css("background-position",x+"px -0px");
+	
+});
+
+
+
 		
 	$('.tabBar a').unbind('click');
 	$('.sbBeta a').unbind('click');

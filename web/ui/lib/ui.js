@@ -1,14 +1,21 @@
+function ui_switch()
+{
+//...to data-switch
+
+
+}
+
 function ui_block(content)
 {
 	if (!$("body .uiBlock").length)
 	$("body").prepend("<div class='uiBlock'></div>");
 	
-	$("body .uiBlock").fadeIn(200);
+	$("body .uiBlock").fadeIn(400);
 	
 }
 function ui_unblock(content)
 {
-	$("body .uiBlock").fadeOut(200);
+	$("body .uiBlock").fadeOut(400);
 
 }
 
@@ -21,7 +28,7 @@ function ui_showBox(content)
 	
 	$("body .fixedBox").html(content).animate({
     top: '200px',
-  }, 200, function() {
+  }, 400, function() {
   });
 	
 }
@@ -37,9 +44,11 @@ return "<a class='button' href='javascript:"+func+";'>"+name+"</a>";
 function ui_closeBox(content)
 {
 	ui_unblock();
+	var h = $("body .fixedBox").height()+100;
+
 	$("body .fixedBox").animate({
-    top: '-500px',
-  }, 200, function() {
+    top: '-'+h+'px',
+  }, 400, function() {
 	  
 	 $("body .fixedBox"). html("");
 	  

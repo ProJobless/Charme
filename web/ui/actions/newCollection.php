@@ -18,6 +18,11 @@ else
 	$fc = new formCollection();
 	$fc->add(new formText("col_name", "Name", ""));
 	$fc->add(new formArea("col_description", "Description", ""));
+
+	$fc->add(new formArea("col_visible", "Visible", ""));
+
+
+
 	$fc->printOut("", false, true);
 }
 
