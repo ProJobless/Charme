@@ -7,20 +7,23 @@ include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/getStream.php");
 fw_load("page");
 page_init("Stream", 0);
 
-
-
 if (isset($_GET["userId"]))
-$userId = $_GET["userId"];
+	$userId = urldecode($_GET["userId"]);
+else
+	$userId = $_SESSION["charme_user"];
+
 
 $username = "Manuel";
 //START: IF NOT DYNAMICALY LOADED
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 {
 ?>
-<div style="overflow:auto;">
 
-<div style="background-color:#F3F3F3; border-left:1px solid silver; border-right:1px silver solid; width:264px; float:right; position:fixed; margin-left:585px;height:100%;">
-<img src="apl/fs/?f=p_200_<?=$_SESSION["charme_user"] ?>" style="width:200px;padding:32px;" />
+<div id='greybg'></div>
+<div style="overflow:auto; background-color:#EFEFEF">
+
+<div style="  width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px;">
+<img src="apl/fs/?f=p_200_<?=$_SESSION["charme_user"] ?>" style="width:200px;" />
 <div class="tabBar">
 <ul>
 
@@ -48,7 +51,8 @@ else
 </ul>
 </div>
 </div>
-<div id="page3" style='margin-right:264px;'>
+
+<div id="page3" style='margin-right:232px;'>
 <?
 } //END: IF NOT DYNAMICALY LOADED
 
@@ -115,11 +119,43 @@ echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' i
 	
 
 
+	
+	
+
+		
+
+	$items = getCollection($userId, getget("id"));
+
+$has = false;
+	foreach ($items as $item)
+	{
+		//if: is collection
+if (!$has ){$has =true;echo "<div class='p24' id='collection_container'>"; }
+
+
+		echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
+	
+		//if is post
+		
+		//if isphoto
+		
+		
+	}
+
+	if (!$has)
+echo "<div class='p24' id='collection_container' style='display:none;'>";
+
+		echo "<br class='cb'></div>";
+
+
+	echo "<div style='height:32px;'></div>";
+
+
 	if (isset($_GET["id"]) && $_GET["id"])
 	{
 
 
-		echo "<br class='cb'><div class='p32' style='padding-bottom:0; padding-top:16px;'>";
+		echo "<div class='p32' style='padding-bottom:16px; padding-top:0px;'>";
 		echo "<a class='switcher' data-pos='1'>Post</a> - <a class='switcher' data-pos='2'>Photo</a>";
 
 echo "<div class='switch switch1'>";
@@ -139,47 +175,38 @@ echo "<div class='switch switch1'>";
 
 
 	}
-	
-	
 
-		echo "<div class='p16'>";
-
-	$items = getCollection($_SESSION["charme_user"], getget("id"));
-
-	echo "<h1>Collections</h1>";
-	foreach ($items as $item)
-	{
-		//if: is collection
-
-
-
-		echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
-	
-		//if is post
-		
-		//if isphoto
-		
-		
-	}
-echo "<br class='cb'><h1>Posts</h1>";
 	fw_load("post");
-	echo "<div class='p16'>";
-		$items = getCollectionPosts($_SESSION["charme_user"], getget("id"));
+	echo "<div class='collectionBg'>";
+		$items = getCollectionPosts($userId, getget("id"));
 		
+
+		//for ($i = 0; $i<10; $i++){
+
+$lasttype = -1;
 		foreach ($items as $item)
 		{
-		
-			post_format($item);
-			//if is post
-			
-			//if isphoto
-			
-			
+			$result  = post_format($item);
+			if ($result[1] != $lasttype)
+			{	echo "</div>";
+
+			if ($result[1] == 1)
+				echo "<div class='collectionImgbox'>";
+			if ($result[1] == 2)
+				echo "<div class='collectionPostbox'>";
+			}
+
+			echo $result[0];
+
+			$lasttype = $result[1];
 		}
+
+if ($lasttype != -1)echo "</div>";
+		//}
 	echo "</div>";
 
 
-	echo "</div>";
+
 	echo "</div>";
 	
 
@@ -201,4 +228,4 @@ echo "</div>";//ADDED
 
 ?>
 
-<br style="clear:both;" /></div></div>
+</div></div>

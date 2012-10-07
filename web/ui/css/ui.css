@@ -1,3 +1,12 @@
+.switcher
+{
+
+	display: inline-block;
+	font-size: 16px;
+	padding-bottom: 8px;
+	
+}
+
 .actionIcon
 {
 
@@ -82,26 +91,35 @@ padding-top:0;
 {
 	padding:0;
 	list-style-type:none;
-	border-top:1px solid silver;
-	position:relative;margin:0;
-	position:relative;
+
+	margin:0;
+	
 }
 .tabBar ul li A
 {
 	
 display:block;padding:8px; cursor:pointer;
+color:#fff;
 }
-.tabBar ul li
+.tabBar ul li a
 {
-	border-bottom:1px silver solid;
-	position:relative;
-	background-color:#eee;
+
+	background-color:#333;
+	margin-bottom:1px;
+
+
 }
-.tabBar ul li.active
+.tabBar ul li a:active
 {
-	background-color:#fff;
-	z-index:1000;
-	left:-1px;
+
+background-color:#222;
+}
+
+.tabBar ul li.active a
+{
+background-color:#222;
+box-shadow:  inset 0 0 3px #000;
+
 	}
 .p32
 {
@@ -112,7 +130,12 @@ display:block;padding:8px; cursor:pointer;
 {	
 	padding:16px;
 	overflow:auto;
+}.p24
+{	
+	padding:24px;
+	overflow:auto;
 }
+
 .box
 {
 	

@@ -7,13 +7,13 @@ needSession();
 if (isset($_POST["col_name"]))
 {
 
-	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	//0 should be parent colleciton id.
-	$cid = addCollection($_SESSION["charme_user"] , $_POST["col_name"], $_POST["col_description"], $_GET["id"]);
+	$cid = addList($_SESSION["charme_user"] , $_POST["col_name"]);
 
 
-	echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$cid."'>".$_POST["col_name"]."</a>";	
+	echo "<li><a ref='$cid'>".$_POST["col_name"]."</a></li>";	
 	
 }
 else
@@ -21,13 +21,10 @@ else
 	fw_load("forms");
 	$fc = new formCollection();
 	$fc->add(new formText("col_name", "Name", ""));
-	$fc->add(new formArea("col_description", "Description", ""));
-
-	$fc->add(new formArea("col_visible", "Visible", ""));
 
 
 
-	$fc->printOut("", false, "");
+	$fc->printOut("", false, false);
 }
 
 //addCollection($owner, $name, $description, $parent);

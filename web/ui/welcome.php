@@ -33,9 +33,10 @@ function login()
 	var p = $('#login_password').val();
 	
 	$('#login_error').hide();
-	$.post("ui/actions/login.php", {user:u, password:p}, function(d){
+	$.post("ui/actions/login.php", {username:u, password:p}, function(d){
 		
-		
+	
+
 		if (d == 1)
 		{$('#login_error').show();
 		$('#login_user').focus().select();}

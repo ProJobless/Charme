@@ -1,18 +1,33 @@
 <?
 //This is a page template
 include_once($_SERVER['DOCUMENT_ROOT']."/ui/framework/framework.php");
+needSession();
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/getStream.php");
-
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 fw_load("page");
 fw_load("forms");
 fw_load("config");
 
+
+
+
+$lists = array();
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
+$cur = getLists($_SESSION["charme_user"]);
+foreach ($cur as $item)
+{
+
+	$lists[] = subMenuActionAdd($item["name"], $item["_id"]);
+}
+
+
 subMenuAdd(
-array(
-subMenuActionAdd("Public", "1"),
-subMenuActionAdd("Friends","2")
-)
+$lists
+
 );
+
+
+
 
 page_init("Stream", 1);
 

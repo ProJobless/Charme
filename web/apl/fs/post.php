@@ -22,15 +22,20 @@ function storePostImage($uplodedFile,$username, $collection)//uploaded file = pi
 	$obj = ($collection==0) ? NULL : new MongoId($collection);
 	//2do: getusername!!
 $name = "testname";
-	$db_charme->posts->insert(
-		array("userid" => $_SESSION["charme_user"],
+
+$data = array("userid" => $_SESSION["charme_user"],
 			"typ" => 2,
 			"username" => $name,
 			"reference" =>new MongoId($gridID),
 			"collection" => new MongoId($collection),
 			"posttime" =>  new MongoDate(time())
 		
-			));
+			);
+
+
+	$db_charme->posts->insert($data );
+
+	return $gridID;
 
 	//$image->->unsharp(80, 0.5, 3); 
 

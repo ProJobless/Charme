@@ -29,8 +29,10 @@ else
 <script src='/ui/lib/string.js'></script>
 <script src='/ui/lib/txa.js'></script>
 <script src='/ui/lib/profile.js'></script>
+<script src='/ui/lib/config.js'></script>
 <script src='/ui/lib/stream.js'></script>
 <script src='/ui/lib/ui.js'></script>
+<script src='/ui/lib/friends.js'></script>
 </head>
 
 <body>
@@ -96,7 +98,8 @@ else
         <div class="sidebar sbBeta">
    
         <div class="actionBar">
- 		<!--<a style="background-position:-30px 0;" href="/ui/actions/login.php?logout=1" class="actionButton"></a>-->
+ 		
+
         </div>
 
      <ul class="subCont">

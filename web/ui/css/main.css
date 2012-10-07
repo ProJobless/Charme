@@ -44,10 +44,30 @@ a.actionButton
 	left:50%;
 	margin-left:-350px; /* 850/2-75 = */
 	background-color:#fff;
+
 	position:fixed;
 	z-index:-9999;
+
+	border-right:1px silver solid;
+	border-left:1px silver solid;
+}
+
+#greybg
+{
+	height:100%;
+	width:850px;
+	margin:0px auto;
+	left:50%;
+	margin-left:-350px; /* 850/2-75 = */
+	background-color:#ededed;
+	position:fixed;
+	z-index:-9994;
+	border-right:1px silver solid;
+	border-left:1px silver solid;
 	
 }
+
+
 .meta
 {
 	

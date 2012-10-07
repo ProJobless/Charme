@@ -12,7 +12,7 @@ function addUser($username, $email, $servername,$password, $firstname,$lastname 
 	
 	$obj = array("username" => $username,"password"=>md5($CHARME_SETTINGS["passwordSalt"].$password), "userid" => $username."@".$CHARME_SETTINGS["serverURL"], "email" => $email, "firstname" => $firstname, "lastname" => $lastname );
 	$collection->insert($obj);
-	$collection->ensureIndex('myindex',array("unique" => true));
+//	$collection->ensureIndex('myindex',array("unique" => true));
 	$cursor = $collection->find();
 
 	foreach ($cursor as $obj) {
@@ -35,7 +35,20 @@ function listUsers($filter)
 function tryLogin($username, $password)
 {
 	
+
+	include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+$p = md5($CHARME_SETTINGS["passwordSalt"].$password);
+
 	
+	global $db_charme;
+
+	$collection = $db_charme->users;
+	$cursor = $collection->findOne(array("username"=> $username, "password"=>$p), array('username'));
+	if ($cursor["username"]==$username)
+		return "2";
+	else
+		return "1";
+
 }
 
 ?>

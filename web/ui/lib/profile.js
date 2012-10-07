@@ -19,7 +19,9 @@ function addCollection()
 	x = (x=="") ?  "0" : x;
 	$.post("ui/actions/newCollection.php?id="+x, $('.fixedBox form').serialize(), function(d){
 		ui_closeBox();
-		alert(d);
+		$('#collection_container').append(d).show();
+
+		initPage(0);
 	});
 }
 
@@ -56,11 +58,17 @@ function handleFileSelect(evt) {
 
     // files is a FileList of File objects. List some properties.
     var output = [];
+$(".collectionBg").prepend("<div class='collectionImgbox'></div>");
+
+
+
+
     for (var i = 0, f; f = files[i]; i++) {
 
     	//TODO:CHECK IF IMAGE!
-    	  UploadFile(f);  
+    	UploadFile(f);  
     }
+
 
    // $('.photodrop > .list') .append('<ul>' + output.join('') + '</ul>');
   }
@@ -88,8 +96,13 @@ formData.append("pic", file);
 				if (xhr.readyState == 4) {
 					if (xhr.status != 200)
 						alert("Error uploading file.");
+else
+	$(".collectionBg .collectionImgbox").first().prepend(xhr.responseText);
+				//alert(xhr.responseText);
 
-				alert(xhr.responseText);
+
+
+
 				}
 			};
 

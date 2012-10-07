@@ -7,18 +7,18 @@ function post_format($obj)
 if (isset($obj["typ"]) && $obj["typ"]==2)
 {
 
-	echo "<img src='apl/fs/?i=".$obj["reference"]."'>";
+
+	return array("<img src='apl/fs/?i=".$obj["reference"]."'>", 1);
 }
 else
 {
-echo "<div class='collectionPost'>".$obj["content"]."
+
+	return array("<div class='collectionPost'>".$obj["content"]."
 
 	<div>10 hours ago - Comments - Love
 	</div>
 
-</div>";
-
-
+</div>", 2);
 
 }
 

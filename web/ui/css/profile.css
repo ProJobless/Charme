@@ -1,11 +1,46 @@
 .collectionPost
 {
-border-bottom:1px silver solid;
+
+	
+	padding:16px;
 	border-top:1px silver solid;
-	margin:16px 0;
-	padding:16px 0;
+
+}
+.collectionPost:first-child
+{
+	border-top:0px silver solid;
+
+}
+.collectionPostbox
+{
+
+
+	box-shadow:   0 0 3px #aaa;
+	margin-bottom:16px;
+	margin:32px;
+	background-color: #fff;
+}
+.collectionImgbox
+{
+	box-shadow:   0 0 3px #aaa;
+	margin-bottom:16px;
+	margin:32px;
+	padding:8px;
+background-color: #fff;
+
+}
+.collectionImgbox img
+{
+box-shadow:   0 0 3px #aaa;
+margin:8px;
+
 }
 
+.collectionBg
+{
+
+
+}
 .profile_header
 {
 padding:32px;
@@ -33,11 +68,11 @@ padding-bottom:8px;
 }
 .collection
 {
-	width:80px; 
-	height:80px;
+	width:60px; 
+	height:60px;
 	border:1px silver solid;
 	background-color: #E6E6E6;
-	margin:16px;
+	margin:8px;
 	display:block;
 	word-wrap: break-word;
 	font-size: 14px;

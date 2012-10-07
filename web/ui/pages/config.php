@@ -53,7 +53,16 @@ $fc->printOut("");
 	
 echo "</div>";
 }
+else if (isset($_GET ["q"]) && $_GET["q"] == 3){
 
+fw_load("forms");
+$fc = new formCollection();
+
+$fc->add(new formText("st_hometown", "Old Password", ""));
+$fc->add(new formArea("st_aboutme", "New Password", ""));
+$fc->add(new formArea("st_aboutme", "Repeat New Password", ""));
+$fc->printOut("");
+}
 else if (isset($_GET ["q"]) && $_GET["q"] == 5){
 	
 	if (isset($_GET ["m"]) && $_GET["m"] == 1)
@@ -72,34 +81,13 @@ else if (isset($_GET ["q"]) && $_GET["q"] == 5){
 else{
 	fw_load("forms");
 	echo "<div class='p32'>";
-$fc = new formCollection();
-$fd = new formHTML("<h1>Personal information</h1>");
-$fc->add($fd);
-$fc->add(new formText("st_hometown", "Hometown", ""));
-$fc->add(new formArea("st_aboutme", "About me", ""));
-
-$fd = new formDrop("st_gender", "Gender", "");
-$fd->addOption(0, "I dont tell");
-$fd->addOption(1, "Male");
-$fd->addOption(2, "Female");
-
-$fd = new formHTML("<h1>What i like</h1>");
-$fc->add($fd);
-$fc->add(new formArea("st_aboutme", "Movies", ""));
-$fc->add(new formArea("st_aboutme", "Books", ""));
-$fc->add(new formArea("st_aboutme", "Games", ""));
 
 
-$fd = new formHTML("<h1>Education</h1>");
-$fc->add($fd);
-$fc->add(new formArea("st_aboutme", "Movies", ""));
-$fc->add(new formArea("st_aboutme", "Books", ""));
-$fc->add(new formArea("st_aboutme", "Games", ""));
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/fields.php");
+$fc->fillFromArray(readProfile($_SESSION["charme_user"]));
 
-
-
-
-$fc->printOut("");
+$fc->printOut("", false, "saveProfile()", "form_profile");
 	
 	echo "</div>";
 	

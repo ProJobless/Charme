@@ -2,6 +2,10 @@
 
 $action  =$_GET["action"];
 
+/*
+RETURN: STATUS CODE!
+*/
+
 
 //Is info request
 
@@ -21,7 +25,10 @@ else if($action == "talk_leave")
 {
 	
 }
+else if($action == "collection_subscribe")
+{
 
+}
 if($action == "profile_get")
 {
 	

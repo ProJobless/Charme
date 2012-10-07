@@ -10,14 +10,16 @@ function addCollection($owner, $name, $description, $parent, $visibility=array()
 
 	$obj = ($parent==0) ? NULL : new MongoId($parent);
 	//todo: validate strings!!
-	$db_charme->usercollections->insert(
-		array("userid" => $_SESSION["charme_user"],
+	$content = array("userid" => $_SESSION["charme_user"],
 			"name" => $name,
 			"description" => $description,
 			"parent" => $obj 
 		
-			));
+			);
 
+	$db_charme->usercollections->insert($content
+		);
+return $content ["_id"];
 
 	
 }
@@ -66,20 +68,21 @@ function getCollectionPosts($owner, $collection)
 {
 	global $db_charme;
 	$col = $db_charme->posts;
-	$cursor = $col->find(array("collection"=>new MongoId($collection)));
+	$cursor = $col->find(array("collection"=>new MongoId($collection)))->sort(array("posttime" => -1));
 	return $cursor;
 
 }
 function getCollection($owner, $filter)
 {
-	$m = new Mongo();
-	$db = $m->charme;
-	$collection = $db->usercollections;
-	
 
+
+	global $db_charme;
+	$collection = $db_charme->usercollections;
 
 	//echo $filter."-";
 	
+
+	//if not my server... ... ... 
 
 	if ($filter == 0)
 	$cursor = $collection->find(array("parent"=>NULL));

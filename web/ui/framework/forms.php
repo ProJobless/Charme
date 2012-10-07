@@ -1,5 +1,10 @@
 <?
+/*
 
+Form Renderer Class
+
+- Used to generate HTML Forms easyily
+*/
 
 function forms_doPostField($collectionId=0)
 {
@@ -25,7 +30,17 @@ abstract class form
 	var $val;
 	var $fid;
 	var $name;
-	
+
+	function setVal($value)
+	{
+		$this->val=$value;
+	}
+	function getId()
+	{
+		return $this->fid;
+	}
+
+
 	function form($fid, $name="", $val="")
 	{
 		$this->name=htmlspecialchars($name);
@@ -74,6 +89,15 @@ class formDrop extends form
     }
 }
 
+class formCity extends form
+{
+	public function render() {
+	
+        return "<tr><td class='tdinfo'>".$this->name.":</td><td><input class='box' type='text' name='".$this->fid."' value='".$this->val."'></td></tr>";
+    }
+}
+
+
 
 class formText extends form
 {
@@ -115,15 +139,50 @@ class formCollection
 	{
 		$this->forms=array();
 	}
+	public function contains($name)
+	{
 	
+		foreach ($this->forms as $key => $item)
+			{
+			
+				//$item = $value;//;$this->forms[$key];
+
+		
+
+
+				if ($item->getId() == $name)
+					return true;
+			}
+
+	 	return false;
+	}
+	public function fillFromArray($arr)
+	{
+		foreach ($this->forms as $key => $value)
+		{
+			$item = $this->forms[$key];
+
+			if (isset($arr[$item->getId()]))
+			{
+				$item->setVal($arr[$item->getId()]);
+
+
+			//echo "VALUE".$arr[$item->getId()];
+
+			}
+
+
+		}
+
+	}
 	public function add($item)
 	{
 	 	$this->forms[] = $item;
 	}
-	public function printOut($url, $submit = true, $ajax = false)
+	public function printOut($url, $submit = true, $ajax = "", $formId="")
 	{
 		
-		echo "<form  action='$url' method='post'><table cellspacing=0 cellpadding=0>";
+		echo "<form id='$formId' action='$url' method='post'><table cellspacing=0 cellpadding=0>";
 		foreach ($this->forms as $item)
 		{
 			echo "".$item->render()."";
@@ -135,8 +194,13 @@ class formCollection
 			
 			if ($submit)
 			{
-				echo "<tr><td></td><td><input style'margin-top:8px;' class='button' type='submit' value='Speichern'></td></tr>";
+				echo "<tr><td></td><td><input style'margin-top:8px;' class='button' type='submit' value='Save'></td></tr>";
 			}
+			if ($ajax != "")
+			{
+				echo "<tr><td></td><td><a style'margin-top:8px;' class='button' href='javascript:$ajax' type='submit'>Save</a></td></tr>";
+			}
+
 			echo "</table>";
 			echo "</form><div id='error'></div>";
 			

@@ -35,17 +35,6 @@ $("#button_notifications").click(function(){
 
 
 
-$(".actionBar a").mousedown(function(){
-	var x = $(this).data("bgpos");
-
-	if (!$(this).hasClass("active"))
-	$(this).css("background-position",x+"px -31px");
-}).mouseout(function(){
-	var x = $(this).data("bgpos");
-	if (!$(this).hasClass("active"))
-	$(this).css("background-position",x+"px -0px");
-	
-});
 
 
  	initPage(0);
@@ -109,6 +98,9 @@ function initPage(level)
 {
 	
 	
+
+
+
 	$(".actionIcon").mousedown(function(){
 	var x = $(this).data("bgpos");
 
@@ -123,11 +115,16 @@ function initPage(level)
 
 
 
+
 		
 	$('.tabBar a').unbind('click');
 	$('.sbBeta a').unbind('click');
 	$('a[data-page]').unbind('click');
 	
+
+
+
+
 
 	//Problem: actionbuttons initlized before, change to "sbBeta .actionbutton"?
 	//$('.actionButton').unbind('click');
@@ -142,9 +139,12 @@ function initPage(level)
 		$('.sbBeta').show();
 		
 	if (level == 0)
+	{
 	$('.subCont').html($('div[title=submenu_items]').html());
-	
-	
+	$('.sbBeta .actionBar').html($('div[title=action_bar]').html());
+
+
+	}
 	}
 	else
 	{
@@ -180,6 +180,20 @@ function initPage(level)
 	else
 	$('.sbBeta li a[ref='+qq+']').parent().addClass("active");
 
+
+	//Has to be called after sbBeta actionbar init.
+	$(".actionBar a").mousedown(function(){
+	
+		var x = $(this).data("bgpos");
+
+		if (!$(this).hasClass("active"))
+		$(this).css("background-position",x+"px -31px");
+	}).mouseout(function(){
+		var x = $(this).data("bgpos");
+		if (!$(this).hasClass("active"))
+		$(this).css("background-position",x+"px -0px");
+		
+	});
 
 	initProfile();
 	

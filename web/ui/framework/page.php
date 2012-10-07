@@ -12,6 +12,10 @@ function getSubMenuItem($title, $href, $count, $isActive=false)
 {
 	
 }
+function actionBarSet($items)
+{
+	echo "<div class='meta' title='action_bar'>".$items."</div>";
+}
 function subMenuAdd($items)
 {
 	$str = "";
