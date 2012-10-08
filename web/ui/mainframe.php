@@ -33,6 +33,7 @@ else
 <script src='/ui/lib/stream.js'></script>
 <script src='/ui/lib/ui.js'></script>
 <script src='/ui/lib/friends.js'></script>
+<script src='/ui/lib/plugins.js'></script>
 </head>
 
 <body>

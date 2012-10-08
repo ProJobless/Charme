@@ -13,6 +13,10 @@ RETURN: STATUS CODE!
 
 
 //is action request
+if($action == "list_added")
+{
+	
+}
 if($action == "talk_postMessage")
 {
 	

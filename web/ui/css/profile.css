@@ -1,3 +1,41 @@
+.aboutBox
+{
+	background-color: #fff;
+	box-shadow:   0 0 3px #aaa;
+}
+.aboutBox label
+{padding:4px; clear:both; display:inline-block;}
+
+.aboutBox table tr:first-child td
+{border:0;
+}
+
+
+.aboutBox table td
+{
+
+	padding:8px;
+	border-top:1px silver solid;
+	vertical-align: top;
+
+}
+.aboutBox table{
+border-spacing: 0px;
+width:100%;
+}
+.aboutContainer
+{
+
+	width:260px;
+	float:left;
+}
+.aboutBox table td.info
+{
+color:gray;
+width:75px;
+
+}
+
 .collectionPost
 {
 

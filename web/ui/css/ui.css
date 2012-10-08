@@ -1,3 +1,24 @@
+.hotCheckbox
+{
+
+	background-image:url(checkbox.gif);
+	background-repeat: no-repeat;
+	display: inline-block;
+	padding: 2px;
+	line-height: 12px;
+padding-left: 20px;
+margin: 2px;
+
+}
+.hotCheckbox:active
+{background-position: 0 -32px;}
+.hotCheckbox.active:active
+{background-position: 0 -48px;}
+.hotCheckbox.active
+{
+
+	background-position: 0 -16px;
+}
 .switcher
 {
 

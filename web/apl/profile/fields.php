@@ -15,10 +15,11 @@ $fc->add($fd);
 
 $fd = new formHTML("<h1>What i like</h1>");
 $fc->add($fd);
+$fc->add(new formArea("st_music", "Music", ""));
 $fc->add(new formArea("st_movies", "Movies", ""));
 $fc->add(new formArea("st_books", "Books", ""));
 $fc->add(new formArea("st_games", "Games", ""));
-
+$fc->add(new formArea("st_series", "Series", ""));
 
 /*
 $fd = new formHTML("<h1>Education</h1>");
@@ -29,14 +30,18 @@ $fc->add(new formArea("st_aboutme", "Games", ""));
 */
 
 
-function readProfile($userId)
+function readProfile($userId, $v_fields)
 {
+	if (!isset($v_fields))
+	return array();
+
 	global $db_charme;
 	$col = $db_charme->users;
-	$cursor = $col->findOne(array("userid"=>$userId));
+	$cursor = $col->findOne(array("userid"=>$userId), $v_fields);
 	return $cursor;
 
 }
+
 
 
 function saveProfile($userId, $fields)

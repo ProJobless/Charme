@@ -27,6 +27,37 @@ function addCollection()
 
 function initProfile()
 {
+	$('#select_lists a').click(function(){
+	$(this).toggleClass("active");
+	$.doTimeout( 'listsave', 1000, function( state ){
+
+
+
+	
+		
+var ar = $('#select_lists a.active').map(function(i,n) {
+        return $(n).data("listid");
+    }).get();
+
+var uid = $.urlParam("userId",location.href );
+
+ $.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
+        alert(d); 
+    });
+
+
+	/*	$('#select_lists a.active').each (function(index)
+		{
+			ar.push(($(this).data("listid")));
+		})*/
+
+
+
+
+
+	}, true);
+	});
+
 	$('.but_postCol').click(function(){ 
 
 		var v = ($(this).parent().children("textarea").val());
@@ -39,16 +70,11 @@ function initProfile()
 	});
 
 	$(".switch").hide();
-$(".switch1").show();
-
-
-$(".switcher").click(function(){
-$(".switch").hide();
+	$(".switch1").show();
+	$(".switcher").click(function(){
+	$(".switch").hide();
 	$(".switch"+$(this).data("pos")).show();
 });
-
-
-
 
 	document.getElementById('files').addEventListener('change', handleFileSelect, false);
 }

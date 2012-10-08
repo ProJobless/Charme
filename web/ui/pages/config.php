@@ -85,7 +85,11 @@ else{
 
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/fields.php");
-$fc->fillFromArray(readProfile($_SESSION["charme_user"]));
+
+//readProfile($_SESSION["charme_user"]);
+
+
+$fc->fillFromArray(readProfile($_SESSION["charme_user"], $fc->getKeys()));
 
 $fc->printOut("", false, "saveProfile()", "form_profile");
 	

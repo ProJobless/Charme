@@ -13,6 +13,9 @@ else
 	$userId = $_SESSION["charme_user"];
 
 
+
+
+
 $username = "Manuel";
 //START: IF NOT DYNAMICALY LOADED
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
@@ -59,8 +62,103 @@ else
 
 
  if (isset($_GET["q"]) && $_GET["q"] =="about"){
-echo "about";
+
 	
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/getProfile.php");
+$arr = getProfile(array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
+
+echo "<div class='profile_header'>";
+
+//DEBUG:test%40charme.local
+
+
+
+echo "<div>$username"."</div>";
+echo "About me</div>";
+
+echo "<div class='p32'>";
+
+//TODO: htmlspecialchars 
+function doLists($ui)
+{
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
+	$arrList = getLists($_SESSION["charme_user"]);
+
+
+	$selectedOld2 = getListitemsWithName($_SESSION["charme_user"], $ui);
+	$selected = array();
+
+	foreach ($selectedOld2 as $item){
+	$selected[] =  ($item["list"]);
+	}
+
+	echo "<div style='padding:6px;' id='select_lists'>";
+	echo "In the following lists:<br/>";
+
+	//$(this)
+
+	foreach ($arrList as $item)
+	{
+	//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
+	//if (in_array($listitem, haystack))
+
+
+		if (in_array($item["_id"], $selected))
+			echo "<a class='hotCheckbox active' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
+		else
+			echo "<a class='hotCheckbox' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
+	}
+	echo "</div>";
+
+	echo "<div style='padding:6px;border-top:1px silver solid;' id='select_collections'>";
+	echo "Collections I follow:<br/>";
+	foreach ($arrList as $listitem)
+	{
+	//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
+	echo "<a class='hotCheckbox active'>".$listitem["name"]."</a><br/>";
+	}
+	echo "</div>";
+}
+function printAbout($content, $name, $htmlspecialchars=true)
+{
+	if ($content != "")
+	{
+		echo "<tr><td class='info'>$name</td><td>";
+		echo $content; 
+		echo "</td></tr>";
+	}
+}
+
+$gend = array("", "Male", "Female");
+echo "<div class='aboutContainer' style='margin-right:32px'>";
+	echo "<div class='aboutBox'><table>";
+		printAbout($arr["firstname"]." ".$arr["lastname"], "Name");
+		printAbout($arr["st_hometown"], "Hometown");
+		printAbout($gend[$arr["st_gender"]], "Gender");
+printAbout($arr["userid"], "Charme ID");
+
+	echo "</table></div>";
+	echo "<div class='aboutBox' style='margin-top:32px'><table>";
+		printAbout(doLists($userId), "Lists", false);
+	echo "</table></div>";
+echo "</div>";
+
+echo "<div class='aboutContainer'>";
+	echo "<div class='aboutBox'><table>";
+		printAbout($arr["st_aboutme"], "About me");
+		printAbout($arr["st_music"], "Music");
+		printAbout($arr["st_movies"], "Movies");
+		printAbout($arr["st_books"], "Books");
+		printAbout($arr["st_games"], "Games");
+		printAbout($arr["st_series"], "Series");
+		echo "</table>";
+	echo "</div>";
+echo "</div>";
+
+
+echo "</div>";
+
 }
 else
 {
