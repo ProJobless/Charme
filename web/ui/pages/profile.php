@@ -26,7 +26,7 @@ if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 <div style="overflow:auto; background-color:#EFEFEF">
 
 <div style="  width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px;">
-<img src="apl/fs/?f=p_200_<?=$_SESSION["charme_user"] ?>" style="width:200px;" />
+<img src="apl/fs/?f=p_200_<?=$_GET["userId"] ?>" style="width:200px;" />
 <div class="tabBar">
 <ul>
 
@@ -43,10 +43,14 @@ array("Subscribers", "subscribers")
  
  foreach ($items as $item)
  {
+
+
+ 	$url = $item[1]."&userId=".urlencode($userId);
+
 	 if ((isset($_GET["q"]) && $_GET["q"] == $item[1]) ||(!isset($_GET["q"]) && $item[1] == "collections"))
-	 echo '<li data-name="'.$item[1].'" class="active"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
+	 echo '<li data-name="'.$item[1].'" class="active"><a ref="'.$url.'">'.$item[0].'</a></li>';
 else
- echo '<li data-name="'.$item[1].'"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
+ echo '<li data-name="'.$item[1].'"><a ref="'.$url.'">'.$item[0].'</a></li>';
 	 
 }
 ?>
@@ -129,13 +133,20 @@ function printAbout($content, $name, $htmlspecialchars=true)
 		echo "</td></tr>";
 	}
 }
+function getArr($arr, $v)
+{
+if (isset($arr[$v]))
+	return $arr[$v];
+return "";
 
-$gend = array("", "Male", "Female");
+}
+
+$gend = array("", "Male", "Female", "" => "");
 echo "<div class='aboutContainer' style='margin-right:32px'>";
 	echo "<div class='aboutBox'><table>";
 		printAbout($arr["firstname"]." ".$arr["lastname"], "Name");
-		printAbout($arr["st_hometown"], "Hometown");
-		printAbout($gend[$arr["st_gender"]], "Gender");
+		printAbout(getArr($arr,"st_hometown"), "Hometown");
+		printAbout($gend[getArr($arr,"st_gender")], "Gender");
 printAbout($arr["userid"], "Charme ID");
 
 	echo "</table></div>";
@@ -146,12 +157,12 @@ echo "</div>";
 
 echo "<div class='aboutContainer'>";
 	echo "<div class='aboutBox'><table>";
-		printAbout($arr["st_aboutme"], "About me");
-		printAbout($arr["st_music"], "Music");
-		printAbout($arr["st_movies"], "Movies");
-		printAbout($arr["st_books"], "Books");
-		printAbout($arr["st_games"], "Games");
-		printAbout($arr["st_series"], "Series");
+		printAbout(getArr($arr, "st_aboutme"), "About me");
+		printAbout(getArr($arr, "st_music"), "Music");
+		printAbout(getArr($arr, "st_movies"), "Movies");
+		printAbout(getArr($arr, "st_books"), "Books");
+		printAbout(getArr($arr, "st_games"), "Games");
+		printAbout(getArr($arr, "st_series"), "Series");
 		echo "</table>";
 	echo "</div>";
 echo "</div>";

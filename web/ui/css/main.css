@@ -31,7 +31,7 @@ a.actionButton
 .actionBar
 {
 	height:30px; background-color:#BA2323; border-bottom:1px #72070B solid; 
-	z-index:999999;
+	z-index:9000;
 	position: relative;
 	overflow:visible;
 	height:30px;
@@ -50,6 +50,18 @@ a.actionButton
 
 	border-right:1px silver solid;
 	border-left:1px silver solid;
+}
+#colorbg
+{	
+	height:100%;
+	width:150px;
+	margin:0px auto;
+	left:50%;
+	margin-left:-349px; /* 850/2-75 = */
+	background-color:red;
+	position:fixed;
+	z-index:-9992;
+
 }
 
 #greybg

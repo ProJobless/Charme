@@ -24,6 +24,7 @@ function getget($name)
 		return $_GET[$name];
 		return 0;
 }
+
 function retget($item)
 {
 	if (isset($item))

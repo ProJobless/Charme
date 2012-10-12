@@ -43,7 +43,7 @@ abstract class form
 	{
 		$this->name=htmlspecialchars($name);
 		$this->fid=$fid;
-		$this->val=htmlentities($val, ENT_QUOTES, "UTF-8");
+		$this->val=htmlentities($val, ENT_COMPAT, "UTF-8");
 	}
 	  public abstract function render();
 }
@@ -51,6 +51,12 @@ class formSplit extends form
 {
 	public function render() {
 		        return "<tr><td class='tdinfo'></td><td>&nbsp;</td></tr>";//$this->val
+	}
+}
+class formHTML2 extends form
+{
+	public function render() {
+		        return "<tr><td class='tdinfo'></td><td>".$this->fid."</td></tr>";//$this->val
 	}
 }
 class formHTML extends form
@@ -94,7 +100,61 @@ class formCity extends form
     }
 }
 
+class formPeople extends form
+{
+	public function render() {
+	
 
+
+		//form: Iid1,id2,id3
+
+		$val2 = substr($this->val, 1);
+	
+
+		
+
+
+		//split ...
+		$mylists = explode(",",$val2);
+
+
+
+		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
+		//1. getmylistnames
+
+		$listnames = array();
+		$licur = getLists($_SESSION["charme_user"]);
+		foreach ($licur as $item)
+		{
+		
+			$listnames[(string)$item["_id"]] = $item["name"] ;
+		}
+
+		$json = array();
+		foreach ($mylists as $item) {
+			//TODO: if startswith p -> person, if startswith l-> list
+
+		if (isset($listnames[$item]))
+			$json[] = array("name"=>  $listnames[$item] , "id"=>$item);
+
+
+		}
+		//make json
+		$json = json_encode($json);
+
+
+        $str =  "<tr><td class='tdinfo'>".$this->name.":</td><td><select  name='".$this->fid."' style='margin-bottom:4px;' class='box userSelectSwitcher'>";
+
+
+        $str .= ($this->val{0} == 1) ? "<option selected='selected' value='1'>Public</option>" : "<option value='1'>Public</option>";
+		$str .= ($this->val{0} == 2) ? "<option selected='selected' value='2'>People in my lists</option>" : "<option value='2'>People in my lists</option>";
+		$str .= ($this->val{0} == 3) ? "<option selected='selected' value='3'>Specify...</option>" : "<option value='3'>Specify...</option>";
+
+
+        $str .= "</select><input type='hidden' class='res' name='people_res_".$this->fid."'><div class='spec'><input class='userSelect' data-styp='".$this->val{0}."' type='hidden' name='people_".$this->fid."' data-json='".$json."'></div></td></tr>";
+        return $str;
+    }
+}
 
 class formText extends form
 {

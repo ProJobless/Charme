@@ -1,25 +1,17 @@
 <?
-
+/*
+Add a user to a list
+*/
 function addList($owner, $name)
 {
-	//TODO: CHECK IF PARENT COLLECTION BELONGS TO USER!!
-
-	//get db...
 	global $db_charme;
-
-
-	
 	$content = array("userid" => $_SESSION["charme_user"],
-			"name" => $name,
-		
-		
-			);
-
-	$db_charme->lists->insert($content
-		);
-return $content ["_id"];
+			"name" => $name,);
+	$db_charme->lists->insert($content);
 
 	
+
+	return $content ["_id"];
 }
 function getLists($owner)
 {
@@ -29,6 +21,25 @@ function getLists($owner)
 	return $cursor;
 
 }
+function findLists($owner, $q)
+{
+
+	global $db_charme;
+	$col = $db_charme->lists;
+	$cursor = $col->find(array("userid"=>$owner, "name"=> array('$regex' => $q)));
+	return $cursor;
+
+}
+function findPeople($owner, $q)
+{
+
+	global $db_charme;
+	$col = $db_charme->listitems;
+	$cursor = $col->find(array("userid"=>$owner, "item"=> array('$regex' => $q)));
+	return $cursor;
+
+}
+
 function getListItems($owner)
 {
 	global $db_charme;
@@ -36,6 +47,16 @@ function getListItems($owner)
 	$cursor = $col->find(array("userid"=>$owner))->sort(array("name" => 1));
 	return $cursor;
 }
+function getListitemsByList($owner, $needle)
+{
+	global $db_charme;
+	$col = $db_charme->listitems;
+
+	$cursor = $col->find(array("userid"=>$owner, "list"=> new MongoId($needle)));
+
+	return $cursor;
+}
+
 function getListitemsWithName($owner, $needle)
 {
 	global $db_charme;
@@ -52,6 +73,16 @@ function addListItem($owner, $list, $person)
 
 	$db_charme->listitems->insert(array("userid"=> $owner, "item"=>$person, "list"=>$list)
 		);
+
+	/*
+	Send Notification to the person added
+	*/
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($person, $_SESSION["charme_user"], "list_added");
+	$rr->setPayload(array());
+	$rr->send();
+
+
 }
 function removeListItem($owner, $list, $person)
 {

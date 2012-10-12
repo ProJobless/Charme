@@ -13,7 +13,7 @@ function addList()
 	$.post("ui/actions/newList.php", $('.fixedBox form').serialize(), function(d){
 		ui_closeBox();
 		$('div[title=submenu_items]').append(d);
-		initPage(0);
+		initPage(1);
 		
 	});
 }

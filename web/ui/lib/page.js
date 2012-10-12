@@ -120,7 +120,7 @@ function initPage(level)
 	$('.tabBar a').unbind('click');
 	$('.sbBeta a').unbind('click');
 	$('a[data-page]').unbind('click');
-	
+	$('a[data-page]').unbind('click');
 
 
 
@@ -153,6 +153,40 @@ function initPage(level)
 		$('.sbBeta').hide();
 	}
 	
+
+$('.userSelectSwitcher').change(function() {
+  
+
+  if ($(this).val() == 3)
+$(this).siblings(".spec").show();
+else
+$(this).siblings(".spec").hide();
+
+});
+
+
+	$('.userSelect').each (function(index)
+	{
+
+	if ($(this).data("styp") != 3)
+	$(this).parent().hide();
+
+
+    jsonp = $(this).data("json");//jquery automatically converts string to json :) 
+
+
+	console.log(jsonp);
+	$(this).tokenInput("ui/actions/auto_people.php", {hintText: "Typ in a person or a list"} );
+	var x = this;
+	jQuery.each(jsonp, function(i, val) {
+	
+       $(x).tokenInput("add", val);
+    });
+
+
+	});
+
+
 
 	$('.functionButton').click(function(){ (eval(this.id+"("+$(this).data("fargs")+");"));	});
 

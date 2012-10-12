@@ -1,6 +1,6 @@
 <?
 include_once($_SERVER['DOCUMENT_ROOT']."/ui/framework/framework.php");
-
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 needSession();
 
 
@@ -23,7 +23,7 @@ else
 	$fc->add(new formText("col_name", "Name", ""));
 	$fc->add(new formArea("col_description", "Description", ""));
 
-	$fc->add(new formArea("col_visible", "Visible", ""));
+	$fc->add(new formPeople("col_visible", "Visible", ""));
 
 
 

@@ -1,3 +1,4 @@
+
 .hotCheckbox
 {
 
@@ -49,7 +50,7 @@ height: 48px;
 		height:100%;
 		display:none;
 		background-color:#fff;
-		z-index:9999998;
+		z-index:9998;
 		
 }
 
@@ -63,7 +64,7 @@ height: 48px;
 	margin: 0 auto;
 	left:50%;
 	margin-left:-150px;
-	z-index:9999999;
+	z-index:9999;
 	
 	
 }
@@ -83,8 +84,12 @@ height: 48px;
 .tdinfo
 {
 	
-width:100px;
+width:120px;
 vertical-align:top;
+padding-top: 12px;
+padding-right: 16px;
+
+font-weight: bold;
 
 
 }

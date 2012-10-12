@@ -1,11 +1,13 @@
 <?
 
-$action  =$_GET["action"];
+$action  =urldecode($_POST["action"]);
+$username = urldecode($_POST["receiver"]);
+$data = urldecode($_POST["json"]);
 
 /*
 RETURN: STATUS CODE!
 */
-
+var_dump($_POST);
 
 //Is info request
 
@@ -15,6 +17,10 @@ RETURN: STATUS CODE!
 //is action request
 if($action == "list_added")
 {
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/notify.php");
+	//notify_new();
+	echo "LISTADDED!!!";
+	print_r($_POST);
 	
 }
 if($action == "talk_postMessage")

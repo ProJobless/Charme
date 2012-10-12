@@ -22,7 +22,7 @@ function subMenuAdd($items)
 	foreach ($items as $item)
 	$str .= $item;
 	
-	echo "<div class='meta' title='submenu_items'>".$str."</div>";
+	echo "<div class='meta' title='submenu_items'>".$str."<div id='colorbg'></div></div>";
 
 	
 }

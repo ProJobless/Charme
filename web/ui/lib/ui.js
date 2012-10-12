@@ -1,3 +1,5 @@
+
+
 function ui_switch()
 {
 //...to data-switch
@@ -19,7 +21,7 @@ function ui_unblock(content)
 
 }
 
-function ui_showBox(content)
+function ui_showBox(content, func)
 {
 	ui_block();
 	if (!$("body .fixedBox").length)
@@ -29,6 +31,8 @@ function ui_showBox(content)
 	$("body .fixedBox").html(content).animate({
     top: '200px',
   }, 400, function() {
+  	if (func)
+  		func
   });
 	
 }
