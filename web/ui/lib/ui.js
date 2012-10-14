@@ -1,4 +1,33 @@
+function ui_userselect()
+{
 
+		$('.userSelect2').each (function(index)
+	{
+	$(this).tokenInput("ui/actions/auto_people.php", {hintText: "Typ in a person or a list"} );
+	});
+
+	$('.userSelect').each (function(index)
+	{
+
+	if ($(this).data("styp") != 3)
+	$(this).parent().hide();
+
+
+    jsonp = $(this).data("json");//jquery automatically converts string to json :) 
+
+
+	console.log(jsonp);
+	$(this).tokenInput("ui/actions/auto_people.php", {hintText: "Typ in a person or a list"} );
+	var x = this;
+	jQuery.each(jsonp, function(i, val) {
+	
+       $(x).tokenInput("add", val);
+    });
+
+
+	});
+
+}
 
 function ui_switch()
 {
@@ -28,9 +57,18 @@ function ui_showBox(content, func)
 	$("body").prepend("<div class='fixedBox'></div>");
 	
 	
-	$("body .fixedBox").html(content).animate({
-    top: '200px',
+	$("body .fixedBox").html(content);
+	 	ui_userselect();
+
+ 	 $("body .fixedBox").css("margin-left", -$("body .fixedBox").width() / 2);
+
+
+	$("body .fixedBox").animate({
+    top: '150px',
   }, 400, function() {
+
+ 
+$("body .fixedBox input:first").focus();
   	if (func)
   		func
   });

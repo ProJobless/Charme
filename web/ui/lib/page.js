@@ -165,26 +165,13 @@ $(this).siblings(".spec").hide();
 });
 
 
-	$('.userSelect').each (function(index)
-	{
-
-	if ($(this).data("styp") != 3)
-	$(this).parent().hide();
 
 
-    jsonp = $(this).data("json");//jquery automatically converts string to json :) 
 
 
-	console.log(jsonp);
-	$(this).tokenInput("ui/actions/auto_people.php", {hintText: "Typ in a person or a list"} );
-	var x = this;
-	jQuery.each(jsonp, function(i, val) {
-	
-       $(x).tokenInput("add", val);
-    });
 
 
-	});
+ui_userselect();
 
 
 
@@ -230,7 +217,7 @@ $(this).siblings(".spec").hide();
 	});
 
 	initProfile();
-	
+
 }
 function pageLoadWithHistoryBetaArg(p, args)
 {

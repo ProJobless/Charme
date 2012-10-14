@@ -2,16 +2,17 @@
 
 $action  =urldecode($_POST["action"]);
 $username = urldecode($_POST["receiver"]);
-$data = urldecode($_POST["json"]);
-
+$data = json_decode(urldecode($_POST["json"]), true); //Second parameter ensures return value is array
+ 
 /*
 RETURN: STATUS CODE!
 */
-var_dump($_POST);
+
 
 //Is info request
 
 
+//TODO: VERIFY SERVER!
 
 
 //is action request
@@ -23,13 +24,29 @@ if($action == "list_added")
 	print_r($_POST);
 	
 }
-if($action == "talk_postMessage")
+else if($action == "post_new")
 {
+	//..insert post into userstream collection, 
+
 	
 }
-else if($action == "talk_createNew")
+else if($action == "dyn_infoupdate")
 {
+	/*
+	Will be requested by all people having me in their list once a week,
+	Contains: Account Status(ACTIVE, CLOSED), Full Name,  
+
+	*/
+
 	
+}
+else if($action == "talk_postMessage")
+{
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/messages.php");
+
+	registerMessage($data);
+
 }
 else if($action == "talk_leave")
 {

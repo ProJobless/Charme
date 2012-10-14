@@ -42,7 +42,7 @@ var DEFAULT_SETTINGS = {
     deleteText: "&times;",
     animateDropdown: true,
     theme: null,
-    zindex: 999,
+    zindex: 99992,
     resultsLimit: null,
 
     enableHTML: false,

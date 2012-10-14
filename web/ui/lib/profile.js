@@ -76,6 +76,7 @@ var uid = $.urlParam("userId",location.href );
 	$(".switch"+$(this).data("pos")).show();
 });
 
+if ($('#files').length)
 	document.getElementById('files').addEventListener('change', handleFileSelect, false);
 }
 

@@ -7,7 +7,7 @@ $CHARME_SETTINGS["maxFileSizeInByte"] =1024*500;//500KB
 
 //Do not change this after users have registred
 $CHARME_SETTINGS["passwordSalt"] ="q3fsknjdakfbk1";
-$CHARME_SETTINGS["serverURL"] ="charme.local";
+$CHARME_SETTINGS["serverURL"] ="localhost";
 
 //To interact with other Charme Servers, type CHARME here.
 //To join the CHARME network you have to agree our terms and conditions.

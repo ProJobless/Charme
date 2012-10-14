@@ -2,15 +2,16 @@
 header("Content-type: image/jpg");
 
 
+
 	$m = new Mongo();
 	$db = $m->charme;
 	$grid = $db->getGridFS();
 
 
 	if (isset($_GET["f"]))
-	 $file = $grid->findOne(array('fname' => $_GET["f"]));
+	 $file = $grid->findOne(array('fname' => urldecode($_GET["f"])));
 	if (isset($_GET["i"]))
-	 $file = $grid->findOne(array('_id' => new MongoId($_GET["i"])));
+	 $file = $grid->findOne(array('_id' => new MongoId(urldecode($_GET["i"]))));
  //echo('Last-Modified: '..' GMT', true, 200);
 
 

@@ -103,21 +103,9 @@ class formCity extends form
 class formPeople extends form
 {
 	public function render() {
-	
-
-
-		//form: Iid1,id2,id3
 
 		$val2 = substr($this->val, 1);
-	
-
-		
-
-
-		//split ...
 		$mylists = explode(",",$val2);
-
-
 
 		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
 		//1. getmylistnames
@@ -126,7 +114,6 @@ class formPeople extends form
 		$licur = getLists($_SESSION["charme_user"]);
 		foreach ($licur as $item)
 		{
-		
 			$listnames[(string)$item["_id"]] = $item["name"] ;
 		}
 
@@ -142,10 +129,7 @@ class formPeople extends form
 		//make json
 		$json = json_encode($json);
 
-
         $str =  "<tr><td class='tdinfo'>".$this->name.":</td><td><select  name='".$this->fid."' style='margin-bottom:4px;' class='box userSelectSwitcher'>";
-
-
         $str .= ($this->val{0} == 1) ? "<option selected='selected' value='1'>Public</option>" : "<option value='1'>Public</option>";
 		$str .= ($this->val{0} == 2) ? "<option selected='selected' value='2'>People in my lists</option>" : "<option value='2'>People in my lists</option>";
 		$str .= ($this->val{0} == 3) ? "<option selected='selected' value='3'>Specify...</option>" : "<option value='3'>Specify...</option>";
@@ -155,6 +139,27 @@ class formPeople extends form
         return $str;
     }
 }
+
+
+class formPeople2 extends form
+{
+	public function render() {
+
+		$val2 = substr($this->val, 1);
+		$mylists = explode(",",$val2);
+
+	
+
+        $str =  "<tr><td class='tdinfo'>".$this->name.":</td><td style='position:relative'>";
+      
+
+
+        $str .= "<input class='userSelect2'  type='hidden' name='".$this->fid."'></td></tr>";
+        return $str;
+    }
+}
+
+
 
 class formText extends form
 {

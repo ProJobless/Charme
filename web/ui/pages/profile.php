@@ -26,8 +26,8 @@ if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 <div style="overflow:auto; background-color:#EFEFEF">
 
 <div style="  width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px;">
-<img src="apl/fs/?f=p_200_<?=$_GET["userId"] ?>" style="width:200px;" />
-<div class="tabBar">
+<img src="apl/fs/?f=p_200_<?=urlencode($userId) ?>" style="width:200px;" />
+<div class="tabBar profileTabs">
 <ul>
 
 <?

@@ -15,12 +15,12 @@ $people = findPeople($_SESSION["charme_user"], $q);
 $json = array();
 foreach ($lists as $list)
 {
-	$json[] = array("id" => (string)$list["_id"], "name" => $list["name"]);
+	$json[] = array("id" => "l".(string)$list["_id"], "name" => $list["name"]);
 }
 
 foreach ($people as $item)
 {
-	$json[] = array("id" => (string)$item["item"], "name" => $item["item"]);
+	$json[] = array("id" => "p".(string)$item["item"], "name" => $item["item"]);
 }
 
 echo json_encode($json);
