@@ -23,6 +23,7 @@ return $content ["_id"];
 
 	
 }
+
 function getParentList($collection)
 {
 
@@ -72,7 +73,7 @@ function getCollectionPosts($owner, $collection)
 	return $cursor;
 
 }
-function getCollection($owner, $filter)
+function getCollection($userId, $owner, $filter)
 {
 
 
@@ -89,8 +90,13 @@ function getCollection($owner, $filter)
 	else
 	$cursor = $collection->find(array("parent"=>new MongoId($filter)));
 
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
 
-	return $cursor;
+	if ($filter == 0) $subscribed = false;
+	else $subscribed = doesFollow($userId, $filter);
+
+echo "!!".$subscribed."!!";
+	return array($cursor, $subscribed);
 }
 
 ?>

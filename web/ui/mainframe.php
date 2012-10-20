@@ -37,6 +37,7 @@ else
 <script src='/ui/lib/ui.js'></script>
 <script src='/ui/lib/friends.js'></script>
 <script src='/ui/lib/plugins.js'></script>
+<script src='/ui/lib/groups.js'></script>
 </head>
 
 <body>
@@ -68,9 +69,8 @@ else
 $items = array(
 
 array("Stream", "stream"),
-array("My Profile", "profile"),
+array("Profile", "profile"),
 array("Talks", "talks"),
-array("Collections", "collections"),
 array("Friends", "friends"),
 array("Groups", "groups"),
 //array("Pages", "pages.php"),

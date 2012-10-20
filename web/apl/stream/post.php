@@ -1,6 +1,11 @@
 <?
+function registerPost($data)
+{
+	//TODO: Chance 1/1000 => delete older posts then 3 days from streams!
 
-function postToCollection($collection, $content, $attachments=array())
+print_r($data);
+}
+function postToCollection($collection, $content, $userId, $attachments=array())
 {
 
 
@@ -9,16 +14,32 @@ function postToCollection($collection, $content, $attachments=array())
 	$obj = ($collection==0) ? NULL : new MongoId($collection);
 	//2do: getusername!!
 $name = "testname";
-	$db_charme->posts->insert(
-		array("userid" => $_SESSION["charme_user"],
+$cont = array("userid" => $_SESSION["charme_user"],
 			"username" => $name,
 			"content" => $content,
 			"collection" => $obj,
 			"attachments" => $attachments,
 			"posttime" =>  new MongoDate(time())
 		
-			));
+			);
 
+	$db_charme->posts->insert($cont	);
+
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+
+$ar_followers = array();
+$arr = getFollowers($collection);
+foreach ($arr as $item){$ar_followers[] = $item["follower"];}
+
+	$servers = clusterServers($ar_followers);
+
+	foreach ($servers as $server)
+	{
+		$rr = new remoteRequest($server[0], $userId, "post_new");
+		$rr->setPayload(array("post"=> $cont, "people"=> $server));
+		$ret = $rr->send();
+	}
 	//TODO: notify followers!
 
 	/*

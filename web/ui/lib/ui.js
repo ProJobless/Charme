@@ -1,3 +1,51 @@
+function ui_attachmentform()
+{
+
+
+}
+
+function ui_attach(x)
+{
+
+
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+  // Great success! All the File APIs are supported.
+
+
+
+$(x).siblings("input").unbind('change').change(function(h)
+{  
+var files = h.target.files; // FileList object
+var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+    	$('.attachmentContainer').append("<div>"+ escape(f.name)+ "</div>");
+
+
+  /*  output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');*/
+    }
+   // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+
+});
+$(x).siblings("input").trigger("click");
+
+
+ 	
+
+ 	//.trigger('change', function(h){}, false);
+
+} else {
+  alert('The File APIs are not fully supported in this browser.');
+}
+
+//
+
+}
+
+
+
 function ui_userselect()
 {
 

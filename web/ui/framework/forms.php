@@ -8,8 +8,12 @@ Made for easy HTML form generation
 
 function forms_doPostField($collectionId=0)
 {
-	echo "<div><textarea class='box' style='margin-bottom:8px; width:100%;'></textarea>
-<a type='button' class='button but_postCol' value='Post'>Post</a> in
+fw_load("attachment");
+$atf = new attachmentForm("atf_stream_".$collectionId);
+
+
+	echo "<div><textarea class='box' style=' width:100%;'></textarea>".$atf->printContainer()."
+<div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a> in
 <select>
 <option>Private</option>
 <option>+ Art</option>
@@ -21,7 +25,7 @@ function forms_doPostField($collectionId=0)
 
 
 </select>
-  - <a href='javascript:makeAttachment()'>Add Attachment</a> <br class='cb'></div>";
+  - ".$atf->printAdd()." <br class='cb'></div></div>";
 
 }
 	
@@ -159,6 +163,14 @@ class formPeople2 extends form
     }
 }
 
+
+class formPass extends form
+{
+	public function render() {
+	
+        return "<tr><td class='tdinfo'>".$this->name.":</td><td><input class='box' type='password' name='".$this->fid."' value='".$this->val."'></td></tr>";
+    }
+}
 
 
 class formText extends form

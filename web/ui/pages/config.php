@@ -83,13 +83,17 @@ else if (isset($_GET ["q"]) && $_GET["q"] == 2){
 	
 echo "<div class='p32'>";
 	fw_load("forms");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/usermanager/account.php");
+	$all = getAccount($_SESSION["charme_user"]);
+
 	$fc = new formCollection();
 
-	$fc->add(new formText("st_newmail", "E-Mail Address", ""));
-	$fc->add(new formHTML2("A confirmation mail will be send to the given mail address.", "First Name", ""));
-	$fc->add(new formText("st_fname", "First Name", ""));
-	$fc->add(new formText("st_lname", "Last Name", ""));
-	$fc->printOut("");
+	$fc->add(new formText("st_newmail", "E-Mail Address", $all["email"]));
+	$fc->add(new formHTML2("A confirmation mail will be send to the given mail address.", "First Name"));
+	$fc->add(new formText("st_fname", "First Name", $all["firstname"]));
+	$fc->add(new formText("st_lname", "Last Name", $all["lastname"]));
+	$fc->printOut("", false,"saveAccount()", "accountForm");
 	echo "</div>";
 
 
@@ -122,10 +126,10 @@ else if (isset($_GET ["q"]) && $_GET["q"] == 3){
 	fw_load("forms");
 	$fc = new formCollection();
 
-	$fc->add(new formText("st_hometown", "Old Password", ""));
-	$fc->add(new formArea("st_aboutme", "New Password", ""));
-	$fc->add(new formArea("st_aboutme", "Repeat New Password", ""));
-	$fc->printOut("");
+	$fc->add(new formPass("st_pass1", "Old Password", ""));
+	$fc->add(new formPass("st_pass2", "Repeat Old Password", ""));
+	$fc->add(new formPass("st_pass3", "New Password", ""));
+	$fc->printOut("", false, "savePassword()", "form_pass");
 	echo "</div>";
 }
 /*

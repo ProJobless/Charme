@@ -1,3 +1,14 @@
+.commentBox
+{
+
+	display: none;
+}
+.commentBox textarea
+{
+	margin: 8px 0;
+	height: 32px;
+	width:100%;
+}
 .stream .post
 {
 	border-top:1px silver solid;

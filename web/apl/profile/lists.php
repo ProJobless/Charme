@@ -6,10 +6,8 @@ function addList($owner, $name)
 {
 	global $db_charme;
 	$content = array("userid" => $_SESSION["charme_user"],
-			"name" => $name,);
+			"name" => $name);
 	$db_charme->lists->insert($content);
-
-	
 
 	return $content ["_id"];
 }

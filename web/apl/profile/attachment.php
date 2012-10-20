@@ -1,0 +1,8 @@
+<?
+function attach_store()
+{
+
+
+}
+
+?>

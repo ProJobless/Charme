@@ -87,17 +87,20 @@ if (isset($_GET["q"]))
 	$ppl = getMessagePeople($_SESSION["charme_user"], $_GET["q"]);
 //var_dump(iterator_to_array($ppl));
 $ppl2 = $ppl["people"];
-$ppl = "p".implode(",p",$ppl2);
+$ppl3 = "p".implode(",p",$ppl2);
+
+fw_load("attachment");
+$atf = new attachmentForm("atf_stream_".$_GET["q"]);
 
 
 echo '<div class="instantanswer"><form>
-<input type="hidden" name="col_to" value="'.$ppl.'">
+<input type="hidden" name="col_to" value="'.$ppl3.'">
 <input type="hidden" name="col_type" value="instant">
-<textarea name="col_description" style="width:100%; margin-bottom:8px;"></textarea>
-<a class="button" href="javascript:sendMessageInstant()">Send</a>
-	</form></div>';
+<textarea name="col_description" style="width:100%; "></textarea>'.$atf->printContainer().'
+<div style="margin-top:8px;"><a class="button" href="javascript:sendMessageInstant()">Send</a> or '.$atf->printAdd().'
+	</form></div></div>';
 
-	
+	echo "People in this conversation: ".implode(", ", $ppl["people"]);
 	echo "<div class='talkmessages'>";
 	
 

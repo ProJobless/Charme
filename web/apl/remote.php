@@ -4,6 +4,33 @@ Class used for information exchange between
 different CHARME servers.
 */
 
+//TODO: Remote Request Package (Bundle multiple messages to one server!)
+class remoteRequestPackage
+{
+
+
+}
+
+//ALTERNATIBE: Helper function for user clusterting to domains
+function clusterServers($people)
+{
+	//$person is someone on the server!
+	$servers = array();
+	$fewpeople = array();
+
+	
+	foreach ($people as $item)
+	{
+		$ex = explode('@',  $item);
+		$ex = $ex[1];
+		$servers[$ex][] = $item;
+	}
+	return $servers;
+
+
+//RETURN: Array with Servers with CharmeIds
+}
+
 class remoteRequest
 {
 	var $destination, $source, $request_type,$payload ;
@@ -34,7 +61,7 @@ class remoteRequest
 		$url = $server."/receiver/index.php";
 
 	
-
+	
 		$data = $this->payload;                                                                    
 		$data_string = (json_encode($data));    
 
@@ -45,6 +72,7 @@ class remoteRequest
 								'json' => urlencode($data_string),
 								'action' => urlencode($this->request_type),
 								'receiver' => urlencode($dest[0])
+							
 								
 						);
 
@@ -63,7 +91,7 @@ class remoteRequest
 	
 		$result = curl_exec($ch);
 
-	echo $result;
+	return $result;
 		curl_close($ch);
 
 

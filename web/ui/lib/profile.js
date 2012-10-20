@@ -10,7 +10,31 @@ function postIntoCollection()
 {
 //var c = 
 }
+function followCol(x, on, colid)
+{	
+	var uid = $.urlParam("userId",location.href );
 
+
+	  $.post("ui/actions/doFollow.php", {"uid":uid, "collection": colid, "follow":on}, function(d){
+		
+		
+
+		if (d == 0) //unfollow now -> Show follow button!
+		{
+
+			$(".butSubOff").hide();
+			$(".butSubOn").show();
+		
+		}
+		else if (d==1) //follow now
+		{
+			$(".butSubOff").show();
+			$(".butSubOn").hide();
+		}
+		else
+			alert(d);
+	});
+}
 function addCollection()
 {
 	//Serialize Form
@@ -60,7 +84,7 @@ var uid = $.urlParam("userId",location.href );
 
 	$('.but_postCol').click(function(){ 
 
-		var v = ($(this).parent().children("textarea").val());
+		var v = ($(this).parent().parent().children("textarea").val());
 		var x = $.urlParam("id",location.href );
 		x = (x=="") ?  "0" : x;
 		$.post("ui/actions/doPost.php?id="+x, {content:v}, function(d)
@@ -72,6 +96,7 @@ var uid = $.urlParam("userId",location.href );
 	$(".switch").hide();
 	$(".switch1").show();
 	$(".switcher").click(function(){
+		$(this).addClass("active").siblings(".switcher").removeClass("active");
 	$(".switch").hide();
 	$(".switch"+$(this).data("pos")).show();
 });

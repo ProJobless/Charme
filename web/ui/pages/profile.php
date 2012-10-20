@@ -182,18 +182,38 @@ else
 
 
 	echo "<div class='profile_header'>";
-
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
+	$uccol = getCollection($_SESSION["charme_user"],$userId, getget("id"));
+	$items = $uccol[0];
+	$subscribed =  $uccol[1];
 
 	//GET parents, if > 4 -> dont display this, also do not display when its not my profile
-echo "<a style='float:right; background-position:-48px 0;' data-bgpos='-48'  class='functionButton actionIcon' id='but_addCollection'> </a>";
+
+if (getget("id") != 0)
+{
+	$colid= getget("id");
+if ($subscribed){
+echo "<a  onclick='followCol(this, 1, \"$colid\")' style='display: none; float:right; background-position:-48px 0;' data-bgpos='-48'  class='butSubOn functionButton actionIcon'> </a>";
+echo "<a  onclick='followCol(this, 0, \"$colid\")' style='float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
+
+}
+else{
+
+echo "<a  onclick='followCol(this, 1, \"$colid\")' style='float:right; background-position:-48px 0;' data-bgpos='-48'  class='butSubOn functionButton actionIcon' > </a>";
+echo "<a  onclick='followCol(this, 0, \"$colid\")' style='display: none; float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
+
+}
+
+}
+else
 echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' id='but_addCollection'> </a>";
 
 
 	echo "<div>$username"."</div>";
 
 
-	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
-	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
+
 	if (isset($_GET["id"]) && $_GET["id"])
 	{
  		echo "<a  data-page2='profile' data-pagearg='&q=collections'>Collections</a>";
@@ -204,7 +224,7 @@ echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' i
 
 
 		if ($_GET["id"] != $value["id"])
-			echo " -> <a  data-page2='profile' data-pagearg='&q=collections&id=".$value["id"]. "'>".$value["name"]. "</a>";
+			echo " -> <a  data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$value["id"]. "'>".$value["name"]. "</a>";
 		else
 			echo " -> ".$value["name"]. "";
 		}
@@ -233,16 +253,16 @@ echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' i
 
 		
 
-	$items = getCollection($userId, getget("id"));
 
-$has = false;
+	$has = false;
+
 	foreach ($items as $item)
 	{
 		//if: is collection
 if (!$has ){$has =true;echo "<div class='p24' id='collection_container'>"; }
 
 
-		echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
+		echo "<a class='collection' data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
 	
 		//if is post
 		
@@ -252,7 +272,7 @@ if (!$has ){$has =true;echo "<div class='p24' id='collection_container'>"; }
 	}
 
 	if (!$has)
-echo "<div class='p24' id='collection_container' style='display:none;'>";
+echo "<div class='p24' id='collection_container' style='display:none;padding-bottom:16px;'>";
 
 		echo "<br class='cb'></div>";
 
@@ -264,8 +284,9 @@ echo "<div class='p24' id='collection_container' style='display:none;'>";
 	{
 
 
-		echo "<div class='p32' style='padding-bottom:16px; padding-top:0px;'>";
-		echo "<a class='switcher' data-pos='1'>Post</a> - <a class='switcher' data-pos='2'>Photo</a>";
+		echo "<div class='p32' style='padding-bottom:16px; padding-top:8px;'>";
+		echo "<a class='switcher active' data-pos='1'><div>Post</div></a>
+		<a class='switcher' data-pos='2'><div>Photo</div></a>";
 
 echo "<div class='switch switch1'>";
 		forms_doPostField();

@@ -1,4 +1,11 @@
+.attachmentContainer div
+{ 
+	padding:4px;
+	border-bottom: 1px silver solid;
+	
 
+
+}
 .hotCheckbox
 {
 
@@ -20,15 +27,62 @@ margin: 2px;
 
 	background-position: 0 -16px;
 }
-.switcher
+.switcher.active
 {
 
-	display: inline-block;
-	font-size: 16px;
-	padding-bottom: 8px;
+	background-color: #fff;
+}
+.switcher div
+{
+	padding: 8px;
+	position: relative;
+
+
+}
+.switcher.active div
+{
+background-color: #fff;
+
+padding: 8px 8px 8px 8px;
+
+
+height:16px; /* 30 - 8*2 + 2 (overlay)*/
+
+
+z-index: 300;
+position: relative;
+
+
+}
+.switcher:active div
+{
+	background-color: #ccc;
+}
+.switcher.active:active div
+{
+	background-color: #fff;
+}
+.switcher
+{
 	
+	display: inline-block;
+	height:30px;
+	background-color: #dedede;
+
+	position: relative;
+
+	box-shadow:   0 0 3px #aaa;
 }
 
+.switch
+{
+	z-index: 200;
+	position: relative;
+	background-color: #fff;
+	padding: 16px;
+		box-shadow:   0 0 3px #aaa;
+		
+}
 .actionIcon
 {
 

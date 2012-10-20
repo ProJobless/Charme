@@ -1,4 +1,6 @@
 <?
+//If remote Request Package -> Do Loop
+
 
 $action  =urldecode($_POST["action"]);
 $username = urldecode($_POST["receiver"]);
@@ -6,7 +8,14 @@ $data = json_decode(urldecode($_POST["json"]), true); //Second parameter ensures
  
 /*
 RETURN: STATUS CODE!
+- UserDeleted
+- NotInList
+- ServerPaused
+- 
+
 */
+
+//TODO: Remote Request Package (Bundle multiple messages to one server!)
 
 
 //Is info request
@@ -28,8 +37,23 @@ else if($action == "post_new")
 {
 	//..insert post into userstream collection, 
 
+		//..insert post into userstream collection, 
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/post.php");
+
+	echo registerPost($data, $username); //OK, AUTHERROR
+
+
+}
+else if($action == "collection_follow")
+{
+	//..insert post into userstream collection, 
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
+	echo registerCollectionFollow($data, $username); //OK, AUTHERROR
 	
 }
+
 else if($action == "dyn_infoupdate")
 {
 	/*
@@ -58,7 +82,6 @@ else if($action == "collection_subscribe")
 }
 if($action == "profile_get")
 {
-	
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/getStream.php");
 	echo json_encode(StreamAsArray($_GET["userId"]));
 }
@@ -66,7 +89,9 @@ if($action == "profile_get")
 
 if($action == "comment_get")
 {
-	
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/comments.php");
+	receiveComment($data);
 }
 
 
