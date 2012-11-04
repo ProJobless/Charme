@@ -38,9 +38,13 @@ else
 <script src='/ui/lib/friends.js'></script>
 <script src='/ui/lib/plugins.js'></script>
 <script src='/ui/lib/groups.js'></script>
+
+
+<script type="text/javascript" src="/tparty/mathjax/MathJax.js?config=default"></script>
 </head>
 
 <body>
+
 <div class="containerAll">
 <div id="whitebg"></div>
 <div class="sidebar sbAlpha">

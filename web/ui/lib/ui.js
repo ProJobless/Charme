@@ -133,6 +133,7 @@ return "<a class='button' href='javascript:"+func+";'>"+name+"</a>";
 
 function ui_closeBox(content)
 {
+	$("body").focus();//Because if not then problem when auto complete focused 
 	ui_unblock();
 	var h = $("body .fixedBox").height()+100;
 

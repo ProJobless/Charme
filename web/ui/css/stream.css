@@ -9,7 +9,16 @@
 	height: 32px;
 	width:100%;
 }
-.stream .post
+
+.stream .time
+{
+float:right;
+}
+.stream .cont
+{
+padding: 8px 0;
+}
+.stream .collectionPost
 {
 	border-top:1px silver solid;
 	padding:32px;
@@ -32,6 +41,8 @@
 		padding-bottom:8px;
 	
 }
+
+
 .attach img
 {
 	margin-top:8px;

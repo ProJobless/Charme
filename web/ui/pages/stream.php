@@ -31,14 +31,19 @@ $lists
 
 page_init("Stream", 1);
 
+fw_load("post");
+
 echo "<div class='p32'>";
 	
 	forms_doPostField();
 	echo "</div>";
 	echo "<div class='stream'>";
-	$arr = StreamAsArray(123);
-	foreach ($arr as $streamitem)
+	$arr = StreamAsArray($_SESSION["charme_user"]);
+	foreach ($arr as $item)
 	{
+
+		echo post_format($item["post"], true)[0];
+		/*
 		echo "<div class='post'>";
 		echo "<img src='ui/media/phantom.jpg' class='profilePic'>";
 		echo "<div class='subDiv'><div class='top'>".$streamitem["username"]."</div><div class='postContent'>".$streamitem["content"]."</div>";
@@ -61,10 +66,10 @@ echo "<div class='p32'>";
 			
 			
 			echo "</div>";
-		}
+		}*/
 		
-		echo "<a data-page=\"post\" data-pagearg='".$streamitem["postId"]."' >Comment</a> - <a href='#'>Love</a> - <a href='#'>Share</a> - <a href='#'>Follow</a><br class='cb'>";
-		echo "</div></div>";	
+	//	echo "<a data-page=\"post\" data-pagearg='".$streamitem["postId"]."' >Comment</a> - <a href='#'>Love</a> - <a href='#'>Share</a> - <a href='#'>Follow</a><br class='cb'>";
+	//	echo "</div></div>";	
 	}
 	
 echo "</div>";

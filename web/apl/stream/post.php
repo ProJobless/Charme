@@ -2,8 +2,14 @@
 function registerPost($data)
 {
 	//TODO: Chance 1/1000 => delete older posts then 3 days from streams!
+	global $db_charme;
+	foreach ($data["people"] as $person)
+	{
 
-print_r($data);
+
+	$db_charme->stream->insert(array("userid" =>$person, "post" => $data["post"] ));
+	}
+//
 }
 function postToCollection($collection, $content, $userId, $attachments=array())
 {

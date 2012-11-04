@@ -4,7 +4,18 @@ function getFollowers($collection)
 	global $db_charme;
 	$qu = array("collection" => $collection);
 	return $db_charme->followers->find($qu);
-
+}
+function getFollowersOfUser($userid)
+{
+	global $db_charme;
+	$qu = array("owner" => $userid);
+	return $db_charme->followers->find($qu);
+}
+function getFollowing($userid)
+{
+	global $db_charme;
+	$qu = array("owner" => $userid);
+	return $db_charme->followerslocal->find($qu);
 }
 function followCollection($userId, $owner, $collection, $follow)
 {
@@ -41,6 +52,7 @@ function registerCollectionFollow($data)
 	global $db_charme;
 	//(sender server has been validated now)
 	$sender = urldecode($data["sender"]);
+
 	$content = array("collection" => $data["collectionid"], "follower" => $data["sender"]);
 
 	//TODO: Check if user can follow collection, check if collection exists, if user is not allowed to follow then echo AUTHERROR 
@@ -53,18 +65,17 @@ function registerCollectionFollow($data)
 }
 function doesFollow($userId, $collectionId)
 {
-
+	//This is used by the requested server to check if a $userId follows a certain local collection
+	//Therefore a second argument for the invader is not necessary
 	global $db_charme;
-
 
 	$qu = array("collection" => $collectionId, "follower" =>$userId);
 
 	$cursor = $db_charme->followers->findOne($qu );
 
-
-
 	if ($cursor == NULL)
 	return false;
 	return true;
 }
+//Sometimes I write comments just for fun.
 ?>

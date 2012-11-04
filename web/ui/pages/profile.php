@@ -13,9 +13,6 @@ else
 	$userId = $_SESSION["charme_user"];
 
 
-
-
-
 $username = "Manuel";
 //START: IF NOT DYNAMICALY LOADED
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
@@ -48,9 +45,9 @@ array("Subscribers", "subscribers")
  	$url = $item[1]."&userId=".urlencode($userId);
 
 	 if ((isset($_GET["q"]) && $_GET["q"] == $item[1]) ||(!isset($_GET["q"]) && $item[1] == "collections"))
-	 echo '<li data-name="'.$item[1].'" class="active"><a ref="'.$url.'">'.$item[0].'</a></li>';
+	 echo '<li data-name="'.$url.'" class="active"><a ref="'.$url.'">'.$item[0].'</a></li>';
 else
- echo '<li data-name="'.$item[1].'"><a ref="'.$url.'">'.$item[0].'</a></li>';
+ echo '<li data-name="'.$url.'"><a ref="'.$url.'">'.$item[0].'</a></li>';
 	 
 }
 ?>
@@ -68,110 +65,139 @@ else
  if (isset($_GET["q"]) && $_GET["q"] =="about"){
 
 	
-include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/getProfile.php");
-$arr = getProfile(array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/getProfile.php");
+	$arr = getProfile(array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
 
-echo "<div class='profile_header'>";
+	echo "<div class='profile_header'>";
 
-//DEBUG:test%40charme.local
-
-
-
-echo "<div>$username"."</div>";
-echo "About me</div>";
-
-echo "<div class='p32'>";
-
-//TODO: htmlspecialchars 
-function doLists($ui)
-{
-	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
-	$arrList = getLists($_SESSION["charme_user"]);
+	//DEBUG:test%40charme.local
 
 
-	$selectedOld2 = getListitemsWithName($_SESSION["charme_user"], $ui);
-	$selected = array();
 
-	foreach ($selectedOld2 as $item){
-	$selected[] =  ($item["list"]);
-	}
+	echo "<div>$username"."</div>";
+	echo "About me</div>";
 
-	echo "<div style='padding:6px;' id='select_lists'>";
-	echo "In the following lists:<br/>";
+	echo "<div class='p32'>";
 
-	//$(this)
-
-	foreach ($arrList as $item)
+	//TODO: htmlspecialchars 
+	function doLists($ui)
 	{
-	//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
-	//if (in_array($listitem, haystack))
+		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
+		$arrList = getLists($_SESSION["charme_user"]);
 
 
-		if (in_array($item["_id"], $selected))
-			echo "<a class='hotCheckbox active' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
-		else
-			echo "<a class='hotCheckbox' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
+		$selectedOld2 = getListitemsWithName($_SESSION["charme_user"], $ui);
+		$selected = array();
+
+		foreach ($selectedOld2 as $item){
+		$selected[] =  ($item["list"]);
+		}
+
+		echo "<div style='padding:6px;' id='select_lists'>";
+		echo "In the following lists:<br/>";
+
+		//$(this)
+
+		foreach ($arrList as $item)
+		{
+		//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
+		//if (in_array($listitem, haystack))
+
+
+			if (in_array($item["_id"], $selected))
+				echo "<a class='hotCheckbox active' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
+			else
+				echo "<a class='hotCheckbox' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
+		}
+		echo "</div>";
+
+		echo "<div style='padding:6px;border-top:1px silver solid;' id='select_collections'>";
+		echo "Collections I follow:<br/>";
+		foreach ($arrList as $listitem)
+		{
+		//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
+		echo "<a class='hotCheckbox active'>".$listitem["name"]."</a><br/>";
+		}
+		echo "</div>";
 	}
+	function printAbout($content, $name, $htmlspecialchars=true)
+	{
+		if ($content != "")
+		{
+			echo "<tr><td class='info'>$name</td><td>";
+			echo $content; 
+			echo "</td></tr>";
+		}
+	}
+	function getArr($arr, $v)
+	{
+	if (isset($arr[$v]))
+		return $arr[$v];
+	return "";
+
+	}
+
+	$gend = array("", "Male", "Female", "" => "");
+	echo "<div class='aboutContainer' style='margin-right:32px'>";
+		echo "<div class='aboutBox'><table>";
+			printAbout($arr["firstname"]." ".$arr["lastname"], "Name");
+			printAbout(getArr($arr,"st_hometown"), "Hometown");
+			printAbout($gend[getArr($arr,"st_gender")], "Gender");
+	printAbout($arr["userid"], "Charme ID");
+
+		echo "</table></div>";
+		echo "<div class='aboutBox' style='margin-top:32px'><table>";
+			printAbout(doLists($userId), "Lists", false);
+		echo "</table></div>";
 	echo "</div>";
 
-	echo "<div style='padding:6px;border-top:1px silver solid;' id='select_collections'>";
-	echo "Collections I follow:<br/>";
-	foreach ($arrList as $listitem)
+	echo "<div class='aboutContainer'>";
+		echo "<div class='aboutBox'><table>";
+			printAbout(getArr($arr, "st_aboutme"), "About me");
+			printAbout(getArr($arr, "st_music"), "Music");
+			printAbout(getArr($arr, "st_movies"), "Movies");
+			printAbout(getArr($arr, "st_books"), "Books");
+			printAbout(getArr($arr, "st_games"), "Games");
+			printAbout(getArr($arr, "st_series"), "Series");
+			echo "</table>";
+		echo "</div>";
+	echo "</div>";
+
+
+	echo "</div>";
+
+}
+else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribing")
+{
+	echo "<div class='p32'>";
+	fw_load("lists");
+	//People in my lists, or subscribers? => just subscribers!
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
+	$list = getFollowing($userId);
+	foreach ($list as $item)
 	{
-	//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
-	echo "<a class='hotCheckbox active'>".$listitem["name"]."</a><br/>";
+		echo doUserListItem($item["follower"], $item["follower"]);
 	}
 	echo "</div>";
 }
-function printAbout($content, $name, $htmlspecialchars=true)
+else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribers")
 {
-	if ($content != "")
+	echo "<div class='p32'>";
+	fw_load("lists");
+	//People in my lists, or subscribers? => just subscribers!
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
+	$list = getFollower($userId);
+	foreach ($list as $item)
 	{
-		echo "<tr><td class='info'>$name</td><td>";
-		echo $content; 
-		echo "</td></tr>";
+		echo doUserListItem($item["follower"], $item["follower"]);
 	}
-}
-function getArr($arr, $v)
-{
-if (isset($arr[$v]))
-	return $arr[$v];
-return "";
-
-}
-
-$gend = array("", "Male", "Female", "" => "");
-echo "<div class='aboutContainer' style='margin-right:32px'>";
-	echo "<div class='aboutBox'><table>";
-		printAbout($arr["firstname"]." ".$arr["lastname"], "Name");
-		printAbout(getArr($arr,"st_hometown"), "Hometown");
-		printAbout($gend[getArr($arr,"st_gender")], "Gender");
-printAbout($arr["userid"], "Charme ID");
-
-	echo "</table></div>";
-	echo "<div class='aboutBox' style='margin-top:32px'><table>";
-		printAbout(doLists($userId), "Lists", false);
-	echo "</table></div>";
-echo "</div>";
-
-echo "<div class='aboutContainer'>";
-	echo "<div class='aboutBox'><table>";
-		printAbout(getArr($arr, "st_aboutme"), "About me");
-		printAbout(getArr($arr, "st_music"), "Music");
-		printAbout(getArr($arr, "st_movies"), "Movies");
-		printAbout(getArr($arr, "st_books"), "Books");
-		printAbout(getArr($arr, "st_games"), "Games");
-		printAbout(getArr($arr, "st_series"), "Series");
-		echo "</table>";
+	echo "Note: Subscribers may be manipluated. To verify the subscribers, look on the profile page and click on Subscribing.";
 	echo "</div>";
-echo "</div>";
-
-
-echo "</div>";
-
 }
-else
+else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 {
 
 
@@ -351,11 +377,7 @@ echo "</div></div>";
 
 echo "</div>";//ADDED
 ?>
-
-
-
-<?
-
-?>
-
 </div></div>
+<?
+//I am glad you read this comment.
+?>

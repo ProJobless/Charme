@@ -41,22 +41,22 @@ $acont = $item["lastauthor"].$more."<div>".$item["preview"]."</div>";
 
 
 	 if ((isset($_GET["q"]) && $_GET["q"] == $item["uniqueId"]) || (!isset($_GET["q"]) && $i ==1))
-	 echo '<li data-name="'.$item["uniqueId"].'" ><a class="active" ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+	 echo '<li class="active" data-name="'.$item["uniqueId"].'" ><a  ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
 	else
 	 echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
 }
 
-
+ echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+  echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+   echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+    echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+     echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+      echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+       echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
 ?>
 </ul>
 
 <?
-echo "<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda";
-echo "<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda";
-echo "<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda";
-echo "<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda";
-echo "<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda<br>asda";
-
 
 
 ?>

@@ -218,6 +218,9 @@ ui_userselect();
 
 	initProfile();
 
+	if (MathJax)
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
 }
 function pageLoadWithHistoryBetaArg(p, args)
 {
@@ -229,6 +232,7 @@ function pageLoadWithHistoryBetaArg(p, args)
 }
 function pageLoadWithHistoryBeta(q, dest)
 {
+
 	var p = $.urlParam("p",location.href );
 	if (p=="")
 		p="stream";
@@ -236,9 +240,11 @@ function pageLoadWithHistoryBeta(q, dest)
 	history.pushState({ page: "ui/pages/"+p+".php?q="+q+"&"}, "", "?p="+p+"&q="+q);
 
 	if (dest == 1){ //Called from profile navigation
-	pageLoad(p,"&q="+q, 0);
+	pageLoad(p,"&q="+q, 3);
+
+	
 $('.tabBar li').removeClass("active");
-$('.tabBar li[data-name='+q+']').addClass("active");
+$('.tabBar li[data-name="'+escapeExpression(q)+'"]').addClass("active");
 
 }
 	else
@@ -265,9 +271,10 @@ function pageLoadURL(url, level)
 		
 
 	var t = '#page';
-if ($('#page3').length > 0 && level == 3)
+if ($('#page3').length > 0 && level == 3){
 t = '#page3';
 
+}
 
 
 		$(t).load(url, {level:level},function() {

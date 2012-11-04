@@ -1,0 +1,3 @@
+- make 48x48 (?) square pictures for user lists
+- delete button for ALL collection entries
+- 

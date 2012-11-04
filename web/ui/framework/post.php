@@ -1,8 +1,21 @@
 <?
 
 //$useProfileImage, 
-function post_format($obj)
+
+function string_format($str)
 {
+
+
+}
+function comment_format()
+{
+
+
+}
+function post_format($obj, $useimg = false)
+{
+
+
 
 if (isset($obj["typ"]) && $obj["typ"]==2)
 {
@@ -13,13 +26,41 @@ if (isset($obj["typ"]) && $obj["typ"]==2)
 else
 {
 
-	return array("<div class='collectionPost'>".$obj["content"]."
+$img = "";
+$img2 = "";
+if ($useimg)
+{
+$img = "<a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>
+<img class='profilePic' src='ui/media/phantom.jpg'><div class='subDiv'></a>";
+$img2 = "</div>";
+}
 
-	<div>".supertime($obj["posttime"]->sec)." - <a onclick='displayCommentBox(this)'>Comment</a> - <a onclick='lovePost(this)'>Love</a> - <a onclick='followPost(this)'>Follow</a>
-	<div class='commentBox'><textarea></textarea><br><a class='button' data-postid='".$obj["_id"]."' data-userid='".$obj["userid"]."' onclick='doCommentReq(this)'>Post comment</a></div>
-	</div>
 
-</div>", 2);
+
+
+if (is_array($obj["_id"]))
+{
+$obj["_id"] = $obj["_id"]['$id'];
+$ttime = $obj["posttime"]["sec"];
+}
+else
+{
+$ttime = $obj["posttime"]->sec;
+}
+var_dump($obj);
+
+	return array("<div class='collectionPost'>".$img."
+<span class='time'>".supertime($ttime)."</span>
+<a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
+	<div>
+     <a onclick='displayCommentBox(this)'>Comment</a>
+      - <a onclick='lovePost(this)'>Love</a> - <a onclick='followPost(this)'>Follow</a>
+	<div class='commentBox'><textarea></textarea><br>
+    <a class='button' data-postid='".$obj["_id"]."'
+    data-userid='".$obj["userid"]."' onclick='doCommentReq(this)'>Post comment</a></div>
+	</div>".$img2."
+
+    </div>", 2);
 
 }
 
