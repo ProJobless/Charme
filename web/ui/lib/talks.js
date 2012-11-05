@@ -11,6 +11,39 @@ function but_newMessage()
 
 
 }
+timer_msg_height = null;
+
+function initTalks()
+{
+	clearInterval(timer_msg_height);
+	timer_msg_height=setInterval(function(){changeHeight()},300);
+
+	if ($(".msgItems").length > 0)
+	{
+
+		changeHeight();
+		$.doTimeout( 'to_bottom', 10, function(){$(window).scrollTop(999999);$.doTimeout( 'to_bottom' );});
+// do something in 1 second
+
+
+
+
+		
+
+	}
+
+
+}
+function changeHeight()
+{
+
+
+$(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
+
+
+
+
+}
 function sendMessage(a)
 {
 $.post("ui/actions/newMessage.php", $(a).serialize(), function(d){

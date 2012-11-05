@@ -69,10 +69,9 @@ $acont = $item["lastauthor"].$more."<div>".$item["preview"]."</div>";
 }
 
 
-//TODO: Create dummy div with height of textarea+x to ensure every message stay visible
 
 
-if ($firstid != "" && !isset($_GET["q"]))
+if (isset($firstid) && $firstid != "" && !isset($_GET["q"]))
 $_GET["q"] = $firstid;
 
 

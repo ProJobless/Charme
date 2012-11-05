@@ -96,8 +96,9 @@ window.onpopstate = function(e) {
 
 function initPage(level)
 {
-	
-	
+	//stop timers if exists
+	if (timer_msg_height)
+		clearInterval(timer_msg_height);
 
 
 
@@ -217,6 +218,9 @@ ui_userselect();
 	});
 
 	initProfile();
+	initTalks();
+
+
 
 	if (MathJax)
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);

@@ -67,6 +67,7 @@ width:518px;
 position: fixed;
 bottom:0;
 padding: 16px;
+z-index: 999;
 border-top:1px silver solid;
 background-color: #fff;
 

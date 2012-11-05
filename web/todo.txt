@@ -1,3 +1,7 @@
+
+
+- marginbotom of messsages = message write box height
 - make 48x48 (?) square pictures for user lists
+- userlist framework function
 - delete button for ALL collection entries
 - 
