@@ -44,7 +44,7 @@ array("Subscribers", "subscribers")
 
  	$url = $item[1]."&userId=".urlencode($userId);
 
-	 if ((isset($_GET["q"]) && $_GET["q"] == $item[1]) ||(!isset($_GET["q"]) && $item[1] == "collections"))
+	 if ((isset($_GET["q"]) && $_GET["q"] == $item[1]) ||(!isset($_GET["q"]) && $item[1] == "about"))
 	 echo '<li data-name="'.$url.'" class="active"><a ref="'.$url.'">'.$item[0].'</a></li>';
 else
  echo '<li data-name="'.$url.'"><a ref="'.$url.'">'.$item[0].'</a></li>';
@@ -62,7 +62,7 @@ else
 
 
 
- if (isset($_GET["q"]) && $_GET["q"] =="about"){
+ if ((isset($_GET["q"]) && $_GET["q"] =="about") ||!isset($_GET["q"])) {
 
 	
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
@@ -94,8 +94,8 @@ else
 		$selected[] =  ($item["list"]);
 		}
 
-		echo "<div style='padding:6px;' id='select_lists'>";
-		echo "In the following lists:<br/>";
+		echo "<div id='select_lists'>";
+		echo "<div class='title'>Lists</div><div style='padding:6px;'>";
 
 		//$(this)
 
@@ -110,16 +110,12 @@ else
 			else
 				echo "<a class='hotCheckbox' data-listid='".$item["_id"]."'>".$item["name"]."</a><br/>";
 		}
-		echo "</div>";
+		echo "</div></div>";
 
-		echo "<div style='padding:6px;border-top:1px silver solid;' id='select_collections'>";
-		echo "Collections I follow:<br/>";
-		foreach ($arrList as $listitem)
-		{
-		//echo "<label><input type='checkbox'>".$listitem["name"]."</label><br/>";
-		echo "<a class='hotCheckbox active'>".$listitem["name"]."</a><br/>";
-		}
-		echo "</div>";
+		/*echo "<div style='padding:6px;border-top:1px silver solid;' id='select_collections'>";
+		echo "Featured Collections<br/>";
+	
+		echo "</div>";*/
 	}
 	function printAbout($content, $name, $htmlspecialchars=true)
 	{
@@ -140,7 +136,7 @@ else
 
 	$gend = array("", "Male", "Female", "" => "");
 	echo "<div class='aboutContainer' style='margin-right:32px'>";
-		echo "<div class='aboutBox'><table>";
+		echo "<div class='aboutBox'><div class='title'>Account</div><table>";
 			printAbout($arr["firstname"]." ".$arr["lastname"], "Name");
 			printAbout(getArr($arr,"st_hometown"), "Hometown");
 			printAbout($gend[getArr($arr,"st_gender")], "Gender");
@@ -150,10 +146,14 @@ else
 		echo "<div class='aboutBox' style='margin-top:32px'><table>";
 			printAbout(doLists($userId), "Lists", false);
 		echo "</table></div>";
+
+			echo "<div class='aboutBox' style='margin-top:32px'><div class='title'>Featured Collections</div>asdasd</div>";
+
+
 	echo "</div>";
 
 	echo "<div class='aboutContainer'>";
-		echo "<div class='aboutBox'><table>";
+		echo "<div class='aboutBox'><div class='title'>Personal Information</div><table>";
 			printAbout(getArr($arr, "st_aboutme"), "About me");
 			printAbout(getArr($arr, "st_music"), "Music");
 			printAbout(getArr($arr, "st_movies"), "Movies");
@@ -162,6 +162,9 @@ else
 			printAbout(getArr($arr, "st_series"), "Series");
 			echo "</table>";
 		echo "</div>";
+
+
+
 	echo "</div>";
 
 
@@ -170,30 +173,46 @@ else
 }
 else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribing")
 {
-	echo "<div class='p32'>";
+	echo "<div class='p16'>";
 	fw_load("lists");
 	//People in my lists, or subscribers? => just subscribers!
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
 	$list = getFollowing($userId);
+
+	echo lists_start();
 	foreach ($list as $item)
 	{
-		echo doUserListItem($item["follower"], $item["follower"]);
+		echo lists_doItem($item["follower"], $item["follower"]);
+
+		echo lists_doItem($item["follower"], "Manuel SChultheiß Blablabla");
+		echo lists_doItem($item["follower"], $item["follower"]);
 	}
+	echo lists_end();
+
 	echo "</div>";
 }
 else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribers")
 {
-	echo "<div class='p32'>";
+	echo "<div class='p16'>";
 	fw_load("lists");
 	//People in my lists, or subscribers? => just subscribers!
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
 	$list = getFollower($userId);
+
+
+	echo lists_start();
 	foreach ($list as $item)
 	{
-		echo doUserListItem($item["follower"], $item["follower"]);
+		echo lists_doItem($item["follower"], $item["follower"]);
+
+
 	}
+	echo lists_end();
+
+
+
 	echo "Note: Subscribers may be manipluated. To verify the subscribers, look on the profile page and click on Subscribing.";
 	echo "</div>";
 }
@@ -201,7 +220,6 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 {
 
 
-{
 
 	echo "<div>";
 	//Build header
@@ -216,69 +234,59 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 
 	//GET parents, if > 4 -> dont display this, also do not display when its not my profile
 
-if (getget("id") != 0)
-{
-	$colid= getget("id");
-if ($subscribed){
-echo "<a  onclick='followCol(this, 1, \"$colid\")' style='display: none; float:right; background-position:-48px 0;' data-bgpos='-48'  class='butSubOn functionButton actionIcon'> </a>";
-echo "<a  onclick='followCol(this, 0, \"$colid\")' style='float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
-
-}
-else{
-
-echo "<a  onclick='followCol(this, 1, \"$colid\")' style='float:right; background-position:-48px 0;' data-bgpos='-48'  class='butSubOn functionButton actionIcon' > </a>";
-echo "<a  onclick='followCol(this, 0, \"$colid\")' style='display: none; float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
-
-}
-
-}
-else
-echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' id='but_addCollection'> </a>";
-
-
-	echo "<div>$username"."</div>";
-
-
-
-	if (isset($_GET["id"]) && $_GET["id"])
+	if (getget("id") != 0)
 	{
- 		echo "<a  data-page2='profile' data-pagearg='&q=collections'>Collections</a>";
-		$list = getParentList($_GET["id"]);
+		$colid= getget("id");
+		if ($subscribed)
+		{
+		echo "<a  onclick='followCol(this, 1, \"$colid\")' style='display: none; float:right; background-position:-48px 0;' data-bgpos='-48'  class='butSubOn functionButton actionIcon'> </a>";
+		echo "<a  onclick='followCol(this, 0, \"$colid\")' style='float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
 
-
-		foreach ($list as $value) {
-
-
-		if ($_GET["id"] != $value["id"])
-			echo " -> <a  data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$value["id"]. "'>".$value["name"]. "</a>";
-		else
-			echo " -> ".$value["name"]. "";
 		}
-		//echo " -> Collections";
+		else
+		{
 
-		//2do: output as long as predesessor, but not longer then 4 times
-	//	echo "-> Collection Name";
-	
+		echo "<a  onclick='followCol(this, 1, \"$colid\")' style='float:right; background-position:-48px 0;' data-bgpos='-48'  class='butSubOn functionButton actionIcon' > </a>";
+		echo "<a  onclick='followCol(this, 0, \"$colid\")' style='display: none; float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
+
+		}
+
 	}
 	else
-	 echo "Collections ";
+	echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' id='but_addCollection'> </a>";
 
+
+		echo "<div>$username"."</div>";
+
+
+
+		if (isset($_GET["id"]) && $_GET["id"])
+		{
+	 		echo "<a  data-page2='profile' data-pagearg='&q=collections'>Collections</a>";
+			$list = getParentList($_GET["id"]);
+
+
+			foreach ($list as $value) {
+
+
+			if ($_GET["id"] != $value["id"])
+				echo " -> <a  data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$value["id"]. "'>".$value["name"]. "</a>";
+			else
+				echo " -> ".$value["name"]. "";
+			}
+			//echo " -> Collections";
+
+			//2do: output as long as predesessor, but not longer then 4 times
+		//	echo "-> Collection Name";
+		
+		}
+		else
+		 echo "Collections ";
 
 	echo "</div>";
 
-
-
-	
-	
 	fw_load("forms");
 	
-
-
-	
-	
-
-		
-
 
 	$has = false;
 
@@ -364,14 +372,11 @@ if ($lasttype != -1)echo "</div>";
 
 
 	echo "</div>";
-	
 
-	
-
-}
 
 
 }
+
 
 echo "</div></div>";
 

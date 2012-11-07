@@ -1,7 +1,23 @@
 
-
-- marginbotom of messsages = message write box height
-- make 48x48 (?) square pictures for user lists
 - userlist framework function
 - delete button for ALL collection entries
-- 
+- latex only on .tex
+- global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
+
+
+- comments: save in posts, get from alpha server via json, add receivejs 
+- comments: do not update names!
+- posts in streams do not update names as only 3 das valid!
+
+- messages: Do update names!
+- friends lists: do update names!
+
+
+-nameservice!
+
+-images in different sizes!
+#
+
+-get name for new possts in getPofile.php
+
+-name in profile in fixed div to prevent recurrent database access

@@ -10,5 +10,9 @@ function getProfile($fields, $userId)
 	return $cursor;
 
 }
+function getName()
+{
 
+	
+}
 ?>

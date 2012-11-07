@@ -13,7 +13,26 @@ function addComment($postowner, $postid, $userId, $content)
 	$rr->send();
 
 }
+function getComments($postid, $owner, $start, $range)
+{
 
+
+
+	global $db_charme;
+
+	//TODO: CHECK AUTHENTICATION!!
+	
+
+
+	$re = $db_charme->posts->findOne(array("_id" => "509988c1d8cc9aa410000046"), array("comments"));
+	print_r($re);
+
+
+	return $re["comments"];
+
+
+
+}
 function receiveComment($data)
 {
 	//Check if it is my host, or another host

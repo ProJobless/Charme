@@ -7,10 +7,13 @@ function string_format($str)
 
 
 }
-function comment_format()
+function comment_format($userid, $username, $content, $time)
 {
+$usid = "<a href='/?p=profile&q=about&userId=".urlencode($userid)."'>".$username."</a>";
 
 
+
+return "<div class='comment'><div class='head'>$usid</div>$content</div>";
 }
 function post_format($obj, $useimg = false)
 {
@@ -47,20 +50,26 @@ else
 {
 $ttime = $obj["posttime"]->sec;
 }
-var_dump($obj);
+
+include_once($_SERVER["DOCUMENT_ROOT"]."/apl/profile/comments.php");
+
+
+
+
+
+//- <a onclick='followPost(this)'>Follow</a>
+
 
 	return array("<div class='collectionPost'>".$img."
 <span class='time'>".supertime($ttime)."</span>
 <a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
 	<div>
-     <a onclick='displayCommentBox(this)'>Comment</a>
-      - <a onclick='lovePost(this)'>Love</a> - <a onclick='followPost(this)'>Follow</a>
-	<div class='commentBox'><textarea></textarea><br>
+     <a onclick='displayCommentBox(this, \"".$obj["userid"]."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
+      - <a onclick='lovePost(this)'>Love</a> 
+	<div class='commentBox'><div class='postcomments'></div><textarea></textarea><br>
     <a class='button' data-postid='".$obj["_id"]."'
     data-userid='".$obj["userid"]."' onclick='doCommentReq(this)'>Post comment</a></div>
-	</div>".$img2."
-
-    </div>", 2);
+	</div>".$img2." </div>", 2);
 
 }
 

@@ -11,7 +11,8 @@ fw_load("config");
 
 
 
-$lists = array();
+$lists = array(subMenuActionAdd("All", 0));
+
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
 $cur = getLists($_SESSION["charme_user"]);
 foreach ($cur as $item)
@@ -33,12 +34,19 @@ page_init("Stream", 1);
 
 fw_load("post");
 
-echo "<div class='p32'>";
+echo "<div class='p32' style='border-bottom:1px silver solid;'>";
 	
 	forms_doPostField();
 	echo "</div>";
 	echo "<div class='stream'>";
 	$arr = StreamAsArray($_SESSION["charme_user"]);
+
+
+	if (Count($arr) == 0){ //There are not any posts in the feed
+		echo "<div class='infobox'>You dont have any friends with post yet.
+	<br/>Only posts that were written after you followed people will show up here.</div>";
+	}
+
 	foreach ($arr as $item)
 	{
 

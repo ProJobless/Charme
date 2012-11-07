@@ -1,11 +1,33 @@
-function displayCommentBox(o)
+function displayCommentBox(o, userid, postid)
 {
 	$(".commentBox").hide();
-	$(o).siblings(".commentBox").show();
+	
 	//$(o).siblings(".commentBox textarea").select().focus(); //does not work because of auto height plugin!
 	console.log($(o).siblings(".commentBox"));
-}
 
+
+if ($(o).siblings(".commentBox").children(".postcomments").html() == "")
+{
+	$.post("ui/actions/showComments.php", {},function(d){
+		
+	
+
+	$(o).siblings(".commentBox").show();
+	$(o).siblings(".commentBox").children(".postcomments").prepend(d);
+
+	//init buttons
+	});
+}
+else
+$(o).siblings(".commentBox").show();
+
+
+}
+function moreComments()
+{
+
+
+}
 function lovePost(o)
 {
 	$(o).text("Unlove");

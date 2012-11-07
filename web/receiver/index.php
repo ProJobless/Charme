@@ -1,11 +1,13 @@
 <?
 //If remote Request Package -> Do Loop
 
+//urldecode unnötig!
+$action  =($_POST["action"]);
+$username = ($_POST["receiver"]);
+$data = json_decode(($_POST["json"]), true); //Second parameter ensures return value is array
 
-$action  =urldecode($_POST["action"]);
-$username = urldecode($_POST["receiver"]);
-$data = json_decode(urldecode($_POST["json"]), true); //Second parameter ensures return value is array
  
+
 /*
 RETURN: STATUS CODE!
 - UserDeleted
@@ -22,6 +24,27 @@ RETURN: STATUS CODE!
 
 
 //TODO: VERIFY SERVER!
+
+
+/*
+important TODO:
+
+
+USERNAMES
+
+req_username: Request username by id
+update_username: Send new username to followers
+
+FOLLOWERS
+
+collection_following: check if follower is active. if three checks in a row fail -> remove follower
+
+COMMENTS
+
+comment_newinfo: is sent to all followers of a post, contains like count and 
+
+
+*/
 
 
 //is action request
@@ -84,6 +107,13 @@ if($action == "profile_get")
 {
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/getStream.php");
 	echo json_encode(StreamAsArray($_GET["userId"]));
+}
+
+if($action == "comment_read")
+{
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/comments.php");
+	readComments($data);
 }
 
 

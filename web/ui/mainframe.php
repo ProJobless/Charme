@@ -53,7 +53,7 @@ else
 
  <div class="actionBar">
        
- 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton"></a><a data-bgpos="-30"  href="/ui/actions/login.php?logout=1" style="background-position:-30px 0; " class="actionButton"></a>
+ 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="/ui/actions/login.php?logout=1" style="background-position:-30px 0; " class="actionButton"></a>
         
         <!--<a   data-bgpos="-30" style="background-position:-30px 0; " class="actionButton"></a>-->
        <!--  href="/ui/actions/login.php?logout=1" -->
@@ -62,8 +62,8 @@ else
         </div>
 
 <div style="height:62px; background-color:#FBDBDB;">
-<a data-page="profile" data-pagearg="&u=">
-<img src="apl/fs/?f=p_150_<?=$_SESSION["charme_user"] ?>" style="width:150px; height:62px" />
+<a data-page="profile" data-pagearg="&u=<?=urlencode($_SESSION["charme_user"])?>">
+<img src="apl/fs/?f=p_150_<?=urlencode($_SESSION["charme_user"])?>" style="width:150px; height:62px" />
 </a>
 </div>
 
