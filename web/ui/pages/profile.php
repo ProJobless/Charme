@@ -20,7 +20,7 @@ if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 ?>
 
 <div id='greybg'></div>
-<div style="overflow:auto; background-color:#EFEFEF">
+<div style="overflow:auto; background-color:#EFEFEF; position:relative">
 
 <div style="  width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px;">
 <img src="apl/fs/?f=p_200_<?=urlencode($userId) ?>" style="width:200px;" />
@@ -55,8 +55,10 @@ else
 </ul>
 </div>
 </div>
+<div class="profile_name"><?=$username?></div>
+<div id="page3" style='margin-right:232px; '>
 
-<div id="page3" style='margin-right:232px;'>
+
 <?
 } //END: IF NOT DYNAMICALY LOADED
 
@@ -67,7 +69,12 @@ else
 	
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/getProfile.php");
-	$arr = getProfile(array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
+	$arr2 = getProfile($_SESSION["charme_user"], array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
+
+	$arr = $arr2[0];
+
+	$collections = $arr2[1];
+
 
 	echo "<div class='profile_header'>";
 
@@ -75,7 +82,7 @@ else
 
 
 
-	echo "<div>$username"."</div>";
+
 	echo "About me</div>";
 
 	echo "<div class='p32'>";
@@ -173,6 +180,14 @@ else
 }
 else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribing")
 {
+
+
+
+
+
+	echo "<div class='profile_header'>Subscribers</div>";
+
+
 	echo "<div class='p16'>";
 	fw_load("lists");
 	//People in my lists, or subscribers? => just subscribers!
@@ -221,11 +236,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 
 
 
-	echo "<div>";
-	//Build header
 
-
-	echo "<div class='profile_header'>";
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
 	$uccol = getCollection($_SESSION["charme_user"],$userId, getget("id"));
@@ -234,6 +245,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 
 	//GET parents, if > 4 -> dont display this, also do not display when its not my profile
 
+	echo "<div class='actionMargin'>";
 	if (getget("id") != 0)
 	{
 		$colid= getget("id");
@@ -255,8 +267,16 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 	else
 	echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' id='but_addCollection'> </a>";
 
+	echo "</div>";
 
-		echo "<div>$username"."</div>";
+
+	echo "<div>";
+	//Build header
+
+
+	echo "<div class='profile_header'>";
+
+		
 
 
 

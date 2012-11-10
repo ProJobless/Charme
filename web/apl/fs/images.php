@@ -42,7 +42,7 @@ function storeProfileImage($uplodedFile,$username)//uploaded file = pic, $newnam
 
 	$thisname = 'p_200_'.$username;
 	$grid->remove(array( 'fname' => $thisname));
-	$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 200, 200)->output('jpg'), array( 'fname' => $thisname, 'ftype'=>1,'owner' => $username,'visibility' => $visibility));
+	$grid->storeBytes($image->resize(200, null, 'fill')->crop(0, 0, 200, 200)->output('jpg'), array( 'fname' => $thisname, 'ftype'=>1,'owner' => $username,'visibility' => $visibility));
 
 
 

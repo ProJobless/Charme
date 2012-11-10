@@ -1,6 +1,6 @@
 .usergrid .item
 {
-	width: 96px;
+	width: 85px;
 	margin:16px;
 	float:left;
 	text-align: center;
@@ -14,8 +14,8 @@
 .usergrid .item img
 {
 	margin-bottom: 8px;
-	width:96px;
-	height:96px;
+	width:85px;
+	height:85px;
 }
 .infobox
 {
@@ -28,6 +28,11 @@
 
 	text-align: center;
 	line-height: 18px;
+}
+.actionMargin
+{
+
+	padding-right: 32px;
 }
  .actionCont
 {

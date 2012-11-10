@@ -48,6 +48,18 @@ $(x).siblings("input").trigger("click");
 
 function ui_userselect()
 {
+	$('.userSelectSwitcher').change(function() {
+	  
+
+	  if ($(this).val() == 3)
+	$(this).siblings(".spec").show();
+	else
+	$(this).siblings(".spec").hide();
+
+	});
+
+
+
 
 		$('.userSelect2').each (function(index)
 	{
@@ -119,6 +131,9 @@ function ui_showBox(content, func)
 $("body .fixedBox input:first").focus();
   	if (func)
   		func
+  	
+ 
+
   });
 	
 }

@@ -91,10 +91,20 @@ margin:8px;
 
 
 }
+
+.profile_name
+{
+
+position: absolute;
+top:32px;
+left:32px;
+font-size: 16px;
+
+}
 .profile_header
 {
 padding:32px;
-
+margin-top:  27px; /* 19px (Username) +  8 (margin)*/
 padding-bottom: 0;
 
 
@@ -106,11 +116,7 @@ padding-bottom: 0;
 
 
 }
-.profile_header div
-{
-font-size: 20px;
-padding-bottom:8px;
-}
+
 .collection:active
 {
 	
@@ -118,8 +124,8 @@ padding-bottom:8px;
 }
 .collection
 {
-	width:60px; 
-	height:60px;
+	width:67px; 
+	height:67px;
 	border:1px silver solid;
 	background-color: #E6E6E6;
 	margin:8px;

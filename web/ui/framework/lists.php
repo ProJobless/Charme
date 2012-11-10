@@ -9,7 +9,7 @@ global  $lists_iterator;
 
 
 
-if ($lists_iterator %4 == 0)
+if ($lists_iterator %5 == 0 && $lists_iterator!=0)
 	echo "<br class='cb'>";
 $lists_iterator++;
 

@@ -56,7 +56,7 @@ echo ".infobox  {border-color: $colors[main];}";
 echo "#colorbg  {background-color: #C2C2C2;}";
 
 
-echo ".tabBar ul li.active a   {background-color: $colors[dark];}";
+//echo ".tabBar ul li.active a   {background-color: $colors[dark];}";
 
 
 

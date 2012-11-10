@@ -1,11 +1,15 @@
 <?
 //JSON encoded
-function addCollection($owner, $name, $description, $parent, $visibility=array())
+function addCollection($owner, $name, $description, $parent, $visibletyp=1, $people="")
 {
 	//TODO: CHECK IF PARENT COLLECTION BELONGS TO USER!!
 
 	//get db...
 	global $db_charme;
+
+//, splitted, people start with p
+
+
 
 
 	$obj = ($parent==0) ? NULL : new MongoId($parent);
@@ -13,10 +17,36 @@ function addCollection($owner, $name, $description, $parent, $visibility=array()
 	$content = array("userid" => $_SESSION["charme_user"],
 			"name" => $name,
 			"description" => $description,
-			"parent" => $obj 
+			"parent" => $obj ,
+
+			"visibletype" => intval($visibletyp),
+
 		
 			);
 
+	if ($visibletyp == 3)
+	{
+		$p_arr= array();
+		$l_arr = array();
+
+
+		$all = explode(',', $people);
+
+
+		foreach ($all as $item)
+		{
+			if ($item{0} == "p") //WARNING: ID CAN START WITH p!!!!!
+				$p_arr[] = substr($item, 1);
+			else if ($item{0} == "l")
+				$l_arr[] = substr($item, 1);
+		}
+
+
+		$content["people"] = $p_arr;
+
+		$content["lists"] = $l_arr;
+
+	}
 	$db_charme->usercollections->insert($content
 		);
 return $content ["_id"];
@@ -95,7 +125,7 @@ function getCollection($userId, $owner, $filter)
 	if ($filter == 0) $subscribed = false;
 	else $subscribed = doesFollow($userId, $filter);
 
-echo "!!".$subscribed."!!";
+//echo "!!".$subscribed."!!";
 	return array($cursor, $subscribed);
 }
 

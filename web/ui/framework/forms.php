@@ -108,8 +108,15 @@ class formPeople extends form
 {
 	public function render() {
 
+
+	if ($this->val == "")
+		$this->val = "1"; //default is public!
+
 		$val2 = substr($this->val, 1);
 		$mylists = explode(",",$val2);
+
+
+
 
 		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
 		//1. getmylistnames

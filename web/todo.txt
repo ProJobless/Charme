@@ -21,3 +21,9 @@
 -get name for new possts in getPofile.php
 
 -name in profile in fixed div to prevent recurrent database access
+
+
+
+Security----
+
++ check if collection follow is legal

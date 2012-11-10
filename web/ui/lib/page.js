@@ -155,15 +155,6 @@ function initPage(level)
 	}
 	
 
-$('.userSelectSwitcher').change(function() {
-  
-
-  if ($(this).val() == 3)
-$(this).siblings(".spec").show();
-else
-$(this).siblings(".spec").hide();
-
-});
 
 
 
