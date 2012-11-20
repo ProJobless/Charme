@@ -1,3 +1,55 @@
+.delete
+{
+
+	background-color: red;
+	width:16px;
+	height: 16px;
+	float:right;
+	display: inline-block;
+	background-image: url("del.gif");
+
+}
+.delete:active
+{	
+	background-position: 0 16px;
+}
+
+.collectionPost .cont
+{
+padding: 8px 0;
+}
+.collectionPost:hover .comment:hover .delete
+{
+
+	 opacity: 1;
+   transition: opacity .3s ease-in-out;
+   -moz-transition: opacity .3s ease-in-out;
+   -webkit-transition: opacity .3s ease-in-out;
+}
+
+.delete
+{
+
+	opacity:  0;
+	 transition: opacity .3s ease-in-out;
+   -moz-transition: opacity .3s ease-in-out;
+   -webkit-transition: opacity .3s ease-in-out;
+}
+.collectionPost:hover .comment .delete
+{opacity:  0;}
+
+
+
+.collectionPost:hover .delete
+{
+
+	
+
+	 opacity: 1;
+   transition: opacity .3s ease-in-out;
+   -moz-transition: opacity .3s ease-in-out;
+   -webkit-transition: opacity .3s ease-in-out;
+}
 .usergrid .item
 {
 	width: 85px;
@@ -183,19 +235,26 @@ letter-spacing: 1px;
 {
 	
 }
-.sidebar span.count
+.sidebar span.count 
 {
 	
 float:right;
 display:inline-block;
-padding:3px;
-background-color:#fff;
-color:#000;
+padding:3px 5px;
+
+color:#666;
 position:relative;
-top:-1px;
-right: -1px;
-font-size:9px;
+top:5px;
+right: 6px;
+font-weight:  bold;
+font-size: 9px;
+font-family: "Tahoma";
+border:1px gray solid;
 border-radius: 2px;
+background-color: #fff;
+
+
+
 
 }
 .sidebar ul li

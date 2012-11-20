@@ -6,7 +6,6 @@ $action  =($_POST["action"]);
 $username = ($_POST["receiver"]);
 $data = json_decode(($_POST["json"]), true); //Second parameter ensures return value is array
 
- 
 
 /*
 RETURN: STATUS CODE!

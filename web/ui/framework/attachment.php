@@ -8,9 +8,10 @@ class attachmentForm
 	}
 	function printAdd()
 	{
+
 		//TODO: Make sure file input value is not submitted in forms!
 		return "<a id='".$this->fid."' onclick='ui_attach(this)'>Add Attachment</a>".
-		'<input style="display:none" type="file" id="files" name="files[]" multiple />';
+		'<input style="display:none" type="file" id="fileinput'.$this->fid.'"" name="files'.$this->fid.'[]" multiple />';
 
 	}
 	function printContainer()

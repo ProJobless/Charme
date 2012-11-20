@@ -3,6 +3,9 @@
 include_once($_SERVER['DOCUMENT_ROOT']."/ui/framework/framework.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/groups/groups.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/getStream.php");
+
+
 
 needSession();
 fw_load("page");
@@ -31,10 +34,62 @@ foreach ($groups as $item)
 {
 
 
-	$groupsui[] =subMenuActionAdd($item["name"], $item["_id"]);
+	$groupsui[] =subMenuActionAdd($item["name"], $item["groupid"]);
 }
 subMenuAdd(
 $groupsui
 
 );
-?>Button: group invitation
+?>
+
+
+
+<?
+if (isset($_GET["q"]))
+{
+	$groupId= $_GET["q"];
+	$groupInfo = getGroupInfo($groupId, array("name", "type"));
+
+	
+
+	//Make Header
+	echo "<div class='p32' >";
+
+//invite/add people, documents, propoerties 
+	echo '<a style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" id="but_addCollection"> </a>';
+	echo '<a style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" id="but_addCollection"> </a>';
+	echo '<a style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" id="but_addCollection"> </a>';
+
+
+
+	echo "<div style='font-size: 16px'>".$groupInfo["name"]."</div><div style='padding: 8px 0 0px 0;'>Typ: ".$groupInfo["type"]."</div>";
+echo "</div><div class='p32' style='padding-top:0;border-bottom:1px silver solid; '>";
+
+
+fw_load("forms");
+fw_load("post");
+
+forms_doPostField($groupId, true);
+echo "</div>";
+
+echo "<div class='stream'>";
+	$arr = groupStreamAsArray($_SESSION["charme_user"], $groupId);
+
+
+	if (Count($arr) == 0){ //There are not any posts in the feed
+		echo "<div class='infobox'>There are no posts in this group yet.
+	</div>";
+	}
+
+	foreach ($arr as $item)
+	{
+
+		echo post_format($item, true)[0];
+
+	}
+echo "</div>";
+
+
+}
+
+?>

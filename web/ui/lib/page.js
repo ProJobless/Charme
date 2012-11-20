@@ -125,6 +125,19 @@ function initPage(level)
 
 
 
+	$('.but_postCol').unbind("click").click(function(){ 
+
+		var v = ($(this).parent().parent().children("textarea").val());
+		var g = ($(this).parent().parent().children("input[name='groupid']").val());
+alert(g);
+		var x = $.urlParam("id",location.href );
+
+		x = (x=="") ?  "0" : x;
+		$.post("ui/actions/doPost.php?id="+x, {content:v, g:g}, function(d)
+		{
+			alert(d);
+		});
+	});
 
 
 	//Problem: actionbuttons initlized before, change to "sbBeta .actionbutton"?

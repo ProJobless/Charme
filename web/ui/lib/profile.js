@@ -10,6 +10,25 @@ function postIntoCollection()
 {
 //var c = 
 }
+function closePhoto()
+{
+
+$(".photobox").remove();
+
+}
+function showPhoto(pid)
+{
+	//TODO: GET owner!
+
+var uid = "";
+	  $.post("ui/actions/showPhoto.php", {"uid":uid, "pid": pid}, function(d){
+
+	$("body").append("<div class='photobox'>"+d+"</div>");
+
+});
+	//warning: has to view other peoples photos too!
+
+}
 function followCol(x, on, colid)
 {	
 	var uid = $.urlParam("userId",location.href );
@@ -82,16 +101,8 @@ var uid = $.urlParam("userId",location.href );
 	}, true);
 	});
 
-	$('.but_postCol').click(function(){ 
 
-		var v = ($(this).parent().parent().children("textarea").val());
-		var x = $.urlParam("id",location.href );
-		x = (x=="") ?  "0" : x;
-		$.post("ui/actions/doPost.php?id="+x, {content:v}, function(d)
-		{
-			alert(d);
-		});
-	});
+	
 
 	$(".switch").hide();
 	$(".switch1").show();
@@ -102,10 +113,13 @@ var uid = $.urlParam("userId",location.href );
 });
 
 if ($('#files').length)
-	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+	document.getElementById('files').addEventListener('change', handleFileSelect2, false);
 }
 
-function handleFileSelect(evt) {
+function handleFileSelect2(evt) {
+
+	alert("");
     var files = evt.target.files; // FileList object
 
     // files is a FileList of File objects. List some properties.

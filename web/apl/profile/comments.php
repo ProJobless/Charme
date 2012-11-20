@@ -9,7 +9,7 @@ function addComment($postowner, $postid, $userId, $content)
 
 
 	$rr = new remoteRequest($postowner, $_SESSION["charme_user"], "comment_get");
-	$rr->setPayload(array("postid"=> $postid, "content" => $content, "userid"=> $userId));
+	$rr->setPayload(array("postid"=> $postid, "content" => $content, "userid"=> $userId, "posttime"=>  new MongoDate(time())));
 	$rr->send();
 
 }
@@ -17,15 +17,13 @@ function getComments($postid, $owner, $start, $range)
 {
 
 
-
+	//problem: STREAM ID != POSTID!!!
 	global $db_charme;
 
 	//TODO: CHECK AUTHENTICATION!!
+
+	$re = $db_charme->posts->findOne(array("_id" => new MongoId( $postid)), array('comments' => array( '$slice' =>  array($start,$range) )));
 	
-
-
-	$re = $db_charme->posts->findOne(array("_id" => "509988c1d8cc9aa410000046"), array("comments"));
-	print_r($re);
 
 
 	return $re["comments"];

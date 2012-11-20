@@ -12,13 +12,21 @@
 - messages: Do update names!
 - friends lists: do update names!
 
+-queue based request sending with priorities
+0: instant () comment delete, post delete
+3: (max 30 seconds) , posts, messages, new comment
+6: max 2 minutes: friendreuqests, subscribe requests
+6: (max 10 minutes)
+9: (max 1h)
+12: (max 1d)
+
 
 -nameservice!
 
 -images in different sizes!
 #
 
--get name for new possts in getPofile.php
+-get name for new posts in getPofile.php
 
 -name in profile in fixed div to prevent recurrent database access
 

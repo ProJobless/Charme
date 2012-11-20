@@ -338,7 +338,7 @@ echo "<div class='p24' id='collection_container' style='display:none;padding-bot
 	{
 
 
-		echo "<div class='p32' style='padding-bottom:16px; padding-top:8px;'>";
+		echo "<div class='p32' style='padding-bottom:0px; overflow: visible;  padding-top:0px;'>";
 		echo "<a class='switcher active' data-pos='1'><div>Post</div></a>
 		<a class='switcher' data-pos='2'><div>Photo</div></a>";
 
@@ -372,7 +372,10 @@ $lasttype = -1;
 		{
 			$result  = post_format($item);
 			if ($result[1] != $lasttype)
-			{	echo "</div>";
+			{
+				if ($lasttype == 1)echo "<br class='cb'/></div>"; //img box end has to stop float:left
+				else	echo "</div>";
+
 
 			if ($result[1] == 1)
 				echo "<div class='collectionImgbox'>";
@@ -385,7 +388,9 @@ $lasttype = -1;
 			$lasttype = $result[1];
 		}
 
-if ($lasttype != -1)echo "</div>";
+
+if ($lasttype == 1)echo "<br class='cb'/></div>";
+else if ($lasttype != -1)echo "</div>";
 		//}
 	echo "</div>";
 

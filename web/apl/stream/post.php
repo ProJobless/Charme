@@ -1,6 +1,7 @@
 <?
 function registerPost($data)
 {
+
 	//TODO: Chance 1/1000 => delete older posts then 3 days from streams!
 	global $db_charme;
 	foreach ($data["people"] as $person)
@@ -11,8 +12,16 @@ function registerPost($data)
 	}
 //
 }
-function postToCollection($collection, $content, $userId, $attachments=array())
+
+
+function postToCollection($collection, $content, $userId, $attachments=array(), $isGroup =false)
 {
+	//note: $collection is groupid if $isGroup = true
+	$destfield = "collection";
+	if ($isGroup)
+		$destfield = "groupid";
+
+echo "!!!".$isGroup."!!!";
 
 
 	global $db_charme;
@@ -23,20 +32,21 @@ $name = "testname";
 $cont = array("userid" => $_SESSION["charme_user"],
 			"username" => $name,
 			"content" => $content,
-			"collection" => $obj,
+			$destfield => $obj,
 			"attachments" => $attachments,
 			"posttime" =>  new MongoDate(time())
 		
 			);
 
 	$db_charme->posts->insert($cont	);
+//echo "THE POSTID IS:".$cont["_id"]."!!!";
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
-include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
 
-$ar_followers = array();
-$arr = getFollowers($collection);
-foreach ($arr as $item){$ar_followers[] = $item["follower"];}
+	$ar_followers = array();
+	$arr = getFollowers($collection);
+	foreach ($arr as $item){$ar_followers[] = $item["follower"];}
 
 	$servers = clusterServers($ar_followers);
 

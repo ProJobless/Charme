@@ -46,14 +46,8 @@
 	width:100%;
 }
 
-.stream .time
-{
-float:right;
-}
-.stream .cont
-{
-padding: 8px 0;
-}
+
+
 .stream .collectionPost
 {
 	border-top:1px silver solid;

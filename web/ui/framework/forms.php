@@ -6,26 +6,34 @@ Form Renderer Class
 Made for easy HTML form generation
 */
 
-function forms_doPostField($collectionId=0)
+function forms_doPostField($collectionId=0, $isGroup=false)
 {
 fw_load("attachment");
 $atf = new attachmentForm("atf_stream_".$collectionId);
 
+echo "<div>";
+	if ($isGroup)
+		echo "<input type='hidden' name='groupid' value='$collectionId'>";
+	else
+		echo "<input type='hidden' name='groupid' value=''>";
 
-	echo "<div><textarea class='box' style=' width:100%;'></textarea>".$atf->printContainer()."
-<div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a> in
-<select>
-<option>Private</option>
-<option>+ Art</option>
-<option>+ Music</option>
-<option>&nbsp;&nbsp;&nbsp;&nbsp;+ Dubstep</option>
-<option>Public</option>
-<option>+ Art</option>
-<option>+ Music</option>
+	echo "<textarea class='box' style=' width:100%;'></textarea>".$atf->printContainer()."
+<div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a>";
 
+	if ($collectionId == 0)
+	{
 
-</select>
-  - ".$atf->printAdd()." <br class='cb'></div></div>";
+	echo " in 
+	<select>
+
+	<option>Art</option>
+	<option>Music</option>
+	<option>Privat</option>
+
+	</select>
+	";
+	}
+  echo " - ".$atf->printAdd()." <br class='cb'></div></div>";
 
 }
 	

@@ -15,7 +15,7 @@ function storePostImage($uplodedFile,$username, $collection)//uploaded file = pi
 	//todo: validate strings!!
 
 
-		$gridID=$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 50)->output('jpg'), array('collection' => $collection, 'ftype'=>2,'owner' => $username));
+		$gridID=$grid->storeBytes($image->resize(118, null, 'fill')->crop(0, 0, 118, 118)->output('jpg'), array('collection' => $collection, 'ftype'=>2,'owner' => $username));
 
 
 

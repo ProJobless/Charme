@@ -40,7 +40,16 @@ else
 <script src='/ui/lib/groups.js'></script>
 
 
-<script type="text/javascript" src="/tparty/mathjax/MathJax.js?config=default"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  "SVG": {
+    scale: 100
+  }
+});
+</script>
+
+<script type="text/javascript" src="/tparty/mathjax/MathJax.js?config=default">
+</script>
 </head>
 
 <body>
@@ -85,7 +94,7 @@ array("Properties", "config"),
  foreach ($items as $item)
  {
 	 if ((isset($_GET["p"]) && $_GET["p"] == $item[1]) ||(!isset($_GET["p"]) && $item[1] == "stream"))
-	 echo '<li class="active"><a ref="'.$item[1].'">'.$item[0].'</a></li>';
+	 echo '<li class="active"><span class="count">4</span><a ref="'.$item[1].'">'.$item[0].'</a></li>';
 else
  echo '<li><a ref="'.$item[1].'">'.$item[0].'</a></li>';
 	 

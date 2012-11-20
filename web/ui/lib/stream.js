@@ -1,32 +1,60 @@
 function displayCommentBox(o, userid, postid)
 {
-	$(".commentBox").hide();
+	//$(".commentBox").hide();
 	
 	//$(o).siblings(".commentBox textarea").select().focus(); //does not work because of auto height plugin!
 	console.log($(o).siblings(".commentBox"));
 
+	var p = $(o).siblings(".commentBox").children(".postcomments");
 
-if ($(o).siblings(".commentBox").children(".postcomments").html() == "")
-{
-	$.post("ui/actions/showComments.php", {},function(d){
+
+	if ($(p).data("loaded") != true)
+	{
+		$(p).data("loaded", true);
+
+		$.post("ui/actions/showComments.php", {postid: postid, userid:userid},function(d){
 		
+
+
+		$(o).siblings(".commentBox").show();
+		$(p).prepend(d);
+		$(o).siblings(".commentBox").children("textarea").focus().select();
+
+		});
+	}
+	else
+	{
+		$(o).siblings(".commentBox").show();
+		$(o).siblings(".commentBox").children("textarea").focus().select();
+	}
+
+
+}
+function stopComment(o)
+{
+
+	$(o).parent().hide();
+	
+}
+function loadComments(postid, userid, o, start)
+{
+
+	$(o).css("color", "silver");
 	
 
-	$(o).siblings(".commentBox").show();
-	$(o).siblings(".commentBox").children(".postcomments").prepend(d);
+	if ($(o).data("loading") != true)
+	{
+		$(o).data("loading", true);
+		$.post("ui/actions/showComments.php?s="+start, {postid: postid, userid:userid},function(d){
+			var t = $(o).parent();
 
-	//init buttons
-	});
-}
-else
-$(o).siblings(".commentBox").show();
+			$(o).remove();
 
-
-}
-function moreComments()
-{
+			$(t).prepend(d);
 
 
+			});
+	}
 }
 function lovePost(o)
 {

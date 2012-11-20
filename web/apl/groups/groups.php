@@ -24,6 +24,17 @@ function addGroupMember($userid, $memberid, $groupid)
 
 	return $content ["_id"];
 }
+function getGroupInfo($groupId, $fields)
+{
+	global $db_charme;
+
+	$collection = $db_charme->groups;
+	
+
+	$cur = $collection->findOne(array("_id"=> new MongoId($groupId)), $fields);
+	return $cur;
+
+}
 function getGroups($userid)
 {
 	global $db_charme;

@@ -9,11 +9,13 @@ function string_format($str)
 }
 function comment_format($userid, $username, $content, $time)
 {
+
+
 $usid = "<a href='/?p=profile&q=about&userId=".urlencode($userid)."'>".$username."</a>";
 
 
 
-return "<div class='comment'><div class='head'>$usid</div>$content</div>";
+return "<div class='comment'><a class='delete'> </a><div class='head'>$usid</div>$content</div>";
 }
 function post_format($obj, $useimg = false)
 {
@@ -24,62 +26,71 @@ if (isset($obj["typ"]) && $obj["typ"]==2)
 {
 
 
-	return array("<img src='apl/fs/?i=".$obj["reference"]."'>", 1);
+
+
+	return array("<a onclick='showPhoto(\"x\")'><img src='apl/fs/?i=".$obj["reference"]."'></a>", 1);
 }
 else
 {
 
-$img = "";
-$img2 = "";
-if ($useimg)
+    $img = "";
+    $img2 = "";
+
+    if ($useimg)
+    {
+        $img = "<a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>
+        <img class='profilePic' src='ui/media/phantom.jpg'><div class='subDiv'></a>";
+        $img2 = "</div>";
+    }
+
+    if (is_array($obj["_id"]))
+    {
+        $obj["_id"] = $obj["_id"]['$id'];
+        $ttime = $obj["posttime"]["sec"];
+    }
+    else
+    {
+        $ttime = $obj["posttime"]->sec;
+    }
+
+    include_once($_SERVER["DOCUMENT_ROOT"]."/apl/profile/comments.php");
+
+
+
+
+
+    //- <a onclick='followPost(this)'>Follow</a>
+
+
+    	return array("<div class='collectionPost'><a class='delete'> </a>".$img."
+    
+    <a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
+    	<div>
+        <span class='time'>".supertime($ttime)."</span>
+         <a onclick='displayCommentBox(this, \"".$obj["userid"]."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
+          - <a onclick='lovePost(this)'>Love</a>
+    	<div class='commentBox'><div class='postcomments'></div><textarea></textarea><br>
+        <a class='button' data-postid='".$obj["_id"]."'
+        data-userid='".$obj["userid"]."' onclick='doCommentReq(this)'>Post comment</a> or  <a onclick='stopComment(this)'>cancel</a></div>
+    	</div>".$img2." </div>", 2);
+
+    }
+
+}
+function commentBox($postid)
 {
-$img = "<a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>
-<img class='profilePic' src='ui/media/phantom.jpg'><div class='subDiv'></a>";
-$img2 = "</div>";
+
+    
 }
-
-
-
-
-if (is_array($obj["_id"]))
-{
-$obj["_id"] = $obj["_id"]['$id'];
-$ttime = $obj["posttime"]["sec"];
-}
-else
-{
-$ttime = $obj["posttime"]->sec;
-}
-
-include_once($_SERVER["DOCUMENT_ROOT"]."/apl/profile/comments.php");
-
-
-
-
-
-//- <a onclick='followPost(this)'>Follow</a>
-
-
-	return array("<div class='collectionPost'>".$img."
-<span class='time'>".supertime($ttime)."</span>
-<a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
-	<div>
-     <a onclick='displayCommentBox(this, \"".$obj["userid"]."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
-      - <a onclick='lovePost(this)'>Love</a> 
-	<div class='commentBox'><div class='postcomments'></div><textarea></textarea><br>
-    <a class='button' data-postid='".$obj["_id"]."'
-    data-userid='".$obj["userid"]."' onclick='doCommentReq(this)'>Post comment</a></div>
-	</div>".$img2." </div>", 2);
-
-}
-
-}
-
 function supertime($ptime) {
     $etime = time() - $ptime;
  
-    if ($etime > 0*24 * 60 * 60)
-    	return date("d.m.y H:i",  ($ptime));
+
+    $full = date("d.m.y H:i:s",  ($ptime));;
+
+
+    if ($etime > 1*24 * 60 * 60)
+    	return "<span title='$full'>".date("d.m H:i",  ($ptime))."</span>";
     if ($etime < 1) {
         return '0 seconds';
     }
@@ -96,7 +107,7 @@ function supertime($ptime) {
         $d = $etime / $secs;
         if ($d >= 1) {
             $r = round($d);
-            return $r . ' ' . $str . ($r > 1 ? 's' : '')." ago";
+            return "<span title='$full'>".$r . ' ' . $str . ($r > 1 ? 's' : '')." ago</span>";
         }
     }
 }
