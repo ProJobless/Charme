@@ -1,6 +1,7 @@
 .attachmentContainer div
 { 
-	padding:4px;
+	padding:8px;
+	padding-right: 0;
 	border-bottom: 1px silver solid;
 	
 

@@ -9,6 +9,9 @@
 	background-image: url("del.gif");
 
 }
+
+
+
 .delete:active
 {	
 	background-position: 0 16px;
@@ -18,7 +21,7 @@
 {
 padding: 8px 0;
 }
-.collectionPost:hover .comment:hover .delete
+.collectionPost:hover .comment:hover .delete, .attachmentContainer div:hover .delete
 {
 
 	 opacity: 1;

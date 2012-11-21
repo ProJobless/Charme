@@ -3,9 +3,18 @@ function ui_attachmentform()
 
 
 }
+function delAttachment(a)
+{
+
+$(a).parent().remove();
+}
+
+
 
 function ui_attach(x)
 {
+
+
 
 
 if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -17,22 +26,31 @@ $(x).siblings("input").unbind('change').change(function(h)
 {  
 var files = h.target.files; // FileList object
 var output = [];
+
+
     for (var i = 0, f; f = files[i]; i++) {
-    	$('.attachmentContainer').append("<div>"+ escape(f.name)+ "</div>");
 
+	var reader = new FileReader();
+	reader.file = f; //http://stackoverflow.com/questions/4404361/html5-file-api-get-file-object-within-filereader-callback
 
-  /*  output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');*/
+	reader.onload = function(e) {
+
+      $('.attachmentContainer').append("<div><a  class='delete' style='float:right' onclick='delAttachment(this)'> </a>"+ escape(this.file.name)+ "</div>");
+		$('.attachmentContainer div').last().data("filecontent", reader);
     }
-   // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+     reader.readAsText(f) ;
+
+    }
 
 });
 $(x).siblings("input").trigger("click");
 
 
- 	
+//Access the files:
+ 	$('.attachmentContainer div').each (function(i,v)
+ 		{
+		console.log($(v).data("filecontent"));
+ 		});
 
  	//.trigger('change', function(h){}, false);
 
