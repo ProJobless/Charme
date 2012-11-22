@@ -38,18 +38,37 @@ $cont = array("userid" => $_SESSION["charme_user"],
 		
 			);
 
+	$db_charme->posts->insert($cont	);
 
 foreach ($attachments as $file)
 {
-$filename = $file[1];
-base64_decode($file[0]); //TODO:Save file lenght
+$filename = $file[1];  //
+
+
+
+
+	
+	$m = new Mongo();
+	$db = $m->charme;
+	$grid = $db->getGridFS();
+
+$type = "JPG"; //TODO!!!!
+
+
+	$grid->storeBytes($file[0], array('filename'=> $filename, 'owner' => $userId, 'type'=>$type,'owner' => $username,'postid' => $cont["_id"]));
+
+	
+
+
+						//TODO: GET File type!
+//base64_decode($file[0]); //TODO:Save file lenght
 
 
 //Insert file into GridFS
 
 }
 
-	$db_charme->posts->insert($cont	);
+
 //echo "THE POSTID IS:".$cont["_id"]."!!!";
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
