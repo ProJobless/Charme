@@ -132,10 +132,20 @@ function initPage(level)
 alert(g);
 		var x = $.urlParam("id",location.href );
 
+		var files = new Array();
+		$('.attachmentContainer div').each (function(i,v)
+ 		{
+		files.push(new Array($(v).data("filecontent").result,$(v).data("filecontent").file.name));
+ 		});
+		console.log(files);
+
+
 		x = (x=="") ?  "0" : x;
-		$.post("ui/actions/doPost.php?id="+x, {content:v, g:g}, function(d)
+		$.post("ui/actions/doPost.php?id="+x, {content:v, g:g, files:files}, function(d)
 		{
 			alert(d);
+
+
 		});
 	});
 

@@ -38,7 +38,7 @@ var output = [];
       $('.attachmentContainer').append("<div><a  class='delete' style='float:right' onclick='delAttachment(this)'> </a>"+ escape(this.file.name)+ "</div>");
 		$('.attachmentContainer div').last().data("filecontent", reader);
     }
-     reader.readAsText(f) ;
+     reader.readAsDataURL(f) ;
 
     }
 
@@ -47,10 +47,7 @@ $(x).siblings("input").trigger("click");
 
 
 //Access the files:
- 	$('.attachmentContainer div').each (function(i,v)
- 		{
-		console.log($(v).data("filecontent"));
- 		});
+ 
 
  	//.trigger('change', function(h){}, false);
 

@@ -18,17 +18,19 @@ Input variables:
 	$_GET["id"] - Collection id if no group id exists
 
 */
+	print_r($_POST["files"]);
+
 	
 if ($_POST["content"] != "") //We do not need empty posts.
 {
 	if ($_POST["g"] == "")
 	{
-			postToCollection($_GET["id"], $_POST["content"], $_SESSION["charme_user"]);
+			postToCollection($_GET["id"], $_POST["content"], $_SESSION["charme_user"], $_POST["files"]);
 	}
 
 	if ($_POST["g"] != "")
 	{
-			postToCollection($_POST["g"], $_POST["content"], $_SESSION["charme_user"], array() ,true);
+			postToCollection($_POST["g"], $_POST["content"], $_SESSION["charme_user"], $_POST["files"],true);
 	}
 }
 

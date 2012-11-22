@@ -38,6 +38,17 @@ $cont = array("userid" => $_SESSION["charme_user"],
 		
 			);
 
+
+foreach ($attachments as $file)
+{
+$filename = $file[1];
+base64_decode($file[0]); //TODO:Save file lenght
+
+
+//Insert file into GridFS
+
+}
+
 	$db_charme->posts->insert($cont	);
 //echo "THE POSTID IS:".$cont["_id"]."!!!";
 
