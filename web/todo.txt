@@ -1,6 +1,8 @@
-
-- userlist framework function
-- delete button for ALL collection entries
+- apl/stream/posts : store attachments!
+- attachments
+-multiple atachments on one site! talks: new message and answer message!!
+- delete collections, images
+-photviewer
 - latex only on .tex
 - global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
 
@@ -12,6 +14,8 @@
 - messages: Do update names!
 - friends lists: do update names!
 
+
+
 -queue based request sending with priorities
 0: instant () comment delete, post delete
 3: (max 30 seconds) , posts, messages, new comment
@@ -19,6 +23,12 @@
 6: (max 10 minutes)
 9: (max 1h)
 12: (max 1d)
+
+
+
+----Sharing (only with public collections!)
+- Share via direct url over home.php?shareuser=USERID&sharepost=POSTID
+- Link back to original entry (also for verify)!
 
 
 -nameservice!

@@ -7,5 +7,5 @@
 
 
 <div class='photoContainer'>
-<img src='' class='photo'>
+<img class='photo' data-width='1234' data-height='1400' src='apl/fs/?i=<?=$_POST["pid"]?>'>
 </div>

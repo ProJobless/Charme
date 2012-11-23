@@ -20,10 +20,43 @@ function showPhoto(pid)
 {
 	//TODO: GET owner!
 
-var uid = "";
-	  $.post("ui/actions/showPhoto.php", {"uid":uid, "pid": pid}, function(d){
+	var uid = "";
+	$.post("ui/actions/showPhoto.php", {"uid":uid, "pid": pid}, function(d){
 
-	$("body").append("<div class='photobox'>"+d+"</div>");
+	$("body").append("<div class='photobox'>"+d+"</div>")
+
+	var iw = $(".photobox .photo").data("width");
+	var ih = $(".photobox .photo").data("height");
+
+	
+
+
+	var pw = $(".photoContainer").width()-64;
+	var ph = $(".photoContainer").height()-64;
+
+	var mh = 9;
+
+	//Scale images relative
+	if (ih > ph) 
+	{
+		var ihtmp = ih;
+		ih = ph;
+		iw = (ih/ihtmp) * iw;
+	}
+	if (iw > pw)
+	{
+		var iwtmp = iw;
+		iw = pw;
+		ih = (iw/iwtmp) * ih;
+	}
+
+$(".photobox .photo").width(iw).height(ih);
+
+	var t = (ph-ih)/2+32;
+	var l = (pw-iw)/2+32;
+
+	var ih = $(".photobox .photo").css("top",t).css("left", l);
+	//Set size and position of Photo
 
 });
 	//warning: has to view other peoples photos too!
