@@ -11,7 +11,7 @@
 .photobox .photoContainer
 {
 
-	margin-right: 300px;
+	margin-right: 350px;
 	height: 100%;
 	position: relative;
 }
@@ -28,7 +28,7 @@
 
 	float:right;
 	background-color:#fff;
-	width:300px;
+	width:350px;
 	height: 100%;
 
 }

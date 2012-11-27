@@ -14,7 +14,7 @@
 - messages: Do update names!
 - friends lists: do update names!
 
-
+-swiftmailer!
 
 -queue based request sending with priorities
 0: instant () comment delete, post delete

@@ -28,7 +28,7 @@ if (isset($obj["typ"]) && $obj["typ"]==2)
 
 
 
-	return array("<a onclick='showPhoto(\"".$obj["reference"]."\")'><img src='apl/fs/?i=".$obj["reference"]."'></a>", 1);
+	return array("<a onclick='showPhoto(\"".$obj["reference"]."\", \"".$obj["userid"]."\")'><img src='apl/fs/?i=".$obj["reference"]."'></a>", 1);
 }
 else
 {
@@ -69,16 +69,20 @@ else
         <span class='time'>".supertime($ttime)."</span>
          <a onclick='displayCommentBox(this, \"".$obj["userid"]."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
           - <a onclick='lovePost(this)'>Love</a>
-    	<div class='commentBox'><div class='postcomments'></div><textarea></textarea><br>
-        <a class='button' data-postid='".$obj["_id"]."'
-        data-userid='".$obj["userid"]."' onclick='doCommentReq(this)'>Post comment</a> or  <a onclick='stopComment(this)'>cancel</a></div>
-    	</div>".$img2." </div>", 2);
+    	".commentBox($obj["_id"], $obj["userid"]).$img2." </div></div>", 2);
 
     }
 
 }
-function commentBox($postid)
+function commentBox($objId, $ownerId, $instantVisible=false)
 {
+
+return "<div class='commentBox' ".($instantVisible  ? " style='display:block;'": "").">
+            <div class='postcomments'></div><textarea></textarea><br>
+            <a class='button' data-postid='".$objId."'
+            data-userid='".$ownerId."' onclick='doCommentReq(this)'>Post comment</a>".($instantVisible  ? "": "or  <a onclick='stopComment(this)'>cancel</a>")." 
+            </div>
+        ";
 
     
 }

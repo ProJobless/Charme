@@ -12,17 +12,20 @@ function postIntoCollection()
 }
 function closePhoto()
 {
-
+$("#page3").show();
 $(".photobox").remove();
 
 }
-function showPhoto(pid)
+function showPhoto(pid, uid)
 {
 	//TODO: GET owner!
 
-	var uid = "";
-	$.post("ui/actions/showPhoto.php", {"uid":uid, "pid": pid}, function(d){
+	
 
+	$.post("ui/actions/showPhoto.php", {"uid":uid, "pid": pid}, function(d){
+	
+	$("#page3").hide(); //To get rid of side scrollbars
+	
 	$("body").append("<div class='photobox'>"+d+"</div>")
 
 	var iw = $(".photobox .photo").data("width");
