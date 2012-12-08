@@ -9,12 +9,20 @@ function addComment($postowner, $postid, $userId, $content)
 
 
 	$rr = new remoteRequest($postowner, $_SESSION["charme_user"], "comment_get");
-	$rr->setPayload(array("postid"=> $postid, "content" => $content, "userid"=> $userId, "posttime"=>  new MongoDate(time())));
+	$rr->setPayload(array("postid"=> $postid, "content" => $content, "userid"=> $userId, "posttime"=> (time())));
 	$rr->send();
 
 }
+
 function getComments($postid, $owner, $start, $range)
 {
+
+	//If $start is negative, the first comment is $lastindex-$start
+echo ".".$postid;
+echo ".".$owner;
+echo ".".$start;
+echo ".".$range;
+
 
 
 	//problem: STREAM ID != POSTID!!!
@@ -22,9 +30,16 @@ function getComments($postid, $owner, $start, $range)
 
 	//TODO: CHECK AUTHENTICATION!!
 
-	$re = $db_charme->posts->findOne(array("_id" => new MongoId( $postid)), array('comments' => array( '$slice' =>  array($start,$range) )));
-	
-
+	/*
+	Warning: It is not possible to sort sub documents
+	http://stackoverflow.com/questions/3848814/sort-sub-documents-in-mongodb for more information.
+	This may become a problem, if some comments are received later, but where posted earlier.
+	Therefore, the original posttime is ignored. Therefore posttime is the time when the comment is received.
+	*/
+	$re = $db_charme->posts->findOne(
+		array("_id" => new MongoId( $postid)),
+		array('comments' => array( '$slice' =>  array($start,$range)))
+		);
 
 	return $re["comments"];
 
@@ -41,7 +56,7 @@ function receiveComment($data)
 	//TODO: Send notification to (ALL?) post followers 
 	//print_r($data);
 	global $db_charme;
-	$comment = array("userid" => $data["userid"], "content" => $data["content"]);//"postid" => $data["postid"]
+	$comment = array("userid" => $data["userid"], "content" => $data["content"], "posttime"=> new MongoDate(time()));//"postid" => $data["postid"]
 
 	
 /*

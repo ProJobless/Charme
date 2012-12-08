@@ -116,6 +116,7 @@ function initPage(level)
 
 
 
+	
 
 		
 	$('.tabBar a').unbind('click');
@@ -129,13 +130,13 @@ function initPage(level)
 
 		var v = ($(this).parent().parent().children("textarea").val());
 		var g = ($(this).parent().parent().children("input[name='groupid']").val());
-alert(g);
 		var x = $.urlParam("id",location.href );
 
 		var files = new Array();
 		$('.attachmentContainer div').each (function(i,v)
  		{
 		files.push(new Array($(v).data("filecontent").result,$(v).data("filecontent").file.name));
+ 	
  		});
 		console.log(files);
 
@@ -158,8 +159,8 @@ alert(g);
 	
 	if ($('div[title=page_layout]').html() == "1")
 	{
-			$('.content').css("width", "700px");
-		$('.content').css("margin-left", "150px");
+			$('.page_content').css("width", "700px");
+		$('.page_content').css("margin-left", "150px");
 		$('.sbBeta').show();
 		
 	if (level == 0)
@@ -172,8 +173,8 @@ alert(g);
 	}
 	else
 	{
-		$('.content').css("width", "850px");
-		$('.content').css("margin-left", "0");
+		$('.page_content').css("width", "850px");
+		$('.page_content').css("margin-left", "0");
 		$('.sbBeta').hide();
 	}
 	
@@ -236,8 +237,8 @@ ui_userselect();
 
 
 
-	if (MathJax)
-	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+	//if (MathJax)
+	//MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
 }
 function pageLoadWithHistoryBetaArg(p, args)

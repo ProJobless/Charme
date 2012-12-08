@@ -40,8 +40,14 @@ else
 <script src='/ui/lib/groups.js'></script>
 
 
+
+
+
+<!--
+
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
   "SVG": {
     scale: 100
   }
@@ -49,6 +55,8 @@ MathJax.Hub.Config({
 </script>
 
 <script type="text/javascript" src="/tparty/mathjax/MathJax.js?config=default">
+-->
+
 </script>
 </head>
 
@@ -123,7 +131,7 @@ else
      </ul>
         </div>
         
-        <div class="content">
+        <div class="page_content">
         <div class="page" style="padding:0px; " id="page">
         <?
 		if (!isset($_GET["p"]))

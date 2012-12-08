@@ -5,6 +5,7 @@ background-color: #efefef;
 display: block;
 padding: 16px;
 
+
 }
 .msgItems li a:active, .msgItems li.active  a
  {
@@ -40,13 +41,26 @@ position: fixed;
 }
 .msgItems li
 {
+
+}
+.msgScrollContainer
+{
+width:300px;
 	
+
+
+}
+.msgScrollContainer
+{
+	
+
 }
 .msgItems
 {
 	padding:0;
 	margin:0;list-style-type: none;
-overflow: auto;
+
+
 }
 .message
 {

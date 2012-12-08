@@ -25,20 +25,31 @@ function initTalks()
 		$.doTimeout( 'to_bottom', 10, function(){$(window).scrollTop(999999);$.doTimeout( 'to_bottom' );});
 // do something in 1 second
 
-
-
-
-		
-
 	}
+	
+$(window).resize(function() {
+setSCHeight();
+});
+
+setSCHeight();
+
+	
 
 
 }
+function setSCHeight()
+{
+$(".msgScrollContainer").css("height", ($(window).height()-82)+"px");
+$('.nano').nanoScroller();
+}
+
 function changeHeight()
 {
 
 
 $(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
+
+
 
 
 

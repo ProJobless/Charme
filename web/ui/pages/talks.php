@@ -19,7 +19,9 @@ if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 <div style='padding:16px; border-bottom:1px silver solid'>
 	<a style='background-position:-0px 0;' data-bgpos='-0'  class='functionButton actionIcon' id='but_newMessage'> </a>
 </div>
-<ul class='msgItems tabBar'>
+<div class='msgScrollContainer nano'>
+
+<ul class='msgItems tabBar content'>
 <?
 
 
@@ -55,7 +57,7 @@ $acont = $item["lastauthor"].$more."<div>".$item["preview"]."</div>";
        echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
 ?>
 </ul>
-
+</div>
 <?
 
 

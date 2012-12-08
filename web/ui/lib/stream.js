@@ -69,9 +69,15 @@ function doCommentReq(o)
 	var pid = $(o).data("postid");	
 	var uid = $(o).data("userid");	
 	var txt = $(o).siblings("textarea").val();
+	var txt2= $(o).siblings("textarea");
 
 	$.post("ui/actions/doComment.php", {"pid":pid, "txt":txt, "uid":uid},function(d){
-	alert(d);
+
+	$(txt2).parent().children(".postcomments").append(d);
+
+
+
+	$(txt2).val("");
 	//init buttons
 	});
 

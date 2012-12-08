@@ -39,12 +39,15 @@ them.
 4) Third Party Includes
 -----------------------------------------------
 
-Name			 | License        | Filepath
+Name			 | License        | Filepath | 
 -----------------------------------------------
 Rockmongo 		  BSD				/admin/rockmongo
 WideImage 		  GNU LGPL 2.1.		/tparty/wideimage
 jQuery Terminal   GNU LGPL			/admin/terminal.js
 Mathjax           Apache License    /tparty/mathjax
+nanoScroller	  MIT		 		embedded in ui.css / ui.js (http://jamesflorentino.github.com/nanoScrollerJS/ for more information)
+
+
 
 The full license files can be found in the 
 specified filepath.

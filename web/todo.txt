@@ -1,12 +1,13 @@
 - apl/stream/posts : store attachments!
 - attachments
+-top collections
 -multiple atachments on one site! talks: new message and answer message!!
 - delete collections, images
 -photviewer
 - latex only on .tex
 - global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
 
-
+-remove add button action when leaving group page and goto stream
 - comments: save in posts, get from alpha server via json, add receivejs 
 - comments: do not update names!
 - posts in streams do not update names as only 3 das valid!
@@ -16,7 +17,11 @@
 
 -swiftmailer!
 
--queue based request sending with priorities
+
+-remove queue
+
+
+-mathjax based request sending with priorities
 0: instant () comment delete, post delete
 3: (max 30 seconds) , posts, messages, new comment
 6: max 2 minutes: friendreuqests, subscribe requests
@@ -45,3 +50,9 @@
 Security----
 
 + check if collection follow is legal
+
+
+
+DEV NOTES
+-----
+nanoScroller needs a .content element inside .nano

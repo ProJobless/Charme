@@ -18,7 +18,7 @@ Input variables:
 	$_GET["id"] - Collection id if no group id exists
 
 */
-	print_r($_POST["files"]);
+//	print_r($_POST["files"]);
 
 	
 if ($_POST["content"] != "") //We do not need empty posts.

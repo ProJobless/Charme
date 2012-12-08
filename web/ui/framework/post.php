@@ -61,15 +61,44 @@ else
 
     //- <a onclick='followPost(this)'>Follow</a>
 
+    $atta = "";
+
+    if ($obj["attachments"])
+            {
+                 $atta .= "<div class='attach'>Attachments: ";
+                foreach ($obj["attachments"] as $att)
+                {
+                
+                $atta .= "<a href='apl/fs/?g=".$att["fileId"]."'> ".$att['name']."</a>";
+                }
+             /*   
+obj
+             $atta .= "<br/>";
+                //Do image Attachments!!
+                foreach ($obj["attachments"] as $att)
+                {
+                if ($att["typ"] == 0)
+                $atta .= "<img src='http://www.google.de/images/srpr/logo3w.png'>";
+                }*/
+                
+                
+                $atta .= "</div>";
+            }
+
+
+
 
     	return array("<div class='collectionPost'><a class='delete'> </a>".$img."
     
     <a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
-    	<div>
+    	<div>".$atta."
         <span class='time'>".supertime($ttime)."</span>
          <a onclick='displayCommentBox(this, \"".$obj["userid"]."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
           - <a onclick='lovePost(this)'>Love</a>
     	".commentBox($obj["_id"], $obj["userid"]).$img2." </div></div>", 2);
+
+
+
 
     }
 
