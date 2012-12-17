@@ -9,14 +9,28 @@ function string_format($str)
 }
 function comment_format($userid, $username, $content, $time)
 {
-
-
-$usid = "<a href='/?p=profile&q=about&userId=".urlencode($userid)."'>".$username."</a>";
-
-
-
-return "<div class='comment'><a class='delete'> </a><div class='head'>$usid</div>$content</div>";
+    $usid = "<a href='/?p=profile&q=about&userId=".urlencode($userid)."'>".$username."</a>";
+    return "<div class='comment'><a class='delete'> </a><div class='head'>$usid</div>$content</div>";
 }
+
+function message_format($author, $content, $attachments)
+{
+    $atta = "";
+
+    //Add attachments to message outputs if avaiable
+    if (Count($attachments)>0)
+    {
+               $atta .= "<div class='attach' style='margin-top:8px'>Attachments: ";
+               foreach ($attachments as $att)
+                {
+                    $atta .= "<a href='apl/fs/?g=".$att["fileId"]."'> ".$att['name']."</a>";
+                }
+                $atta .= "</div>";
+    }
+
+    return "<div class='message'><div class='top'>".$author."</div>".$content."".$atta."</div>";
+}
+
 function post_format($obj, $useimg = false)
 {
 
@@ -66,7 +80,10 @@ else
     if ($obj["attachments"])
             {
                  $atta .= "<div class='attach'>Attachments: ";
-                foreach ($obj["attachments"] as $att)
+
+               //   $atta .= implode(", ", $obj["attachments"]);
+               
+               foreach ($obj["attachments"] as $att)
                 {
                 
                 $atta .= "<a href='apl/fs/?g=".$att["fileId"]."'> ".$att['name']."</a>";

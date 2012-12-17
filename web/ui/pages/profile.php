@@ -69,7 +69,9 @@ else
 	
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/getProfile.php");
-	$arr2 = getProfile($_SESSION["charme_user"], array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
+
+	//TODO: 1st Argument must be profile owner, not logged in user
+	$arr2 = getProfile($userId, array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
 
 	$arr = $arr2[0];
 
@@ -154,7 +156,20 @@ else
 			printAbout(doLists($userId), "Lists", false);
 		echo "</table></div>";
 
-			echo "<div class='aboutBox' style='margin-top:32px'><div class='title'>Featured Collections</div>asdasd</div>";
+		// Format collections
+		$format = "";
+		
+		foreach ($arr2[1] as $item)
+		{
+
+
+
+			$format .= "<li><a  data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$item["_id"]. "'>".$item["name"]. "</a></li>";
+
+
+			//$format .= "<li><a href='".$item["name"]."'>".$item["name"]."</a></li>"
+		}
+			echo "<div class='aboutBox' style='margin-top:32px'><div class='title'>Featured Collections</div><ul>".$format."</ul></div>";
 
 
 	echo "</div>";

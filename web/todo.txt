@@ -21,7 +21,11 @@
 -remove queue
 
 
--mathjax based request sending with priorities
+-mathjax based
+
+
+
+request sending with priorities
 0: instant () comment delete, post delete
 3: (max 30 seconds) , posts, messages, new comment
 6: max 2 minutes: friendreuqests, subscribe requests

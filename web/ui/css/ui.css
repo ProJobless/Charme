@@ -1,3 +1,11 @@
+.more
+{
+
+	display: block;
+	border:1px silver solid;
+	padding:16px;
+	text-align: center;
+}
 .attachmentContainer div
 { 
 	padding:8px;

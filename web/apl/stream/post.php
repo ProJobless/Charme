@@ -34,32 +34,27 @@ function postToCollection($collection, $content, $userId, $attachments=array(), 
 
 	foreach ($attachments as $file)
 	{
+		/*
+		The content of this loop should be mostly equivalent to the sendMessage functions file loop in
+		apl/profile/messages.php
 
+		TODO: Build a function?
+		*/
 
-	$filename = $file[1];  //
-	$grid = $db_charme->getGridFS();
+		$filename = $file[1];  //
+		$grid = $db_charme->getGridFS();
 
+		$file2 = explode(',',  $file[0]);
 
-	$type = "JPG"; //TODO!!!!
+		// Get File Type e.g text/plain
+		$tmp = explode(';',  $file2[0]);
+		$tmp = explode(':',  $tmp[0]);
+		
+		//Return file type
+		$type = $tmp[1];
 
-	$file2 = explode(',',  $file[0]);
-
-
-	// Get File Type e.g text/plain
-	$tmp = explode(';',  $file2[0]);
-	$tmp = explode(':',  $tmp[0]);
-	$type = $tmp[1];
-
-		echo "##".$filename;
-
-
-	$objId = $grid->storeBytes(base64_decode ($file2[1]), array('filename'=> $filename, 'owner' => $userId, 'type'=>$type));
-	$attachments2[] = array("name" => $filename, "fileId"=>$objId);
-
-	//TODO: GET File type!
-	//base64_decode($file[0]); //TODO:Save file lenght
-
-	//Insert file into GridFS
+		$objId = $grid->storeBytes(base64_decode ($file2[1]), array('filename'=> $filename, 'owner' => $userId, 'type'=>$type));
+		$attachments2[] = array("name" => $filename, "fileId"=>$objId);
 	}
 
 

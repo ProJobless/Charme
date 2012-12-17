@@ -57,12 +57,37 @@ $(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
 }
 function sendMessage(a)
 {
-$.post("ui/actions/newMessage.php", $(a).serialize(), function(d){
-		
+	var files;
+	if (a == '.fixedBox form') // New message was created => Get files from new message form
+		files = getAttachmentFiles("atf_NEWMESSAGE");
+	else //Appended message => Get files from answer message form
+		files = getAttachmentFiles("atf_stream_APPENDMESSAGE");
+	
+
+	
+	/*
+		Cannot use .serialize() for form here, because we also need to post attachement files!
+	*/
+	$.post("ui/actions/newMessage.php",{
+
+		col_to: $(a+" input[name='col_to']").val(), 
+		col_type: $(a+" input[name='col_type']").val(),
+		col_description: $(a+" textarea[name='col_description']").val(),
+		files: files
+
+	 }, function(d){
 	ui_closeBox();
+
+	// Clear Textbox and attachment container after messages has been sent
+	$(a+" textarea[name='col_description']").val("").focus();
+	$("#attachmentsatf_stream_APPENDMESSAGE").html("")
+
+	// Scroll to bottom
+	$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 
 	if (a == '.instantanswer form')
 			$('.talkmessages').append(d);
+
 
 	});
 

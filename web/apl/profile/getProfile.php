@@ -8,14 +8,14 @@ function getProfile($invader, $fields, $userId)
 	$col = $db_charme->users;
 	$cursor = $col->findOne(array("userid"=>$userId));
 
+	// Cursor 2 contains collection. TODO: Sort and maximum numer=5 (?), TODO: Select only fields which are necessary
+
+	$cursor2 = $db_charme->usercollections->find(array("userid"=> ($userId)),array("name", "_id"));
 
 	//Only if visible to me!!!!!!
 
 
-
-	$collections = ""; //array("name", "id")
-
-	return array($cursor, $collections);
+	return array($cursor, $cursor2);
 
 }
 function getName()

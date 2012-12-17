@@ -1,7 +1,11 @@
 <?
+/*
+Class provides a gui for attachments
+Javascript functions can be found in ui.js
+*/
 class attachmentForm
 {
-	var $fid;
+	var $fid; // Must be unique for every attachment
 	function attachmentForm($fid)
 	{
 		$this->fid=$fid;

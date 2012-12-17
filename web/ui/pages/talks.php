@@ -7,6 +7,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 needSession();
 fw_load("page");
 fw_load("forms");
+fw_load("post");
 page_init("Talks", 0);
 
 
@@ -48,13 +49,7 @@ $acont = $item["lastauthor"].$more."<div>".$item["preview"]."</div>";
 	 echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
 }
 
- echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
-  echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
-   echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
-    echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
-     echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
-      echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
-       echo '<li data-name="'.$item["uniqueId"].'"><a ref="'.$item["uniqueId"].'">'.$acont.'</a></li>';
+
 ?>
 </ul>
 </div>
@@ -91,7 +86,7 @@ $ppl2 = $ppl["people"];
 $ppl3 = "p".implode(",p",$ppl2);
 
 fw_load("attachment");
-$atf = new attachmentForm("atf_stream_".$_GET["q"]);
+$atf = new attachmentForm("atf_stream_APPENDMESSAGE");
 
 
 echo '<div class="instantanswer"><form>
@@ -101,17 +96,15 @@ echo '<div class="instantanswer"><form>
 <div style="margin-top:8px;"><a class="button" href="javascript:sendMessageInstant()">Send</a> or '.$atf->printAdd().'
 	</form></div></div>';
 
-	echo "People in this conversation: ".implode(", ", $ppl["people"]);
+	echo "<div class='message'>People: ".implode(", ", $ppl["people"])."</div>";
+
 	echo "<div class='talkmessages'>";
 	
 
 	$items = getMessageItems($_SESSION["charme_user"], $_GET["q"]);
 	foreach ($items as $item)
 	{
-
-
-		
-		echo "<div class='message'><div class='top'>".$item["author"]."</div>".$item["content"]."</div>";
+		echo message_format($item["author"], $item["content"], $item["attachments"]);
 	}
 	echo "</div>";
 }
