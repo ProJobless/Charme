@@ -6,20 +6,45 @@ needSession();
 
 $commentsPerPage = 3;
 
-$commentStartIndex = isset($_GET["s"]) ? $_GET["s"] : -$commentsPerPage;
+
+
+
+if (!isset($_GET["s"]))
+$commentStartIndex = getCommentCount($_POST["postid"])-$commentsPerPage;
+
+
+else
+$commentStartIndex = $_GET["s"];
+
+if ($commentStartIndex < 0)
+{
+	$commentsPerPage = $commentsPerPage+$commentStartIndex;
+	$commentStartIndex = 0;
+}
 
 fw_load("post");
+
+
+
+
+
 
 //getComments(postid, owner, start,range)
 $cList = getComments($_POST["postid"], $_POST["userid"], $commentStartIndex,$commentsPerPage); 
 
+
 $showload = false;
+
+
+if (($commentStartIndex) > 0)
+$showload = true;
+
 foreach ($cList as $item)
 {
-	if (!$showload)
+	if ($showload)
 	{
-		echo "<a class='more' onclick='loadComments(\"".$_POST["postid"]."\", \"".$_POST["userid"]."\", this,".($commentStartIndex-$commentsPerPage).")'>More...</a>";
-		$showload = true;
+		echo "<a class='morecomments' onclick='loadComments(\"".$_POST["postid"]."\", \"".$_POST["userid"]."\", this,".($commentStartIndex-$commentsPerPage).")'>More...</a>";
+		$showload = false;
 	}
 	echo comment_format($item["userid"], "USERNAME" ,$item["content"], time());
 }

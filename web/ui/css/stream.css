@@ -4,12 +4,12 @@
 	display: none;
 }
 .postcomments{padding-top: 8px;}
-.postcomments .more:active
+.postcomments .morecomments:active
 {
 	background-color: #efefef;
 
 }
-.postcomments .more
+.postcomments .morecomments
 {
 
 	padding:8px;

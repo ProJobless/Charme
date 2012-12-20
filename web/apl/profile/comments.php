@@ -14,6 +14,15 @@ function addComment($postowner, $postid, $userId, $content)
 
 }
 
+function getCommentCount($postid)
+{
+		//problem: STREAM ID != POSTID!!!
+	global $db_charme;
+
+	$count = $db_charme->postcomments->find(array("postid" => new MongoId( $postid)))->count();
+	return $count;
+
+}
 function getComments($postid, $owner, $start, $range)
 {
 
@@ -29,7 +38,9 @@ echo ".".$range;*/
 	//problem: STREAM ID != POSTID!!!
 	global $db_charme;
 
-	//TODO: CHECK AUTHENTICATION!!
+	// TODO: Cross Site Access!
+
+	// TODO: CHECK AUTHENTICATION!!
 
 	/*
 	Warning: It is not possible to sort sub documents
@@ -37,13 +48,14 @@ echo ".".$range;*/
 	This may become a problem, if some comments are received later, but where posted earlier.
 	Therefore, the original posttime is ignored. Therefore posttime is the time when the comment is received.
 	*/
-	$re = $db_charme->posts->findOne(
+	
+
+	/*$re = $db_charme->posts->findOne(
 		array("_id" => new MongoId( $postid)),
 		array('comments' => array( '$slice' =>  array($start,$range)))
-		);
-
-	return $re["comments"];
-
+		);*/
+	//$count = $db_charme->postcomments->find(array("postid" => new MongoId( $postid)))->count();
+return $db_charme->postcomments->find(array("postid" => new MongoId( $postid)))->sort(array("posttime" => -1))->limit($range)->skip($start);
 
 
 }
@@ -57,7 +69,7 @@ function receiveComment($data)
 	//TODO: Send notification to (ALL?) post followers 
 	//print_r($data);
 	global $db_charme;
-	$comment = array("userid" => $data["userid"], "content" => $data["content"], "posttime"=> new MongoDate(time()));//"postid" => $data["postid"]
+	$comment = array("postid" => new MongoId($data["postid"]), "userid" => $data["userid"], "content" => $data["content"], "posttime"=> new MongoDate(time()));//"postid" => $data["postid"]
 
 	
 /*
@@ -79,11 +91,13 @@ $collection->update($query,
 //$xy = $db_charme->posts->update(array("_id"=>new MongoId($data["postid"])),	array('$set' => array("comments"=> array())));
 
 
-	$xy = $db_charme->posts->update(array("_id"=>new MongoId($data["postid"])),array('$push' => array('comments' => $comment)), array("upsert" =>true));
+	// Sub array like this is a bad idea, as with every new comment whole post has to be reordered in memory
+	//$xy = $db_charme->posts->update(array("_id"=>new MongoId($data["postid"])),array('$push' => array('comments' => $comment)), array("upsert" =>true));
 	
 
-
-	print_r($xy);
+ 	$db_charme->postcomments->insert($comment);
+ 
+	//print_r($xy);
 
 
 	//TODO: SEND UPDATE TO followers if not send within the last two minutes!
