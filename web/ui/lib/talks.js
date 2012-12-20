@@ -1,3 +1,13 @@
+function loadMessages(q,s)
+{
+	$.post("ui/actions/loadMessageItems.php?q="+q+"&s="+s, function(d){
+		$(".talkmessages .more").remove();
+		$(".talkmessages").prepend(d);
+	//init buttons
+	});
+
+}
+
 function but_newMessage()
 {
 

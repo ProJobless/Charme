@@ -17,7 +17,7 @@ $lists_iterator++;
 	$iurl = explode('@',	$userid);
 	$iurl = $iurl[1];
 
-	echo "<div class='item'><a  href='/?p=profile&q=about&userId=".urlencode($userid)."'><img src='http://".$iurl."/apl/fs/?f=p_200_".urlencode($userid)."'>
+	echo "<div class='item' data-userid='".$userid."'><a  href='/?p=profile&q=about&userId=".urlencode($userid)."'><img src='http://".$iurl."/apl/fs/?f=p_200_".urlencode($userid)."'>
 	".$name."</a></div>";
 }
 function lists_start()

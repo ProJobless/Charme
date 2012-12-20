@@ -18,6 +18,8 @@ include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/lists.php");
 $cur = getLists($_SESSION["charme_user"]);
 
 
+$lists[] = subMenuActionAdd("All", "0");
+
 $first = "";
 foreach ($cur as $item)
 {
@@ -35,17 +37,45 @@ $lists
 
 );
 //Default cricles: Friends, Acquaintances, Colleauges
-echo "ID$selected";
+//echo "ID$selected";
+
+$name = "All lists";
+
+	echo "<div class='p32' style='padding-bottom:0px' >";
+
+//invite/add people, documents, propoerties 
+	echo '<a style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" id="but_addCollection"> </a>';
+
+
+	echo "<div style='font-size: 16px'>".$name."</div><div style='padding: 8px 0 0px 0;'>22 People</div>";
+echo "</div>";
 
 
 
-$listItems = getListitemsByList($_SESSION["charme_user"], $selected );
-print_r($listItems);
+echo "<div class='p16' id='friendItemContainer'>";
 
 
-foreach ($listItems as $item){
-echo $item["item"]."<br>";
-}
+	$listItems = getListitemsByList($_SESSION["charme_user"], $selected );
+
+//print_r($listItems);
+
+
+
+fw_load("lists");
+	//People in my lists, or subscribers? => just subscribers!
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
+
+	echo lists_start();
+	foreach ($listItems as $item)
+	{
+		echo lists_doItem($item["item"], "NAME OF ".$item["item"]);
+
+	}
+	echo lists_end();
+
+
+echo "</div>";
 
 
 

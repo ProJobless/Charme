@@ -95,6 +95,18 @@ if ($collection == NULL || $collection == 0)
 	return array_reverse ($arr);
 }
 
+// TODO: Has to work via remote request (if user is not on this server!)
+function getCollectionPostCount($owner, $collection)
+{
+	/*global $db_charme;
+	$col = $db_charme->posts;
+	$cursor = $col->find(array("collection"=>new MongoId($collection)))->sort(array("posttime" => -1));
+	return $cursor;*/
+	
+
+}
+
+
 function getCollectionPosts($owner, $collection)
 {
 	global $db_charme;

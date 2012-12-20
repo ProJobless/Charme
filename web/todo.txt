@@ -1,9 +1,6 @@
-- apl/stream/posts : store attachments!
-- attachments
--top collections
--multiple atachments on one site! talks: new message and answer message!!
 - delete collections, images
 -photviewer
+-comments must work for other servers! (if post deleted  -> delete at me too)
 - latex only on .tex
 - global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
 

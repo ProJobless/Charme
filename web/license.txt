@@ -13,8 +13,9 @@ conditions:
 The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-Other copyright notices, like on the about page, shall not be
-removed either.
+Other copyright notices, like on the about page (ui/pages/about.php), shall not be
+removed either. Also links referencing to the about page are not
+allowed to be removed.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES

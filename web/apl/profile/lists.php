@@ -17,25 +17,20 @@ function getLists($owner)
 	$col = $db_charme->lists;
 	$cursor = $col->find(array("userid"=>$owner))->sort(array("name" => 1));
 	return $cursor;
-
 }
 function findLists($owner, $q)
 {
-
 	global $db_charme;
 	$col = $db_charme->lists;
 	$cursor = $col->find(array("userid"=>$owner, "name"=> array('$regex' => $q)));
 	return $cursor;
-
 }
 function findPeople($owner, $q)
 {
-
 	global $db_charme;
 	$col = $db_charme->listitems;
 	$cursor = $col->find(array("userid"=>$owner, "item"=> array('$regex' => $q)));
 	return $cursor;
-
 }
 
 function getListItems($owner)
@@ -50,7 +45,10 @@ function getListitemsByList($owner, $needle)
 	global $db_charme;
 	$col = $db_charme->listitems;
 
-	$cursor = $col->find(array("userid"=>$owner, "list"=> new MongoId($needle)));
+	if ((string)$needle == "0") // Get all list items
+		$cursor = $col->find(array("userid"=>$owner));
+	else // Get listitems with list ID $needle
+		$cursor = $col->find(array("userid"=>$owner, "list"=> new MongoId($needle)));
 
 	return $cursor;
 }

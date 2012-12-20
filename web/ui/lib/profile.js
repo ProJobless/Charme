@@ -1,3 +1,28 @@
+function loadCollection(user, start, col)
+{
+	$(".collectionBg  .more").remove();
+	$.post("ui/actions/loadPosts.php?userid="+user+"&s="+start+"&col="+col, function(d){
+		
+		$(".collectionBg").append(d);
+	//init buttons
+	});
+
+}
+function deletePost2(postId)
+{
+	$.post("ui/actions/deletePost.php",{'postId':postId},function(d){
+	$("#post"+postId).fadeOut().remove();
+	ui_closeBox();
+	alert(d);
+	});
+}
+function deletePost(postId)
+{
+	$.post("ui/actions/deletePost.php?prompt=1",{'postId':postId}, function(d){
+		ui_showBox(d+ui_Button("Delete Post", "deletePost2(\""+postId+"\")") +" or " + ui_closeBoxButton());
+	//init buttons
+	});
+}
 function but_addCollection()
 {
 	$.post("ui/actions/newCollection.php", function(d){

@@ -71,16 +71,7 @@ $acont = $item["lastauthor"].$more."<div>".$item["preview"]."</div>";
 if (isset($firstid) && $firstid != "" && !isset($_GET["q"]))
 $_GET["q"] = $firstid;
 
-
-
-
-
-
-
-//display newest coneversation
-if (isset($_GET["q"]))
-{
-	$ppl = getMessagePeople($_SESSION["charme_user"], $_GET["q"]);
+$ppl = getMessagePeople($_SESSION["charme_user"], $_GET["q"]);
 //var_dump(iterator_to_array($ppl));
 $ppl2 = $ppl["people"];
 $ppl3 = "p".implode(",p",$ppl2);
@@ -94,20 +85,21 @@ echo '<div class="instantanswer"><form>
 <input type="hidden" name="col_type" value="instant">
 <textarea name="col_description" style="width:100%; "></textarea>'.$atf->printContainer().'
 <div style="margin-top:8px;"><a class="button" href="javascript:sendMessageInstant()">Send</a> or '.$atf->printAdd().'
-	</form></div></div>';
+</form></div></div>';
 
-	echo "<div class='message'>People: ".implode(", ", $ppl["people"])."</div>";
+echo "<div class='message'>People: ".implode(", ", $ppl["people"])."</div>";
 
-	echo "<div class='talkmessages'>";
-	
 
-	$items = getMessageItems($_SESSION["charme_user"], $_GET["q"]);
-	foreach ($items as $item)
-	{
-		echo message_format($item["author"], $item["content"], $item["attachments"]);
-	}
-	echo "</div>";
-}
+
+echo "<div class='talkmessages'>";
+
+
+
+if (isset($_GET["q"]))
+include($_SERVER["DOCUMENT_ROOT"]."/ui/actions/loadMessageItems.php");
+
+
+echo "</div>";
 
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 echo "</div>";

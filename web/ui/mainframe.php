@@ -27,6 +27,7 @@ else
 	
 ?>">
 <script src='/ui/lib/jq.js'></script>
+<script src='/ui/lib/jqui.js'></script>
 <script src='/ui/lib/page.js'></script>
 <script src='/ui/lib/string.js'></script>
 <script src='/ui/lib/txa.js'></script>
@@ -66,10 +67,10 @@ MathJax.Hub.Config({
 <div id="whitebg"></div>
 <div class="sidebar sbAlpha">
 
-<div class="actionCont"></div>
+
 
  <div class="actionBar">
-       
+       <div class="actionCont"></div>
  		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="/ui/actions/login.php?logout=1" style="background-position:-30px 0; " class="actionButton"></a>
         
         <!--<a   data-bgpos="-30" style="background-position:-30px 0; " class="actionButton"></a>-->
@@ -114,7 +115,7 @@ else
 </ul>
 
 
-<a data-page="about">About</a> - <a data-page="about">Help</a>
+<a data-page="about">About</a> - <a data-page="help">Help</a>
 </div>
 
 

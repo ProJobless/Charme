@@ -377,10 +377,16 @@ echo "<div class='switch switch1'>";
 
 	fw_load("post");
 	echo "<div class='collectionBg'>";
-		$items = getCollectionPosts($userId, getget("id"));
+		
+	if (isset($_GET["id"]))
+	{
+		$_GET["col"] = $_GET["id"];
+		include($_SERVER["DOCUMENT_ROOT"]."/ui/actions/loadPosts.php");
+	}	/*$items = getCollectionPosts($userId, getget("id"));
 		
 
 		//for ($i = 0; $i<10; $i++){
+
 
 $lasttype = -1;
 		foreach ($items as $item)
@@ -407,8 +413,7 @@ $lasttype = -1;
 if ($lasttype == 1)echo "<br class='cb'/></div>";
 else if ($lasttype != -1)echo "</div>";
 		//}
-	echo "</div>";
-
+	echo "</div>";*/
 
 
 	echo "</div>";

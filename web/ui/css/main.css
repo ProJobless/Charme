@@ -10,7 +10,15 @@
 
 }
 
-
+.subCont li.dp-active
+{
+	
+	background-color: #ccc;
+}
+.subCont li.dp-hover
+{
+		background-color: #ddd;
+}
 
 .delete:active
 {	
@@ -89,16 +97,26 @@ padding: 8px 0;
 
 	padding-right: 32px;
 }
+ .actionCont .item:first-child
+ {
+ 	border:0;
+ }
+ .actionCont .item
+ {
+ 	padding:8px;
+ 	border-top:1px silver solid;
+
+ }
  .actionCont
 {
 	width:298px;
 
 	background-color:#fff;
 	position:fixed;
-	border:1px silver solid;
+	border:1px #222 solid;
 	
 	
-	z-index:9999;
+	z-index:99999;
 	border-top:0;
 	top:-205px;
 }
@@ -120,15 +138,20 @@ padding: 8px 0;
 a.actionButton
 {
 	background-image:url(actions.png);
-	width:30px;
-	height:31px;
+
+
 	display:inline-block;
 	cursor:pointer;
 float: left;
 	width:31px;
-	height:8px;
+	height:9px;
 	padding:  11px 0;
 	text-align: center;
+
+	/* Prevent text selection */
+	-webkit-user-select: none;
+    -moz-user-select: none; 
+    -khtml-user-select: none; 
 	
 }
 .actionBar
@@ -354,5 +377,6 @@ body
 	background-color:#EEE;
 	font-family:Tahoma, Geneva, sans-serif;
 	font-size:12px;
+
 	
 	}

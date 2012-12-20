@@ -105,7 +105,7 @@ obj
 
 
 
-    	return array("<div class='collectionPost'><a class='delete'> </a>".$img."
+    	return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='delete' onclick='deletePost(\"".$obj["_id"]."\")'> </a>".$img."
     
     <a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
     	<div>".$atta."

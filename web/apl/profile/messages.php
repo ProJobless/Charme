@@ -61,19 +61,27 @@ function registerMessage($data)
 	//Done :)
 }
 
-function getMessageCount($userID)
+function getMessageCount($uniqueId)
 {
-
-
-}
-function getMessageItems($userID, $uniqueId)
-{
+	global $db_charme;
+	$col = $db_charme->messages;
 	
+	return  $col->find(
+		array("uniqueId"=>new MongoId($uniqueId))
+	)->count();
+}
+function getMessageItems($userID, $uniqueId, $startIndex, $itemsPerQuery)
+{
+
+
 	global $db_charme;
 	//TODO: CHeck if user part of ppl
 
 	$col = $db_charme->messages;
-	$cursor = $col->find(array("uniqueId"=>new MongoId($uniqueId)))->sort(array("time" => 1));
+	$cursor = $col->find(
+		array("uniqueId"=>new MongoId($uniqueId))
+	)->sort(array("time" => 1))->limit($itemsPerQuery)->skip($startIndex);
+
 	return $cursor;
 
 }

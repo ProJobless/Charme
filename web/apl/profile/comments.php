@@ -18,10 +18,11 @@ function getComments($postid, $owner, $start, $range)
 {
 
 	//If $start is negative, the first comment is $lastindex-$start
+	/*
 echo ".".$postid;
 echo ".".$owner;
 echo ".".$start;
-echo ".".$range;
+echo ".".$range;*/
 
 
 

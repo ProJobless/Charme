@@ -1,3 +1,4 @@
+
 .more
 {
 
@@ -5,7 +6,18 @@
 	border:1px silver solid;
 	padding:16px;
 	text-align: center;
+	border-radius: 2px;
+	-webkit-user-select: none;
+    -moz-user-select: none; 
+    -khtml-user-select: none; 
+    background-color: #fff;
 }
+.more:active
+{
+
+	background-color: #efefef;
+}
+
 .attachmentContainer div
 { 
 	padding:8px;

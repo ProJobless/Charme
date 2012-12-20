@@ -31,7 +31,7 @@ function ui_attach(x)
 
 			    $('#attachments'+atid).append("<div><a  class='delete' style='float:right' onclick='delAttachment(this)'> </a>"+ escape(this.file.name)+ "</div>");
 				$('#attachments'+atid+' div').last().data("filecontent", this);
-				$('#attachments'+atid+' div').last().text(this.file.name);
+
 		    }
 		    reader.readAsDataURL(f) ;
 

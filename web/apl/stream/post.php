@@ -1,4 +1,12 @@
 <?
+function deletePost($userId, $postId)
+{
+	global $db_charme;
+	$db_charme->posts->delete(array(
+		"userid" => $userId,
+		"_id" => $postId
+		));
+}
 function registerPost($data)
 {
 
