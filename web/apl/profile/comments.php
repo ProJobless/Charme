@@ -55,7 +55,7 @@ echo ".".$range;*/
 		array('comments' => array( '$slice' =>  array($start,$range)))
 		);*/
 	//$count = $db_charme->postcomments->find(array("postid" => new MongoId( $postid)))->count();
-return $db_charme->postcomments->find(array("postid" => new MongoId( $postid)))->sort(array("posttime" => -1))->limit($range)->skip($start);
+return $db_charme->postcomments->find(array("postid" => new MongoId( $postid)))->sort(array("posttime" => 1))->limit($range)->skip($start);
 
 
 }

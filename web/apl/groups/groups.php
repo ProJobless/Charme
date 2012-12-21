@@ -8,6 +8,31 @@ function addGroup($creator, $name, $description, $type)
 
 	return $content ["_id"];
 }
+function updateGroup($groupId ,  $name, $description, $type)
+{
+	echo $groupId;
+
+	global $db_charme;
+	$content = array(
+			"name" => $name,"description" => $description,"type" => $type);
+
+	$db_charme->groups->update(array("_id"=> new MongoId($groupId)),array('$set' => $content));
+
+	return 1;
+}
+
+function setNotifications($groupId)
+{
+
+
+}
+
+function getNotifications($groupId)
+{
+
+}
+
+
 function addGroupMember($userid, $memberid, $groupid)
 {
 	global $db_charme;

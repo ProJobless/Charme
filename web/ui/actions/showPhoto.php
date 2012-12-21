@@ -18,30 +18,52 @@ $pictureId =  $_POST["pid"];
 		<?
 
 		
-		$commentsPerPage = 3;
-		$commentStartIndex=-$commentsPerPage;
+			$commentsPerPage = 3;
 
-		// The last two indices define start and range
-		$cList = getComments($pictureId, $userId, $commentStartIndex,$commentsPerPage); 
-		$showload = false;
 
-		foreach ($cList as $item)
-		{
-			// Button for loading next "page"
-			if (!$showload)
+			if (!isset($_GET["s"]))
+			$commentStartIndex = getCommentCount($pictureId)-$commentsPerPage;
+
+
+			else
+			$commentStartIndex = $_GET["s"];
+
+			if ($commentStartIndex < 0)
 			{
-				echo "<a class='more' onclick='loadComments(\"".$pictureId."\", \"".$userId."\", this,".($commentStartIndex-$commentsPerPage).")'>More...</a>";
-				$showload = true;
+				$commentsPerPage = $commentsPerPage+$commentStartIndex;
+				$commentStartIndex = 0;
 			}
-			echo comment_format($item["userid"], "USERNAME" ,$item["content"], time());
-		}
 
-		?>
-		</div>
-		<?
-			// Textbox and Button for writing new comments
-			echo commentBox($pictureId , $userId,true );
-		?>
+			fw_load("post");
+
+
+			//getComments(postid, owner, start,range)
+			$cList = getComments($pictureId, $userId, $commentStartIndex,$commentsPerPage); 
+
+
+			$showload = false;
+
+
+			if (($commentStartIndex) > 0)
+			$showload = true;
+
+			foreach ($cList as $item)
+			{
+				if ($showload)
+				{
+					echo "<a class='morecomments' onclick='loadComments(\"".$pictureId."\", \"".$userId."\", this,".($commentStartIndex-$commentsPerPage).")'>More...</a>";
+					$showload = false;
+				}
+				echo comment_format($item["userid"], "USERNAME" ,$item["content"], time());
+			}
+
+
+					?>
+					</div>
+					<?
+						// Textbox and Button for writing new comments
+						echo commentBox($pictureId , $userId,true );
+					?>
 
 	</div>
 </div>

@@ -37,7 +37,7 @@ $lists
 
 );
 //Default cricles: Friends, Acquaintances, Colleauges
-//echo "ID$selected";
+echo "ID$selected";
 
 $name = "All lists";
 

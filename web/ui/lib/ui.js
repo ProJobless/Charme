@@ -117,6 +117,11 @@ function ui_showBox(content, func)
 	
 	
 	$("body .fixedBox").html(content);
+
+	var h = $("body .fixedBox").height()+100;
+
+	 $("body .fixedBox").css("top", -h);
+
 	 	ui_userselect();
 
  	 $("body .fixedBox").css("margin-left", -$("body .fixedBox").width() / 2);
@@ -124,7 +129,7 @@ function ui_showBox(content, func)
 
 	$("body .fixedBox").animate({
     top: '150px',
-  }, 400, function() {
+  }, 200, function() {
 
  
 $("body .fixedBox input:first").focus();
@@ -153,7 +158,7 @@ function ui_closeBox(content)
 
 	$("body .fixedBox").animate({
     top: '-'+h+'px',
-  }, 400, function() {
+  }, 200, function() {
 	  
 	 $("body .fixedBox"). html("");
 	  

@@ -98,20 +98,20 @@ if ($collection == NULL || $collection == 0)
 // TODO: Has to work via remote request (if user is not on this server!)
 function getCollectionPostCount($owner, $collection)
 {
-	/*global $db_charme;
+	global $db_charme;
 	$col = $db_charme->posts;
-	$cursor = $col->find(array("collection"=>new MongoId($collection)))->sort(array("posttime" => -1));
-	return $cursor;*/
+	$cursor = $col->find(array("collection"=>new MongoId($collection)))->count();
+	return $cursor;
 	
 
 }
 
 
-function getCollectionPosts($owner, $collection)
+function getCollectionPosts($owner, $collection, $count, $start)
 {
 	global $db_charme;
 	$col = $db_charme->posts;
-	$cursor = $col->find(array("collection"=>new MongoId($collection)))->sort(array("posttime" => -1));
+	$cursor = $col->find(array("collection"=>new MongoId($collection)))->sort(array("posttime" => -1))->skip($start)->limit($count);
 	return $cursor;
 
 }

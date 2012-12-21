@@ -25,14 +25,16 @@ function initFriends()
 	drop: function(ev, ui) {
 	
 	var listId= $(this).children("a").attr("ref");
-	var itemId= $(ui.draggable).attr("alt");
+
+	var itemId= $(ui.draggable).data("userid");
 
 	$(this).append("<span class='stateInfo'>Adding...</span>").show();
 	
 	var x = $(this); // Save element in temporary veriable
 
-	$.post("ui/actions/dropList.php",{listId: listId,itemId: itemId},function(d){
+	$.post("ui/actions/dropList.php",{'listId': listId,'itemId': itemId},function(d){
 		$(x).children(".stateInfo").html(" +1 Person").fadeOut(500);
+		alert(d);
 	});
 
 	

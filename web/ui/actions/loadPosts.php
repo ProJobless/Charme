@@ -21,21 +21,25 @@ $userId = urldecode($_GET["userid"]);
 
 
 
-$items =5; // How many items are loaded with one request?
+$count =5; // How many items are loaded with one request?
 
 
 if (!isset($_GET["s"])) // No start index given -> get index of last comments
 {
-	$start = 0; //TODO!!!getMessageCount($_GET["q"])-$items;
+	$start = getCollectionPostCount($userId, $_GET["col"])-$count; //TODO!!!getMessageCount($_GET["q"])-$items;
 }
 else
 {
 	$start = (isset($_GET["s"]) ? $_GET["s"] : 0);
 }
 
-$newstart = $start+$items;
+if ($start < 0)
+{
+	$count = $count+$start;
+	$start = 0;
+}
 
-$count = 33; //TODO!
+
 
 
 
@@ -45,7 +49,7 @@ $count = 33; //TODO!
 
 	fw_load("post");
 
-		$items = getCollectionPosts($userId, $_GET["col"]);
+		$items = getCollectionPosts($userId, $_GET["col"], $count, $start);
 		
 
 		//for ($i = 0; $i<10; $i++){
@@ -80,8 +84,9 @@ else if ($lasttype != -1)echo "</div>";
 
 
 
+$newstart = $start-$count;
 
-if ($newstart < $count)
+if ($start>0)
  	echo "<a class='more' style='margin: 8px 32px 32px 32px;' onclick='loadCollection(\"".urlencode($userId)."\", $newstart, \"".$_GET["col"]."\")' style='margin:0 16px'>More...</a>";
 
 ?>

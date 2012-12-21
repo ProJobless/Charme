@@ -11,10 +11,12 @@ page_init("About", 0);
 	<h3 style='margin-top:0'>About Charme</h3>
 	This website is based on the open source and distributed social network Charme.
 	You can find more information about Charme on <a href="www.charmeproject.com">www.charmeproject.com</a>.
-The source code is avaiable <a href='https://github.com/mschultheiss/Charme'>here</a>.
+
 
 	<h3>Credits</h3>
-	Developed by <a href="http://www.mschultheiss.com">Manuel Schultheiß</a><br />
+	Developed by <a href="http://www.mschultheiss.com">Manuel Schultheiß</a>
+	
+
 	</div>
 <!-- -->
 

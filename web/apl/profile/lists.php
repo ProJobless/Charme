@@ -63,21 +63,24 @@ function getListitemsWithName($owner, $needle)
 	return $cursor;
 
 }
-function addListItem($owner, $list, $person)
+function addListItem($owner, $list, $person, $silent=false)
 {
 	global $db_charme;
 
-	$db_charme->listitems->insert(array("userid"=> $owner, "item"=>$person, "list"=>$list)
+	// TODO: Insert with upsert to prevent duplicates!
+	$db_charme->listitems->insert(array("userid"=> $owner, "item"=>$person, "list"=> new MongoID($list))
 		);
 
 	/*
 	Send Notification to the person added
 	*/
-	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
-	$rr = new remoteRequest($person, $_SESSION["charme_user"], "list_added");
-	$rr->setPayload(array());
-	$rr->send();
-
+	if (!$silent)
+	{
+		include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+		$rr = new remoteRequest($person, $_SESSION["charme_user"], "list_added");
+		$rr->setPayload(array());
+		$rr->send();
+	}
 
 }
 function removeListItem($owner, $list, $person)
