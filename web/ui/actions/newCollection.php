@@ -8,6 +8,8 @@ if (isset($_POST["col_name"]))
 {
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
+
+
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	//0 should be parent colleciton id.
 
@@ -20,9 +22,16 @@ if (isset($_POST["col_name"]))
 
 
  	//+= type, people
-	$cid = addCollection($_SESSION["charme_user"] , $_POST["col_name"], $_POST["col_description"], $_GET["id"], $_POST["col_visible"], $_POST["people_col_visible"]);
-
-
+ 	if (!$_POST["groupId"])
+ 	{
+ 		addCollection($_SESSION["charme_user"] , $_POST["col_name"], $_POST["col_description"], $_GET["id"], $_POST["col_visible"], $_POST["people_col_visible"]);
+ 	}
+ 	else
+ 	{
+ 	 	saveCollection($_SESSION["charme_user"] , $_POST["col_name"], $_POST["col_description"], $_GET["id"], $_POST["col_visible"], $_POST["people_col_visible"]);
+	
+ 	}
+	
 
 
 
@@ -31,18 +40,58 @@ if (isset($_POST["col_name"]))
 }
 else
 {
+
 	fw_load("forms");
 	$fc = new formCollection();
+	$arr = array();
+	if (isset($_GET["col"]))
+	{
+		$fc->add(new formHidden("groupId", "", $_GET["col"]));
+
+		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
+		$arr = getCollectionInfo($_SESSION["charme_user"], $_GET["col"]);
+
+		
+	}
+	
+	
+	function infoGet($arr, $key)
+	{
+		if (!isset($arr[$key]))
+			return "";
+		else
+			return $arr[$key];
+	}
 
 	//if $GET ID -> EDIT MODE! -> add hidden id field
 
 
-
 	
-	$fc->add(new formText("col_name", "Name", ""));
-	$fc->add(new formArea("col_description", "Description", ""));
+	$fc->add(new formText("col_name", "Name", infoGet($arr, "name")));
+	$fc->add(new formArea("col_description", "Description", infoGet($arr, "description")));
 
-	$fc->add(new formPeople("col_visible", "Visible", ""));
+
+	$valvs = "";
+	if (isset($_GET["col"]))
+	{
+	$l = ",l".implode(",l", infoGet($arr, "lists"));
+
+
+		$valvs =  infoGet($arr, "visibletype")."p".implode(",p", infoGet($arr, "people"));
+
+		if (strlen($l) > 2) // Add lists if exist
+			$valvs .= $l;
+
+		echo $valvs;
+	}
+
+	$fc->add(new formPeople("col_visible", "Visible", $valvs));
+
+	if (isset($_GET["col"]))
+	{
+$fc->add(new formHTML2("<a>Delete Collection</a>", "", ""));
+		
+	}
 
 
 

@@ -215,7 +215,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribing")
 	{
 		echo lists_doItem($item["follower"], $item["follower"]);
 
-		echo lists_doItem($item["follower"], "Manuel SChultheiß Blablabla");
+		echo lists_doItem($item["follower"], "Manuel Schultheiß Blablabla");
 		echo lists_doItem($item["follower"], $item["follower"]);
 	}
 	echo lists_end();
@@ -243,7 +243,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribers")
 
 
 
-	echo "Note: Subscribers may be manipluated. To verify the subscribers, look on the profile page and click on Subscribing.";
+	echo "Note: Subscriber list could be manipluated by the owner. To verify the subscribers, look on the profile page and click on Subscribing.";
 	echo "</div>";
 }
 else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
@@ -277,6 +277,9 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 		echo "<a  onclick='followCol(this, 0, \"$colid\")' style='display: none; float:right; background-position:-96px 0;' data-bgpos='-96'  class='butSubOff functionButton actionIcon' > </a>";
 
 		}
+
+		if ($userId == $_SESSION["charme_user"])
+		echo '<a title="Settings" onclick=\'showCollectionSettings("'.$colid.'")\' style="float: right; background-position: -144px 0px;" data-bgpos="-144" class="actionIcon"> </a>';
 
 	}
 	else
@@ -358,7 +361,7 @@ echo "<div class='p24' id='collection_container' style='display:none;padding-bot
 		<a class='switcher' data-pos='2'><div>Photo</div></a>";
 
 echo "<div class='switch switch1'>";
-		forms_doPostField();
+		forms_doPostField($_GET["id"]);
 		echo "</div>";
 
 			echo "<div class='photodrop switch switch2'>";
@@ -429,5 +432,5 @@ echo "</div>";//ADDED
 ?>
 </div></div>
 <?
-//I am glad you read this comment.
+// I am glad you read this comment.
 ?>

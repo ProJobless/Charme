@@ -14,6 +14,19 @@ function addComment($postowner, $postid, $userId, $content)
 
 }
 
+//UserId: The person who wants to delete the comment.
+function deleteComment($userid, $comId)
+{
+/*
+	TODO: Cross Site Deletions!
+
+*/
+
+	global $db_charme;
+
+	$count = $db_charme->postcomments->delete(array("userid" => $userid, "_id" => new MongoId( $comId)));
+
+}
 function getCommentCount($postid)
 {
 		//problem: STREAM ID != POSTID!!!

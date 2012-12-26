@@ -7,10 +7,10 @@ function string_format($str)
 
 
 }
-function comment_format($userid, $username, $content, $time)
+function comment_format($commentId, $userid, $username, $content, $time)
 {
     $usid = "<a href='/?p=profile&q=about&userId=".urlencode($userid)."'>".$username."</a>";
-    return "<div class='comment'><a class='delete'> </a><div class='head'>$usid</div>$content</div>";
+    return "<div class='comment'><a onlick='deleteComment(\"".$commentId."\")' class='delete'> </a><div class='head'>$usid</div>$content</div>";
 }
 
 function message_format($author, $content, $attachments)

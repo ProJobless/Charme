@@ -9,7 +9,7 @@ page_init("About", 0);
 <!-- THE FOLLOWING COPYRIGHT NOTICE SHALL NOT BE REMOVED (See license.txt for more information)-->
 	<div class="p32" style='float:right; width:200px; background-color:#efefef; margin:32px;'>
 	<h3 style='margin-top:0'>About Charme</h3>
-	This website is based on the open source and distributed social network Charme.
+	This social network is based on Charme.
 	You can find more information about Charme on <a href="www.charmeproject.com">www.charmeproject.com</a>.
 
 

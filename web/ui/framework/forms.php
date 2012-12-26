@@ -8,6 +8,14 @@ Made for easy HTML form generation
 
 function forms_doPostField($collectionId=0, $isGroup=false)
 {
+	/*
+		Warning: Do not edit the DOM structure here as it is used by 
+		click event of .but_postCol in javascript file page.js
+
+		If you want to edit the DOM struture you will have to edit
+		this file too.
+	*/
+
 fw_load("attachment");
 $atf = new attachmentForm("atf_stream_".$collectionId);
 
@@ -20,17 +28,19 @@ echo "<div>";
 	echo "<textarea class='box' style=' width:100%;'></textarea>".$atf->printContainer()."
 <div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a>";
 
+
 	if ($collectionId == 0)
 	{
 
+
 	echo " in 
-	<select>
+	<select>";
 
-	<option>Art</option>
-	<option>Music</option>
-	<option>Privat</option>
+$colls = getCollections($_SESSION["charme_user"]);
+foreach ($colls as $item)
+echo "<option value='".$item["_id"]."'>".$item["name"]."</option>";
 
-	</select>
+	echo "</select>
 	";
 	}
   echo " - ".$atf->printAdd()." <br class='cb'></div></div>";
@@ -112,9 +122,15 @@ class formCity extends form
     }
 }
 
+/*
+People with visible  selector
+Value has form: "[$]id1,id2" where [$] is visibility type (1,2,3) and id starts with p for person or l for list
+Example: 2pschuldie@localhost,ltest contains user id schuldie@localhost and list test with type 2
+*/
 class formPeople extends form
 {
 	public function render() {
+
 
 
 	if ($this->val == "")
@@ -131,6 +147,8 @@ class formPeople extends form
 
 		$listnames = array();
 		$licur = getLists($_SESSION["charme_user"]);
+
+		// Get all lists of user
 		foreach ($licur as $item)
 		{
 			$listnames[(string)$item["_id"]] = $item["name"] ;
@@ -139,14 +157,29 @@ class formPeople extends form
 		$json = array();
 		foreach ($mylists as $item) {
 			//TODO: if startswith p -> person, if startswith l-> list
+			//echo  $item;
+			if (strlen($item) > 0)
+			{
+				$realid= substr($item, 1);
+				
+				if ($item{0} == "l" && isset($listnames[$realid]))
+				{
 
-		if (isset($listnames[$item]))
-			$json[] = array("name"=>  $listnames[$item] , "id"=>$item);
+					$json[] = array("name"=>  $listnames[$realid] , "id"=>$item);
+				}
+				else if ($item{0} == "p")
+				{
 
-
+					$json[] = array("name"=> $realid , "id"=>$item);
+				}
+			}
 		}
-		//make json
-		$json = json_encode($json);
+	
+	//	print_r($json);
+
+		//make json, JSON is added to list by ui_userselect() in lib/ui.js 
+	$json = json_encode($json);
+	
 
         $str =  "<tr><td class='tdinfo'>".$this->name.":</td><td><select  name='".$this->fid."' style='margin-bottom:4px;' class='box userSelectSwitcher'>";
         $str .= ($this->val{0} == 1) ? "<option selected='selected' value='1'>Public</option>" : "<option value='1'>Public</option>";
@@ -159,7 +192,9 @@ class formPeople extends form
     }
 }
 
-
+/*
+Only People
+*/
 class formPeople2 extends form
 {
 	public function render() {

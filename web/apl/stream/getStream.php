@@ -26,8 +26,17 @@ function groupStreamAsArray($userId, $groupId)
 	$qu = array("groupid" => new MongoId($groupId));
 	$xy =  $db_charme->posts->find($qu);
 
-return $xy;
+	return $xy;
 
+}
+
+function getCollections($userId)
+{
+	global $db_charme;
+	$qu = array("userid" =>  ($userId));
+	$xy =  $db_charme->usercollections->find($qu, array("name", "_id"));
+
+	return $xy;
 }
 
 

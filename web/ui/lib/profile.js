@@ -16,6 +16,14 @@ function deletePost2(postId)
 	alert(d);
 	});
 }
+function showCollectionSettings(col)
+{
+$.post("ui/actions/newCollection.php?col="+col, function(d){
+	ui_showBox(d+ui_Button("Save", "addCollection()") +" or " + ui_closeBoxButton());
+	//init buttons
+	});
+
+}
 function deletePost(postId)
 {
 	$.post("ui/actions/deletePost.php?prompt=1",{'postId':postId}, function(d){
@@ -23,6 +31,24 @@ function deletePost(postId)
 	//init buttons
 	});
 }
+
+function deleteComment2(comId)
+{
+	$.post("ui/actions/deletePost.php",{'comId':comId},function(d){
+	$("#post"+postId).fadeOut().remove();
+	ui_closeBox();
+
+	});
+}
+function deleteComment(comId)
+{
+alert("lala");
+	$.post("ui/actions/deleteComment.php?prompt=1",{'comId':comId}, function(d){
+		ui_showBox(d+ui_Button("Delete Comment", "deleteComment2(\""+comId+"\")") +" or " + ui_closeBoxButton());
+	//init buttons
+	});
+}
+
 function but_addCollection()
 {
 	$.post("ui/actions/newCollection.php", function(d){

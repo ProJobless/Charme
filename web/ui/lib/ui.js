@@ -78,7 +78,11 @@ function ui_userselect()
 	console.log(jsonp);
 	$(this).tokenInput("ui/actions/auto_people.php", {hintText: "Typ in a person or a list"} );
 	var x = this;
+
+
+
 	jQuery.each(jsonp, function(i, val) {
+	
 	
        $(x).tokenInput("add", val);
     });

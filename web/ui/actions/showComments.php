@@ -46,7 +46,7 @@ foreach ($cList as $item)
 		echo "<a class='morecomments' onclick='loadComments(\"".$_POST["postid"]."\", \"".$_POST["userid"]."\", this,".($commentStartIndex-$commentsPerPage).")'>More...</a>";
 		$showload = false;
 	}
-	echo comment_format($item["userid"], "USERNAME" ,$item["content"], time());
+	echo comment_format($item["_id"], $item["userid"], "USERNAME" ,$item["content"], time());
 }
 
 

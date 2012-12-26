@@ -136,9 +136,16 @@ function initPage(level)
 
 	$('.but_postCol').unbind("click").click(function(){ 
 
+
 		var v = ($(this).parent().parent().children("textarea").val());
 		var g = ($(this).parent().parent().children("input[name='groupid']").val());
 		var x = $.urlParam("id",location.href );
+
+		// Collection is selected by user via drop down
+		var g2 = ($(this).parent().children("select").val());
+
+		if (g2 != undefined)
+			g = g2;
 
 		var files = new Array();
 		$('.attachmentContainer div').each (function(i,v)
@@ -147,7 +154,6 @@ function initPage(level)
  	
  		});
 		console.log(files);
-
 
 		x = (x=="") ?  "0" : x;
 		$.post("ui/actions/doPost.php?id="+x, {content:v, g:g, files:files}, function(d)

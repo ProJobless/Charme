@@ -1,3 +1,6 @@
+- post to collection from homepage does not work...
+- edit collections
+
 - delete collections, images
 -photviewer
 -comments must work for other servers! (if post deleted  -> delete at me too)

@@ -115,6 +115,14 @@ function getCollectionPosts($owner, $collection, $count, $start)
 	return $cursor;
 
 }
+function getCollectionInfo($userId, $collectionId)
+{
+	global $db_charme;
+	
+	return  $db_charme->usercollections->findOne(array("_id"=>new MongoId($collectionId), "userid"=>$userId), array("name","description", "visibletype", "people", "lists"));
+
+}
+
 function getCollection($userId, $owner, $filter)
 {
 
