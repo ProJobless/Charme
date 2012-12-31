@@ -24,7 +24,7 @@ function deleteComment($userid, $comId)
 
 	global $db_charme;
 
-	$count = $db_charme->postcomments->delete(array("userid" => $userid, "_id" => new MongoId( $comId)));
+	$count = $db_charme->postcomments->remove(array("userid" => $userid, "_id" => new MongoId( $comId)));
 
 }
 function getCommentCount($postid)

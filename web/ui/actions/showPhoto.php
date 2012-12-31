@@ -6,14 +6,39 @@ GUI for popup photobox used when clicking on a collection photo
 include_once($_SERVER['DOCUMENT_ROOT']."/ui/framework/framework.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/comments.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/post.php");
 needSession();
 fw_load("post");
 
 $userId = $_POST["uid"]; // Id of photo owner, i.e. "owner@someserver.com"
-$pictureId =  $_POST["pid"];
+
+
+$fields =  getPostInfo($_POST["pid"], array("reference", "description"));
+
+$pictureId = $fields["reference"];
+
+
 ?>
-<div class='photoboxComments'><a onclick='closePhoto()'>Close</a>
-	<div class='p32'>
+
+	
+<div class='photoboxComments'>
+<div style='overflow:auto; padding:32px 32px 0 32px ;'>
+<?
+	// Button for close
+	echo '<a title="Close"  onclick=\'closePhoto()\' style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
+	// Delete Photo Button
+	echo '<a title="Delete Photo" onclick=\'deletePost("'.$_POST["pid"].'")\' style="float: right; background-position: -144px 0px;" data-bgpos="-144" class="actionIcon"> </a>';
+	
+//<a onclick='closePhoto()'>Close</a>
+?>
+
+<div id='photoDescription' class='cb' style='padding-top:32px;'>
+Lrem ipsum asdasd
+</div>
+
+</div>
+
+	<div class='p32' style='padding-top:24px'>
 		<div class='postcomments'>
 		<?
 
@@ -54,7 +79,7 @@ $pictureId =  $_POST["pid"];
 					echo "<a class='morecomments' onclick='loadComments(\"".$pictureId."\", \"".$userId."\", this,".($commentStartIndex-$commentsPerPage).")'>More...</a>";
 					$showload = false;
 				}
-				echo comment_format($item["userid"], "USERNAME" ,$item["content"], time());
+				echo comment_format($item["userid"], "userid@userid", "USERNAME" ,$item["content"], time());
 			}
 
 

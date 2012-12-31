@@ -8,6 +8,23 @@ function loadCollection(user, start, col)
 	});
 
 }
+function deleteCollection(colId)
+{
+	$.post("ui/actions/deleteCollection.php?prompt=1",{'colId':colId}, function(d){
+		
+		ui_showBox(d+ui_Button("Delete Collection", "deleteCollection2(\""+colId+"\")") +" or " + ui_closeBoxButton());
+	//init buttons
+	});
+}
+function deleteCollection2(colId)
+{
+	$.post("ui/actions/deleteCollection.php",{'colId':colId},function(d){
+	alert(d);
+	ui_closeBox();
+
+	});
+}
+
 function deletePost2(postId)
 {
 	$.post("ui/actions/deletePost.php",{'postId':postId},function(d){
@@ -19,11 +36,23 @@ function deletePost2(postId)
 function showCollectionSettings(col)
 {
 $.post("ui/actions/newCollection.php?col="+col, function(d){
-	ui_showBox(d+ui_Button("Save", "addCollection()") +" or " + ui_closeBoxButton());
+	ui_showBox(d+ui_Button("Save", "saveCollectionSettings()") +" or " + ui_closeBoxButton());
 	//init buttons
 	});
 
 }
+function saveCollectionSettings()
+{
+	var x = $.urlParam("id",location.href );
+	x = (x=="") ?  "0" : x;
+	$.post("ui/actions/newCollection.php", $('.fixedBox form').serialize(), function(d){
+		ui_closeBox();
+		alert(d);
+
+		initPage(0);
+	});
+}
+
 function deletePost(postId)
 {
 	$.post("ui/actions/deletePost.php?prompt=1",{'postId':postId}, function(d){
@@ -42,7 +71,7 @@ function deleteComment2(comId)
 }
 function deleteComment(comId)
 {
-alert("lala");
+
 	$.post("ui/actions/deleteComment.php?prompt=1",{'comId':comId}, function(d){
 		ui_showBox(d+ui_Button("Delete Comment", "deleteComment2(\""+comId+"\")") +" or " + ui_closeBoxButton());
 	//init buttons

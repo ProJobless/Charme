@@ -1,28 +1,39 @@
-- post to collection from homepage does not work...
-- edit collections
+MUSTHAVE
+----------------------------------
 
-- delete collections, images
--photviewer
--comments must work for other servers! (if post deleted  -> delete at me too)
-- latex only on .tex
+
+- groups....
+- post to collection from stream page does not work...
+- Nameservice
+	- comments: do not update names!
+	- friends lists: do update names!
+	- posts in streams do not update names as only 3 das valid!
+	- messages: Do update names!
+- delete collections
+	-return to collection overview after complete
+	-notify subscribers about deleted collection
+- delete images
+
+
+- comments must work for other servers! (if post deleted  -> delete at me too)
+- multi server test
+
+
+
+SHOULD HAVE
+----------------------------------
+- remove add button action when leaving group page and goto stream
 - global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
 
--remove add button action when leaving group page and goto stream
-- comments: save in posts, get from alpha server via json, add receivejs 
-- comments: do not update names!
-- posts in streams do not update names as only 3 das valid!
 
-- messages: Do update names!
-- friends lists: do update names!
 
+MAYBE
+----------------------------------
 -swiftmailer!
 
 
--remove queue
-
-
--mathjax based
-
+- Share via direct url over home.php?shareuser=USERID&sharepost=POSTID
+- Link back to original entry (also for verify)!
 
 
 request sending with priorities
@@ -35,9 +46,6 @@ request sending with priorities
 
 
 
-----Sharing (only with public collections!)
-- Share via direct url over home.php?shareuser=USERID&sharepost=POSTID
-- Link back to original entry (also for verify)!
 
 
 -nameservice!

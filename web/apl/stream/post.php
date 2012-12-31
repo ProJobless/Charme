@@ -2,11 +2,31 @@
 function deletePost($userId, $postId)
 {
 	global $db_charme;
-	$db_charme->posts->delete(array(
+
+	// Get GridFS Id
+	$grid = $db_charme->getGridFS();
+
+
+	$ref = getPostInfo($postId, array("reference"));
+	$ref = $ref["reference"];
+	$grid->remove(array("ftype" => 2, "_id"=> new MongoId($ref)));
+
+	$db_charme->posts->remove(array(
 		"userid" => $userId,
-		"_id" => $postId
+		"_id" => new MongoId($postId)
 		));
+
+	// Delete image from GridFS if exists
+
+	
 }
+function getPostInfo( $postId, $fields)
+{
+	global $db_charme;
+	$res = $db_charme->posts->findOne(array("_id" => new MongoId( $postId)), $fields);
+	return $res;
+}
+
 function registerPost($data)
 {
 

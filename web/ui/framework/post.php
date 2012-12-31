@@ -42,7 +42,7 @@ if (isset($obj["typ"]) && $obj["typ"]==2)
 
 
 
-	return array("<a onclick='showPhoto(\"".$obj["reference"]."\", \"".$obj["userid"]."\")'><img src='apl/fs/?i=".$obj["reference"]."'></a>", 1);
+	return array("<a onclick='showPhoto(\"".$obj["_id"]."\", \"".$obj["userid"]."\")'><img src='apl/fs/?i=".$obj["reference"]."'></a>", 1);
 }
 else
 {

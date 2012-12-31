@@ -1,5 +1,65 @@
 <?
-//JSON encoded
+
+function deleteCollection($userId, $collectionId)
+{
+	global $db_charme;
+	$db_charme->usercollections->remove(array("_id" => new MongoId($collectionId), "userid" => $userId));
+	// TODO: Notify ALL subscribers!
+}
+
+function saveCollection($colId, $owner, $name, $description,  $visibletyp=1, $people="")
+{
+	global $db_charme;
+
+
+
+	// This part is identical with the one in the function addCollection
+	
+	//todo: validate strings!!
+	$content = array("userid" => $_SESSION["charme_user"],
+			"name" => $name,
+			"description" => $description,
+	
+
+			"visibletype" => intval($visibletyp),
+
+		
+	);
+	if ($visibletyp == 3)
+	{
+		$p_arr= array();
+		$l_arr = array();
+
+
+		$all = explode(',', $people);
+
+
+		foreach ($all as $item)
+		{
+			if ($item{0} == "p") //WARNING: ID CAN START WITH p!!!!!
+				$p_arr[] = substr($item, 1);
+			else if ($item{0} == "l")
+				$l_arr[] = substr($item, 1);
+		}
+
+
+		$content["people"] = $p_arr;
+
+		$content["lists"] = $l_arr;
+
+	}
+
+echo "UPADTE!!!";
+
+
+echo $colId.$owner;
+
+// Problem: Field parent is removed @update
+	$db_charme->usercollections->update(array("_id" => new MongoId($colId), "userid" => $owner),array('$set' =>  $content));
+
+// , array("upsert" => true)
+
+}
 function addCollection($owner, $name, $description, $parent, $visibletyp=1, $people="")
 {
 	//TODO: CHECK IF PARENT COLLECTION BELONGS TO USER!!
