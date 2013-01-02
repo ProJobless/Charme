@@ -1,3 +1,25 @@
+
+function editPhotoDescription()
+{
+	$('#photoDescriptionView').hide();
+	$('#photoDescriptionEdit').show();
+	$('#photoDescriptionEdit textarea').focus();
+
+}
+function stopEditPhotoDescription()
+{
+	$('#photoDescriptionView').show();
+	$('#photoDescriptionEdit').hide();
+
+}
+function savePhotoDescription()
+{
+	var t = $('#photoDescriptionEdit textarea').val();
+
+	$('#photoDescriptionView').text(t);
+
+	stopEditPhotoDescription();
+}
 function loadCollection(user, start, col)
 {
 	$(".collectionBg  .more").remove();

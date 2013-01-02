@@ -1,4 +1,9 @@
 <?
+function setDefaultGroup($userId, $value)
+{
+	// Save value in User Collection
+
+}
 function addGroup($creator, $name, $description, $type)
 {
 	global $db_charme;

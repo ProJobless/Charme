@@ -1,8 +1,10 @@
 MUSTHAVE
 ----------------------------------
 
-
+- form validation
 - groups....
+- latex
+- pagination should work...
 - post to collection from stream page does not work...
 - Nameservice
 	- comments: do not update names!
@@ -12,13 +14,22 @@ MUSTHAVE
 - delete collections
 	-return to collection overview after complete
 	-notify subscribers about deleted collection
-- delete images
 
+- delete images, posts
+	- notify subscribers OR display hint at comment loading
+
+- delete posts from groups!!
 
 - comments must work for other servers! (if post deleted  -> delete at me too)
 - multi server test
+- sign up page
 
-
+- counts 
+	-+ New message
+	-+ Group Post
+	-+ New Stream Posts
+	-+ function setCount(userID, countId, value), incCount(userId, countId)
+- image sizes
 
 SHOULD HAVE
 ----------------------------------
@@ -27,7 +38,7 @@ SHOULD HAVE
 
 
 
-MAYBE
+TO CONSIDER
 ----------------------------------
 -swiftmailer!
 
@@ -35,6 +46,7 @@ MAYBE
 - Share via direct url over home.php?shareuser=USERID&sharepost=POSTID
 - Link back to original entry (also for verify)!
 
+QUEUE BASED SERVER 2 SERVER COMMUNICATION
 
 request sending with priorities
 0: instant () comment delete, post delete
@@ -47,24 +59,18 @@ request sending with priorities
 
 
 
-
--nameservice!
-
--images in different sizes!
-#
-
 -get name for new posts in getPofile.php
 
 -name in profile in fixed div to prevent recurrent database access
 
 
 
-Security----
-
+Security
+----------------------------------
 + check if collection follow is legal
 
 
 
 DEV NOTES
------
+----------------------------------
 nanoScroller needs a .content element inside .nano

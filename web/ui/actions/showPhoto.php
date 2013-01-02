@@ -24,6 +24,10 @@ $pictureId = $fields["reference"];
 <div class='photoboxComments'>
 <div style='overflow:auto; padding:32px 32px 0 32px ;'>
 <?
+	// Button for next and previous photo
+	echo '<a title="Close"  onclick=\'nextPhoto()\'  background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
+	echo '<a title="Close"  onclick=\'prevPhoto()\'  background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
+
 	// Button for close
 	echo '<a title="Close"  onclick=\'closePhoto()\' style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
 	// Delete Photo Button
@@ -33,8 +37,37 @@ $pictureId = $fields["reference"];
 ?>
 
 <div id='photoDescription' class='cb' style='padding-top:32px;'>
-Lrem ipsum asdasd
+
+<div id='photoDescriptionBox'>
+<a onclick='editPhotoDescription()' id="photoDescriptionView">
+<?
+if (isset($fields["description"]))
+echo $fields["description"];
+else
+echo "<span class='hint'>Click to add description...</span>";
+?>
+</a>
+
 </div>
+
+<div id='photoDescriptionEdit'>
+<textarea class='box' style='margin-bottom: 8px;'>
+<?
+if (isset($fields["description"]))
+echo $fields["description"];
+?>
+</textarea>
+<br/>
+<a onclick='savePhotoDescription()' class='button'>Save</a> or <a onclick='stopEditPhotoDescription()' >cancel</a>
+
+</div>
+
+
+
+
+</div>
+
+
 
 </div>
 

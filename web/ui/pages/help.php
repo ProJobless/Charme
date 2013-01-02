@@ -33,7 +33,9 @@ Go to the friends page and drag people from the middle on some list on the left.
 As every user is located on another server this does not work at the moment. However we are on this.
 
 
-
+<h3>Formulas</h3>
+If your browser supports MathML you can also write TeX Formulas. We use <a href='http://math.etsu.edu/LaTeXMathML/'>this</a> Library for conversion
+form TeX to MathML. See their website for supported commands.
 
 
 </div>

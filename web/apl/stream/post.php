@@ -1,4 +1,16 @@
 <?
+function getNextPhoto($photoid)
+{
+
+
+	return -1;
+}
+function getPrevPhoto($photoid)
+{
+	
+
+	return -1;
+}
 function deletePost($userId, $postId)
 {
 	global $db_charme;

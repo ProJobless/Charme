@@ -41,27 +41,15 @@ else
 <script src='/ui/lib/groups.js'></script>
 
 
+<script type="text/javascript" src="/tparty/latex2ml.js">
 
-
-
-<!--
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  config: ["MMLorHTML.js"],
-  "SVG": {
-    scale: 100
-  }
-});
-</script>
-
-<script type="text/javascript" src="/tparty/mathjax/MathJax.js?config=default">
--->
 
 </script>
 </head>
 
 <body>
+
+
 
 <div class="containerAll">
 <div id="whitebg"></div>

@@ -1,3 +1,20 @@
+#photoDescriptionEdit
+{
+	display:  none;
+}
+#photoDescriptionView
+{
+	padding: 8px;
+	background-color: #efefef;
+	color: #000;
+	font-weight: normal;
+	display: block;
+}
+#photoDescriptionView .hint
+{
+	color:grey;
+	font-style: italic;
+}
 .photobox
 {
 

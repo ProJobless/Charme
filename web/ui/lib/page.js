@@ -1,4 +1,11 @@
 $(document).ready(function() {
+
+// Latex Test
+
+//$(".tex")
+
+
+
   var sus = location.href.split('&');
   var ar ="";
   var p = $.urlParam("p",location.href );
