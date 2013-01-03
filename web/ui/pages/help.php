@@ -34,10 +34,18 @@ As every user is located on another server this does not work at the moment. How
 
 
 <h3>Formulas</h3>
-If your browser supports MathML you can also write TeX Formulas. We use <a href='http://math.etsu.edu/LaTeXMathML/'>this</a> Library for conversion
-form TeX to MathML. See their website for supported commands.
+If your browser supports MathML you can also write TeX Formulas. You can use the preview function to check the rendering.
+To include LateX capsulate the formula with \$. For example
 
+<div style='padding:16px;'>
+<span style='font-family: Consolas'>\$\sum_{i=0}^{n-1}i\$</span>
+</div>
+ is
+<div style='padding:16px;'>
 
+	$\sum_{i=0}^{n-1}i$
+</div>
+To write a \$ sign you have to write \\$.
 </div>
 
 

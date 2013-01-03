@@ -27,26 +27,57 @@ groups: should have:
 
 */
 
-$groups = getGroups($_SESSION["charme_user"]);
-$groupsui = array();
+$default = -1;
+// level exists => loaded via javascript
+//if ((isset($_GET["q"]) && !isset($_POST["level"])) || !isset($_GET["q"]))
 
-foreach ($groups as $item)
+
+if (!isset($_POST["level"]) || $_POST["level"] == 0)
 {
+	$groups = getGroups($_SESSION["charme_user"]);
+	$groupsui = array();
 
 
-	$groupsui[] =subMenuActionAdd($item["name"], $item["groupid"]);
+
+		
+	foreach ($groups as $item)
+	{
+
+		if (!isset($_GET["q"]) && isset($item["position"]) && $item["position"] == 1)
+		{
+			$default  = (string)$item["groupid"];
+			$groupsui[] =subMenuActionAdd($item["name"], $item["groupid"], true);
+		}
+		else
+		$groupsui[] =subMenuActionAdd($item["name"], $item["groupid"]);	
+	}
+
+
+	if (!isset($_GET["q"]) && $default==-1)
+	{
+		if (Count($groups) > 0)
+		$_GET["q"] = (string)$groups[0]["groupid"];
+		else
+
+			echo "You have not added any groups yet. Create a new group or join a group.";
+	}
+
+	subMenuAdd(
+	$groupsui
+
+	);
 }
-subMenuAdd(
-$groupsui
 
-);
 ?>
 
 
 
 <?
-if (isset($_GET["q"]))
+if (isset($_GET["q"]) ||$default != -1)
 {
+	if ($default != -1)
+		$_GET["q"] = $default;
+
 	if (isset($_GET["action"]) && $_GET["action"] == "members")
 	{
 		$groupInfo = getGroupInfo($groupId, array("name", "type"));

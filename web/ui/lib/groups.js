@@ -6,6 +6,13 @@ function addGroup()
 	//init buttons
 	});
 }
+function setDefaultGroup(groupId)
+{
+	$.post("ui/actions/setDefaultGroup.php", {'groupId':groupId}, function(d){
+	$("#group_setdef").replaceWith("<span>Group is default group now</span>")
+	alert(d);
+	});
+}
 function addGroupOk()
 {
 

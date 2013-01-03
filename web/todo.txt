@@ -1,12 +1,24 @@
 MUSTHAVE
 ----------------------------------
 
+- setDefaultGroup: update on other groups not working!
+- prev/next picture
 - form validation
+- comment counter
 - groups....
+	- pagination, newest entries first.
+	- member page
+	- cross server posting!
+
+	
+- if q argument missing -> reload not working
+- format text with nl2br, latex with $$
 - latex
+	- preview
+	-only for comments, posts, photo descriptions
 - pagination should work...
 - post to collection from stream page does not work...
-- Nameservice
+- Nameservice (via dbRef?)
 	- comments: do not update names!
 	- friends lists: do update names!
 	- posts in streams do not update names as only 3 das valid!
@@ -31,11 +43,14 @@ MUSTHAVE
 	-+ function setCount(userID, countId, value), incCount(userId, countId)
 - image sizes
 
+
+
+
 SHOULD HAVE
 ----------------------------------
 - remove add button action when leaving group page and goto stream
 - global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
-
+- WebRTC based Voice/Videochat
 
 
 TO CONSIDER
@@ -67,7 +82,8 @@ request sending with priorities
 
 Security
 ----------------------------------
-+ check if collection follow is legal
++ check if collection follow is allowed
++ Maximal Post lenght!
 
 
 

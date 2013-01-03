@@ -32,6 +32,7 @@ if (isset($_POST["col_name"]))
 else
 {
 	$info = array();
+	$info2 = array();
 
 	function infoGet($arr, $key)
 	{
@@ -44,6 +45,7 @@ else
 	if (isset($_POST["groupId"]))
 	{
  		$info = getGroupInfo($_POST["groupId"], array("name", "type", "description"));
+ 		$info2 = getGroupMemberInfo($_SESSION["charme_user"],$_POST["groupId"], array("isdefault", "notifications"));
 
 	}
 
@@ -73,7 +75,13 @@ else
 	$fd->addOption(1, "Disable");
 	$fc->add($fd);
 
-	$fc->add(new formHTML2("<a onclick='group_setDefault(\"".$_POST["groupId"]."\")'>Set as Default Group</a> - <a onclick='leaveGroup(\"".$_POST["groupId"]."\")'>Leave Group", "", ""));
+	$str = "";
+
+
+	if (!infoGet($info2, "isdefault"))
+$str = "<a id='group_setdef' onclick='setDefaultGroup(\"".$_POST["groupId"]."\")'>Set as Default Group</a> - ";
+
+	$fc->add(new formHTML2($str."<a onclick='leaveGroup(\"".$_POST["groupId"]."\")'>Leave Group", "", ""));
 
 
 	}

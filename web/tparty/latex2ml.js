@@ -1162,6 +1162,9 @@ var AMbody;
 var AMnoMathML = false, AMtranslated = false;
 
 function translate(spanclassAM) {
+
+  AMtranslated = false;
+  
   if (!AMtranslated) { // run this only once
     AMtranslated = true;
     AMinitSymbols();
@@ -1184,6 +1187,8 @@ function generic()
   translate();
 };
 //setup onload function
+
+/*
 if(typeof window.addEventListener != 'undefined')
 {
   //.. gecko, safari, konqueror and standard
@@ -1223,3 +1228,4 @@ else
     window.onload = generic;
   }
 }
+*/

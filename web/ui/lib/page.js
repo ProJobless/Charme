@@ -21,13 +21,18 @@ $(document).ready(function() {
 
 
 
+	var ind = location.href.indexOf('&');
+	if (ind == -1)
+		ar = "";
+	else
+	ar = "&"+location.href.substr(ind+1);
 
-	ar = location.href.substr(location.href.indexOf('&')+1);
+
 
   //alert(sus[1]);
   //Problem here: if more args then p and q -> problem!
   //history.replaceState({ page: "ui/pages/"+p+".php?foo=1&"+ar}, "", "?p="+p+"&"+ar);
-	history.replaceState({ page: "ui/pages/"+p+".php?foo=1&"+ar}, "", "?p="+p+"&"+ar);
+	history.replaceState({ page: "ui/pages/"+p+".php?foo=1"+ar}, "", "?p="+p+""+ar);
 
 
   $('.sbAlpha ul a').each (function(index)
@@ -111,7 +116,10 @@ window.onpopstate = function(e) {
 
 function initPage(level)
 {
-	//stop timers if exists
+	// Do Latex
+		translate();
+
+	// stop timers if exists
 	if (timer_msg_height)
 		clearInterval(timer_msg_height);
 
@@ -217,16 +225,27 @@ function initPage(level)
 	$('.sbBeta li').removeClass("active");
 	
 	//loads into #page div
-	$('a[data-page]').each (function(index)  {	$(this).click(function(){   pageLoadWithHistory($(this).attr("data-page"),$(this).attr("data-pagearg"));});});
+	$('a[data-page]').each (function(index)  {	$(this).click(function(){ var x = $(this).attr("data-pagearg"); if (x== null) x = "";  pageLoadWithHistory($(this).attr("data-page"),x);});});
 	//loads into #page3 div
-	$('a[data-page2]').each (function(index)  {	$(this).click(function(){   pageLoadWithHistoryBetaArg($(this).attr("data-page"),$(this).attr("data-pagearg"));});});
+	$('a[data-page2]').each (function(index)  {	$(this).click(function(){  var x = $(this).attr("data-pagearg"); if (x== null) x = "";   pageLoadWithHistoryBetaArg($(this).attr("data-page"),x);});});
 		
 		
 	
 	var qq =  $.urlParam("q",location.href );
 
 	if (qq=="")
-	$('.sbBeta li a').first().parent().addClass("active");
+	{
+
+		// If no active element specified, mark 1st element as active
+		if ($('.sbBeta li a.active2').length == 0) 
+
+			$('.sbBeta li a').first().parent().addClass("active");
+		else
+		{
+			$('.sbBeta li a.active2').parent().addClass("active");
+			$('.sbBeta li a.active2').removeClass("active2");
+		}
+	}
 	else
 	$('.sbBeta li a[ref='+qq+']').parent().addClass("active");
 

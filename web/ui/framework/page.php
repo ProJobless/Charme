@@ -26,11 +26,12 @@ function subMenuAdd($items)
 
 	
 }
-function subMenuActionAdd($title, $par)
+function subMenuActionAdd($title, $par, $active=false)
 {	
+	if ($active)
+		return "<li><a class='active2' ref='$par'>$title</a></li>";
 
-	
-		return "<li><a ref='$par'>$title</a></li>";
+	return "<li><a ref='$par'>$title</a></li>";
 }
 function page_addCSS()
 {

@@ -1,8 +1,13 @@
 <?
-function setDefaultGroup($userId, $value)
-{
-	// Save value in User Collection
+function setDefaultGroup($userId, $groupId)
+{	
+	global $db_charme;
+echo $userId.$groupId;
+	// Remove default status from other groups
+	$db_charme->groupmembers->update(array("memberid" => $userId),array('$set' => array("position" => 0)), array("multiple" => true));
 
+	// Set default status for new group
+	$db_charme->groupmembers->update(array("memberid" => $userId,"groupid"=> new MongoId($groupId)),array('$set' => array("position" => 1)));
 }
 function addGroup($creator, $name, $description, $type)
 {
@@ -53,6 +58,10 @@ function addGroupMember($userid, $memberid, $groupid)
 
 
 	return $content ["_id"];
+}
+function getGroupMemberInfo($userId, $groupId, $fields)
+{
+	
 }
 function getGroupInfo($groupId, $fields)
 {
