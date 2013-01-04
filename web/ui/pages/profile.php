@@ -71,7 +71,10 @@ else
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/getProfile.php");
 
 	//TODO: 1st Argument must be profile owner, not logged in user
-	$arr2 = getProfile($userId, array("st_about", "st_hometown", "st_books", "userid", "st_games", "st_movies","firstname", "lastname", "st_gender", "st_music"), $userId);
+	$arr2 = getProfile($userId, $_SESSION["charme_user"]);
+
+
+
 
 	$arr = $arr2[0];
 
@@ -158,13 +161,16 @@ else
 
 		// Format collections
 		$format = "";
-		
+	
+
 		foreach ($arr2[1] as $item)
 		{
 
 
 
-			$format .= "<li><a  data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$item["_id"]. "'>".$item["name"]. "</a></li>";
+			$format .= "<li><a  data-page2='profile' data-pagearg='&userId="
+			.urlencode($userId)
+			."&q=collections&id=".$item["_id"]['$id']. "'>".$item["name"]. "</a></li>";
 
 
 			//$format .= "<li><a href='".$item["name"]."'>".$item["name"]."</a></li>"

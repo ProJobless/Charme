@@ -59,7 +59,7 @@ if (!isset($_POST["level"]) || $_POST["level"] == 0)
 		$_GET["q"] = (string)$groups[0]["groupid"];
 		else
 
-			echo "You have not added any groups yet. Create a new group or join a group.";
+			echo "<div class='infobox'>You have not added any groups yet. Create a new group or join a group.</div>";
 	}
 
 	subMenuAdd(

@@ -90,13 +90,19 @@ class remoteRequest
 		curl_setopt($ch,CURLOPT_POST, count($fields));
 		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
 
-	
-		$result = curl_exec($ch);
+		// Return result and not status code for curl_exec. This is very important
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE );
 
-	return $result;
+				
+		$result = curl_exec($ch);
 		curl_close($ch);
 
 
+		// Only decode if no local request!!!
+		return json_decode($result, true);
+		
+		// TODO: No decode if local request:
+		// return ... 
 
 /*
 		$ch = curl_init($url);                                                                      

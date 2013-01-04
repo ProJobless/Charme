@@ -1,7 +1,18 @@
 MUSTHAVE
 ----------------------------------
 
-- setDefaultGroup: update on other groups not working!
+MILESTONE:
+
+1) MULTI SERVER TEST
+	- Refactor receiver: Exclude functions, avoid json_encode on same server
+	- 2nd account
+	- 1st test: profile, collection get, followers
+	- 2nd test: groups, grouppost 
+
+- remove lists from own profile
+- remove post box from collection if not my profile
+
+- build indexes
 - prev/next picture
 - form validation
 - comment counter
@@ -11,22 +22,19 @@ MUSTHAVE
 	- cross server posting!
 
 	
-- if q argument missing -> reload not working
-- format text with nl2br, latex with $$
 - latex
 	- preview
 	-only for comments, posts, photo descriptions
 - pagination should work...
 - post to collection from stream page does not work...
-- Nameservice (via dbRef?)
+- Nameservice (via dbRef??? dbref efficiency??)
 	- comments: do not update names!
 	- friends lists: do update names!
 	- posts in streams do not update names as only 3 das valid!
 	- messages: Do update names!
 - delete collections
-	-return to collection overview after complete
 	-notify subscribers about deleted collection
-
+- format text with nl2br
 - delete images, posts
 	- notify subscribers OR display hint at comment loading
 
@@ -34,7 +42,7 @@ MUSTHAVE
 
 - comments must work for other servers! (if post deleted  -> delete at me too)
 - multi server test
-- sign up page
+
 
 - counts 
 	-+ New message
@@ -51,7 +59,8 @@ SHOULD HAVE
 - remove add button action when leaving group page and goto stream
 - global menus (.dropMenu, menuitems(hidden) on siblings, pos = ...)
 - WebRTC based Voice/Videochat
-
+- sign up page
+- latex with $$
 
 TO CONSIDER
 ----------------------------------
@@ -89,4 +98,6 @@ Security
 
 DEV NOTES
 ----------------------------------
-nanoScroller needs a .content element inside .nano
+- nanoScroller needs a .content element inside .nano
+- user iterator_to_array for json encoded remote requests
+- use single quotes to access dollar indices in arrays like $item["_id"]['$id']

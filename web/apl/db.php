@@ -14,13 +14,12 @@ function db_getUserField($field)
 {
 	global $db_charme;
 	
-	
-
-
 	$collection = $db_charme->users;
 	$cursor = $collection->findOne(array("userid" => $_SESSION["charme_user"]), array($field));
-
-	return $cursor["color"];
+	if (isset($cursor[$field]))
+		return $cursor[$field];
+	else
+		return NULL;
 }
 
 

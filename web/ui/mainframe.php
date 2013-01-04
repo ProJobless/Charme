@@ -17,14 +17,10 @@ include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 <link rel="stylesheet" type="text/css" href="/ui/css/profile.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/talks.css">
 <link rel="stylesheet" type="text/css" href="/ui/css/css.php?color=<?
-
 if (isset($_POST["st_color"]))
-echo $_POST["st_color"];
+    echo $_POST["st_color"];
 else
-	echo db_getUserField("color");
-
-	
-	
+    echo db_getUserField("color");
 ?>">
 <script src='/ui/lib/jq.js'></script>
 <script src='/ui/lib/jqui.js'></script>

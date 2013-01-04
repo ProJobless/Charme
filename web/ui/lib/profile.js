@@ -36,13 +36,16 @@ function deleteCollection(colId)
 		
 		ui_showBox(d+ui_Button("Delete Collection", "deleteCollection2(\""+colId+"\")") +" or " + ui_closeBoxButton());
 	//init buttons
+
 	});
 }
 function deleteCollection2(colId)
 {
 	$.post("ui/actions/deleteCollection.php",{'colId':colId},function(d){
-	alert(d);
+
 	ui_closeBox();
+		pageLoadWithHistory("profile","&q=collections");
+
 
 	});
 }

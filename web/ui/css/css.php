@@ -31,8 +31,9 @@ array(
 
 );
 
-
-
+if ($_GET["color"] == "")
+	$colors = $colors[0];
+else
 $colors = $colors[$_GET["color"]];
 
 

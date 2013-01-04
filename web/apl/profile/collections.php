@@ -16,7 +16,7 @@ function saveCollection($colId, $owner, $name, $description,  $visibletyp=1, $pe
 	// This part is identical with the one in the function addCollection
 	
 	//todo: validate strings!!
-	$content = array("userid" => $_SESSION["charme_user"],
+	$content = array("userid" =>$owner,
 			"name" => $name,
 			"description" => $description,
 	
@@ -49,10 +49,9 @@ function saveCollection($colId, $owner, $name, $description,  $visibletyp=1, $pe
 
 	}
 
-echo "UPADTE!!!";
 
 
-echo $colId.$owner;
+
 
 // Problem: Field parent is removed @update
 	$db_charme->usercollections->update(array("_id" => new MongoId($colId), "userid" => $owner),array('$set' =>  $content));

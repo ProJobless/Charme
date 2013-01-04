@@ -71,35 +71,40 @@ $acont = $item["lastauthor"].$more."<div>".$item["preview"]."</div>";
 if (isset($firstid) && $firstid != "" && !isset($_GET["q"]))
 $_GET["q"] = $firstid;
 
-$ppl = getMessagePeople($_SESSION["charme_user"], $_GET["q"]);
-//var_dump(iterator_to_array($ppl));
-$ppl2 = $ppl["people"];
-$ppl3 = "p".implode(",p",$ppl2);
-
-fw_load("attachment");
-$atf = new attachmentForm("atf_stream_APPENDMESSAGE");
-
-
-echo '<div class="instantanswer"><form>
-<input type="hidden" name="col_to" value="'.$ppl3.'">
-<input type="hidden" name="col_type" value="instant">
-<textarea name="col_description" style="width:100%; "></textarea>'.$atf->printContainer().'
-<div style="margin-top:8px;"><a class="button" href="javascript:sendMessageInstant()">Send</a> or '.$atf->printAdd().'
-</form></div></div>';
-
-echo "<div class='message'>People: ".implode(", ", $ppl["people"])."</div>";
-
-
-
-echo "<div class='talkmessages'>";
-
-
-
 if (isset($_GET["q"]))
-include($_SERVER["DOCUMENT_ROOT"]."/ui/actions/loadMessageItems.php");
+{
+	$ppl = getMessagePeople($_SESSION["charme_user"], $_GET["q"]);
+	//var_dump(iterator_to_array($ppl));
+	$ppl2 = $ppl["people"];
+	$ppl3 = "p".implode(",p",$ppl2);
+
+	fw_load("attachment");
+	$atf = new attachmentForm("atf_stream_APPENDMESSAGE");
 
 
-echo "</div>";
+	echo '<div class="instantanswer"><form>
+	<input type="hidden" name="col_to" value="'.$ppl3.'">
+	<input type="hidden" name="col_type" value="instant">
+	<textarea name="col_description" style="width:100%; "></textarea>'.$atf->printContainer().'
+	<div style="margin-top:8px;"><a class="button" href="javascript:sendMessageInstant()">Send</a> or '.$atf->printAdd().'
+	</form></div></div>';
+
+	echo "<div class='message'>People: ".implode(", ", $ppl["people"])."</div>";
+
+
+
+	echo "<div class='talkmessages'>";
+
+
+
+	if (isset($_GET["q"]))
+	include($_SERVER["DOCUMENT_ROOT"]."/ui/actions/loadMessageItems.php");
+
+
+	echo "</div>";
+}
+else
+	echo "<div class='infobox'>You do not have any conversation yet. Click the plus button to start a new conversation.</div>";
 
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
 echo "</div>";

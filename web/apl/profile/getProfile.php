@@ -1,8 +1,23 @@
 <?
 
-function getProfile($invader, $fields, $userId)
+function getProfile($userId, $invader)
 {
 	//TODO: JSON request if not my server!!
+
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($userId, $invader, "profile_get");
+	//$rr->setPayload(array());
+
+	$ret =  ($rr->send());
+
+global $db_charme;
+
+
+
+
+	return $ret;
+/*
+
 
 	global $db_charme;
 	$col = $db_charme->users;
@@ -15,7 +30,13 @@ function getProfile($invader, $fields, $userId)
 	//Only if visible to me!!!!!!
 
 
+
+
+
 	return array($cursor, $cursor2);
+*/
+
+
 
 }
 function getName()

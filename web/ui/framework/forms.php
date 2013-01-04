@@ -15,7 +15,13 @@ function forms_doPostField($collectionId=0, $isGroup=false)
 		If you want to edit the DOM struture you will have to edit
 		this file too.
 	*/
+$colls = getCollections($_SESSION["charme_user"]);
 
+if ($colls->count() == 0 && $collectionId == 0 && !$isGroup)
+{
+	echo "<div class='infobox' style='margin:0px;'>You do not have any collections yet. Create a collection on your profile page first to start posting.</div>";
+	return;
+}
 fw_load("attachment");
 $atf = new attachmentForm("atf_stream_".$collectionId);
 
@@ -36,7 +42,7 @@ echo "<div>";
 	echo " in 
 	<select>";
 
-$colls = getCollections($_SESSION["charme_user"]);
+
 foreach ($colls as $item)
 echo "<option value='".$item["_id"]."'>".$item["name"]."</option>";
 
