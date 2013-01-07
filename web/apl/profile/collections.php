@@ -116,6 +116,9 @@ return $content ["_id"];
 function getParentList($collection)
 {
 
+
+
+
 if ($collection == NULL || $collection == 0)
 	return array();
 
@@ -182,30 +185,28 @@ function getCollectionInfo($userId, $collectionId)
 
 }
 
-function getCollection($userId, $owner, $filter)
+function getCollection($userId, $collectionOwner, $filter)
 {
-
-
-	global $db_charme;
-	$collection = $db_charme->usercollections;
-
-	//echo $filter."-";
 	
 
-	//if not my server... ... ... 
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($collectionOwner, $userId, "collection_get");
+	$rr->setPayload(array("filter" => $filter));
 
-	if ($filter == 0)
-	$cursor = $collection->find(array("parent"=>NULL));
-	else
-	$cursor = $collection->find(array("parent"=>new MongoId($filter)));
+	$ret =  ($rr->send());
+	
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
 
 	if ($filter == 0) $subscribed = false;
 	else $subscribed = doesFollow($userId, $filter);
 
-//echo "!!".$subscribed."!!";
-	return array($cursor, $subscribed);
+
+	return array($ret, $subscribed);
+
+
+
+	
 }
 
 ?>

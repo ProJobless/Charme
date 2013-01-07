@@ -47,6 +47,32 @@ function parseRequest($action , $username, $data)
 			echo registerPost($data, $username); //OK, AUTHERROR
 			break;
 
+		case "collection_get":
+			global $db_charme;
+			
+			$username.= "@localhost";
+
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+			$collection = $db_charme->usercollections;
+
+			if ($data["filter"] == 0)
+				$cursor = iterator_to_array($collection->find(array("parent"=>NULL)));
+			else
+				$cursor = iterator_to_array($collection->find(array("parent"=>new MongoId($data["filter"]))));
+
+
+			
+			$infos = array();
+			$infos["name"] = "Collection Name TODO";
+	
+
+			return (array("items" => $cursor, "info"=>$infos));
+
+	    	break;
+
+
 		case "group_post":
 	      
 	    	break;
@@ -116,6 +142,7 @@ function parseRequest($action , $username, $data)
 		receiveComment($data);
 	}
 }
+
 
 
 

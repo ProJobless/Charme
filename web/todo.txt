@@ -5,8 +5,10 @@ MILESTONE:
 
 1) MULTI SERVER TEST
 	- Refactor receiver: Exclude functions, avoid json_encode on same server
-	- 2nd account
 	- 1st test: profile, collection get, followers
+		- getCollections as JSON
+		- getCollection as JSON
+		- 
 	- 2nd test: groups, grouppost 
 
 - remove lists from own profile
@@ -22,9 +24,7 @@ MILESTONE:
 	- cross server posting!
 
 	
-- latex
-	- preview
-	-only for comments, posts, photo descriptions
+
 - pagination should work...
 - post to collection from stream page does not work...
 - Nameservice (via dbRef??? dbref efficiency??)
@@ -49,8 +49,13 @@ MILESTONE:
 	-+ Group Post
 	-+ New Stream Posts
 	-+ function setCount(userID, countId, value), incCount(userId, countId)
-- image sizes
 
+
+
+- image sizes
+- latex
+	- preview
+	-only for comments, posts, photo descriptions
 
 
 

@@ -49,9 +49,10 @@ class remoteRequest
 		$this->payload = $a_arr;
 	}
 
-	public function send()
+	// $plain: return plain query for debug reasons.
+	public function send($plain=false)
 	{
-		$dest = explode ('@',$this->destination);
+		$dest = explode ('@', $this->destination);
 	
 		//$this->payload["receiver"] =$dest[0];
 
@@ -97,6 +98,8 @@ class remoteRequest
 		$result = curl_exec($ch);
 		curl_close($ch);
 
+		if ($plain) // Use $plain=true for debugging
+			echo str_replace('$', '\$', $result);
 
 		// Only decode if no local request!!!
 		return json_decode($result, true);

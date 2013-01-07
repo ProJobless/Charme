@@ -261,7 +261,15 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/collections.php");
 	$uccol = getCollection($_SESSION["charme_user"],$userId, getget("id"));
-	$items = $uccol[0];
+
+
+
+	//echo str_replace('$', '\$', print_r($uccol, true));
+
+
+	$items = $uccol[0]["items"];
+	$infos = $uccol[0]["info"];
+
 	$subscribed =  $uccol[1];
 
 	//GET parents, if > 4 -> dont display this, also do not display when its not my profile
@@ -307,10 +315,11 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 		if (isset($_GET["id"]) && $_GET["id"])
 		{
 	 		echo "<a  data-page2='profile' data-pagearg='&q=collections'>Collections</a>";
-			$list = getParentList($_GET["id"]);
+		//	$list = getParentList($_GET["id"]);
+			echo " -> ".$infos["name"]. "";
 
 
-			foreach ($list as $value) {
+		/*	foreach ($list as $value) {
 
 
 			if ($_GET["id"] != $value["id"])
@@ -319,7 +328,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 				echo " -> ".$value["name"]. "";
 			}
 			//echo " -> Collections";
-
+*/
 			//2do: output as long as predesessor, but not longer then 4 times
 		//	echo "-> Collection Name";
 		
@@ -340,7 +349,8 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 if (!$has ){$has =true;echo "<div class='p24' id='collection_container'>"; }
 
 
-		echo "<a class='collection' data-page2='profile' data-pagearg='&userId=".urlencode($userId)."&q=collections&id=".$item["_id"]."'>".$item["name"]."</a>";	
+		echo "<a class='collection' data-page2='profile' data-pagearg='&userId=".urlencode($userId).
+		"&q=collections&id=".$item["_id"]['$id']."'>".$item["name"]."</a>";	
 	
 		//if is post
 		
