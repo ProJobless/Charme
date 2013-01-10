@@ -1,10 +1,11 @@
 <?
-//urldecode unnötig!
+//urldecode unnecessary!
 
 
 // username is receiver
 function parseRequest($action , $username, $data)
 {
+	$userId = $username."@localhost";
 
 	switch ($action) 
 	 {
@@ -46,6 +47,33 @@ function parseRequest($action , $username, $data)
 			include_once($_SERVER['DOCUMENT_ROOT']."/apl/stream/post.php");
 			echo registerPost($data, $username); //OK, AUTHERROR
 			break;
+		
+		case "followers_get":
+			global $db_charme;
+			
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+			$qu = array("owner" => $userId);
+			return iterator_to_array($db_charme->followers->find($qu));
+		break;
+
+		case "following_get":
+
+			global $db_charme;
+			
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+			$qu = array("owner" => $userId);
+			return iterator_to_array($db_charme->followerslocal->find($qu));
+
+		break;
+
+		case "picture_get":
+
+		break;	
+
 
 		case "collection_get":
 			global $db_charme;
@@ -57,6 +85,7 @@ function parseRequest($action , $username, $data)
 
 			$collection = $db_charme->usercollections;
 
+			// TODO: Selctor with userId
 			if ($data["filter"] == 0)
 				$cursor = iterator_to_array($collection->find(array("parent"=>NULL)));
 			else
@@ -72,12 +101,57 @@ function parseRequest($action , $username, $data)
 
 	    	break;
 
+	    case "comment_read":
+	    	// 1) Try to get comment count, if not possible -> post has been deleted -> notify
+	    	// 2) Return array(info[commentcount], comments)
+	
+
+
+			global $db_charme;
+
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+
+			$ret =  iterator_to_array(
+
+				$db_charme->postcomments->find
+				(array("postid" => new MongoId( $data["postid"])))->sort(array("posttime" => 1))->limit($data["range"])->skip($data["start"]));
+
+		
+			return $ret;
+
+	    break;
 
 		case "group_post":
 	      
 	    	break;
 
+		case "comment_get":
+		
+			global $db_charme;
+
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+
+		    include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+			include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/comments.php");
+			$comment = array("postid" => new MongoId($data["postid"]), "userid" => $data["userid"], "content" => $data["content"], "posttime"=> new MongoDate(time()));//"postid" => $data["postid"]
+
+			print_r($comment);
+
+
+	 		$db_charme->postcomments->insert($comment);
+
+	    break;
+
+
 		case "group_postnotify":
+
+	    break;
+
+	    case "name_update":
 
 	    break;
 	}
@@ -127,20 +201,6 @@ function parseRequest($action , $username, $data)
 	}
 
 
-	else if($action == "comment_read")
-	{
-		include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
-		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/comments.php");
-		readComments($data);
-	}
-
-
-	else if($action == "comment_get")
-	{
-		include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
-		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/comments.php");
-		receiveComment($data);
-	}
 }
 
 

@@ -1,4 +1,4 @@
-Copyright 2012 Manuel Schultheiß
+Copyright 2013 Manuel Schultheiß
 http://www.mschultheiss.com
 
 Permission is hereby granted, free of charge, to any person

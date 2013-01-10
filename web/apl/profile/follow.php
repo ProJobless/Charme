@@ -1,21 +1,41 @@
 <?
-function getFollowers($collection)
+function getFollowers($collection, $userId, $invader)
 {
+
 	global $db_charme;
 	$qu = array("collection" => $collection);
 	return $db_charme->followers->find($qu);
+
+	
+
 }
-function getFollowersOfUser($userid)
+
+function getFollowersOfUser($userId, $invader)
 {
+	/*
 	global $db_charme;
 	$qu = array("owner" => $userid);
 	return $db_charme->followers->find($qu);
+*/
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($userId, $invader, "followers_get");
+	//$rr->setPayload(array());
+	$ret =  ($rr->send());
+	return $ret;
+
 }
-function getFollowing($userid)
-{
+function getFollowingOfUser($userId, $invader){
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($userId, $invader, "following_get");
+	//$rr->setPayload(array());
+	$ret =  ($rr->send());
+	return $ret;
+
+	/*
 	global $db_charme;
 	$qu = array("owner" => $userid);
-	return $db_charme->followerslocal->find($qu);
+	return $db_charme->followerslocal->find($qu);*/
+
 }
 function followCollection($userId, $owner, $collection, $follow)
 {

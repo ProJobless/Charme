@@ -25,8 +25,8 @@ $pictureId = $fields["reference"];
 <div style='overflow:auto; padding:32px 32px 0 32px ;'>
 <?
 	// Button for next and previous photo
-	echo '<a title="Close"  onclick=\'nextPhoto()\'  background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
-	echo '<a title="Close"  onclick=\'prevPhoto()\'  background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
+	echo '<a title="Previous"  onclick=\'prevPhoto()\'  background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
+	echo '<a title="Next"  onclick=\'nextPhoto()\'  background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
 
 	// Button for close
 	echo '<a title="Close"  onclick=\'closePhoto()\' style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
@@ -38,17 +38,35 @@ $pictureId = $fields["reference"];
 
 <div id='photoDescription' class='cb' style='padding-top:32px;'>
 
+
 <div id='photoDescriptionBox'>
-<a onclick='editPhotoDescription()' id="photoDescriptionView">
+
 <?
-if (isset($fields["description"]))
-echo $fields["description"];
-else
-echo "<span class='hint'>Click to add description...</span>";
+if ($userId == $_SESSION["charme_user"])
+{
 ?>
-</a>
+	<a onclick='editPhotoDescription()' id="photoDescriptionView">
+	<?
+	if (isset($fields["description"]))
+		echo $fields["description"];
+	else 
+		echo "<span class='hint'>Click to add description...</span>";
+	?>
+	</a>
+<?
+}
+else
+{
+	if (isset($fields["description"]))
+		echo $fields["description"];
+}
+?>
+
+
 
 </div>
+
+
 
 <div id='photoDescriptionEdit'>
 <textarea class='box' style='margin-bottom: 8px;'>

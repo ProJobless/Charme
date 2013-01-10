@@ -52,7 +52,7 @@ class remoteRequest
 	// $plain: return plain query for debug reasons.
 	public function send($plain=false)
 	{
-		$dest = explode ('@', $this->destination);
+		$dest = explode ('@',$this->destination);
 	
 		//$this->payload["receiver"] =$dest[0];
 

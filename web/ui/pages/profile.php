@@ -13,6 +13,8 @@ else
 	$userId = $_SESSION["charme_user"];
 
 
+$is_owner = ($userId == $_SESSION["charme_user"]) ? true  : false;
+
 $username = "Manuel";
 //START: IF NOT DYNAMICALY LOADED
 if (!isset($_POST["level"]) || $_POST["level"] !=3 )
@@ -214,7 +216,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribing")
 	//People in my lists, or subscribers? => just subscribers!
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
-	$list = getFollowing($userId);
+	$list = getFollowingOfUser($userId, $_SESSION["charme_user"]);
 
 	echo lists_start();
 	foreach ($list as $item)
@@ -230,12 +232,13 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribing")
 }
 else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribers")
 {
+	echo "<div class='profile_header'>Subscribing</div>";
 	echo "<div class='p16'>";
 	fw_load("lists");
 	//People in my lists, or subscribers? => just subscribers!
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
-	$list = getFollower($userId);
+	$list = getFollowersOfUser($userId, $_SESSION["charme_user"]);
 
 
 	echo lists_start();
@@ -243,14 +246,15 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="subscribers")
 	{
 		echo lists_doItem($item["follower"], $item["follower"]);
 
-
 	}
 	echo lists_end();
 
 
 
-	echo "Note: Subscriber list could be manipluated by the owner. To verify the subscribers, look on the profile page and click on Subscribing.";
 	echo "</div>";
+
+		echo "<div class='p32'><b>Note:</b> This list can be manipluated by the profile owner. To verify a subscriber, look on the profile page and click on Subscribing.</div>";
+
 }
 else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 {
@@ -292,13 +296,15 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 
 		}
 
-		if ($userId == $_SESSION["charme_user"])
+		if ($is_owner)
 		echo '<a title="Settings" onclick=\'showCollectionSettings("'.$colid.'")\' style="float: right; background-position: -144px 0px;" data-bgpos="-144" class="actionIcon"> </a>';
 
 	}
 	else
+	{
+	if ($is_owner)
 	echo "<a style='float:right;' data-bgpos='0' class='functionButton actionIcon' id='but_addCollection'> </a>";
-
+	}
 	echo "</div>";
 
 
@@ -314,7 +320,7 @@ else if (isset($_GET["q"]) &&  $_GET["q"] =="collections")
 
 		if (isset($_GET["id"]) && $_GET["id"])
 		{
-	 		echo "<a  data-page2='profile' data-pagearg='&q=collections'>Collections</a>";
+	 		echo "<a  data-page2='profile' data-pagearg='&q=collections&userId=".urlencode($userId)."'>Collections</a>";
 		//	$list = getParentList($_GET["id"]);
 			echo " -> ".$infos["name"]. "";
 
@@ -365,16 +371,18 @@ echo "<div class='p24' id='collection_container' style='display:none;padding-bot
 		echo "<br class='cb'></div>";
 
 
-	echo "<div style='height:32px;'></div>";
+	
 
 
-	if (isset($_GET["id"]) && $_GET["id"])
+	// Make sure we are inside a collection and we are the collection owner, then we show the post field.
+	if (isset($_GET["id"]) && $_GET["id"] && ($_SESSION["charme_user"] == $userId))
 	{
 
-
+	echo "<div style='height:32px;'></div>";
 		echo "<div class='p32' style='padding-bottom:0px; overflow: visible;  padding-top:0px;'>";
 		echo "<a class='switcher active' data-pos='1'><div>Post</div></a>
 		<a class='switcher' data-pos='2'><div>Photo</div></a>";
+
 
 echo "<div class='switch switch1'>";
 		forms_doPostField($_GET["id"]);

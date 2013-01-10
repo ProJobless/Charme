@@ -6,15 +6,15 @@ MILESTONE:
 1) MULTI SERVER TEST
 	- Refactor receiver: Exclude functions, avoid json_encode on same server
 	- 1st test: profile, collection get, followers
-		- getCollections as JSON
-		- getCollection as JSON
-		- 
+		- remove getCommentCount, add comment counter to post collection, pass comment count as argument
+		- getPostInfo: return previous and next image if item is image
+
 	- 2nd test: groups, grouppost 
 
 - remove lists from own profile
 - remove post box from collection if not my profile
 
-- build indexes
+
 - prev/next picture
 - form validation
 - comment counter
@@ -34,14 +34,13 @@ MILESTONE:
 	- messages: Do update names!
 - delete collections
 	-notify subscribers about deleted collection
-- format text with nl2br
+
 - delete images, posts
 	- notify subscribers OR display hint at comment loading
 
 - delete posts from groups!!
 
 - comments must work for other servers! (if post deleted  -> delete at me too)
-- multi server test
 
 
 - counts 
@@ -51,12 +50,13 @@ MILESTONE:
 	-+ function setCount(userID, countId, value), incCount(userId, countId)
 
 
-
+- format text with nl2br
+- build indexes
 - image sizes
 - latex
 	- preview
 	-only for comments, posts, photo descriptions
-
+- showPhoto: Button Mousedown effect
 
 
 SHOULD HAVE

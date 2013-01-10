@@ -30,7 +30,7 @@ fw_load("post");
 
 
 //getComments(postid, owner, start,range)
-$cList = getComments($_POST["postid"], $_POST["userid"], $commentStartIndex,$commentsPerPage); 
+$cList = getComments($_POST["postid"], $_POST["userid"], $_SESSION["charme_user"],  $commentStartIndex,$commentsPerPage); 
 
 
 $showload = false;
@@ -38,6 +38,8 @@ $showload = false;
 
 if (($commentStartIndex) > 0)
 $showload = true;
+
+print_r($cList);
 
 foreach ($cList as $item)
 {
