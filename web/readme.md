@@ -4,6 +4,11 @@
 
 Charme is a distributed and open source social network. In contrast to classic social networks you can save your user data on your own server or a server of your choice.
 
+## Version
+
+Warning: This version is for preview only. This version is not stable and misses necessary functions like encrpytion and privacy control.
+We plan to release a stable version in summer 2014.
+
 ## Installation
 
   * Install PHP
