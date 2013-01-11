@@ -72,7 +72,8 @@ class remoteRequest
 		$fields = array(
 								'json' => urlencode($data_string),
 								'action' => urlencode($this->request_type),
-								'receiver' => urlencode($dest[0])
+								'receiver' => urlencode($dest[0]),
+								'sender' => urlencode($this->source)
 							
 								
 						);

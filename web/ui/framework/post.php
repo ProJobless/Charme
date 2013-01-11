@@ -77,7 +77,7 @@ else
 
     $atta = "";
 
-    if ($obj["attachments"])
+    if (isset($obj["attachments"]) && Count($obj["attachments"])>0)
             {
                  $atta .= "<div class='attach'>Attachments: ";
 

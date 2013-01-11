@@ -30,7 +30,8 @@ if ($_POST["content"] != "") //We do not need empty posts.
 
 	if ($_POST["g"] != "")
 	{
-			postToCollection($_POST["g"], $_POST["content"], $_SESSION["charme_user"], $_POST["files"],true);
+
+			postToGroup(urldecode($_POST["g"]),  $_SESSION["charme_user"], $_POST["content"]);
 	}
 }
 

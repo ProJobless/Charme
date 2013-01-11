@@ -5,6 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT']."/apl/groups/groups.php");
 needSession();
 
 
-setDefaultGroup($_SESSION["charme_user"], $_POST["groupId"]);
+setDefaultGroup($_SESSION["charme_user"], urldecode($_POST["groupId"]));
 
 ?>

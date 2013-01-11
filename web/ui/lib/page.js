@@ -247,7 +247,7 @@ function initPage(level)
 		}
 	}
 	else
-	$('.sbBeta li a[ref='+qq+']').parent().addClass("active");
+	$('.sbBeta li a[ref='+escapeExpression(qq)+']').parent().addClass("active");
 
 
 	//Has to be called after sbBeta actionbar init.

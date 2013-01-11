@@ -3,9 +3,14 @@
 
 
 // username is receiver
-function parseRequest($action , $username, $data)
+function parseRequest($action , $username, $data, $sender)
 {
 	$userId = $username."@localhost";
+
+	if ($username{0} == '#')
+		$groupId= substr($username, 1);
+
+	
 
 	switch ($action) 
 	 {
@@ -123,9 +128,54 @@ function parseRequest($action , $username, $data)
 
 	    break;
 
+	    // get group members...
 		case "group_post":
-	      
+	      	// TODO: Check if group member...,
+	      	// return status => nomember if not
+ 			global $db_charme;
+
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+	      	echo "POST TO GROUP".$groupId.$data["content"];
+
+	      	$name = "testname";
+
+			$cont = array("userid" => $sender,
+			"username" => $name,
+			"content" => $data["content"],
+			"groupid"=> new MongoId($groupId),
+			//"attachments" => $attachments2,
+			"posttime" =>  new MongoDate(time())
+		
+			);
+			$db_charme->posts->insert($cont);
+
+	      	// return value has to contain post id
 	    	break;
+
+
+		case "group_getstream":
+			// TODO: Check if group member...
+	      	global $db_charme;
+
+			if (!isset($db_charme))
+				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+			$qu = array("groupid" => new MongoId($groupId));
+			$xy =  $db_charme->posts->find($qu);
+
+			return 	iterator_to_array($xy);
+
+	    	break;
+
+
+		case "group_postnotification":
+	    
+
+	    // If not in group -> return notification  
+	    	break;
+
 
 		case "comment_get":
 		

@@ -27,7 +27,7 @@ $atf = new attachmentForm("atf_stream_".$collectionId);
 
 echo "<div>";
 	if ($isGroup)
-		echo "<input type='hidden' name='groupid' value='$collectionId'>";
+		echo "<input type='hidden' name='groupid' value='".urlencode($collectionId)."'>";
 	else
 		echo "<input type='hidden' name='groupid' value=''>";
 
@@ -35,7 +35,7 @@ echo "<div>";
 <div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a>";
 
 
-	if ($collectionId == 0)
+	if ($collectionId == 0 && !$isGroup)
 	{
 
 
@@ -49,7 +49,10 @@ echo "<option value='".$item["_id"]."'>".$item["name"]."</option>";
 	echo "</select>
 	";
 	}
-  echo " - ".$atf->printAdd()." <br class='cb'></div></div>";
+ if (!$isGroup)
+  echo " - ".$atf->printAdd();
+
+  echo "<br class='cb'></div></div>";
 
 }
 	

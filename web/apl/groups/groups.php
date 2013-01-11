@@ -7,16 +7,28 @@ echo $userId.$groupId;
 	$db_charme->groupmembers->update(array("memberid" => $userId),array('$set' => array("position" => 0)), array("multiple" => true));
 
 	// Set default status for new group
-	$db_charme->groupmembers->update(array("memberid" => $userId,"groupid"=> new MongoId($groupId)),array('$set' => array("position" => 1)));
+	$db_charme->groupmembers->update(array("memberid" => $userId,"groupid"=>  ($groupId)),array('$set' => array("position" => 1)));
 }
 function addGroup($creator, $name, $description, $type)
 {
 	global $db_charme;
+
+	include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+
+
+
 	$content = array("creator" => $creator,
 			"name" => $name,"description" => $description,"type" => $type);
 	$db_charme->groups->insert($content);
 
-	return $content ["_id"];
+	$groupid = "#".$content["_id"]."@".$CHARME_SETTINGS["serverURL"];
+
+
+	$db_charme->groups->update(array("_id" =>  $content ["_id"]),array('$set' => array("groupid" => $groupid)));
+
+
+
+	return $groupid;
 }
 function updateGroup($groupId ,  $name, $description, $type)
 {
@@ -43,13 +55,13 @@ function getNotifications($groupId)
 }
 
 
-function addGroupMember($userid, $memberid, $groupid)
+function addGroupMember($userid, $memberid, $groupid, $name)
 {
 	global $db_charme;
 
 	$ref = MongoDBRef::create("groups", $groupid);
 	$content = array(
-			"memberid" => $memberid,"groupid" => $groupid, "nameref"=>$ref);
+			"memberid" => $memberid,"groupid" => $groupid, "name"=>$name);
 
 	$db_charme->groupmembers->insert($content);
 
@@ -79,22 +91,9 @@ function getGroups($userid)
 	global $db_charme;
 	$col = $db_charme->groupmembers;
 	$cursor = $col->find(array("memberid"=>$userid));
-	$values = array();
-	foreach ($cursor as $item)
-	{
-
-	
-$nn = MongoDBRef::get($db_charme, $item['nameref']);
 
 
-
-	$item["name"] =$nn["name"];
-	$values[] = $item;
-	//var_dump($item);
-	}
-
-
-	return $values;
+	return ($cursor);
 }
 
 

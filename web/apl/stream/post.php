@@ -53,8 +53,19 @@ function registerPost($data)
 //
 }
 
+function postToGroup($groupId, $invader, $content)
+{
+	
 
-function postToCollection($collection, $content, $userId, $attachments=array(), $isGroup =false)
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($groupId, $invader, "group_post");
+	$rr->setPayload(array("content" => $content));
+
+	$ret =  ($rr->send(true));
+
+}
+
+function postToCollection($collection, $content, $userId, $attachments=array())
 {
 	//note: $collection is groupid if $isGroup = true
 	$destfield = "collection";

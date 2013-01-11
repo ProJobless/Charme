@@ -3,6 +3,9 @@ MUSTHAVE
 
 MILESTONE:
 
+
+
+
 1) MULTI SERVER TEST
 	- Refactor receiver: Exclude functions, avoid json_encode on same server
 	- 1st test: profile, collection get, followers
@@ -10,10 +13,22 @@ MILESTONE:
 		- getPostInfo: return previous and next image if item is image
 
 	- 2nd test: groups, grouppost 
+		- getGroupPosts(#groupid)
+		- comment add recode
+		- groupname not via dbref
+
+
+
+
 
 - remove lists from own profile
 - remove post box from collection if not my profile
+-username restrictions:
+	-allowed: a-z, A-Z, 0-9, . , _
+	- can not start with _ or .
 
+- group default id:
+	- #31e3e3fa2@servername. 
 
 - prev/next picture
 - form validation
@@ -29,7 +44,8 @@ MILESTONE:
 - post to collection from stream page does not work...
 - Nameservice (via dbRef??? dbref efficiency??)
 	- comments: do not update names!
-	- friends lists: do update names!
+	- friends lists: do update names when visiting friends profile or incoming post!
+	
 	- posts in streams do not update names as only 3 das valid!
 	- messages: Do update names!
 - delete collections

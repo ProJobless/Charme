@@ -23,7 +23,7 @@ if (isset($_POST["col_name"]))
 	else
 	{
 		$gid = addGroup($_SESSION["charme_user"],$_POST["col_name"], $_POST["col_description"], $_POST["col_type"]);
-		addGroupMember($_SESSION["charme_user"],$_SESSION["charme_user"], $gid);
+		addGroupMember($_SESSION["charme_user"],$_SESSION["charme_user"], $gid, $_POST["col_name"]);
 	}
 
 	//echo "<a class='collection' data-page2='profile' data-pagearg='&q=collections&id=".$cid."'>".$_POST["col_name"]."</a>";	

@@ -11,6 +11,6 @@ $data = json_decode(($_POST["json"]), true); //Second parameter ensures return v
 
 
 include("functions.php");
-echo json_encode(parseRequest($action, $username, $data));
+echo json_encode(parseRequest($action, $username, $data, $_POST["sender"]));
 
 ?>

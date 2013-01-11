@@ -10,8 +10,6 @@ function getProfile($userId, $invader)
 
 	$ret =  ($rr->send());
 
-global $db_charme;
-
 
 
 

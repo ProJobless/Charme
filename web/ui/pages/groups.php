@@ -39,24 +39,28 @@ if (!isset($_POST["level"]) || $_POST["level"] == 0)
 
 
 
-		
+	$firstid= "";
+
 	foreach ($groups as $item)
 	{
+		if ($firstid == "")
+			$firstid =  (string)$item["groupid"];
 
 		if (!isset($_GET["q"]) && isset($item["position"]) && $item["position"] == 1)
 		{
 			$default  = (string)$item["groupid"];
-			$groupsui[] =subMenuActionAdd($item["name"], $item["groupid"], true);
+			$groupsui[] =subMenuActionAdd($item["name"], urlencode($item["groupid"]), true);
 		}
 		else
-		$groupsui[] =subMenuActionAdd($item["name"], $item["groupid"]);	
+		$groupsui[] =subMenuActionAdd($item["name"], urlencode($item["groupid"]));	
 	}
 
 
 	if (!isset($_GET["q"]) && $default==-1)
 	{
-		if (Count($groups) > 0)
-		$_GET["q"] = (string)$groups[0]["groupid"];
+
+		if ($firstid != "")
+		$_GET["q"] =$firstid;
 		else
 
 			echo "<div class='infobox'>You have not added any groups yet. Create a new group or join a group.</div>";
@@ -73,6 +77,7 @@ if (!isset($_POST["level"]) || $_POST["level"] == 0)
 
 
 <?
+
 if (isset($_GET["q"]) ||$default != -1)
 {
 	if ($default != -1)
@@ -95,15 +100,16 @@ if (isset($_GET["q"]) ||$default != -1)
 	}
 	else
 	{
-		$groupId= $_GET["q"];
+		$groupId= urldecode($_GET["q"]);
+		//echo $groupId;
 		$groupInfo = getGroupInfo($groupId, array("name", "type"));
 
 		//Make Header
 		echo "<div class='p32' >";
 
 		//invite/add people, documents, propoerties 
-		echo '<a title="Add People"  onclick=\'addPeople("'.$groupId.'")\' style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
-		echo '<a title="Settings" onclick=\'showSettings("'.$groupId.'")\' style="float: right; background-position: -144px 0px;" data-bgpos="-144" class="actionIcon"> </a>';
+		echo '<a title="Add People"  onclick=\'addPeople("'.urlencode(($groupId)).'")\' style="float: right; background-position: 0px 0px;" data-bgpos="0" class="actionIcon" > </a>';
+		echo '<a title="Settings" onclick=\'showSettings("'.urlencode(($groupId)).'")\' style="float: right; background-position: -144px 0px;" data-bgpos="-144" class="actionIcon"> </a>';
 		echo "<div style='font-size: 16px'>".$groupInfo["name"]."</div><div style='padding: 8px 0 0px 0;'>Typ: ".$groupInfo["type"]." - <a href='#'>1337 Members</a></div>";
 		echo "</div><div class='p32' style='padding-top:0;border-bottom:1px silver solid; '>";
 
