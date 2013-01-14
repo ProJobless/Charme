@@ -30,6 +30,7 @@ subMenuActionAdd("Profile Image", "5"),
 subMenuActionAdd("Password","3"),
 subMenuActionAdd("Privacy","4"),
 subMenuActionAdd("Customize","6"),
+subMenuActionAdd("Ignore List","7")
 )
 );
 /*
@@ -150,6 +151,10 @@ else if (isset($_GET ["q"]) && $_GET["q"] == 5){
 
 <?
 }
+else if (isset($_GET ["q"]) && $_GET["q"] == 7){
+
+echo "Sorry but this feature is not yet implemented.";
+	}
 else{
 	fw_load("forms");
 	echo "<div class='p32'>";

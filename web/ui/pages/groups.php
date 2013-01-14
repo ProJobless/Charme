@@ -85,7 +85,7 @@ if (isset($_GET["q"]) ||$default != -1)
 
 	if (isset($_GET["action"]) && $_GET["action"] == "members")
 	{
-		$groupInfo = getGroupInfo($groupId, array("name", "type"));
+		//$groupInfo = getGroupInfo($groupId, array("name", "type"));
 		echo "<div class='p32' >";
 
 	
@@ -102,7 +102,10 @@ if (isset($_GET["q"]) ||$default != -1)
 	{
 		$groupId= urldecode($_GET["q"]);
 		//echo $groupId;
-		$groupInfo = getGroupInfo($groupId, array("name", "type"));
+
+		// returns array(stream, info)
+		$groupstream = groupStreamAsArray($_SESSION["charme_user"], $groupId);
+		$groupInfo = $groupstream["info"];
 
 		//Make Header
 		echo "<div class='p32' >";
@@ -119,7 +122,7 @@ if (isset($_GET["q"]) ||$default != -1)
 		forms_doPostField($groupId, true);
 		echo "</div>";
 		echo "<div class='stream'>";
-		$arr = groupStreamAsArray($_SESSION["charme_user"], $groupId);
+		$arr = $groupstream["stream"];
 
 
 		if (Count($arr) == 0){ //There are not any posts in the feed
@@ -129,7 +132,7 @@ if (isset($_GET["q"]) ||$default != -1)
 
 		foreach ($arr as $item)
 		{
-			echo post_format($item, true)[0];
+			echo post_format($item, true, $groupId)[0];
 		}
 		echo "</div>";
 	}

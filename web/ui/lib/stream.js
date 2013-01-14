@@ -12,6 +12,7 @@ function displayCommentBox(o, userid, postid)
 	{
 		$(p).data("loaded", true);
 
+		// userid can also be group id
 		$.post("ui/actions/showComments.php", {postid: postid, userid:userid},function(d){
 		
 

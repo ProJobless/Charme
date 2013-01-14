@@ -163,9 +163,18 @@ function parseRequest($action , $username, $data, $sender)
 				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 
 			$qu = array("groupid" => new MongoId($groupId));
-			$xy =  $db_charme->posts->find($qu);
+			$cur_stream =  $db_charme->posts->find($qu);
 
-			return 	iterator_to_array($xy);
+
+			if (!isset($data["start"]) || $data["start"] == 0)
+				$cur_infos = $db_charme->groups->findOne(array("_id"=> new MongoId($groupId)),array( "name", "type"));
+			else
+				$cur_infos =array();
+
+
+
+			return 	array("stream" => iterator_to_array($cur_stream),
+				"info" => ($cur_infos));
 
 	    	break;
 

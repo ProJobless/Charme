@@ -31,7 +31,7 @@ function message_format($author, $content, $attachments)
     return "<div class='message'><div class='top'>".$author."</div>".$content."".$atta."</div>";
 }
 
-function post_format($obj, $useimg = false)
+function post_format($obj, $useimg = false, $groupId="")
 {
 
 
@@ -105,14 +105,23 @@ obj
 
 
 
+    $commentId =  $obj["userid"];
+
+
+    if ($groupId!= "")
+        $commentId = urlencode($groupId);
+
+
+
+
     	return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='delete' onclick='deletePost(\"".$obj["_id"]."\")'> </a>".$img."
     
     <a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
     	<div>".$atta."
         <span class='time'>".supertime($ttime)."</span>
-         <a onclick='displayCommentBox(this, \"".$obj["userid"]."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
+         <a onclick='displayCommentBox(this, \"".$commentId."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
           - <a onclick='lovePost(this)'>Love</a>
-    	".commentBox($obj["_id"], $obj["userid"]).$img2." </div></div>", 2);
+    	".commentBox($obj["_id"], $commentId).$img2." </div></div>", 2);
 
 
 
@@ -120,13 +129,17 @@ obj
     }
 
 }
+// ownerId can be group or userId, group id starts with #
 function commentBox($objId, $ownerId, $instantVisible=false)
 {
+
+   echo $ownerId;
+
 
 return "<div class='commentBox' ".($instantVisible  ? " style='display:block;'": "").">
             <div class='postcomments'></div><textarea></textarea><br>
             <a class='button' data-postid='".$objId."'
-            data-userid='".$ownerId."' onclick='doCommentReq(this)'>Post comment</a>".($instantVisible  ? "": "or  <a onclick='stopComment(this)'>cancel</a>")." 
+            data-userid='".$ownerId."' onclick='doCommentReq(this)'>Post comment</a>".($instantVisible  ? "": " or <a onclick='stopComment(this)'>cancel</a>")." 
             </div>
         ";
 

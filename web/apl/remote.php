@@ -56,6 +56,8 @@ class remoteRequest
 	
 		//$this->payload["receiver"] =$dest[0];
 
+echo "D:".$this->destination;
+
 
 		$server = $dest[1];
 

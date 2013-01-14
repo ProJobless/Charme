@@ -14,15 +14,17 @@ MILESTONE:
 
 	- 2nd test: groups, grouppost 
 		- getGroupPosts(#groupid)
-		- comment add recode
-		- groupname not via dbref
+		- comment add recode (should work)
+		. members page via json
+		
+
 
 
 
 
 
 - remove lists from own profile
-- remove post box from collection if not my profile
+
 -username restrictions:
 	-allowed: a-z, A-Z, 0-9, . , _
 	- can not start with _ or .

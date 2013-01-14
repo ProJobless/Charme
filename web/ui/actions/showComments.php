@@ -6,6 +6,8 @@ needSession();
 
 $commentsPerPage = 3;
 
+// $_POST["userid"] can also be group id, group ids start with #, for example: #123123@myserver.com
+$_POST["userid"] = urldecode($_POST["userid"]);
 
 
 
@@ -23,6 +25,8 @@ if ($commentStartIndex < 0)
 }
 
 fw_load("post");
+
+
 
 
 
