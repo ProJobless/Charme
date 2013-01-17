@@ -13,7 +13,7 @@ fw_load("post");
 $userId = $_POST["uid"]; // Id of photo owner, i.e. "owner@someserver.com"
 
 
-$fields =  getPostInfo($_POST["pid"], array("reference", "description"));
+$fields =  getPostInfo($userId, $_SESSION["charme_user"], $_POST["pid"], array("reference", "description"));
 
 $pictureId = $fields["reference"];
 

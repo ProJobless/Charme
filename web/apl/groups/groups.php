@@ -55,6 +55,35 @@ function getNotifications($groupId)
 }
 
 
+// $fields contains the desired fields, like:
+// $fields = array("stream" => true, "info" => true, "members" => true)
+function getGroupInfos($fields, $invader, $groupId, $start=0)
+{
+
+
+	// IF $start==0 -> also return group information
+
+	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	$rr = new remoteRequest($groupId, $invader, "group_getinfos");
+	$rr->setPayload($fields);
+
+	$ret =  ($rr->send(true));
+	return $ret;
+
+
+	/*global $db_charme;
+
+	//TODO: CHECK AUTHENTICATION and if user can access group id!!!
+	
+	// DO JSON REQUEST!
+
+	$qu = array("groupid" => new MongoId($groupId));
+	$xy =  $db_charme->posts->find($qu);
+
+	return $xy;*/
+
+
+}
 function addGroupMember($userid, $memberid, $groupid, $name)
 {
 	global $db_charme;
@@ -63,8 +92,10 @@ function addGroupMember($userid, $memberid, $groupid, $name)
 	$content = array(
 			"memberid" => $memberid,"groupid" => $groupid, "name"=>$name);
 
+	// Copy on client server
 	$db_charme->groupmembers->insert($content);
-
+	// Copy on group server
+	$db_charme->groupmembersinternal->insert($content);
 
 
 

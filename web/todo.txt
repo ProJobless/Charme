@@ -16,7 +16,17 @@ MILESTONE:
 		- getGroupPosts(#groupid)
 		- comment add recode (should work)
 		. members page via json
-		
+
+	- photoviewer
+		- json
+		- next/prev
+		- comments
+
+		- multirequest
+			- make class
+
+	- lists in startpage:
+		- 
 
 
 

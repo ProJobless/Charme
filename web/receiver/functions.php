@@ -154,27 +154,50 @@ function parseRequest($action , $username, $data, $sender)
 	      	// return value has to contain post id
 	    	break;
 
+	    /*
+			Returns group data, like stream items, group members and group information
 
-		case "group_getstream":
+	    */
+		case "group_getinfos":
 			// TODO: Check if group member...
 	      	global $db_charme;
+
+			$cur_infos =array();
+	      	$cur_stream = array();
+	      	$cur_members =array();
+
 
 			if (!isset($db_charme))
 				include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
 
-			$qu = array("groupid" => new MongoId($groupId));
-			$cur_stream =  $db_charme->posts->find($qu);
 
-
-			if (!isset($data["start"]) || $data["start"] == 0)
+			if (isset($data["stream"]) && $data["stream"] == true)
+			{
+				$qu = array("groupid" => new MongoId($groupId));
+				$cur_stream = iterator_to_array($db_charme->posts->find($qu));
+			}
+			if (isset($data["info"]) && $data["info"] == true)
+			{
+	
 				$cur_infos = $db_charme->groups->findOne(array("_id"=> new MongoId($groupId)),array( "name", "type"));
-			else
-				$cur_infos =array();
+		
+			}
+			if (isset($data["members"]) && $data["members"] == true)
+			{
+				// TODO: is group id form ok?
+				$cur_members = iterator_to_array(
+					$db_charme->groupmembersinternal->find(array("groupid"=>  ($groupId)),array( "name", "memberid"))
+
+					);
+		
+			}
+
+			
 
 
 
-			return 	array("stream" => iterator_to_array($cur_stream),
-				"info" => ($cur_infos));
+			return ( 	array("stream" => ($cur_stream),
+				"info" => ($cur_infos), "members" => ($cur_members)));
 
 	    	break;
 

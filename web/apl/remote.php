@@ -31,6 +31,25 @@ function clusterServers($people)
 //RETURN: Array with Servers with CharmeIds
 }
 
+
+// Bundles two or more remoteRequests into one HTTP Connection
+class multiRequest
+{
+	var $destination, $source, $requests,$payload ;
+	function multiRequest($a_destination, $a_source, $requests)
+	{
+		$this->destination=$a_destination;
+		$this->source=$a_source;
+		$this->requests= $a_typs; // is array! with (requestid, payload)
+	}
+	// ...TODO!
+
+	// remote Request: GET JSON!
+
+}
+
+
+// Outdated. Better use multiRequest
 class remoteRequest
 {
 	var $destination, $source, $request_type,$payload ;

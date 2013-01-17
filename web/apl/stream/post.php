@@ -32,7 +32,7 @@ function deletePost($userId, $postId)
 
 	
 }
-function getPostInfo( $postId, $fields)
+function getPostInfo($owner, $invader, $postId, $fields)
 {
 	global $db_charme;
 	$res = $db_charme->posts->findOne(array("_id" => new MongoId( $postId)), $fields);

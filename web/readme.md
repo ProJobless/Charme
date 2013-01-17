@@ -64,6 +64,11 @@ for more information.
         <td>Apache License</td>
         <td>/tparty/mathjax</td>
     </tr>
+           <tr>
+        <td>jQuery</td>
+        <td>MIT</td>
+        <td>/lib/jq.js and lib/jqui.js</td>
+    </tr>
         <tr>
         <td>nanoScroller</td>
         <td>MIT</td>

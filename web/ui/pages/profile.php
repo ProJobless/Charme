@@ -168,12 +168,9 @@ else
 		foreach ($arr2[1] as $item)
 		{
 
-
-
 			$format .= "<li><a  data-page2='profile' data-pagearg='&userId="
 			.urlencode($userId)
 			."&q=collections&id=".$item["_id"]['$id']. "'>".$item["name"]. "</a></li>";
-
 
 			//$format .= "<li><a href='".$item["name"]."'>".$item["name"]."</a></li>"
 		}

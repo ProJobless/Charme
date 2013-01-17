@@ -14,11 +14,18 @@ page_init("About", 0);
 
 
 	<h3>Credits</h3>
-	Developed by <a href="http://www.mschultheiss.com">Manuel Schultheiß</a>
-	
+	Developed by <a href="http://www.mschultheiss.com">Manuel Schultheiß</a>.
 
+<!--<br/><br/>
+	A lot of thanks for advices, help and reviews go to 
+-->
+
+
+	<h3>Libraries</h3>
+There are a lot of third party libraries used in Charme. You can find 
+a list <a href='https://github.com/mschultheiss/Charme/blob/master/web/readme.md#libraries'>here</a>. A special thanks go to the developers of these libraries.
 	</div>
-<!-- -->
+<!-- THE ABOVE COPYRIGHT NOTICE SHALL NOT BE REMOVED (See license.txt for more information) -->
 
 
 <!--
