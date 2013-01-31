@@ -20,7 +20,8 @@ Input variables:
 */
 //	print_r($_POST["files"]);
 
-	
+fw_load("post"); // Used for post_format
+
 if ($_POST["content"] != "") //We do not need empty posts.
 {
 	if ($_POST["g"] == "")
@@ -31,7 +32,9 @@ if ($_POST["content"] != "") //We do not need empty posts.
 	if ($_POST["g"] != "")
 	{
 
-			postToGroup(urldecode($_POST["g"]),  $_SESSION["charme_user"], $_POST["content"]);
+			$item = postToGroup(urldecode($_POST["g"]),  $_SESSION["charme_user"], $_POST["content"]);
+			echo post_format($item, true, $groupId)[0];
+
 	}
 }
 

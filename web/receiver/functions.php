@@ -14,6 +14,10 @@ function parseRequest($action , $username, $data, $sender)
 
 	switch ($action) 
 	 {
+	 	case "multi_test":
+
+	 	break;
+
 		case "profile_get":
 			
 

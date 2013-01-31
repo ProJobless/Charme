@@ -64,6 +64,11 @@ for more information.
         <td>Apache License</td>
         <td>/tparty/mathjax</td>
     </tr>
+     <tr>
+        <td>Latex to MathML Converter</td>
+        <td>GPL</td>
+        <td>/tparty/latex2ml</td>
+    </tr>
            <tr>
         <td>jQuery</td>
         <td>MIT</td>

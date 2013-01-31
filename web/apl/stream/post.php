@@ -62,6 +62,7 @@ function postToGroup($groupId, $invader, $content)
 	$rr->setPayload(array("content" => $content));
 
 	$ret =  ($rr->send(true));
+	return $ret;
 
 }
 

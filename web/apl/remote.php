@@ -42,6 +42,54 @@ class multiRequest
 		$this->source=$a_source;
 		$this->requests= $a_typs; // is array! with (requestid, payload)
 	}
+	function send($debug=false)
+	{
+		$dest = explode ('@',$this->destination);
+
+
+		foreach ($this->requests as $item)
+		{
+			$data[] = $item; // $item has form REQUEST ID , DATA
+		}
+
+		$server = $dest[1];
+		$url = $server."/receiver/index.php";
+	                                                                  
+		$data_string = (json_encode($data));    
+
+		$fields = array(
+								'json' => urlencode($data_string),
+								'action' => urlencode($this->request_type),
+								'receiver' => urlencode($dest[0]),
+								'sender' => urlencode($this->source),
+								'multi' => true
+							
+								
+						);
+
+		foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+		rtrim($fields_string, '&');
+
+		$ch = curl_init();
+
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_POST, count($fields));
+		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+
+		// Return result and not status code for curl_exec. This is very important
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE );
+
+				
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		if ($plain) // Use $plain=true for debugging
+			echo str_replace('$', '\$', $result);
+
+		// Only decode if no local request!!!
+		return json_decode($result, true);
+
+	}
 	// ...TODO!
 
 	// remote Request: GET JSON!
@@ -75,10 +123,7 @@ class remoteRequest
 	
 		//$this->payload["receiver"] =$dest[0];
 
-echo "D:".$this->destination;
-
-
-		$server = $dest[1];
+	$server = $dest[1];
 
 		$url = $server."/receiver/index.php";
 
