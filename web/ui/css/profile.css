@@ -10,6 +10,38 @@
 	font-weight: normal;
 	display: block;
 }
+ul.featuredCollections 
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+ul.featuredCollections li .recbox
+{float:left;
+	width: 16px;
+	height: 16px;
+	
+	margin-right: 8px;
+	border:0;
+	display: inline-block;
+
+
+
+}
+ul.featuredCollections li a:active
+{background-color: #efefef;}
+ul.featuredCollections li a
+{
+ padding:8px;
+ border-bottom: 1px silver solid;
+ display: block;
+ color:#666;
+ font-weight: normal;
+}
+ul.featuredCollections li a:hover
+{
+ color:#000;
+}
 #photoDescriptionView .hint
 {
 	color:grey;

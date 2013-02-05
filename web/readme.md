@@ -6,8 +6,8 @@ Charme is a distributed and open source social network. In contrast to classic s
 
 ## Version
 
-Warning: This version is for preview only. This version is not stable and misses necessary functions like encrpytion and privacy control.
-We plan to release a stable version in summer 2014.
+Warning: This version is for preview only. This version is not stable and misses essential functions like encrpytion and privacy control.
+We plan to release a stable version in 2014.
 
 ## Installation
 
@@ -22,11 +22,11 @@ We plan to release a stable version in summer 2014.
 ## License
 
 Charme is basically MIT licensed, but you are not
-allowed to remove the credit parts of the about page.
+allowed to remove the credit parts of the about page or the link to the about page.
 See license.txt for more information.
 
-The third party includes have their own license.
-You have to accept their terms, too
+All third party libraries have their own license.
+You have to accept to their license or remove them.
 
 ## Questions?
 
@@ -78,6 +78,11 @@ for more information.
         <td>nanoScroller</td>
         <td>MIT</td>
         <td>embedded in ui.css / ui.js (http://jamesflorentino.github.com/nanoScrollerJS/ for more information)</td>
+    </tr>
+     <tr>
+        <td>Backbone.js</td>
+        <td>MIT</td>
+        <td>/lib/backbone.js</td>
     </tr>
 </table>
 

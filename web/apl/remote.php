@@ -36,11 +36,11 @@ function clusterServers($people)
 class multiRequest
 {
 	var $destination, $source, $requests,$payload ;
-	function multiRequest($a_destination, $a_source, $requests)
+	function multiRequest($a_destination, $a_source, $a_requests=array())
 	{
 		$this->destination=$a_destination;
 		$this->source=$a_source;
-		$this->requests= $a_typs; // is array! with (requestid, payload)
+		$this->requests= $a_requests; // is array! with (requestid, payload)
 	}
 	function send($debug=false)
 	{
@@ -49,8 +49,11 @@ class multiRequest
 
 		foreach ($this->requests as $item)
 		{
-			$data[] = $item; // $item has form REQUEST ID , DATA
+			
+			$data[] = array("rqid" => $item->request_type, "data" => $item->payload); // $item is of class remoteREquest, get Data by getDAta();
+
 		}
+
 
 		$server = $dest[1];
 		$url = $server."/receiver/index.php";
@@ -59,14 +62,14 @@ class multiRequest
 
 		$fields = array(
 								'json' => urlencode($data_string),
-								'action' => urlencode($this->request_type),
+								
 								'receiver' => urlencode($dest[0]),
 								'sender' => urlencode($this->source),
 								'multi' => true
 							
 								
 						);
-
+		$fields_string ="";  
 		foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 		rtrim($fields_string, '&');
 
@@ -83,7 +86,7 @@ class multiRequest
 		$result = curl_exec($ch);
 		curl_close($ch);
 
-		if ($plain) // Use $plain=true for debugging
+		if ($debug) // Use $plain=true for debugging
 			echo str_replace('$', '\$', $result);
 
 		// Only decode if no local request!!!
@@ -123,7 +126,7 @@ class remoteRequest
 	
 		//$this->payload["receiver"] =$dest[0];
 
-	$server = $dest[1];
+		$server = $dest[1];
 
 		$url = $server."/receiver/index.php";
 

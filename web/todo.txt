@@ -94,6 +94,7 @@ SHOULD HAVE
 - WebRTC based Voice/Videochat
 - sign up page
 - latex with $$
+- gridFS only for files < 16MB!!
 
 TO CONSIDER
 ----------------------------------

@@ -163,18 +163,27 @@ else
 
 		// Format collections
 		$format = "";
-	
+		function getColor($itemid)
+		{
+
+			$rr = (hexdec (substr((string)$itemid, -8)));
+			
+
+
+			$arr = array("#DBA901", "#088A08", "#B40404", "#084B8A", "#A901DB", "#0080FF", "#01DFD7", "#B45F04","#86B404");
+			return $arr[bcmod(hexdec ($rr), 9)];
+		}
 
 		foreach ($arr2[1] as $item)
 		{
 
 			$format .= "<li><a  data-page2='profile' data-pagearg='&userId="
 			.urlencode($userId)
-			."&q=collections&id=".$item["_id"]['$id']. "'>".$item["name"]. "</a></li>";
+			."&q=collections&id=".$item["_id"]['$id']. "'><div class='recbox' style='background-color: ".getColor($item["_id"]['$id'])."'></div>".$item["name"]. "<br class='cb'></a></li>";
 
 			//$format .= "<li><a href='".$item["name"]."'>".$item["name"]."</a></li>"
 		}
-			echo "<div class='aboutBox' style='margin-top:32px'><div class='title'>Featured Collections</div><ul>".$format."</ul></div>";
+			echo "<div class='aboutBox' style='margin-top:32px'><div class='title'>Featured Collections</div><ul class='featuredCollections'>".$format."</ul></div>";
 
 
 	echo "</div>";

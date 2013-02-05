@@ -5,15 +5,34 @@ function getProfile($userId, $invader)
 	//TODO: JSON request if not my server!!
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
+	
+
+	$req1 = new remoteRequest($userId, $invader, "profile_get");
+	$req1->setPayload(array());
+
+	$req2 = new remoteRequest($userId, $invader, "username_get");
+	$req2->setPayload(array("test" => 1));
+
+
+	//$ret =  ($rr->send());
+
+	$multi = new multiRequest($userId, $invader, array($req1,$req2));
+
+		
+	$ret = $multi->send();
+
+
+	/*
+
 	$rr = new remoteRequest($userId, $invader, "profile_get");
 	//$rr->setPayload(array());
 
 	$ret =  ($rr->send());
+*/
 
 
 
-
-	return $ret;
+	return $ret["profile_get"];
 /*
 
 
@@ -37,9 +56,5 @@ function getProfile($userId, $invader)
 
 
 }
-function getName()
-{
 
-	
-}
 ?>

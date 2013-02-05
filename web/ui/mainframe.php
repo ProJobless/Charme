@@ -32,6 +32,7 @@ else
 <script src='/ui/lib/jqui.js'></script>
 <script src='/ui/lib/page.js'></script>
 <script src='/ui/lib/string.js'></script>
+<script src='/ui/lib/backbone.js'></script>
 <script src='/ui/lib/txa.js'></script>
 <script src='/ui/lib/profile.js'></script>
 <script src='/ui/lib/config.js'></script>
