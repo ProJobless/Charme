@@ -157,9 +157,13 @@ else
 	printAbout($arr["userid"], "Charme ID");
 
 		echo "</table></div>";
-		echo "<div class='aboutBox' style='margin-top:32px'><table>";
-			printAbout(doLists($userId), "Lists", false);
-		echo "</table></div>";
+
+		if (!$is_owner)
+		{
+			echo "<div class='aboutBox' style='margin-top:32px'><table>";
+				printAbout(doLists($userId), "Lists", false);
+			echo "</table></div>";
+		}
 
 		// Format collections
 		$format = "";

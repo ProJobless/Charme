@@ -69,9 +69,8 @@ function postToGroup($groupId, $invader, $content)
 function postToCollection($collection, $content, $userId, $attachments=array())
 {
 	//note: $collection is groupid if $isGroup = true
-	$destfield = "collection";
-	if ($isGroup)
-		$destfield = "groupid";
+
+	
 
 //echo "!!!".$isGroup."!!!";
 
@@ -113,11 +112,20 @@ function postToCollection($collection, $content, $userId, $attachments=array())
 	//todo: validate strings!!
 	$obj = ($collection==0) ? NULL : new MongoId($collection);
 	//2do: getusername!!
-$name = "testname";
-$cont = array("userid" => $_SESSION["charme_user"],
+
+
+
+	$res2 = $db_charme->users->findOne(array("userid" =>  $userId), array("firstname" ,"lastname"));
+
+
+
+
+$name = $res2["firstname"]." ".$res2["lastname"];
+
+$cont = array("userid" => $userId,
 			"username" => $name,
 			"content" => $content,
-			$destfield => $obj,
+			"collection" => $obj,
 			"attachments" => $attachments2,
 			"posttime" =>  new MongoDate(time())
 		
@@ -139,7 +147,9 @@ $cont = array("userid" => $_SESSION["charme_user"],
 	include_once($_SERVER['DOCUMENT_ROOT']."/apl/remote.php");
 
 	$ar_followers = array();
-	$arr = getFollowers($collection);
+	$arr = getFollowers($collection,  $userId,  $userId);
+
+
 	foreach ($arr as $item){$ar_followers[] = $item["follower"];}
 
 	$servers = clusterServers($ar_followers);

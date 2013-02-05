@@ -26,6 +26,9 @@ if ($_POST["content"] != "") //We do not need empty posts.
 {
 	if ($_POST["g"] == "")
 	{
+		if (!isset($_POST["files"]))
+			$_POST["files"] = array();
+		
 			postToCollection($_GET["id"], $_POST["content"], $_SESSION["charme_user"], $_POST["files"]);
 	}
 

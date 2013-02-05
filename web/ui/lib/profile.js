@@ -177,7 +177,7 @@ function followCol(x, on, colid)
 
 	  $.post("ui/actions/doFollow.php", {"uid":uid, "collection": colid, "follow":on}, function(d){
 		
-		
+
 
 		if (d == 0) //unfollow now -> Show follow button!
 		{

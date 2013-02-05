@@ -96,9 +96,12 @@ function parseRequest($action , $username, $data, $sender)
 
 			// TODO: Selctor with userId
 			if ($data["filter"] == 0)
-				$cursor = iterator_to_array($collection->find(array("parent"=>NULL)));
+				$cursor = iterator_to_array($collection->find(array("userid"=> ($username), "parent"=>NULL),array("name", "_id")));
 			else
-				$cursor = iterator_to_array($collection->find(array("parent"=>new MongoId($data["filter"]))));
+				$cursor = iterator_to_array($collection->find(array("userid"=> ($username), "parent"=>new MongoId($data["filter"])),array("name", "_id")));
+	
+
+
 
 
 			
@@ -240,19 +243,26 @@ function parseRequest($action , $username, $data, $sender)
 	    case "name_update":
 
 	    break;
+
+	    case "collection_follow":
+			//..insert post into userstream collection, 
+
+	  	global $db_charme;
+
+				if (!isset($db_charme))
+					include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
+
+			
+					include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
+					return registerCollectionFollow($data, $username); //OK, AUTHERROR
+					
+	    break;
 	}
 
 
 
-	if($action == "collection_follow")
-	{
-		//..insert post into userstream collection, 
-		include_once($_SERVER['DOCUMENT_ROOT']."/apl/db.php");
-		include_once($_SERVER['DOCUMENT_ROOT']."/apl/profile/follow.php");
-		echo registerCollectionFollow($data, $username); //OK, AUTHERROR
-		
-	}
-	else if($action == "collection_deleted")
+	
+	 if($action == "collection_deleted")
 	{
 		// Notify all users if a collection does not exist anymore
 

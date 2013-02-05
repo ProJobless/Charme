@@ -70,6 +70,7 @@ function actionwindow(obj)
 	$('.actionCont').html(d);
 	});
 
+$('.actionCont').css("left", $('#button_notifications').offset().left);
 
 
 	if ($('.actionCont').position().top > 0)

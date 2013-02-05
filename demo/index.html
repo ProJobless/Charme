@@ -5,14 +5,23 @@
     <title>Charme</title>
 <script src="jq.js" type="text/javascript"></script>
 <script>
-$(document).ready(function() {
-    var w = $(document).width();
+
+window.onresize = function(event) {
+     pos();
+}
+function pos()
+{    var w = $(document).width();
         var d = $(document).height()-200;
 $('.slider .item').css("width", w);
 $('.slider .item').css("height", d);
 
+}
+
+$(document).ready(function() {
 
 
+xpos = 0;
+ pos();
 
  timeout_init();
 
@@ -235,7 +244,7 @@ img
   	<div class='images'>
 <div class='slider'>
  
-	<div class='item'><div class='pinfo'><h1>Hey You!</h1>Charme is an open source and distributed social network. This means you can choose a server, where your data is stored an kept private, or even set up your own.<br><br>It will be released in 2014, but you can contribute to the development on our community or register for a beta account.</div><img style=' margin-left:290px;' src='wel.png'></div>
+	<div class='item'><div class='pinfo'><h1>Hey You!</h1>Charme is an open source and distributed social network. This means you can choose a server, where your data is stored an kept private, or even set up your own.<br><br>It will be released in 2014, but you can contribute to the development on our community, setup a test server or register for a beta account.</div><img style=' margin-left:290px;' src='wel.png'></div>
 <div class='item'><div class='pinfo'><h1>Multiple Walls</h1>You are not interested in someones private life, but like the music she or he produces?<br><br>Charme allows you to create different walls, so called collections,  which can be subscribed separately. So in this case you would only subscribe to the Music Collection.</div><img style=' margin-left:320px;' src='walls.png'></div>
 <div class='item'><div class='pinfo'><h1>Mobility</h1>We will release Apps for smartphones and talbets.</div><img src='mob.png'></div>
 <div class='item'><div class='pinfo'><h1>Technology and Design at its finest</h1>Charme has a minimalistic design reduced on the important functions. The GUI is fully dynamic, every page is loaded via ajax.</div><img src='collections.png'></div>

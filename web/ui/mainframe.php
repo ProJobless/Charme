@@ -52,7 +52,7 @@ else
 
 <body>
 
-
+<div class="actionCont"></div>
 
 <div class="containerAll">
 <div id="whitebg"></div>
@@ -61,7 +61,7 @@ else
 
 
  <div class="actionBar">
-       <div class="actionCont"></div>
+       
  		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="/ui/actions/login.php?logout=1" style="background-position:-30px 0; " class="actionButton"></a>
         
         <!--<a   data-bgpos="-30" style="background-position:-30px 0; " class="actionButton"></a>-->

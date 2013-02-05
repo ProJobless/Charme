@@ -49,6 +49,8 @@ function followCollection($userId, $owner, $collection, $follow)
 	$rr->setPayload(array("collectionid"=> $collection, "sender" => $userId, "follow"=> $follow));
 	$ret = $rr->send();
 	
+
+
 	if ($ret == "OK")
 	{
 		//If follows now
@@ -63,12 +65,13 @@ function followCollection($userId, $owner, $collection, $follow)
 			$xy = $db_charme->followerslocal->remove($content);
 		}
 	}
-
+return $ret;
 	//insert into userfollowers...
 	//If request succeeds then add to my collections, 
 }
 function registerCollectionFollow($data)
 {
+
 	global $db_charme;
 	//(sender server has been validated now)
 	$sender = urldecode($data["sender"]);
@@ -81,6 +84,7 @@ function registerCollectionFollow($data)
 	else
 		$xy = $db_charme->followers->remove($content);
 	
+
 	return $data["follow"];
 }
 function doesFollow($userId, $collectionId)
