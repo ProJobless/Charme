@@ -10,10 +10,6 @@ Warning: This version is for preview only. This version is not stable and misses
 We plan to release a stable version in 2014.
 
 
-1. Install PHP on your webserver
-2. Install MongoDB on your Webserver. See http://www.php.net/manual/en/mongo.installation.php
-3. 
-
 
 ## Installation
 
