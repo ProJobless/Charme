@@ -27,4 +27,18 @@ Charme is a distributed and open source social network. In contrast to classic s
         <td>Various screenshots and promotion images.</td>
 
     </tr>
+
+      <tr>
+        <td>/jsclient</td>
+        <td>HTML5 based client for Encrypted Communication</td>
+
+    </tr>
+
+     <tr>
+        <td>/server</td>
+        <td>Server for Encrypted Communication</td>
+
+    </tr>
+
+
 </table>

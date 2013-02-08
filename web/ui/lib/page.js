@@ -1,8 +1,22 @@
+function getNotifications()
+{
+	// JSON contains, number of new notifications, ....
+}
+
+
 $(document).ready(function() {
 
 // Latex Test
 
 //$(".tex")
+
+
+$.doTimeout( 'getnotify', 1000*60, function(){
+		
+	getNotifications();
+	return true; // return false to cancel loop
+
+});
 
 
 
@@ -175,7 +189,8 @@ function initPage(level)
 		$.post("ui/actions/doPost.php?id="+x, {content:v, g:g, files:files}, function(d)
 		{
 			alert(d);
-
+			var pv = new PostView({el: $('.collectionPostbox')});  
+			console.log(pv);
 
 		});
 	});

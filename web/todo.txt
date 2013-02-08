@@ -34,6 +34,14 @@ MILESTONE:
 	- posts in streams do not update names
 	- messages: DO NOT UPDATE NAMES
 
+- views
+	- notification
+		- renderPopup
+		- render
+		- initialize: SET Count Numbers!
+
+		- getNotifications interval
+		- direct json
 
 
 

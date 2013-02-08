@@ -28,11 +28,21 @@ if (isset($_POST["st_color"]))
 else
     echo db_getUserField("color");
 ?>">
+
+
 <script src='/ui/lib/jq.js'></script>
 <script src='/ui/lib/jqui.js'></script>
+
+<script src='/ui/lib/underscore.js'></script>
+<script src='/ui/lib/backbone.js'></script>
+<script src='/ui/lib/models.js'></script>
+
+
+
+
 <script src='/ui/lib/page.js'></script>
 <script src='/ui/lib/string.js'></script>
-<script src='/ui/lib/backbone.js'></script>
+
 <script src='/ui/lib/txa.js'></script>
 <script src='/ui/lib/profile.js'></script>
 <script src='/ui/lib/config.js'></script>
@@ -52,7 +62,8 @@ else
 
 <body>
 
-<div class="actionCont"></div>
+<div class="actionCont">
+</div>
 
 <div class="containerAll">
 <div id="whitebg"></div>
