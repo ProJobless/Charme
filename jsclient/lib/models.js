@@ -16,6 +16,31 @@
 
 
 
+
+inputElement = Backbone.View.extend({  
+
+});
+
+
+
+inputForm = Backbone.View.extend({   
+
+
+
+    initialize: function(){
+
+    },
+     render: function(){
+
+     }
+
+    });
+
+
+
+
+
+
  	PageContainer = Backbone.View.extend({   
 
     ownerid: '',

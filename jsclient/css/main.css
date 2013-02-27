@@ -1,3 +1,32 @@
+@font-face {
+  font-family: OpenSans;
+  src: url(fonts/Open_Sans/OpenSans-Regular.ttf);
+}  
+@font-face {
+  font-family: OpenSansLight;
+  src: url(fonts/Open_Sans/OpenSans-Light.ttf);
+}  
+
+
+.button:active
+{
+
+background-color: black;
+}
+
+.sbAlpha ul a:active
+{
+	background-color: #c2c2c2;
+}
+.sbAlpha ul li.active
+{
+	background-color: #c2c2c2;
+}
+
+
+
+
+
 .delete
 {
 
@@ -317,11 +346,7 @@ background-color:#fff;
 display:none;
 	
 }
-.sbAlpha ul li.active
-{
-	
-background-color:#950202;
-}
+
 .sbBetaCont
 {
 	background-color:#950202;
@@ -344,10 +369,7 @@ border-left:1px silver solid;
 
 }
 
-.sbAlpha li a
-{
 
-}
 .sbAlpha
 {
 	
@@ -361,7 +383,7 @@ margin-left:1px;
 }
 .sbAlpha  ul li
 {
-	background-color:#d60000;
+	background-color:#E0E0E0;
 }
 .sbAlpha  ul 
 {
@@ -383,11 +405,12 @@ margin-left:150px;
 
 }
 
+
 body
 {
 	margin:0px;
 	background-color:#EEE;
-	font-family:Tahoma, Geneva, sans-serif;
+	font-family:OpenSans,Tahoma, Geneva, sans-serif;
 	font-size:12px;
 
 	

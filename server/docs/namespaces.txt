@@ -1,0 +1,6 @@
+
+
+
+\charme\core 		- contains core files 
+\charme\db			- db wrapper files
+\charme\validation	- validation files

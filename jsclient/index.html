@@ -8,13 +8,17 @@
 <script src='lib/jqui.js'></script>
 <script src='lib/underscore.js'></script>
 <script src='lib/backbone.js'></script>
-
+<script src='lib/sjcl.js'></script>
 
 
 <script src='lib/crypto.js'></script>
 <script src='lib/models.js'></script>
-<script src='lib/pages.js'></script>
+<script src='lib/colors.js'></script>
+<script src='pages.js'></script>
 <script src='lib/routes.js'></script>
+
+
+<script src='page_modules.js'></script>
 
 
 
@@ -39,25 +43,7 @@
 <body>
 <div id="layout">
 
-  <div style="width:600px; margin:200px auto;" id="welcome_main" >
-  <img src="media/welcome.png" />
-  <div style="float:right; width:264px;">
-  <div style="background-color:#fff;  padding:32px; border-radius:8px; margin-bottom:16px;">
-  <div id="login_error" style="background-color:#F7D2D2; padding:16px; display:none;  border-radius:8px; margin-bottom:16px;color:#C30; text-align:center;">Login failed. Please check your login data.</div>
-  Username:
-  <input id="login_user" class="box" style="margin:8px 0; width:190px;" />
-  Password:
-  <input id="login_password" type="password" class="box" style="margin:8px 0; width:190px;" />
-  <div style="position:relative;">
-  <a href="javascript:login();" class="button" style="float:left">Login</a><span style="float:left; top:6px; left:5px; position:relative;"> or <a href="?p=signup">Sign up</a></span>
-  <br class="cb" />
-  </div>
-  </div>
-  <div style="text-align:right" class="lightLink">
-  <a href="#/account/password">Forgot Password?</a> - <a href="#/about">About</a>
-  </div>
-  </div>
-  </div>
+
   </div>
 
 </body>

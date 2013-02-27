@@ -12,7 +12,7 @@ Charme is a distributed and open source social network. In contrast to classic s
 
     <tr>
         <td>/web</td>
-        <td>Contains all server side files for setting up your own Charme server.</td>
+        <td>Files of the old version.</td>
 
     </tr>
 
