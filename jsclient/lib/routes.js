@@ -22,10 +22,8 @@
     });
 
 
-     app_router.on('route:getPage', function (id) {
+    app_router.on('route:getPage', function (id) {
       
-
-       
     container_main.openPage(id);
 
 

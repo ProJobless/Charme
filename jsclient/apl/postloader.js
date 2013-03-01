@@ -9,10 +9,13 @@ function apl_postloader_check()
 }
 function apl_postloader_getAll()
 {
-	// Return last 30 posts....
+	// Return last 30 posts...
+	var ret = {"items": [
+	        {"time": 213123133, "postId": "123dlk2", "name": "Manuel", "userId": "manu@localhost", "content": "Lorem ipsum lorem ipsum"},
+	    	{"time": 213123133, "postId": "123dlk2", "name": "Test 2", "userId": "manu@localhost", "content": "hahahahahaha"},
+	    	{"time": 213123133, "postId": "123dlk2", "name": "Test", "userId": "manu@localhost", "content": "hahahahahaha"}
+	    ]
+	};
 
-
-
-
-
+	return ret;
 }

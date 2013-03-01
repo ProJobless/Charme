@@ -27,6 +27,11 @@ page_authenticated = Backbone.View.extend({
 
         	}
 
+        	if (id == "stream")
+			{
+				templateData = apl_postloader_getAll();
+
+			}
         	// ...Add posts from cache...
 
 			_.templateSettings.variable = "rc";

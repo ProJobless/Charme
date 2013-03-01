@@ -1,2 +1,44 @@
-<h1><%- rc.listTitle %></h1>
 
+
+
+<!--
+return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='delete' onclick='deletePost(\"".$obj["_id"]."\")'> </a>".$img."
+    
+    <a href='/?p=profile&q=about&userId=".urlencode($obj["userid"])."'>".$obj["username"]."</a><div class='cont'>".$obj["content"]."</div>
+        <div>".$atta."
+        <span class='time'>".supertime($ttime)."</span>
+         <a onclick='displayCommentBox(this, \"".$commentId."\", \"".$obj["_id"]."\")'>Comments <span class='countComments'>(2)</span></a>
+          - <a onclick='lovePost(this)'>Love</a>
+        ".commentBox($obj["_id"], $commentId).$img2." </div></div>", 2);
+
+ 
+-->
+<div class='p32' style='border-bottom:1px silver solid;'>
+<textarea class='box' style=' width:100%;'></textarea>
+<div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a>
+</div>
+</div>
+
+<div class='stream'>
+	 <% _.each( rc.items, function( item ){ %>
+	 <div class='collectionPost' id='post<%- item.postId %>'>
+          <a class='delete' ></a>
+          <a href='#/user/<%- item.userId %>'><img class='profilePic' src='http://server.local/media/phantom.jpg'></a>
+            <div class='subDiv'>
+                <a href='#/user/<%- item.userId %>'><%- item.name %></a><div class='cont'>
+                <%- item.content %>
+                </div>
+                <div>
+                    <span class='time'>THE time</span>
+                    <a onclick=''>Comments <span class='countComments'>(2)</span></a> - <a onclick=''>Love</a>
+                </div>
+
+
+                  <% if ( item.hasOlympicGold ){ %>
+                    <em>*</em>
+                <% } %>
+            </div>
+        </div>
+	<% }); %>
+</div>
+   
