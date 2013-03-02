@@ -6,7 +6,7 @@ function setColor(light, dark)
 $("button").css("background-color", light);
 
 
-$(".sbBeta ul li.active").css("background-color", "#fff");
+
 $(".sbBeta").css("background-color", " #C2C2C2");
 
 

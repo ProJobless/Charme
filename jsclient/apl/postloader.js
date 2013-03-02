@@ -1,3 +1,19 @@
+/*
+Possible Errors:
+
+
+Unexpeccted identifier by misplaced  comma:
+
+var obj = {
+   id: 23,
+   name: "test",  <--
+}
+
+
+
+*/
+
+
 function apl_postloader_check()
 {
 	// get the encrypted json from server, decrypt this json and store into html5 web storage
@@ -18,4 +34,15 @@ function apl_postloader_getAll()
 	};
 
 	return ret;
+}
+function apl_postloader_getLists()
+{
+	// Choose an unique identifier here "listitems"
+	return {"items": [
+	        {"id": 213123133, "name": "listname"},
+	    	{"id": 213123133, "name": "listname"},
+	    	{"id": 213123133, "name": "listname"}
+	    ]
+	};
+
 }

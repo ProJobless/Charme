@@ -1,4 +1,15 @@
 
+<div title='layout' class='meta'>sidebar</div>
+
+<!--
+Sidebar Items:
+-->
+<div title='submenu_items' class='meta'>
+  <li><a data-destination='page/stream/all'>All</a></li>
+  <% _.each( rc.listitems.items, function(item2){ %>
+    <li><a  data-destination='page/stream/<%- item2.id %>'><%- item2.name %></a></li>
+  <% }); %>
+</div>
 
 
 <!--
@@ -13,6 +24,8 @@ return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='del
 
  
 -->
+
+
 <div class='p32' style='border-bottom:1px silver solid;'>
 <textarea class='box' style=' width:100%;'></textarea>
 <div style='margin-top:8px;'><a type='button' class='button but_postCol' value='Post'>Post</a>
@@ -20,7 +33,7 @@ return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='del
 </div>
 
 <div class='stream'>
-	 <% _.each( rc.items, function( item ){ %>
+	 <% _.each( rc.streamitems.items, function( item ){ %>
 	 <div class='collectionPost' id='post<%- item.postId %>'>
           <a class='delete' ></a>
           <a href='#/user/<%- item.userId %>'><img class='profilePic' src='http://server.local/media/phantom.jpg'></a>
@@ -30,7 +43,7 @@ return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='del
                 </div>
                 <div>
                     <span class='time'>THE time</span>
-                    <a onclick=''>Comments <span class='countComments'>(2)</span></a> - <a onclick=''>Love</a>
+                    <a onclick=''>Comments <span class='countComments'>(2)</span></a> - <a onclick=''>Spread</a>
                 </div>
 
 
@@ -41,4 +54,5 @@ return array("<div class='collectionPost' id='post".$obj["_id"]."'><a class='del
         </div>
 	<% }); %>
 </div>
+
    

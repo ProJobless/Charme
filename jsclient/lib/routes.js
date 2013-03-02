@@ -5,6 +5,7 @@
         routes: {
             "posts/:id": "getPost",
             "account/:id" : "getAccountPage",
+            "page/:id/:item" : "getPage",
             "page/:id" : "getPage",
             "*actions": "defaultRoute" // Backbone will try match the route above first
         }
@@ -22,13 +23,11 @@
     });
 
 
-    app_router.on('route:getPage', function (id) {
-      
-    container_main.openPage(id);
 
 
+    app_router.on('route:getPage', function (id, item) {
+    container_main.openPage(id, item);
     });
-
 
     app_router.on('route:defaultRoute', function (actions) {
      
@@ -39,11 +38,12 @@
     // Start Backbone history a necessary step for bookmarkable URL's
 
 
-
 var container_guest = new page_login()
 var container_main ;
 
 $(document).ready(function() {
+
+
 
     if (container_main == null)
      container_main= new page_authenticated({el:'#layout'});

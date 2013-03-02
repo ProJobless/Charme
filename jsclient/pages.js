@@ -3,74 +3,105 @@ page_authenticated = Backbone.View.extend({
 	 el: '',
 
 	events: {
-	  "click  .sbAlpha ul a" : "openPageHandler"
+		"click  .sbAlpha ul a" : "openPageHandler",
+		"click  .sbBeta ul a" : "sidebarClickHandler",
+		"click  .shareIt" : "shareClick"
 	},
+	shareClick: function(ev)
+    {
+    	// Load homepage and append to [sharecontainer]
+alert("share");
+		
+	}
+    ,
+	sidebarClickHandler: function(ev)
+    {
+		var d = $(ev.target).data("destination");
 
+    	location.href="#/"+d;
+
+    //alert("ev");
+	}
+    ,
 
     initialize: function(){
 
 
     },
-  	openPage: function(id)
+  	openPage: function(id, item)
   	{
+
   		// TODO: if not logged in -> show login field!
   	
   		$(".sbAlpha ul li").removeClass("active");
     	$(".sbAlpha ul li a[data-topic='"+id+"']").parent().addClass("active");
 
 
+
+    	
+
 		// Template loader using underscore.js, TODO: preload templates!
 		$.post("templates/"+id+".html", function (d)
 		{
 			var templateData = {
-            listTitle: "List title test"
+           // listTitle: "List title test"
+           globaldata : []
 
         	}
 
         	if (id == "stream")
 			{
-				templateData = apl_postloader_getAll();
+				templateData["streamitems"] = apl_postloader_getAll();
+				templateData["listitems"] = apl_postloader_getLists();
+
+				console.log(templateData);
+
 
 			}
         	// ...Add posts from cache...
 
 			_.templateSettings.variable = "rc";
 			var template = _.template(d, templateData); 
-			
+
 
 
 			$("#page").html(template);
 
+			// Make textareas autosizing
+			$('textarea:not(.noAutoHeight)').autosize();
+
 			// Check for page specific sidebar items
+			
+
+			// Adapt layout depending on sidebar existence
+		    if ($('div[title=layout]').text() == "sidebar") // Use left sidebar
+			{
+				$('.page_content').css("width", "700px");
+				$('.page_content').css("margin-left", "150px");
+				$('.sbBeta').show();
+			
+				//if (level == 0) TODO!
+				{
+					$('.sbBeta .actionBar').html(""); // Remove existing buttons
+					$('.subCont').html($('div[title=submenu_items]').html());
+					$('.sbBeta .actionBar').html($('div[title=action_bar]').html());
+				}
+			}
+			else // Do not use left sidebar
+			{
+				$('.page_content').css("width", "850px");
+				$('.page_content').css("margin-left", "0");
+				$('.sbBeta').hide();
+			}
+
+			// Do this after sidebar items were initialised:
+			$(".subCont").append('<div id="colorbg"></div>');
+
+			$(".sbBeta ul li").removeClass("active");
+    		$(".sbBeta ul li a[data-destination='page/"+id+"/"+item+"']").parent().addClass("active");
+
 
 		}, "text");
-
-
-
-    	// Adapt layout depending on sidebar existence
-	    if (1==1) // Use left sidebar
-		{
-			$('.page_content').css("width", "700px");
-			$('.page_content').css("margin-left", "150px");
-			$('.sbBeta').show();
-			
-			//if (level == 0)
-			{
-				$('.sbBeta .actionBar').html(""); // Remove existing buttons
-				$('.subCont').html($('div[title=submenu_items]').html());
-				$('.sbBeta .actionBar').html($('div[title=action_bar]').html());
-			}
-		}
-		else // Do not use left sidebar
-		{
-			$('.page_content').css("width", "850px");
-			$('.page_content').css("margin-left", "0");
-			$('.sbBeta').hide();
-		}
-
-
-
-
   	},
 
     openPageHandler: function(ev)
@@ -87,8 +118,8 @@ page_authenticated = Backbone.View.extend({
 
 		var str = '<div id="cnt_loggedIn"><div class="actionCont"></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
-		<div style="height:62px; background-color:#000;"><a data-page="profile"><img></a></div><ul></ul> \
-		<a href="#/about">About</a> - <a href="#/help">Help</a></div> \
+		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a></div><ul></ul> \
+		<a href="#/page/about">About</a> - <a href="#/page/help">Help</a></div> \
 		    <div class="sbBetaCont"> \
 		        <div class="sidebar sbBeta"> \
 		           <div class="actionBar"> \

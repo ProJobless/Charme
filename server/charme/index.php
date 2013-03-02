@@ -41,6 +41,11 @@ switch ($action)
 
 	break;
 
+	case "post.spread": 
+	// Notify post owner when sharing a posting
+
+	break;
+
 	case "profile.get":
 	// Lookup visibility for this user.
 

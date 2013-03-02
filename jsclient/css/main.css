@@ -225,7 +225,7 @@ float: left;
 	margin:0px auto;
 	left:50%;
 	margin-left:-349px; /* 850/2-75 = */
-	background-color:red;
+	background-color:#c2c2c2;
 	position:fixed;
 	z-index:-9992;
 
@@ -331,6 +331,13 @@ background-color: #fff;
 	color:#fff;
 	margin-bottom:1px;
 }
+
+.sbBeta ul li a:active
+{
+	
+background-color:#fff;
+}
+
 .sbBeta ul li.active
 {
 	
