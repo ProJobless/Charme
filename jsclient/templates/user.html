@@ -6,9 +6,9 @@
 	<img src="apl/fs/?f=p_200_<?=urlencode($userId) ?>" style="width:200px; height:200px; background-color:#ccc" />
 	<div class="tabBar profileTabs">
 	<ul>
-		<li data-item="'.$url.'"><a ref="'.$url.'">Info</a></li>
-		<li data-item="'.$url.'"><a ref="'.$url.'">Subscribers</a></li>
-		<li data-item="'.$url.'"><a ref="'.$url.'">Subscribing</a></li
+		<li><a data-defaultDestination="true" data-destination='user/<%- rc.userId %>'>Info</a></li>
+		<li><a data-destination='user/<%- rc.userId %>/subscribers'>Subscribers</a></li>
+		<li ><a data-destination='user/<%- rc.userId %>/subscribing'>Subscribing</a></li
 	</ul>
 	</div>
 	</div>

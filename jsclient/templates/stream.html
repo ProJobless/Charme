@@ -5,9 +5,9 @@
 Sidebar Items:
 -->
 <div title='submenu_items' class='meta'>
-  <li><a data-destination='page/stream/all'>All</a></li>
+  <li><a data-defaultDestination="true"  data-destination='stream'>All</a></li>
   <% _.each( rc.listitems.items, function(item2){ %>
-    <li><a  data-destination='page/stream/<%- item2.id %>'><%- item2.name %></a></li>
+    <li><a  data-destination='stream/<%- item2.id %>'><%- item2.name %></a></li>
   <% }); %>
 </div>
 

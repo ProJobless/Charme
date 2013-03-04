@@ -3,30 +3,67 @@
 //
  var AppRouter = Backbone.Router.extend({
         routes: {
-            "posts/:id": "getPost",
-            "account/:id" : "getAccountPage",
-            "page/:id/:item" : "getPage",
-            "page/:id" : "getPage",
-            "*actions": "defaultRoute" // Backbone will try match the route above first
+
+            "user/:id/collection/:collection" : "getCollection",
+            "user/:id/subscribing" : "getUserSubscribing",
+            "user/:id/subscribers" : "getUserSubscribers", // if page3 exists and path=/user/userid then load in #page3
+            "user/:id" : "getUser",
+            "stream" : "getStream",
+
+            //":id/*actions" : "getPage",
+            ":id" : "getPage",
+
+            "*path": "defaultRoute" // Backbone will try match the route above first
         }
     });
     // Instantiate the router
     var app_router = new AppRouter;
-    app_router.on('route:getPost', function (id) {
-        alert( "Get post number " + id );   
+ 
+
+    app_router.on('route:getPage', function (id) {
+        var pa = new view_page({template: id, navMatch: id});
+        container_main.openPage(pa);
+     
     });
 
+    app_router.on('route:getStream', function () {
 
-    app_router.on('route:getAccountPage', function (id) {
-        console.log("Account...");
-     $("#layout").html("account"); 
+        var pa = new view_stream({template: "stream", useSidebar: true, navMatch: 'stream'});
+        container_main.openPage(pa);
+    
     });
 
+    app_router.on('route:getUser', function (id) {
+
+        var userId = decodeURIComponent(id);
+
+        // make user view
+        var userView  = null;
+        // make info subview
+
+        // attach subview to view
+
+        container_main.openPage(userView);
+
+        //currentView
+
+    });
+    app_router.on('route:getUserSubscribing', function (id) {
+
+        var userId = decodeURIComponent(id);
+
+        var pa = new userView({template: "stream", useSidebar: true, navMatch: 'stream'});
+
+        if (container_main.currentView != null && container_main.currentView.viewId != "userView")
+        container_main.openPage(userView);
+
+        //do that: container_main.currentView.loadSubPage();
 
 
+       
 
-    app_router.on('route:getPage', function (id, item) {
-    container_main.openPage(id, item);
+        //currentView
+
     });
 
     app_router.on('route:defaultRoute', function (actions) {
@@ -96,7 +133,7 @@ function login()
         $("#welcome_main").fadeOut(0, function(){
 
          container_main.render();
-            location.href="#page/stream";
+            location.href="#stream";
 
         });
     
