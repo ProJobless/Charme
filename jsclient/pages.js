@@ -1,12 +1,10 @@
 page_authenticated = Backbone.View.extend({   
 
-	 el: '',
-	 sidebarLoad : false,
-	 currentView: null,
+	el: '',
+	sidebarLoad : false,
+	currentView: "",
 	events: {
 		"click  .sbAlpha ul a" : "openPageHandler",
-
-		//"click  .shareIt" : "shareClick"
 	},
 	
 	/*shareClick: function(ev)
@@ -53,14 +51,15 @@ console.log("sidebar load=true");
 
     initialize: function(){
 
-
+console.log("el"+ this.el);
     },
 
 
   	openPage: function(view, subview)
   	{
 
-		view.render();
+//this.$el.html("lalala");
+	
   		// TODO: if not logged in -> show login field!
   	
   		//$(".sbAlpha ul li").removeClass("active");

@@ -2,9 +2,12 @@ Pages:
 
 For shared pages (about, help etc.):
 
-new container_shared()
-	if (loggedIn()) -> new container_main();
-	else -> new container_offline();
+
 
 backbone form validation!
 
+
+
+Problems:
+
+- subviews get more than one event registration!

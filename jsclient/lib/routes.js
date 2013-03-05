@@ -8,8 +8,9 @@
             "user/:id/subscribing" : "getUserSubscribing",
             "user/:id/subscribers" : "getUserSubscribers", // if page3 exists and path=/user/userid then load in #page3
             "user/:id" : "getUser",
-            "stream" : "getStream",
 
+            "stream" : "getStream",
+            "stream/:id" : "getStream",
             //":id/*actions" : "getPage",
             ":id" : "getPage",
 
@@ -26,10 +27,24 @@
      
     });
 
-    app_router.on('route:getStream', function () {
+    app_router.on('route:getStream', function (id) {
+        if (id == undefined)
+            id = "0";
 
-        var pa = new view_stream({template: "stream", useSidebar: true, navMatch: 'stream'});
-        container_main.openPage(pa);
+
+        // only if not yet exists...:
+
+        if (container_main.currentViewId != "stream")
+        {
+        console.log("Instantiate ParentView");
+        container_main.currentView = new view_stream({template: "stream", useSidebar: true, navMatch: 'stream'});
+        }
+
+   
+        var vsd =  new view_stream_display({streamId: id, template: "stream_", navMatch: '#nav_'+id});
+        container_main.currentView.sub = vsd;
+        container_main.currentView.render();
+
     
     });
 
@@ -51,6 +66,8 @@
     app_router.on('route:getUserSubscribing', function (id) {
 
         var userId = decodeURIComponent(id);
+
+
 
         var pa = new userView({template: "stream", useSidebar: true, navMatch: 'stream'});
 
