@@ -5,8 +5,11 @@
         routes: {
 
             "user/:id/collection/:collection" : "getCollection",
-            "user/:id/subscribing" : "getUserSubscribing",
-            "user/:id/subscribers" : "getUserSubscribers", // if page3 exists and path=/user/userid then load in #page3
+           
+
+
+
+            "user/:id/:id2" : "getUser", // if page3 exists and path=/user/userid then load in #page3
             "user/:id" : "getUser",
 
             "stream" : "getStream",
@@ -22,8 +25,13 @@
  
 
     app_router.on('route:getPage', function (id) {
+
+
         var pa = new view_page({template: id, navMatch: id});
-        container_main.openPage(pa);
+        container_main.currentView = pa;
+        container_main.currentView.render();
+
+         console.log("navMatch1:"+pa.options.navMatch);
      
     });
 
@@ -42,37 +50,58 @@
 
    
         var vsd =  new view_stream_display({streamId: id, template: "stream_", navMatch: '#nav_'+id});
-        container_main.currentView.sub = vsd;
+        container_main.currentView.setSub(vsd);
         container_main.currentView.render();
 
     
     });
 
-    app_router.on('route:getUser', function (id) {
+    app_router.on('route:getUser', function (id, id2) {
 
+        console.log("getuser");
         var userId = decodeURIComponent(id);
 
-        // make user view
-        var userView  = null;
-        // make info subview
 
-        // attach subview to view
+        if (container_main.currentViewId != "user")
+        {
+            console.log("CREATE NEW PARENT VIEW");
+        console.log("Instantiate ParentView : User");
+        container_main.currentView = new view_profilepage({userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'});
+        }
 
-        container_main.openPage(userView);
+        if (id2 == null)
+        {
+            console.log("router: id2 is null");
 
-        //currentView
+            var vsd =  new view_profilepage_info({ template: "user_", navMatch: '#nav_profile_info'});
+            container_main.currentView.setSub(vsd);
+           
+        }
+        if (id2 == "subscribing")
+        {
+            var vsd =  new view_subpage({ template: "user_subscribing", navMatch: '#nav_profile_sub2', el: '#page3'});
+            container_main.currentView.setSub(vsd);
+            
+        }
+        if (id2 == "subscribers")
+        {
+            var vsd =  new view_subpage({template: "user_subscribers", navMatch: '#nav_profile_sub', el: '#page3'});
+            container_main.currentView.setSub(vsd);
+            
+        }
+        container_main.currentView.render();
 
     });
     app_router.on('route:getUserSubscribing', function (id) {
 
-        var userId = decodeURIComponent(id);
+     //   var userId = decodeURIComponent(id);
 
 
 
-        var pa = new userView({template: "stream", useSidebar: true, navMatch: 'stream'});
+       // var pa = new userView({template: "stream", useSidebar: true, navMatch: 'stream'});
 
-        if (container_main.currentView != null && container_main.currentView.viewId != "userView")
-        container_main.openPage(userView);
+      //  if (container_main.currentView != null && container_main.currentView.viewId != "userView")
+    //    container_main.openPage(userView);
 
         //do that: container_main.currentView.loadSubPage();
 
@@ -85,8 +114,8 @@
 
     app_router.on('route:defaultRoute', function (actions) {
      
-
-     
+    // Go to stream if no route specified
+   location.replace('#stream');
 
     });
     // Start Backbone history a necessary step for bookmarkable URL's

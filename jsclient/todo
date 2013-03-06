@@ -11,3 +11,9 @@ backbone form validation!
 Problems:
 
 - subviews get more than one event registration!
+
+
+
+About routing and events:
+http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
+http://stackoverflow.com/questions/11073877/delegateevents-in-backbone-js

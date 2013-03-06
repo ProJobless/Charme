@@ -1,10 +1,13 @@
+var myUserIdRaw = "manu%40localhost";
+var myUserId = "manu@localhost";
+
 page_authenticated = Backbone.View.extend({   
 
 	el: '',
 	sidebarLoad : false,
 	currentView: "",
 	events: {
-		"click  .sbAlpha ul a" : "openPageHandler",
+		//"click  .sbAlpha ul a" : "openPageHandler",
 	},
 	
 	/*shareClick: function(ev)
@@ -179,15 +182,8 @@ console.log("el"+ this.el);
 		
   	},
 
-    openPageHandler: function(ev)
-    {
-    	//alert($(ev.target).data("topic"));
-    	//this.openPage($(ev.target).data("topic"));
-    	location.href="#"+$(ev.target).data("topic");
-    
-    //alert("ev");
-	}
-    ,
+   
+
      render: function(){
 
 
@@ -218,12 +214,12 @@ console.log("el"+ this.el);
 			$(this.el).html(str);
 
 		
-			$(".sbAlpha ul").append("<li><a data-topic='stream'>Stream</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='user'>Profile</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='talks'>Talks</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='lists'>Lists</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='groups'>Groups</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='settings'>Settings</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='stream' href='#stream'>Stream</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/"+myUserIdRaw+"'>Profile</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='talks' href='#talks'>Talks</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='lists' href='#lists' >Lists</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='settings' href='#settings'>Settings</a></li>");
 		}
 	
 
