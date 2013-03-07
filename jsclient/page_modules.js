@@ -73,7 +73,7 @@ view_page = Backbone.View.extend({
     		$(".sbAlpha ul li").removeClass("active");
     		$(".sbAlpha ul li a[data-topic='"+this.options.navMatch+"']").parent().addClass("active");
     	}
-
+console.log(this.options);
     	if (this.options.useSidebar)
 		{
 			
@@ -104,7 +104,10 @@ view_page = Backbone.View.extend({
 			$('.sbBeta').hide();
 		}	
 
-
+			if (this.postRender != null)
+			{
+				this.postRender();
+			}
 
 		
 
@@ -234,11 +237,51 @@ view_subpage = Backbone.View.extend({
 });
 
 
+function setSCHeight()
+{
+$(".msgScrollContainer").css("height", ($(window).height()-82)+"px");
+$('.nano').nanoScroller();
+}
+
+$(window).resize(function() {
+setSCHeight();
+});
 
 
 
 
+/*
 
+	The List Page views
+
+*/
+
+var view_lists = view_page.extend({
+
+
+	options: {template:'profile'},
+	viewId : 'profileView', // important f
+
+
+	getData: function()
+	{
+		var templateData = {globaldata : []};
+		templateData["listitems"] = apl_postloader_getLists();
+		return templateData;
+	}
+
+});
+
+
+var view_lists_subpage = view_subpage.extend({
+	options: {template:'lists_'},
+	getData: function()
+	{
+		var templateData = {globaldata : []	};
+	    return templateData;
+	}
+
+});
 
 /*
 
@@ -275,6 +318,24 @@ var view_profilepage_info = view_subpage.extend({
 });
 
 
+/*
+
+	The Settings Page views
+
+*/
+
+var view_settings_sub = view_subpage.extend({
+
+
+	getData: function()
+	{
+		var templateData = {globaldata : []	};
+	    return templateData;
+	}
+
+});
+
+
 
 var view_stream_display = view_subpage.extend({
 
@@ -297,6 +358,35 @@ var view_stream_display = view_subpage.extend({
 	}
 
 });
+
+
+var view_talks = view_page.extend({
+
+	events: {
+
+		"click  #but_newMessage" : "newMsg"
+	},
+	newMsg: function(ev)
+	{
+	    // Load homepage and append to [sharecontainer]
+alert("New message");
+	},
+	getData: function () {
+		var templateData = {globaldata : [], test:"test"	};
+		templateData["listitems"] = apl_postloader_getLists();
+	    return templateData;
+
+	},
+
+	postRender: function(){
+		setSCHeight();
+		console.log("set talks height");
+
+	}
+
+});
+
+
 
 var view_stream = view_page.extend({
 

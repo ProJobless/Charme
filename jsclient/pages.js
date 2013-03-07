@@ -218,7 +218,7 @@ console.log("el"+ this.el);
 			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/"+myUserIdRaw+"'>Profile</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='talks' href='#talks'>Talks</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='lists' href='#lists' >Lists</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");
+			//$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='settings' href='#settings'>Settings</a></li>");
 		}
 	

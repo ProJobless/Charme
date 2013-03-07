@@ -1,11 +1,11 @@
 
-<div title='layout' class='meta'>sidebar</div>
+
 
 <!--
 Sidebar Items:
 -->
 <div title='submenu_items' class='meta'>
-  <li id='nav_0'><a  data-defaultDestination="true"  href='#stream'>All</a></li>
+  <li id='nav_'><a  data-defaultDestination="true"  href='#stream'>All</a></li>
   <% _.each( rc.listitems.items, function(item2){ %>
     <li id='nav_<%- item2.id %>' ><a  href='#stream/<%- item2.id %>'><%- item2.name %></a></li>
   <% }); %>

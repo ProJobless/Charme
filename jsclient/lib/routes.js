@@ -15,7 +15,19 @@
             "stream" : "getStream",
             "stream/:id" : "getStream",
             //":id/*actions" : "getPage",
+
+            "settings/:id" : "getSettings",
+            "settings" : "getSettings",
+
+            "talks/:id" : "getTalks",
+            "talks" : "getTalks",
+
+            "lists" : "getLists",
+            "lists/:id" : "getLists",
+
             ":id" : "getPage",
+
+          
 
             "*path": "defaultRoute" // Backbone will try match the route above first
         }
@@ -23,6 +35,74 @@
     // Instantiate the router
     var app_router = new AppRouter;
  
+  app_router.on('route:getLists', function (id) {
+
+        if (id == undefined)
+            id = "";
+       
+
+        if (container_main.currentViewId != "lists")
+        {
+            var pa = new view_lists({template: "lists", navMatch: "lists", useSidebar: true});
+            container_main.currentView = pa;
+            container_main.currentView.render();
+        }
+        
+
+        var vsd =  new view_lists_subpage({ template: "lists_",  listId: id, navMatch: '#nav_'+id, el: '#page'});
+        container_main.currentView.setSub(vsd);
+        container_main.currentView.render();
+
+     
+    });
+
+
+
+   app_router.on('route:getTalks', function (id) {
+
+        if (id == undefined)
+            id = "";
+       
+
+        if (container_main.currentViewId != "talks")
+        {
+            var pa = new view_talks({template: "talks", navMatch: "talks"});
+            container_main.currentView = pa;
+            container_main.currentView.render();
+        }
+        
+
+        var vsd =  new view_settings_sub({ template: "talks_", navMatch: '#nav_'+id, el: '#page3'});
+        container_main.currentView.setSub(vsd);
+        container_main.currentView.render();
+
+     
+    });
+
+
+
+
+  app_router.on('route:getSettings', function (id) {
+
+        if (id == undefined)
+            id = "";
+       
+
+        if (container_main.currentViewId != "settings")
+        {
+            var pa = new view_page({template: "settings", navMatch: "settings", useSidebar: true});
+            container_main.currentView = pa;
+            container_main.currentView.render();
+        }
+        
+        var vsd =  new view_settings_sub({ template: "settings_"+id, navMatch: '#nav_'+id});
+        container_main.currentView.setSub(vsd);
+        container_main.currentView.render();
+
+     
+    });
+
+
 
     app_router.on('route:getPage', function (id) {
 
@@ -37,7 +117,7 @@
 
     app_router.on('route:getStream', function (id) {
         if (id == undefined)
-            id = "0";
+            id = "";
 
 
         // only if not yet exists...:
