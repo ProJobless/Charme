@@ -121,6 +121,12 @@ padding: 8px 0;
 	text-align: center;
 	line-height: 18px;
 }
+.formDiv div
+{
+	padding:8px 0;
+}
+label { display: inline-block; width: 130px; }
+
 .actionMargin
 {
 

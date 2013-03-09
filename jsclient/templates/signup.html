@@ -1,8 +1,53 @@
+<div style='background-color:#fff; padding:32px'>
+<a href='#welcome'>Go back</a>
+
 Welcome to Charme.
 
-1. Plese select a server
+<h1>Step 1: Choose a username and a server</h1>
+
+
+<input placeholder="you" class='box'> @ <input placeholder="yourserver.com" class='box'>
+<br>
+<a href='#welcome'>Help me to choose a server</a>
+
+<h1>Step 2: Create a certificate</h1>
+
+<div id='template_certhint'>
+Certificates are needed for encrypted communication. Certificate Creation may take a while.<br><br>
+
+
+<a id='but_makecert' class='button'>Create certificate</a>
+</div>
+
+<div style='display: none' id='template_certok'>
+
+
+Your certificate Key is: 
+<div style='padding:16px; margin:16px 0; border:2px maroon solid;' id='template_certkey'>dakj3bbkjbk3bkk3jbkassjdb2
+</div>
+
+
+<b>Warning: The Certificate Key can not be restored. Write it down on paper somewhere and make sure nobody but you can find it. If you loose the Certificate Key you loose your account!</b>
+
+</div>
 
 
 
+<h1>Step 3: Enter your data</h1>
 
-Warning: This Password can not be restored!!!!
+<div class='formDiv'><div>
+<label for="vorn">First Name:</label> <input placeholder="" class='box'>
+</div><div>
+<label for="vorn">Last Name: </label> <input placeholder="" class='box'>
+</div><div>
+<label for="vorn">Email:</label>  <input placeholder="" class='box'>
+</div><div>
+<label for="vorn">Password: </label> <input placeholder="" type='password' class='box'>
+</div><div>
+<label for="vorn">Repeat Password:</label>  <input placeholder=""  type='password'  class='box'>
+</div>
+
+
+</div>
+<br>
+<label for="vorn"> </label><a id='but_makecert' class='button'>Finish Registration</a>

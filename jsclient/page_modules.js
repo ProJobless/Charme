@@ -317,6 +317,32 @@ var view_lists_subpage = view_subpage.extend({
 });
 
 /*
+	The registration view
+
+*/
+
+
+var view_register = view_page.extend({
+	options: {template:'signup'},
+	events: {
+
+		"click  #but_makecert" : "makecert"
+	},
+	makecert: function()
+	{
+
+		$('#template_certok').show();
+		$('#template_certhint').hide();
+
+		/*  */
+
+
+	}
+
+});
+
+
+/*
 
 	The Profile Page views
 

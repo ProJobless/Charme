@@ -9,6 +9,8 @@
 
             "user/:id/:id2" : "getUser",
             "user/:id" : "getUser",
+            
+            "signup" : "getRegister",
 
             "stream" : "getStream",
             "stream/:id" : "getStream",
@@ -97,6 +99,16 @@
         container_main.currentView.setSub(vsd);
         container_main.currentView.render();
 
+     
+    });
+
+    app_router.on('route:getRegister', function (id) {
+
+
+    
+        var pa = new view_register({needLogin: false});
+        pa.render();
+        //console.log("navMatch1:"+pa.options.navMatch);
      
     });
 
