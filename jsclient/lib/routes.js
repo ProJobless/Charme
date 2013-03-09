@@ -1,20 +1,18 @@
 // Router - Controls the history
 // A tutorial about routers in backbone.js can be found on http://backbonetutorials.com/what-is-a-router/
-//
+
+
  var AppRouter = Backbone.Router.extend({
         routes: {
 
             "user/:id/collection/:collection" : "getCollection",
-           
 
-
-
-            "user/:id/:id2" : "getUser", // if page3 exists and path=/user/userid then load in #page3
+            "user/:id/:id2" : "getUser",
             "user/:id" : "getUser",
 
             "stream" : "getStream",
             "stream/:id" : "getStream",
-            //":id/*actions" : "getPage",
+
 
             "settings/:id" : "getSettings",
             "settings" : "getSettings",
@@ -29,7 +27,7 @@
 
           
 
-            "*path": "defaultRoute" // Backbone will try match the route above first
+            "*path": "defaultRoute" 
         }
     });
     // Instantiate the router
@@ -107,11 +105,17 @@
     app_router.on('route:getPage', function (id) {
 
 
-        var pa = new view_page({template: id, navMatch: id});
-        container_main.currentView = pa;
-        container_main.currentView.render();
-
-         console.log("navMatch1:"+pa.options.navMatch);
+    
+        var pa = new view_page({template: id, navMatch: id, needLogin: false});
+        
+        if (charmeUser != null)
+        {
+            container_main.currentView = pa;
+            container_main.currentView.render();
+        }
+        else
+            pa.render();
+        //console.log("navMatch1:"+pa.options.navMatch);
      
     });
 
@@ -194,14 +198,18 @@
 
     app_router.on('route:defaultRoute', function (actions) {
      
+
     // Go to stream if no route specified
-   location.replace('#stream');
+    if (charmeUser == null)
+        location.replace('#welcome');
+    else
+        location.replace('#stream');
 
     });
     // Start Backbone history a necessary step for bookmarkable URL's
 
 
-var container_guest = new page_login()
+var container_guest = new page_login();
 var container_main ;
 
 $(document).ready(function() {
@@ -257,10 +265,21 @@ function login()
         $('#login_user').focus().select();}
         if (d==2)
         $("#welcome_main").fadeOut(0, function(){
+  
+
+        var uid = $("#login_user").val();
+        charmeUser = new apl_user(uid); 
+
 
          container_main.render();
             location.href="#stream";
 
+
+         
+
+           
+      
+           
         });
     
 
@@ -277,15 +296,20 @@ function LoadSimplePage(pageName)
 
 function logout()
 {
+
     container_guest.render();
     main_container = null;
+    charmeUser = null;
+    location.replace("#welcome");
 
 
 }
 
 function isLoggedIn()
 {
+    if (charmeUser != null)
     return true;
+    return false;
 }
 
 

@@ -3,15 +3,25 @@ Pages:
 For shared pages (about, help etc.):
 
 
+no contructor!
+
+http://documentcloud.github.com/backbone/#Model
+
+
 
 backbone form validation!
+
+Local Database:
+http://www.tutorialspoint.com/html5/html5_web_sql.htm
+
+- Store: uid, listid, json
 
 
 
 Problems:
 
 - subviews get more than one event registration!
-
+- talk view: newmessage fired to often
 
 
 About routing and events:

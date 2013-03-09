@@ -126,14 +126,14 @@ padding: 8px 0;
 
 	padding-right: 32px;
 }
- .actionCont .item:first-child
+ .actionCont .item:last-child
  {
  	border:0;
  }
  .actionCont .item
  {
  	padding:8px;
- 	border-top:1px silver solid;
+ 	border-bottom:1px silver solid;
 
  }
  .actionCont
@@ -144,10 +144,10 @@ padding: 8px 0;
 	position:fixed;
 	border:1px #222 solid;
 	
-	
+	display:   none;
 	z-index:8000;
 
-	top:-205px;
+
 }
 .actionCont .whitespace
 {

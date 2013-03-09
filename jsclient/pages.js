@@ -7,9 +7,72 @@ page_authenticated = Backbone.View.extend({
 	sidebarLoad : false,
 	currentView: "",
 	events: {
-		//"click  .sbAlpha ul a" : "openPageHandler",
+		"click  #button_notifications" : "showNotifications",
 	},
 	
+
+showNotifications : function(obj)
+{
+	var obj = $('#button_notifications');
+
+	var x = $(obj).data("bgpos");
+
+	
+	obj.css("background-position",x+"px -62px");
+
+
+	//$('.actionCont').append("");
+	$('#notificationMain').html("<div class='item'>Someone has commented your status.</div>");
+
+
+
+
+
+	$('.actionCont').css("left", $('#button_notifications').offset().left);
+
+
+
+
+	if ($('.actionCont').is(":visible"))
+	{
+		$('.actionBar a').removeClass("active");
+		$('.actionCont').hide();
+		obj.css("background-position",x+"px -0px");
+  	
+	}
+	else
+	{
+		obj.addClass("active");
+		$('.actionCont').show().css("top", 31);;
+	}
+	
+	
+
+
+/*
+	if ($('.actionCont:visible').position().top > 0)
+	{
+		$('.actionBar a').removeClass("active");
+		obj.css("background-position",x+"px -0px");
+		
+		$('.actionCont').animate({
+	    top: '-205'}, 0, function() {
+	 	 });
+  	
+	}
+	else
+	{
+		$('.actionCont').animate({
+	    opacity: 1.0,
+	    top: '31'}, 0, function() {
+	   
+	  	});
+	}*/
+	
+	
+	
+	},
+
 	/*shareClick: function(ev)
     {
     	// Load homepage and append to [sharecontainer]
@@ -187,7 +250,7 @@ console.log("el"+ this.el);
      render: function(){
 
 
-		var str = '<div id="cnt_loggedIn"><div class="actionCont"></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
+		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a></div><ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a></div> \
@@ -241,7 +304,7 @@ page_login = Backbone.View.extend({
      render: function(){
 
 
-	$("#layout").html('<div style="width:600px; margin:200px auto;" id="welcome_main" >  <img src="media/welcome.png" />  <div style="float:right; width:264px;">  <div style="background-color:#fff;  padding:32px; border-radius:8px; margin-bottom:16px;">  <div id="login_error" style="background-color:#F7D2D2; padding:16px; display:none;  border-radius:8px; margin-bottom:16px;color:#C30; text-align:center;">Login failed. Please check your login data.</div>  Username:  <input placeholder="you@yourserver.com"  id="login_user" class="box" style="margin:8px 0; width:190px;" />  Password:  <input placeholder="●●●●●●●●●" id="login_password" type="password" class="box" style="margin:8px 0; width:190px;" />  <div style="position:relative;">  <a href="javascript:login();" class="button" style="float:left">Login</a><span style="float:left; top:6px; left:5px; position:relative;"> or <a href="#/account/signup">Sign up</a></span>  <br class="cb" />  </div>  </div>  <div style="text-align:right" class="lightLink">  <a href="#password">Forgot Password?</a> - <a href="#/about">About</a> </div>  </div>  </div>');
+	$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
 		
 		var u = $('#login_user').focus();
 		$('#login_password').keypress(function(e) {

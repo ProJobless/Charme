@@ -22,23 +22,34 @@ Backbone.View.prototype.close = function(){
 view_page = Backbone.View.extend({   
 
 
-	aTemplate: '',
-	useSidebar: false,
+
 	subPage: null,
 	el : '#page',
+	
 
-	options: {template:'none', useSidebar:false, navMatch: ''},
+	options: {
+		template:'none',
+		useSidebar:false,
+		navMatch: '',
+		needLogin: true
+	},
 
 	events: {
 	
 	//	"click  a" : "testClick"
 	},
+	
+	
+
+	initialize: function() {
+	 
+	
+	 
+	},
+
 
 	// Warning: do not add initlize function, because passing arguments does not work then!
 
-	initialize: function (attrs) {
-	    this.options = attrs;
-	},
     getData: function()
     {
 
@@ -63,7 +74,7 @@ view_page = Backbone.View.extend({
 
     finishRender: function(d, d2)
     {
-    
+
 
 //alert("find"+this.options.useSidebar);
 
@@ -73,7 +84,7 @@ view_page = Backbone.View.extend({
     		$(".sbAlpha ul li").removeClass("active");
     		$(".sbAlpha ul li a[data-topic='"+this.options.navMatch+"']").parent().addClass("active");
     	}
-console.log(this.options);
+
     	if (this.options.useSidebar)
 		{
 			
@@ -118,12 +129,22 @@ console.log(this.options);
 		/*
 			Warning: Do not render subViews here if not yet rendered!
 			http://stackoverflow.com/questions/9604750/backbone-js-firing-event-from-a-view-inside-a-view
-		*/
+		*/  
+	
+
+		if (this.options.needLogin && charmeUser == null)
+		{	
+  		
+			logout();
+			return;
+			
+		}
+		//alert("render");
 
 
 	 	if (container_main.currentViewId == this.options.template)
         {
-     
+   
             // Just update SubView, we are allowed to render it here as parent view is already rendered
             this.sub.render();
 
@@ -138,7 +159,7 @@ console.log(this.options);
 
 			$.post("templates/"+this.options.template+".html", function (d)
 			{
-				
+			
 				var templateData = that.getData();
 
 				_.templateSettings.variable = "rc";
@@ -166,28 +187,40 @@ console.log(this.options);
 
 //view_subpage
 
+view_test = Backbone.View.extend({ 
+
+options: {useSidebar : true, la2: 15},
+initialize: function() {
+	//  this.options = _.extend(this.defaults, this.options);
+	},
+});
+
+/*
+alert("start");
+
+var tt = new view_test({la:17, useSidebar:false});
+alert(tt.options.useSidebar+","+tt.options.la2);
+
+var tt = new view_test({la:17});
+alert(tt.options.useSidebar+","+tt.options.la2);
+*/
+
 
 
 view_subpage = Backbone.View.extend({   
 	el: '#page',
-	aTemplate: '',
 	options: {},
-	events: {
 
-	},
-
-
-	initialize: function (attrs) {
-	    this.options = attrs;
-	},
+	initialize: function() {
 	
+	},
+
 	render: function(){
 		// Done in parent page!
 
 		var that = this;
 
-	
-
+		
 
 
 		$.post("templates/"+this.options.template+".html", function (d)
@@ -226,7 +259,7 @@ view_subpage = Backbone.View.extend({
 		// Set sb beta
 		//alert(that.options.navMatch);
 
-		$(".sbBeta ul li, .profileTabs ul li").removeClass("active");
+		$(".sbBeta ul li, .profileTabs ul li, .navMatch ul li").removeClass("active");
 		$(that.options.navMatch).addClass("active");
 
 		// call prototype.finishredner();
