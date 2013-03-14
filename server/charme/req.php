@@ -1,11 +1,41 @@
 <?php
 
+/*
 spl_autoload_extensions('.php');
 spl_autoload_register(function ($class) {
 
 	$class = str_replace("\\", "/", $class);
     include $_SERVER["DOCUMENT_ROOT"].'/charme/' . $class . '.class.php';
-});
+});*/
+
+
+
+/*
+	We are using Symphonys class loader here, see
+	http://symfony.com/doc/2.0/components/class_loader.html
+	for more information
+
+	Resources:
+	http://stackoverflow.com/questions/10371073/symfony-class-loader-usage-no-examples-of-actual-usage
+
+	Performance:
+	http://www.zalas.eu/autoloading-classes-in-any-php-project-with-symfony2-classloader-component
+*/
+
+require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+$loader = new UniversalClassLoader();
+// Component namespace will be found in Componet directory
+
+
+$loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
+//$loader->registerNamespace("App" , "Component"); 
+$loader->register();
+
+
+$helloWorld = new App\TestComponent\Testbench();
+
 
 /*
 	Interface Definitions
@@ -37,7 +67,17 @@ use \core\action as action;
 
 /* Parse incoming request */
 
-$req = new Core\TestComponent\Testbench();
+/*
+By registering your namespace as follows:
+
+$loader->registerNamespace('App\Location\Location', 'Location/Location');
+autoloader will look for the App\Location\Location class in the Location/Location/App/Location/Location.php file. Note that file/directory names are case sensitive.
+
+First parameter of registerNamespace() is either a namespace or part of the namespace. Second parameter is a path to a PSR-0 compliant library. That means that directory structure inside that path should follow PSR-0 standard. This path is not used when calculating path for given namespace.
+
+App\Location\Location()
+*/
+
 $data = array();
 /*
 	TODO:
@@ -59,7 +99,7 @@ switch ($action)
 
 	case "newUser.register":
 		// Return error if: Captcha is false, no name, invalid name/password/email
-		$user = new Core\Users\Register($data);
+		//$user = new Core\Users\Register($data);
 	
 	break;
 
