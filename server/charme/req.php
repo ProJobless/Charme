@@ -1,5 +1,22 @@
 <?php
 
+spl_autoload_extensions('.php');
+spl_autoload_register(function ($class) {
+
+	$class = str_replace("\\", "/", $class);
+    include $_SERVER["DOCUMENT_ROOT"].'/charme/' . $class . '.class.php';
+});
+
+/*
+	Interface Definitions
+*/
+
+
+
+
+
+
+/*
 function __autoload($className) {
 	$fileName = str_replace("\\", "/", $className).".php";
  
@@ -14,11 +31,14 @@ spl_autoload_register();
 
 use \core\com as com;
 use \core\action as action;
+*/
+
+
 
 /* Parse incoming request */
 
-$req = new action\request();
-
+$req = new Core\TestComponent\Testbench();
+$data = array();
 /*
 	TODO:
 	- Validate User idenity
@@ -26,6 +46,7 @@ $req = new action\request();
 
 */
 
+$action = "newUser.register";
 
 switch ($action) 
 {
@@ -37,8 +58,9 @@ switch ($action)
 	break;
 
 	case "newUser.register":
-	// Return error if: Captcha is false, no name, invalid name/password/email
-
+		// Return error if: Captcha is false, no name, invalid name/password/email
+		$user = new Core\Users\Register($data);
+	
 	break;
 
 	case "post.spread": 

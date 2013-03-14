@@ -331,8 +331,53 @@ var view_register = view_page.extend({
 	makecert: function()
 	{
 
-		$('#template_certok').show();
-		$('#template_certhint').hide();
+
+
+
+  var worker = new Worker("lib/crypto/thread_makeSignature.js");
+  $("#but_makecert").text("Please Wait...");
+worker.onmessage = function(e) {
+    
+	
+
+	var certificate={version:1,rsa:e.data};
+
+
+
+ 	$('#template_certok').show();
+	$('#template_certhint').hide();
+
+
+    var passphrase = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 20; i++ )
+        passphrase += possible.charAt(Math.floor(Math.random() * possible.length));
+
+
+
+var tt  = sjcl.encrypt(passphrase, JSON.stringify(certificate));
+
+
+
+
+
+
+
+    $("#template_certkey").text(passphrase);
+   $("#rsa").val(tt);
+
+
+
+
+};
+
+
+   worker.postMessage("");
+
+
+
+
 
 		/*  */
 
