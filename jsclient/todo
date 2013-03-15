@@ -1,3 +1,10 @@
+Important:
+http://stackoverflow.com/questions/8006458/backbone-js-how-to-perform-garbage-collection-on-parent-views-as-well-as-child
+- subviews and views get more than one event registration!
+
+
+
+
 Pages:
 
 For shared pages (about, help etc.):
@@ -24,9 +31,10 @@ Problems:
 - talk view: newmessage fired to often
 
 
-About routing and events:
+About routing and events, and multiple occuring events:
 http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
 http://stackoverflow.com/questions/11073877/delegateevents-in-backbone-js
+http://stackoverflow.com/questions/9080763/backbone-js-view-removing-and-unbinding
 
 Templates with controls:
 http://stackoverflow.com/questions/12452067/backbone-list-item-view-tag-controlled-by-template

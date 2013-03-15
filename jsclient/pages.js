@@ -3,14 +3,26 @@ var myUserId = "manu@localhost";
 
 page_authenticated = Backbone.View.extend({   
 
-	el: '',
-	sidebarLoad : false,
-	currentView: "",
-	events: {
-		"click  #button_notifications" : "showNotifications",
-	},
-	
+el: '',
+sidebarLoad : false,
+currentView: "",
+events: {
+	"click  #button_notifications" : "showNotifications",
+},
+setCurrent : function(obj)
+{
+	if (this.currentView  != null)
+	{
+		console.log(this.currentView);
+		//this.currentView.remove();
+		this.currentView.unbind();
 
+		this.currentView = obj;
+		console.log("Cleared current view");
+	}
+	this.currentView = obj;
+	console.log("Set current view");
+},
 showNotifications : function(obj)
 {
 	var obj = $('#button_notifications');

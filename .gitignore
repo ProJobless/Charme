@@ -1,6 +1,6 @@
 #/web/*
 /dev/*
-/jsclient/mongodb.php
+/server/mongodb.php
 /temp/*
 /doxygen/*
 

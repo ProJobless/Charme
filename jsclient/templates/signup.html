@@ -4,93 +4,94 @@ and make sure it matches with server Validation
 -->
 
 <div style='padding:32px;border-bottom:1px silver solid; background-color:#fff' >
+	
 <a href='#welcome'>&laquo; Home</a>
 </div>
 
 <div style='background-color:#fff; padding:32px'>
 	
+<form id='form_signup'>
+	<div class='formDiv'><div>
+	<label for="vorn">Username:</label> <input name='username' style='width:150px'  placeholder="username" class='box'> @ <input  name='server'  style='width:150px' value='server.local' id='inp_server' placeholder="yourserver.com" class='box'> 
 
-<div class='formDiv'><div>
-<label for="vorn">Username:</label> <input  style='width:150px'  placeholder="username" class='box'> @ <input  style='width:150px' value='beta.charmeproject.com' placeholder="yourserver.com" class='box'> 
-
-</div>
-
-
-
-<div>
-<label for="vorn">Registration Code:</label><input  style='width:150px; margin-bottom:8px;'  placeholder="XXXXXXXXXXX" class='box'>
-</div>
-</div>
-<label for="vorn">Certificate:</label> 
-<div  style='padding-bottom:16px; display:inline-block; width:300px; float:left'>
+	</div>
 
 
 
-
-<div id='template_certhint'>
-Certificates are needed for encrypted communication. Certificate Creation may take a while. We strongly recommend Chrome for using Charme (It is about 30 times faster than Firefox for doing our encryption algorithms)<br><br>
-
-
-<a id='but_makecert' class='button'>Create certificate</a>
-</div>
-
-<div style='display: none' id='template_certok'>
-
-
-Your certificate Key is: 
-<div style='padding:16px; margin:16px 0; border:2px maroon solid; font-family: Consolas;' id='template_certkey'>Error creating key
-</div>
-<input name='certkey' type='hidden' id='certkey'  value=''>
+	<div>
+	<label for="vorn">Registration Code:</label><input  style='width:150px; margin-bottom:8px;'  placeholder="XXXXXXXXXXX" class='box'>
+	</div>
+	</div>
+	<label for="vorn">Certificate:</label> 
+	<div  style='padding-bottom:16px; display:inline-block; width:300px; float:left'>
 
 
 
 
-<b>Warning: The Certificate Key can not be restored. Write it down on paper somewhere and make sure nobody but you can find it. If you loose the Certificate Key you loose your account!</b>
-
-<br>
-<br>
-Raw Certificate:<br><br>
-<textarea name='rsa' id='rsa'  value='' disabled></textarea>
+	<div id='template_certhint'>
+	Certificates are needed for encrypted communication. Certificate Creation may take a while. We strongly recommend Chrome for using Charme (It is about 30 times faster than Firefox for doing our encryption algorithms)<br><br>
 
 
+	<a id='but_makecert' class='button'>Create certificate</a>
+	</div>
 
-</div></div>
+	<div style='display: none' id='template_certok'>
 
 
-<div class='formDiv'><div>
-<label for="vorn">First Name:</label> <input placeholder="" class='box'>
-</div><div>
-<label for="vorn">Last Name: </label> <input placeholder="" class='box'>
-</div><div>
-<label for="vorn">Email:</label>  <input placeholder="" class='box'>
-</div><div>
-<label for="vorn">Password: </label> <input placeholder="" type='password' class='box'>
-</div><div>
-<label for="vorn">Repeat Password:</label>  <input placeholder=""  type='password'  class='box'>
-</div>
-<div>
-	<label for="vorn">&nbsp;</label><a id='but_makecert' class='button'>Submit</a>
-</div>
+	Your certificate Key is: 
+	<div style='padding:16px; margin:16px 0; border:2px maroon solid; font-family: Consolas;' id='template_certkey'>Error creating key
+	</div>
+	<input type='hidden' id='certkey'  value=''>
 
-</div>
 
-<div class='infobox' style='margin: 0; margin-top:16px; marign-bottom:0'>
 
-<div id='error1'>Invalid Registration Code</div>
-<div  id='error2'>Invalid characters in username</div>
-<div  id='error3'>Username lenght must be between 2 and 30 characters</div>
 
-<div id='error4'>Password lenght must be between 10 and 30 characters</div>
-<div id='error5'>Password contains illegal characters</div>
-<div id='error6'>Please create a certificate</div>
+	<b>Warning: The Certificate Key can not be restored. Write it down on paper somewhere and make sure nobody but you can find it. If you loose the Certificate Key you loose your account!</b>
 
-<div id='error7'>Invalid mail address</div>
+	<br>
+	<br>
+	Raw Certificate:<br><br>
+	<input name='rsa' id='rsa' type='hidden' value=''>
 
-<div id='error8'>Invalid server</div>
 
-<div  id='error9'>Name must have between 2 and 30 characters and should not contain special characters</div>
 
-<div  id='error10'>Please accept the terms.</div>
-<div  id='error11'>Outdated Charme Client Version. Please update your client software.</div>
+	</div></div>
 
+
+	<div class='formDiv'><div>
+	<label for="vorn">First Name:</label> <input placeholder="" class='box'>
+	</div><div>
+	<label for="vorn">Last Name: </label> <input placeholder="" class='box'>
+	</div><div>
+	<label for="vorn">Email:</label>  <input placeholder="" class='box'>
+	</div><div>
+	<label for="vorn">Password: </label> <input placeholder="" type='password' class='box'>
+	</div><div>
+	<label for="vorn">Repeat Password:</label>  <input placeholder=""  type='password'  class='box'>
+	</div>
+	<div>
+		<label for="vorn">&nbsp;</label><a id='but_signupok' class='button'>Submit</a>
+	</div>
+
+	</div>
+
+	<div class='infobox' style='margin: 0; margin-top:16px; marign-bottom:0'>
+
+	<div id='error1'>Invalid Registration Code</div>
+	<div  id='error2'>Invalid characters in username</div>
+	<div  id='error3'>Username lenght must be between 2 and 30 characters</div>
+
+	<div id='error4'>Password lenght must be between 10 and 30 characters</div>
+	<div id='error5'>Password contains illegal characters</div>
+	<div id='error6'>Please create a certificate</div>
+
+	<div id='error7'>Invalid mail address</div>
+
+	<div id='error8'>Invalid server</div>
+
+	<div  id='error9'>Name must have between 2 and 30 characters and should not contain special characters</div>
+
+	<div  id='error10'>Please accept the terms.</div>
+	<div  id='error11'>Outdated Charme Client Version. Please update your client software.</div>
+	</form>
 </div>

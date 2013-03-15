@@ -16,6 +16,8 @@ Backbone.View.prototype.close = function(){
     this.onClose();
 
   }
+   this.remove();
+    this.unbind();
 }
 
 
@@ -43,8 +45,8 @@ view_page = Backbone.View.extend({
 
 	initialize: function() {
 	 
-	
-	 
+
+		 
 	},
 
 
@@ -74,7 +76,7 @@ view_page = Backbone.View.extend({
 
     finishRender: function(d, d2)
     {
-
+		console.log("finishRender()");
 
 //alert("find"+this.options.useSidebar);
 
@@ -175,7 +177,11 @@ view_page = Backbone.View.extend({
 				
 					that.sub.render();
 				}
-
+				
+				console.log("delegateEvents() in view");
+				that.delegateEvents();
+				//that.delegateEvents();
+		
 
 
 			});
@@ -251,6 +257,7 @@ view_subpage = Backbone.View.extend({
 					this.postRender();
 
 				// important:!!
+				console.log("delegateEvents() in subView");
 				that.delegateEvents();
 
 
@@ -326,7 +333,32 @@ var view_register = view_page.extend({
 	options: {template:'signup'},
 	events: {
 
-		"click  #but_makecert" : "makecert"
+		"click  #but_makecert" : "makecert",
+		"click  #but_signupok" : "signup"
+	},
+	signup: function()
+	{
+		var s = $("#form_signup").serialize();
+		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?d='+s+'&callback=?';
+		console.log("Loading JSON: "+u);
+		$.ajax({
+		  dataType: "jsonp",
+		  url: u,
+		  data: "",
+		  success: function(data) {
+		  	console.log(data);
+
+		  }
+		});
+
+
+
+		
+
+
+
+	
+
 	},
 	makecert: function()
 	{

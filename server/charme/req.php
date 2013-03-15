@@ -1,13 +1,15 @@
 <?php
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Content-type: application/json');
 
-/*
-spl_autoload_extensions('.php');
-spl_autoload_register(function ($class) {
 
-	$class = str_replace("\\", "/", $class);
-    include $_SERVER["DOCUMENT_ROOT"].'/charme/' . $class . '.class.php';
-});*/
-
+/**
+ * req.php
+ * Parses incoming client requests
+ *
+ * @author mschultheiss
+ */
 
 
 /*
@@ -26,59 +28,10 @@ require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
-// Component namespace will be found in Componet directory
-
-
 $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
-//$loader->registerNamespace("App" , "Component"); 
 $loader->register();
 
-
-$helloWorld = new App\TestComponent\Testbench();
-
-
-/*
-	Interface Definitions
-*/
-
-
-
-
-
-
-/*
-function __autoload($className) {
-	$fileName = str_replace("\\", "/", $className).".php";
- 
-	if (file_exists($fileName)) {
-		require_once $fileName;
-	}
-}
-
-spl_autoload_extensions(".php");
-spl_autoload_register();
-
-
-use \core\com as com;
-use \core\action as action;
-*/
-
-
-
-/* Parse incoming request */
-
-/*
-By registering your namespace as follows:
-
-$loader->registerNamespace('App\Location\Location', 'Location/Location');
-autoloader will look for the App\Location\Location class in the Location/Location/App/Location/Location.php file. Note that file/directory names are case sensitive.
-
-First parameter of registerNamespace() is either a namespace or part of the namespace. Second parameter is a path to a PSR-0 compliant library. That means that directory structure inside that path should follow PSR-0 standard. This path is not used when calculating path for given namespace.
-
-App\Location\Location()
-*/
-
-$data = array();
+$data = json_decode($_GET["d"]);
 /*
 	TODO:
 	- Validate User idenity
@@ -87,6 +40,11 @@ $data = array();
 */
 
 $action = "newUser.register";
+
+// JSON Callback, see http://stackoverflow.com/questions/2822609/invalid-label-firebug-error-with-jquery-getjson
+echo $_GET['callback'].'(';
+
+
 
 switch ($action) 
 {
@@ -99,7 +57,11 @@ switch ($action)
 
 	case "newUser.register":
 		// Return error if: Captcha is false, no name, invalid name/password/email
-		//$user = new Core\Users\Register($data);
+		$user = new \App\Users\UserRegistration($data);
+		echo $user->execute();
+	
+
+
 	
 	break;
 
@@ -150,5 +112,7 @@ switch ($action)
 // stream: getPosts(Timestamp, max count), post
 
 
+// jQuery Callback end
+echo ')';
 
 ?>

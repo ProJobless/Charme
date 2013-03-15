@@ -1,0 +1,5 @@
+Type a message about your server here. 
+This messae will be displayed client side on the about page.
+You can also use links like:
+
+http://www.google.de

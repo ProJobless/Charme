@@ -44,7 +44,7 @@
         if (container_main.currentViewId != "lists")
         {
             var pa = new view_lists({template: "lists", navMatch: "lists", useSidebar: true});
-            container_main.currentView = pa;
+            container_main.setCurrent(pa);
             container_main.currentView.render();
         }
         
@@ -67,7 +67,7 @@
         if (container_main.currentViewId != "talks")
         {
             var pa = new view_talks({template: "talks", navMatch: "talks"});
-            container_main.currentView = pa;
+            container_main.setCurrent(pa);
             container_main.currentView.render();
         }
         
@@ -91,7 +91,7 @@
         if (container_main.currentViewId != "settings")
         {
             var pa = new view_page({template: "settings", navMatch: "settings", useSidebar: true});
-            container_main.currentView = pa;
+           container_main.setCurrent(pa);
             container_main.currentView.render();
         }
         
@@ -107,6 +107,7 @@
 
     
         var pa = new view_register({needLogin: false});
+        container_main.setCurrent(pa);
         pa.render();
         //console.log("navMatch1:"+pa.options.navMatch);
      
@@ -122,7 +123,7 @@
         
         if (charmeUser != null)
         {
-            container_main.currentView = pa;
+            container_main.setCurrent(pa);
             container_main.currentView.render();
         }
         else
@@ -141,7 +142,7 @@
         if (container_main.currentViewId != "stream")
         {
         console.log("Instantiate ParentView");
-        container_main.currentView = new view_stream({template: "stream", useSidebar: true, navMatch: 'stream'});
+        container_main.setCurrent(new view_stream({template: "stream", useSidebar: true, navMatch: 'stream'}));
         }
 
    
@@ -162,7 +163,7 @@
         {
             console.log("CREATE NEW PARENT VIEW");
         console.log("Instantiate ParentView : User");
-        container_main.currentView = new view_profilepage({userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'});
+        container_main.setCurrent(new view_profilepage({userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'}));
         }
 
         if (id2 == null)

@@ -1,17 +1,19 @@
 <?php
 namespace App\TestComponent;
 
-use App;
+//use App; //If not added, then new App\Users\UserRegistration("") will not load
 
-class Testbench  //extends \MyLibrary\MyComponent\MyClass
+class Testbench implements \App\Models\Action
 {
 	function __construct()
 	{
 		echo "test ok";
+		//$helloWorld = new App\Users\UserRegistration("");
+
 	} 
-	function getHTTML($r)
+	function execute($r)
 	{
-		return ";";
+	return "";
 	}
 }
 
