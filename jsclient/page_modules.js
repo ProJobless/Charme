@@ -355,7 +355,8 @@ $("#box_errors").hide();
 	{
 
 		var s = $("#form_signup").serialize();
-		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?d='+s+'&callback=?';
+	
+		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?'+s+'&callback=?';
 		console.log("Loading JSON: "+u);
 		$.ajax({
 		  dataType: "jsonp",
@@ -364,7 +365,8 @@ $("#box_errors").hide();
 		  success: function(data) {
 		  	console.log(data);
 		  	if (data.error != null)
-		  	{
+		  	{	
+		  		$("#box_errors").hide();
 		  		$("#box_errors").show();
 		  		$("#error"+data.error).show();
 		  		// TODO: Scroll to bottom to make show errors are shown
@@ -373,6 +375,7 @@ $("#box_errors").hide();
 		  	else if (data.success == 1)
 		  		 location.replace('#signup_success');
 
+		  
 		  }
 		});
 
@@ -395,7 +398,7 @@ $("#box_errors").hide();
   $("#but_makecert").text("Please Wait...");
 worker.onmessage = function(e) {
     
-	
+	console.log(e.data)
 
 	var certificate={version:1,rsa:e.data};
 
@@ -413,9 +416,11 @@ worker.onmessage = function(e) {
 
 
 
-var tt  = sjcl.encrypt(passphrase, JSON.stringify(certificate));
+	var tt  = sjcl.encrypt(passphrase, JSON.stringify(certificate));
 
-
+	var pub = {"n": e.data.n, "e" : e.data.e};
+	console.log(JSON.stringify(pub));
+  	$("#pubkey").val(JSON.stringify(pub));
 
 
 

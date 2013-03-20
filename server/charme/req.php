@@ -31,7 +31,13 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
 
-$data = json_decode($_GET["d"]);
+
+if (isset($_GET["d"]))
+	$data = json_decode($_GET["d"]);
+else
+	$data = "";
+
+include_once("config.php");
 /*
 	TODO:
 	- Validate User idenity
@@ -61,7 +67,7 @@ switch ($action)
 
 	case "newUser.register":
 		// Return error if: Captcha is false, no name, invalid name/password/email
-		$user = new \App\Users\UserRegistration($data);
+		$user = new \App\Users\UserRegistration();
 		echo $user->execute();
 	
 
