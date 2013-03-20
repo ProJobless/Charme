@@ -39,12 +39,16 @@ $data = json_decode($_GET["d"]);
 
 */
 
-$action = "newUser.register";
+
 
 // JSON Callback, see http://stackoverflow.com/questions/2822609/invalid-label-firebug-error-with-jquery-getjson
 echo $_GET['callback'].'(';
 
+// Iterate through each request:
 
+
+
+$action = "newUser.register";
 
 switch ($action) 
 {

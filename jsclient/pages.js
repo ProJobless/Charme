@@ -5,7 +5,7 @@ page_authenticated = Backbone.View.extend({
 
 el: '',
 sidebarLoad : false,
-currentView: "",
+currentView: null,
 events: {
 	"click  #button_notifications" : "showNotifications",
 },
@@ -14,10 +14,13 @@ setCurrent : function(obj)
 	if (this.currentView  != null)
 	{
 		console.log(this.currentView);
-		//this.currentView.remove();
-		this.currentView.unbind();
-
-		this.currentView = obj;
+	
+	this.currentView.undelegateEvents();
+	//	this.currentView.remove();
+	//	this.currentView.unbind();
+		//this.delegateEvents();
+	//this.undelegateEvents();
+	
 		console.log("Cleared current view");
 	}
 	this.currentView = obj;

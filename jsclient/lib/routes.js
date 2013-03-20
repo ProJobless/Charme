@@ -147,7 +147,7 @@
 
    
         var vsd =  new view_stream_display({streamId: id, template: "stream_", navMatch: '#nav_'+id});
-        container_main.currentView.setSub(vsd);
+        container_main.currentView.setSub (vsd);
         container_main.currentView.render();
 
     
@@ -232,6 +232,9 @@ $(document).ready(function() {
     if (container_main == null)
      container_main= new page_authenticated({el:'#layout'});
 
+
+    if (isLoggedIn())
+    console.log("is logged in!");
 
     if (isLoggedIn())
         container_main.render();

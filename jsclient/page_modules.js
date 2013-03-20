@@ -10,14 +10,11 @@
 Backbone.View.prototype.close = function(){
 
 
-
-
-  if (this.onClose){
-    this.onClose();
-
-  }
-   this.remove();
-    this.unbind();
+   /* if (this.onClose) {
+        this.onClose();
+    }
+    this.remove();
+    this.undelegateEvents();*/
 }
 
 
@@ -64,7 +61,7 @@ view_page = Backbone.View.extend({
     	{
     		//Problem: #page is removed
     	
-    		this.sub.close();
+    		this.sub.undelegateEvents();
     	}
     	this.sub = s;
 
@@ -177,10 +174,13 @@ view_page = Backbone.View.extend({
 				
 					that.sub.render();
 				}
+				//else
+				{
+					
+					that.delegateEvents();
+				}
+				//console.log("delegateEvents() in view");
 				
-				console.log("delegateEvents() in view");
-				that.delegateEvents();
-				//that.delegateEvents();
 		
 
 
@@ -249,16 +249,18 @@ view_subpage = Backbone.View.extend({
 	
 
 				console.log(that.$el);
-				// Problem: Selector may be okay, but element may have changed
-				$(that.$el.selector).html(template);
+
+				// Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
+				$(that.$el.selector).html(template);//that.$el.selector
 				
 			
 				if (this.postRender != null)
 					this.postRender();
 
 				// important:!!
-				console.log("delegateEvents() in subView");
+				//	that.undelegateEvents();
 				that.delegateEvents();
+				
 
 
 
@@ -336,8 +338,22 @@ var view_register = view_page.extend({
 		"click  #but_makecert" : "makecert",
 		"click  #but_signupok" : "signup"
 	},
+	initialize: function()
+	{
+;
+},
+
+
+	postRender: function(){
+		setSCHeight();
+		console.log("set talks height");
+$("#box_errors div").hide();
+$("#box_errors").hide();
+	}
+,
 	signup: function()
 	{
+
 		var s = $("#form_signup").serialize();
 		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?d='+s+'&callback=?';
 		console.log("Loading JSON: "+u);
@@ -347,6 +363,15 @@ var view_register = view_page.extend({
 		  data: "",
 		  success: function(data) {
 		  	console.log(data);
+		  	if (data.error != null)
+		  	{
+		  		$("#box_errors").show();
+		  		$("#error"+data.error).show();
+		  		// TODO: Scroll to bottom to make show errors are shown
+		  		$(window).scrollTop(999999);
+		  	}
+		  	else if (data.success == 1)
+		  		 location.replace('#signup_success');
 
 		  }
 		});

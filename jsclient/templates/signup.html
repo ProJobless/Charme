@@ -10,6 +10,9 @@ and make sure it matches with server Validation
 
 <div style='background-color:#fff; padding:32px'>
 	
+		<div class='infobox' style='margin: 0; margin-top:0px; margin-bottom:32px'>
+WARNING: This is Charme Beta. Do not provide any personal or private data. This is for testing purposes only!
+		</div>
 <form id='form_signup'>
 	<div class='formDiv'><div>
 	<label for="vorn">Username:</label> <input name='username' style='width:150px'  placeholder="username" class='box'> @ <input  name='server'  style='width:150px' value='server.local' id='inp_server' placeholder="yourserver.com" class='box'> 
@@ -19,7 +22,7 @@ and make sure it matches with server Validation
 
 
 	<div>
-	<label for="vorn">Registration Code:</label><input  style='width:150px; margin-bottom:8px;'  placeholder="XXXXXXXXXXX" class='box'>
+	<label for="vorn">Registration Code:</label><input  style='width:150px; margin-bottom:8px;' name='regcode'  placeholder="XXXXXXXXXXX" class='box'>
 	</div>
 	</div>
 	<label for="vorn">Certificate:</label> 
@@ -29,7 +32,7 @@ and make sure it matches with server Validation
 
 
 	<div id='template_certhint'>
-	Certificates are needed for encrypted communication. Certificate Creation may take a while. We strongly recommend Chrome for using Charme (It is about 30 times faster than Firefox for doing our encryption algorithms)<br><br>
+	Certificates are needed for encrypted communication. Certificate Creation may take a while. We strongly recommend Google Chrome for using Charme (It is about 30 times faster than Firefox at doing our encryption algorithms).<br><br>
 
 
 	<a id='but_makecert' class='button'>Create certificate</a>
@@ -39,18 +42,16 @@ and make sure it matches with server Validation
 
 
 	Your certificate Key is: 
+
+	<!-- Do not change this div to an input field as it should be ignored by jQuerys form serializer. The certificate key is not allowed to be submitted to the server!!!!!!! -->
 	<div style='padding:16px; margin:16px 0; border:2px maroon solid; font-family: Consolas;' id='template_certkey'>Error creating key
 	</div>
-	<input type='hidden' id='certkey'  value=''>
 
 
 
+	<b>Warning: The Certificate Key can not be restored. Write it down on paper somewhere and make sure nobody but you can find it. If you loose the Certificate Key you loose your account forever!</b>
 
-	<b>Warning: The Certificate Key can not be restored. Write it down on paper somewhere and make sure nobody but you can find it. If you loose the Certificate Key you loose your account!</b>
 
-	<br>
-	<br>
-	Raw Certificate:<br><br>
 	<input name='rsa' id='rsa' type='hidden' value=''>
 
 
@@ -59,15 +60,15 @@ and make sure it matches with server Validation
 
 
 	<div class='formDiv'><div>
-	<label for="vorn">First Name:</label> <input placeholder="" class='box'>
+	<label for="vorn">First Name:</label> <input placeholder="" name='firstname' class='box'>
 	</div><div>
-	<label for="vorn">Last Name: </label> <input placeholder="" class='box'>
+	<label for="vorn">Last Name: </label> <input placeholder="" class='box' name='lastname'>
 	</div><div>
-	<label for="vorn">Email:</label>  <input placeholder="" class='box'>
+	<label for="vorn">Email:</label>  <input placeholder="" class='box' name='email'>
 	</div><div>
-	<label for="vorn">Password: </label> <input placeholder="" type='password' class='box'>
+	<label for="vorn">Password: </label> <input placeholder="" type='password' class='box' name='password'>
 	</div><div>
-	<label for="vorn">Repeat Password:</label>  <input placeholder=""  type='password'  class='box'>
+	<label for="vorn">Repeat Password:</label>  <input placeholder=""  type='password'  class='box' name='password2'>
 	</div>
 	<div>
 		<label for="vorn">&nbsp;</label><a id='but_signupok' class='button'>Submit</a>
@@ -75,7 +76,7 @@ and make sure it matches with server Validation
 
 	</div>
 
-	<div class='infobox' style='margin: 0; margin-top:16px; marign-bottom:0'>
+	<div class='infobox' id='box_errors' style='margin: 0; margin-top:16px; marign-bottom:0'>
 
 	<div id='error1'>Invalid Registration Code</div>
 	<div  id='error2'>Invalid characters in username</div>
@@ -90,7 +91,7 @@ and make sure it matches with server Validation
 	<div id='error8'>Invalid server</div>
 
 	<div  id='error9'>Name must have between 2 and 30 characters and should not contain special characters</div>
-
+<div  id='error12'>Password do not match</div>
 	<div  id='error10'>Please accept the terms.</div>
 	<div  id='error11'>Outdated Charme Client Version. Please update your client software.</div>
 	</form>
