@@ -156,7 +156,7 @@ view_page = Backbone.View.extend({
 			var that = this;
 
 
-			$.post("templates/"+this.options.template+".html", function (d)
+			$.get("templates/"+this.options.template+".html", function (d)
 			{
 			
 				var templateData = that.getData();
@@ -229,7 +229,7 @@ view_subpage = Backbone.View.extend({
 		
 
 
-		$.post("templates/"+this.options.template+".html", function (d)
+		$.get("templates/"+this.options.template+".html", function (d)
 		{
 
 				var templateData = {};

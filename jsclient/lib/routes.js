@@ -2,6 +2,30 @@
 // A tutorial about routers in backbone.js can be found on http://backbonetutorials.com/what-is-a-router/
 
 
+    // Start Backbone history a necessary step for bookmarkable URL's
+
+
+var container_guest = new page_login();
+var container_main ;
+
+$(function(){
+
+ 
+
+    if (container_main == null)
+     container_main= new page_authenticated({el:'#layout'});
+
+
+    if (isLoggedIn())
+    console.log("is logged in!");
+
+    if (isLoggedIn())
+        container_main.render();
+    else
+        container_guest.render();
+
+
+
  var AppRouter = Backbone.Router.extend({
         routes: {
 
@@ -219,30 +243,10 @@
         location.replace('#stream');
 
     });
-    // Start Backbone history a necessary step for bookmarkable URL's
 
-
-var container_guest = new page_login();
-var container_main ;
-
-$(document).ready(function() {
-
-
-
-    if (container_main == null)
-     container_main= new page_authenticated({el:'#layout'});
-
-
-    if (isLoggedIn())
-    console.log("is logged in!");
-
-    if (isLoggedIn())
-        container_main.render();
-    else
-        container_guest.render();
-
-
-    Backbone.history.start();
+    if (!Backbone.History.started) {
+            Backbone.history.start();
+        }
 
     // Mouse Down effect for icons above main navigation
     $(".actionBar a").mousedown(function(){
@@ -257,6 +261,8 @@ $(document).ready(function() {
         $(this).css("background-position",x+"px -0px");
         
     });
+
+
 
 
 

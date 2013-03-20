@@ -1,3 +1,5 @@
+
+
 var myUserIdRaw = "manu%40localhost";
 var myUserId = "manu@localhost";
 
@@ -314,7 +316,7 @@ page_login = Backbone.View.extend({
 
  
     initialize: function(){
-
+    console.log("guest container render");
     },
      render: function(){
 
