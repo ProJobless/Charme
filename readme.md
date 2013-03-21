@@ -11,7 +11,7 @@ Charme is a distributed and open source social network. In contrast to classic s
     </tr>
 
     <tr>
-        <td>/web</td>
+        <td>/web (deprecated)</td>
         <td>Files of the old version.</td>
 
     </tr>
@@ -39,6 +39,21 @@ Charme is a distributed and open source social network. In contrast to classic s
         <td>Server for Encrypted Communication</td>
 
     </tr>
+    
+## Installation
 
+  * Install PHP
+  * Make sure short_open_tag is set to true in php.ini, otherwise 
+    PHP will not parse php files. 
+  *  Make sure curl is enabled in php.ini
+  * Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
+  *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files within the /web directory on your server.
+  * Protect /admin with a .htaccess file
+  * Edit config.php. Set a network ID. To be comptible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt (aka: Doing no bullshit with your server) when joining networks starting with CHARME.
+
+## Version
+
+Warning: This version is for preview puposes only. This version is NOT stable and misses essential functions like form validation
+We plan to release a stable version by summer 2014.
 
 </table>
