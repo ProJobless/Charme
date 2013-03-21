@@ -72,8 +72,8 @@ switch ($action)
 
 		$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"]), "password"=>$p2), array('userid', "rsa"));
 
-		if ($cursor["userid"]==urldecode($_GET["u"]))
-			$stat = "OK";
+		if ($cursor["userid"]==urldecode($_GET["u"]) && $cursor["userid"] != "")
+			$stat = "PASS";
 		else
 			$stat = "FAIL";
 

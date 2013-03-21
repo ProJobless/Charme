@@ -344,10 +344,10 @@ function login()
           url: url,
           data: "",
           success: function(data) {
-            console.log("logged in and received:"+data.status);
+            console.log("logged in and received:"+data.status+" on url "+url);
           //  console.log(data);
 
-            if (data.status == "OK")
+            if (data.status == "PASS")
             {
                 
 
@@ -385,7 +385,7 @@ function login()
 
 
                 } catch(e) {
-                  alert("Can't decrypt RSA Key");
+                  alert("Can't decrypt RSA Key (Wrong passphrase?)");
                   return;
                  }
 
