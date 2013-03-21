@@ -48,8 +48,14 @@ $(function(){
 
             "lists" : "getLists",
             "lists/:id" : "getLists",
+            
+            "welcome" : "getWelcome",
 
             ":id" : "getPage",
+
+
+
+
 
           
 
@@ -155,6 +161,24 @@ $(function(){
         //console.log("navMatch1:"+pa.options.navMatch);
      
     });
+
+app_router.on('route:getWelcome', function (id) {
+
+
+
+        var pa = new view_welcome({template: "welcome",  needLogin: false});
+        
+        if (charmeUser != null)
+        {
+            container_main.setCurrent(pa);
+            container_main.currentView.render();
+        }
+        else
+            pa.render();
+
+     
+    });
+
 
     app_router.on('route:getStream', function (id) {
         if (id == undefined)
@@ -269,6 +293,8 @@ $(function(){
 
 });
 
+var charme_private_rsakey = null;
+
 
 function login()
 {
@@ -286,29 +312,101 @@ function login()
         {$('#login_error').show();
         $('#login_user').focus().select();}
         if (d==2)
-        $("#welcome_main").fadeOut(0, function(){
+        
   
 
-        var uid = $("#login_user").val();
-        charmeUser = new apl_user(uid); 
+     
+        charmeUser = new apl_user(u); 
 
-
-         container_main.render();
-            location.href="#stream";
-
-
-         
-
-           
-      
-           
-        });
-    
 
         
-    //  });
-    
-    
+/*
+        var passphrase = "";
+        if (localStorage.getItem("!user_"+u) == null)
+        {
+
+               // also ask for certificate
+               passphrase =prompt("Please enter your passphrase","");
+               // localStorage.setItem("!user_"+u);
+
+        }
+*/
+
+
+        // TODO: Change server.local to user id val
+        var url = 'http://server.local/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
+
+
+
+        // always load certificate...
+         $.ajax({
+          dataType: "jsonp",
+          url: url,
+          data: "",
+          success: function(data) {
+            console.log("logged in and received:"+data.status);
+          //  console.log(data);
+
+            if (data.status == "OK")
+            {
+                
+
+                var passphrase = "";
+                if (localStorage.getItem("!user_"+u) == null)
+                {
+
+                   // also ask for certificate
+                   passphrase =prompt("Please enter your passphrase","4KuOzJknRDIW3lU2d5ED");
+                   // localStorage.setItem("!user_"+u);
+
+                   //charme_private_rsakey
+
+                }
+                else
+                {
+                    // Decrpyt stored item with password.
+
+                }
+                console.log("TO DECRYPT:");
+                console.log(data.rsa);
+                try {
+                    
+                    var tt  = sjcl.decrypt(passphrase, (data.rsa));
+                    //v.plaintext = sjcl.decrypt(passphrase, ciphertext, {}, rp);
+                    console.log("decrpyted rsa key is:");
+                    charme_private_rsakey = tt;
+
+                    // Success! -> Login!
+
+                     $("#welcome_main").fadeOut(0, function(){
+                     container_main.render();
+                        location.href="#stream";
+                            });
+
+
+                } catch(e) {
+                  alert("Can't decrypt RSA Key");
+                  return;
+                 }
+
+
+                
+              
+
+                console.log(tt);
+
+            }
+
+/*
+*  ON SUCCESS
+*
+
+*/
+
+
+            // decrpyt certificate with passphrase
+          }});
+
 
 }
 function LoadSimplePage(pageName)

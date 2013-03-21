@@ -314,30 +314,19 @@ console.log("el"+ this.el);
 
 page_login = Backbone.View.extend({   
 
- 
+
     initialize: function(){
     console.log("guest container render");
     },
+
+
      render: function(){
 
 
 	$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
 		
-		var u = $('#login_user').focus();
-		$('#login_password').keypress(function(e) {
-
-		   code= (e.keyCode ? e.keyCode : e.which);
-		    if (code == 13)
-		    login();
-
-		});
-		$('#login_user').keypress(function(e) {
-
-		   code= (e.keyCode ? e.keyCode : e.which);
-		    if (code == 13)
-		    $('#login_password').focus().select();
-
-		});
+	
+	
 
 
      }

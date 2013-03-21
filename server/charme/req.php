@@ -54,10 +54,36 @@ echo $_GET['callback'].'(';
 
 
 
-$action = "newUser.register";
+$action =  $_GET['action'];
 
 switch ($action) 
 {
+	case "user.login":
+
+		// Get certificate
+		$col = \App\DB\Get::Collection();
+
+		$p1 = urldecode($_GET["p"]);
+		
+		if (!isset($CHARME_SETTINGS["passwordSalt"]))
+			die("CHARME_SETTINGS NOT INCLUDED");
+
+		$p2 =md5($CHARME_SETTINGS["passwordSalt"].$p1);
+
+		$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"]), "password"=>$p2), array('userid', "rsa"));
+
+		if ($cursor["userid"]==urldecode($_GET["u"]))
+			$stat = "OK";
+		else
+			$stat = "FAIL";
+
+
+		echo  json_encode(array("status" => $stat, "rsa" => $cursor["rsa"], "ret"=>$cursor));
+
+	break;
+
+
+
 	case "newUser.getCaptcha":
 	// Save captcha result temporary
 

@@ -356,7 +356,7 @@ $("#box_errors").hide();
 
 		var s = $("#form_signup").serialize();
 	
-		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?'+s+'&callback=?';
+		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?action=newUser.register&'+s+'&callback=?';
 		console.log("Loading JSON: "+u);
 		$.ajax({
 		  dataType: "jsonp",
@@ -373,9 +373,15 @@ $("#box_errors").hide();
 		  		$(window).scrollTop(999999);
 		  	}
 		  	else if (data.success == 1)
+		  	{
+
+	
+
+
+
 		  		 location.replace('#signup_success');
 
-		  
+		  }
 		  }
 		});
 
@@ -415,7 +421,7 @@ worker.onmessage = function(e) {
         passphrase += possible.charAt(Math.floor(Math.random() * possible.length));
 
 
-
+    // Encrypt certificate with passpharse
 	var tt  = sjcl.encrypt(passphrase, JSON.stringify(certificate));
 
 	var pub = {"n": e.data.n, "e" : e.data.e};
@@ -428,6 +434,8 @@ worker.onmessage = function(e) {
 
     $("#template_certkey").text(passphrase);
    $("#rsa").val(tt);
+
+
 
 
 
@@ -524,6 +532,36 @@ var view_stream_display = view_subpage.extend({
 	}
 
 });
+
+var view_welcome = view_page.extend({
+
+    events: {
+    'keyup #login_password': 'keypass'
+    ,'keypress #login_user': 'keyuser'
+  }
+  ,keyuser: function(e) {
+      code= (e.keyCode ? e.keyCode : e.which);
+		    if (code == 13)
+		    $('#login_password').focus().select();
+  }
+  ,keypass: function(e) {
+      
+
+		code= (e.keyCode ? e.keyCode : e.which);
+		    if (code == 13)
+		    login();
+  },
+
+
+
+	postRender: function(){
+		$('#login_user').focus();
+
+	}
+
+});
+
+
 
 
 var view_talks = view_page.extend({

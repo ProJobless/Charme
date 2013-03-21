@@ -56,12 +56,14 @@ class UserRegistration implements \App\Models\Action
 
 		if ($_GET["password"] != $_GET["password2"])
 			$arr["error"] = 12;
-		else if (strlen($_GET["password"]) < 10 || strlen($_GET["password"]) >30)
+		else if (strlen($_GET["password"]) < 4 || strlen($_GET["password"]) >30)
 			$arr["error"] = 4;
+		else if (strlen($_GET["username"]) < 2 || strlen($_GET["username"]) >30)
+			$arr["error"] = 3;
 		else if ($_GET["rsa"] == "" || !isset($_GET["rsa"] ))
 			$arr["error"] = 6;
 		if ($_GET["pubkey"]  == "") // Has to be tested AFTER rsa key test.
-			$arr["error"] = 12;
+			$arr["error"] = 13;
 		else
 		{
 			// Insert user into database...
@@ -74,7 +76,8 @@ class UserRegistration implements \App\Models\Action
 			"email" => $_GET["email"],
 			"firstname" => $_GET["firstname"],
 			"lastname" =>$_GET["lastname"],
-			"pubKey" => $_GET["pubkey"]
+			"pubKey" => $_GET["pubkey"],
+			"rsa" => $_GET["rsa"]
 		);
 			$col = \App\DB\Get::Collection();
 
