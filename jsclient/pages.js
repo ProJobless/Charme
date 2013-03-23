@@ -271,8 +271,8 @@ console.log("el"+ this.el);
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a> \
 		</div> \
-		 <div style="padding:1px;background-color:#E0E0E0; margin-bottom: 1px;"> \
-		     <input style="width:134px;padding:7px;border:0px; margin:0;" placeholder="Find..." type="text"></div> \
+		 <div style="padding:1px;background-color:#c2c2c2; margin-bottom: 0px;"> \
+		     <input style="width:132px;padding:8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a></div> \
 		    <div class="sbBetaCont"> \
