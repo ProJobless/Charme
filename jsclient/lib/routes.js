@@ -9,6 +9,11 @@ var container_guest = new page_login();
 var container_main ;
 
 $(function(){
+   
+    // FIRST STEP: CHEKC FOR USER SESSION!!!
+    charmeUser = localStorage.getItem("user");
+
+
 
  
 
@@ -313,7 +318,7 @@ function login()
   
 
      
-        charmeUser = new apl_user(u); 
+       
 
 
         
@@ -328,10 +333,10 @@ function login()
 
         }
 */
-
+        var serverurl = u.split("@")[1]
 
         // TODO: Change server.local to user id val
-        var url = 'http://server.local/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
+        var url = 'http://'+serverurl+'/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
 
 
 
@@ -376,10 +381,10 @@ function login()
                     // Success! -> Login!
 
                     // Save PHP Session Key
-                    localStorage.setItem("session", "wert");
-
+                    localStorage.setItem("user", charmeUser);
+                    charmeUser = new apl_user(u); 
                     // Save server
-                    
+
                      $("#welcome_main").fadeOut(0, function(){
                      container_main.render();
                         location.href="#stream";
@@ -423,12 +428,24 @@ function logout()
     main_container = null;
     charmeUser = null;
     location.replace("#welcome");
+    localStorage.removeItem("user");
 
 
 }
 
 function isLoggedIn()
 {
+     if (charmeUser != null)
+        console.log("LOGIN: TRUE");
+    else
+        console.log("LOGIN: FALSE");
+
+
+if (localStorage.getItem("user") == null)
+     console.log("LOGIN: STORAGE: FALSE");
+
+
+
     if (charmeUser != null)
     return true;
     return false;
