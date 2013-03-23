@@ -168,15 +168,12 @@ app_router.on('route:getWelcome', function (id) {
 
         var pa = new view_welcome({template: "welcome",  needLogin: false});
         
-        if (charmeUser != null)
-        {
-            container_main.setCurrent(pa);
-            container_main.currentView.render();
-        }
-        else
-            pa.render();
 
-     
+        container_main.setCurrent(pa);
+        pa.render();
+
+
+
     });
 
 

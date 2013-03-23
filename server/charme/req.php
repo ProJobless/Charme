@@ -107,11 +107,16 @@ switch ($action)
 	break;
 
 	case "profile.get":
-	// Lookup visibility for this user.
+	
+		// Lookup visibility for this user.
 
-	// Always send public profile information
+		// Always send public profile information
 
-	// Send private information if encrypted text found for this user.
+		// Send private information if encrypted text found for this user.
+		$col = \App\DB\Get::Collection();
+		$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"])), array("info", "firstname", "lastname"));
+		echo  json_encode(array("info"=>$cursor));
+
 	break;
 
 	case "profile.followCollection":

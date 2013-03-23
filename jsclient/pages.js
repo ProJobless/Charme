@@ -323,6 +323,7 @@ page_login = Backbone.View.extend({
      render: function(){
 
 
+
 	$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
 		
 	

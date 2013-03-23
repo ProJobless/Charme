@@ -171,7 +171,7 @@ view_page = Backbone.View.extend({
 
 				if (that.sub != null)
 				{
-				
+					if (!that.sub.asyncRenderMode)
 					that.sub.render();
 				}
 				//else
@@ -242,7 +242,7 @@ view_subpage = Backbone.View.extend({
 					_.templateSettings.variable = "rc";
 					
 				}
-		
+				//console.log(templateData);
 
 				var template = _.template(d, templateData); 
 
@@ -483,10 +483,33 @@ var view_profilepage = view_page.extend({
 var view_profilepage_info = view_subpage.extend({
 
 	el: '#page3',
+	reqData: {},
+	asyncRenderMode: true, 
+	canRender: false,
+
+	initialize: function()
+	{
+
+  		var url = 'http://server.local/charme/req.php?u='+encodeURI("ms@server.local")+'&action=profile.get&callback=?';
+
+  		var that = this;
+
+         $.ajax({
+          dataType: "jsonp",
+          url: url,
+          data: "",
+          success: function(data) {
+          	that.reqData = data;
+          	that.render();
+
+          }});
+
+
+	},
 	getData: function()
 	{
-		var templateData = {globaldata : []	};
-	    return templateData;
+
+		return this.reqData;
 	}
 
 });

@@ -2,7 +2,11 @@ Important:
 http://stackoverflow.com/questions/8006458/backbone-js-how-to-perform-garbage-collection-on-parent-views-as-well-as-child
 - subviews and views get more than one event registration!
 
+http://stackoverflow.com/questions/10429648/backbone-js-how-to-unbind-from-events-on-model-remove
 
+
+this.undelegateEvents(); in guest container!!
+(Bug: goto welcome, sign in , welcome, sign in, welcome, then login -> multiple call of login())
 
 
 Pages:
