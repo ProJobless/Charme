@@ -269,7 +269,11 @@ console.log("el"+ this.el);
 
 		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
-		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a></div><ul></ul> \
+		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a> \
+		</div> \
+		 <div style="padding:1px;background-color:#E0E0E0; margin-bottom: 1px;"> \
+		     <input style="width:134px;padding:7px;border:0px; margin:0;" placeholder="Find..." type="text"></div> \
+		<ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a></div> \
 		    <div class="sbBetaCont"> \
 		        <div class="sidebar sbBeta"> \
