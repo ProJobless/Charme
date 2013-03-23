@@ -375,6 +375,11 @@ function login()
 
                     // Success! -> Login!
 
+                    // Save PHP Session Key
+                    localStorage.setItem("session", "wert");
+
+                    // Save server
+                    
                      $("#welcome_main").fadeOut(0, function(){
                      container_main.render();
                         location.href="#stream";

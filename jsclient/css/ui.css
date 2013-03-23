@@ -179,11 +179,13 @@ h1
 {
 
 	font-size:14px;
-	border-bottom:1px silver solid;
+
 	padding:16px 0;
 	margin-top:0;
-	margin-bottom:16px;
-	margin-top:16px;
+	text-transform:   uppercase;
+	color:gray;
+	margin-bottom:8px;
+	margin-top:8px;
 }
 h1:first-child
 {
