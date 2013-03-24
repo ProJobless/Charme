@@ -490,7 +490,23 @@ var view_profilepage_info = view_subpage.extend({
 	initialize: function()
 	{
 
-  		var url = 'http://server.local/charme/req.php?u='+encodeURI("ms@server.local")+'&action=profile.get&callback=?';
+		var that = this;
+		apl_request(
+		    {"requests" : [
+		    {"id" : "profile_get", "profileId" : "ms@server.local"}
+
+		    ]
+		}, function(d){
+
+		 that.reqData = d;
+         that.render();
+        
+
+		});
+
+
+
+  		/*var url = 'http://server.local/charme/req.php?u='+(container_main.currentView.options.userIdRaw)+'&action=profile.get&callback=?';//encodeURI
 
   		var that = this;
 
@@ -502,7 +518,7 @@ var view_profilepage_info = view_subpage.extend({
           	that.reqData = data;
           	that.render();
 
-          }});
+          }});*/
 
 
 	},
@@ -510,6 +526,7 @@ var view_profilepage_info = view_subpage.extend({
 	{
 
 		return this.reqData;
+
 	}
 
 });

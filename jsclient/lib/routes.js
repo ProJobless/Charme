@@ -11,14 +11,20 @@ var container_main ;
 $(function(){
    
     // FIRST STEP: CHEKC FOR USER SESSION!!!
-    charmeUser = localStorage.getItem("user");
+    if ((localStorage.getItem("user") !==  null))
+    charmeUser = new apl_user(localStorage.getItem("user"));
 
 
 
- 
+console.log("USEROBJ");
+ console.log(charmeUser);
 
     if (container_main == null)
      container_main= new page_authenticated({el:'#layout'});
+
+
+    //container_main.userIdURL = charmeUser.userIdURL;
+
 
 
     if (isLoggedIn())
@@ -28,6 +34,7 @@ $(function(){
         container_main.render();
     else
         container_guest.render();
+
 
 
 
@@ -274,19 +281,7 @@ app_router.on('route:getWelcome', function (id) {
             Backbone.history.start();
         }
 
-    // Mouse Down effect for icons above main navigation
-    $(".actionBar a").mousedown(function(){
-    
-        var x = $(this).data("bgpos");
 
-        if (!$(this).hasClass("active"))
-        $(this).css("background-position",x+"px -31px");
-    }).mouseout(function(){
-        var x = $(this).data("bgpos");
-        if (!$(this).hasClass("active"))
-        $(this).css("background-position",x+"px -0px");
-        
-    });
 
 
 
@@ -381,9 +376,10 @@ function login()
                     // Success! -> Login!
 
                     // Save PHP Session Key
-                    localStorage.setItem("user", charmeUser);
+                    localStorage.setItem("user", u);
                     charmeUser = new apl_user(u); 
                     // Save server
+                    container_main.userIdURL = charmeUser.userIdURL;
 
                      $("#welcome_main").fadeOut(0, function(){
                      container_main.render();
@@ -435,15 +431,6 @@ function logout()
 
 function isLoggedIn()
 {
-     if (charmeUser != null)
-        console.log("LOGIN: TRUE");
-    else
-        console.log("LOGIN: FALSE");
-
-
-if (localStorage.getItem("user") == null)
-     console.log("LOGIN: STORAGE: FALSE");
-
 
 
     if (charmeUser != null)

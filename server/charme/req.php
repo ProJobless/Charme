@@ -33,9 +33,9 @@ $loader->register();
 
 
 if (isset($_GET["d"]))
-	$data = json_decode($_GET["d"]);
+	$data = (json_decode($_GET["d"], true));
 else
-	$data = "";
+	$data = array();
 
 include_once("config.php");
 /*
@@ -47,100 +47,105 @@ include_once("config.php");
 
 
 
+
 // JSON Callback, see http://stackoverflow.com/questions/2822609/invalid-label-firebug-error-with-jquery-getjson
 echo $_GET['callback'].'(';
 
 // Iterate through each request:
 
+$returnArray = array();
 
-
-$action =  $_GET['action'];
-
-switch ($action) 
+foreach ($data["requests"] as $item)
 {
-	case "user.login":
 
-		// Get certificate
-		$col = \App\DB\Get::Collection();
+	$action = $item["id"];
 
-		$p1 = urldecode($_GET["p"]);
+
+	switch ($action) 
+	{
+		case "user.login":
+
+			// Get certificate
+			$col = \App\DB\Get::Collection();
+
+			$p1 = urldecode($_GET["p"]);
+			
+			if (!isset($CHARME_SETTINGS["passwordSalt"]))
+				die("CHARME_SETTINGS NOT INCLUDED");
+
+			$p2 =md5($CHARME_SETTINGS["passwordSalt"].$p1);
+
+			$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"]), "password"=>$p2), array('userid', "rsa"));
+
+			if ($cursor["userid"]==urldecode($_GET["u"]) && $cursor["userid"] != "")
+				$stat = "PASS";
+			else
+				$stat = "FAIL";
+
+
+			$returnArray[$action] =   (array("status" => $stat, "rsa" => $cursor["rsa"], "ret"=>$cursor));
+
+		break;
+
+
+
+		case "newUser.getCaptcha":
+		// Save captcha result temporary
+
+
+
+		break;
+
+		case "newUser.register":
+			// Return error if: Captcha is false, no name, invalid name/password/email
+			$user = new \App\Users\UserRegistration();
+			echo $user->execute();
 		
-		if (!isset($CHARME_SETTINGS["passwordSalt"]))
-			die("CHARME_SETTINGS NOT INCLUDED");
-
-		$p2 =md5($CHARME_SETTINGS["passwordSalt"].$p1);
-
-		$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"]), "password"=>$p2), array('userid', "rsa"));
-
-		if ($cursor["userid"]==urldecode($_GET["u"]) && $cursor["userid"] != "")
-			$stat = "PASS";
-		else
-			$stat = "FAIL";
 
 
-		echo  json_encode(array("status" => $stat, "rsa" => $cursor["rsa"], "ret"=>$cursor));
+		
+		break;
 
-	break;
+		case "post.spread": 
+		// Notify post owner when sharing a posting
 
+		break;
 
+		case "profile_get":
+		
+			// Lookup visibility for this user.
 
-	case "newUser.getCaptcha":
-	// Save captcha result temporary
+			// Always send public profile information
 
+			// Send private information if encrypted text found for this user.
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> urldecode($item["profileId"])), array("info", "firstname", "lastname"));
+			$returnArray[$action] =   (array("info"=>$cursor));
 
+		break;
 
-	break;
+		case "profile.followCollection":
 
-	case "newUser.register":
-		// Return error if: Captcha is false, no name, invalid name/password/email
-		$user = new \App\Users\UserRegistration();
-		echo $user->execute();
-	
+		break;
 
+		case "message.send":
 
-	
-	break;
+		break;
 
-	case "post.spread": 
-	// Notify post owner when sharing a posting
+		case "info.about":
 
-	break;
+			$ar = array("owner" => "Undefined", "charmeVersion" => "0.0.1");
+		break;
 
-	case "profile.get":
-	
-		// Lookup visibility for this user.
+		case "info.trace":
+			// return 50 of most connected friend servers and amount of registred users on THIS server
 
-		// Always send public profile information
-
-		// Send private information if encrypted text found for this user.
-		$col = \App\DB\Get::Collection();
-		$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"])), array("info", "firstname", "lastname"));
-		echo  json_encode(array("info"=>$cursor));
-
-	break;
-
-	case "profile.followCollection":
-
-	break;
-
-	case "message.send":
-
-	break;
-
-	case "info.about":
-
-		$ar = array("owner" => "Undefined", "charmeVersion" => "0.0.1");
-	break;
-
-	case "info.trace":
-		// return 50 of most connected friend servers and amount of registred users on THIS server
-
-		$ar = array("amount" => 1231, "servers" => array());
-	break;
+			$ar = array("amount" => 1231, "servers" => array());
+		break;
 
 
+	}
 }
-
 
 // This file accepts requests from clients or other servers.
 
@@ -151,7 +156,7 @@ switch ($action)
 
 
 // stream: getPosts(Timestamp, max count), post
-
+echo json_encode($returnArray);
 
 // jQuery Callback end
 echo ')';

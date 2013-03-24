@@ -8,8 +8,10 @@ var charmeUser;
 function apl_user(uid)
 {
 	this.userId = uid;
+	this.userIdURL = encodeURIComponent(uid);
 	this.server = uid.split("@")[1];
-	this.usernmae = uid.split("@")[0];
+	this.username = uid.split("@")[0];
+	this.sessionID = "lalala";
 
 	console.log(this);
 	

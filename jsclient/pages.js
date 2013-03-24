@@ -1,7 +1,6 @@
 
 
-var myUserIdRaw = "manu%40localhost";
-var myUserId = "manu@localhost";
+
 
 page_authenticated = Backbone.View.extend({   
 
@@ -271,8 +270,8 @@ console.log("el"+ this.el);
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a> \
 		</div> \
-		 <div style="padding:1px;background-color:#c2c2c2; margin-bottom: 0px;"> \
-		     <input style="width:132px;padding:8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
+		 <div style="padding:1px;background-color:#c2c2c2; padding-top:0; margin-bottom: 0px;"> \
+		     <input style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a></div> \
 		    <div class="sbBetaCont"> \
@@ -294,12 +293,13 @@ console.log("el"+ this.el);
 		{
 			
 
-			console.log(this.el);
+
+
 			$(this.el).html(str);
 
-		
+		console.log("render main container");
 			$(".sbAlpha ul").append("<li><a data-topic='stream' href='#stream'>Stream</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/"+myUserIdRaw+"'>Profile</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/"+(charmeUser.userIdURL)+"'>Profile</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='talks' href='#talks'>Talks</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='lists' href='#lists' >Lists</a></li>");
 			//$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");
@@ -309,6 +309,20 @@ console.log("el"+ this.el);
 
 	// Set a color scheme (See lib/colors.js for function)
 	setColor("#1A3C87","#000614");
+
+	    // Mouse Down effect for icons above main navigation
+    $(".actionBar a").mousedown(function(){
+    
+        var x = $(this).data("bgpos");
+
+        if (!$(this).hasClass("active"))
+        $(this).css("background-position",x+"px -31px");
+    }).mouseout(function(){
+        var x = $(this).data("bgpos");
+        if (!$(this).hasClass("active"))
+        $(this).css("background-position",x+"px -0px");
+        
+    });
 
      }
      });
