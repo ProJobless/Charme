@@ -39,6 +39,7 @@ Charme is a distributed and open source social network. In contrast to classic s
         <td>Server for Encrypted Communication</td>
 
     </tr>
+    </table>
     
 ## Installation
 
@@ -56,4 +57,4 @@ Charme is a distributed and open source social network. In contrast to classic s
 Warning: This version is for preview puposes only. This version is NOT stable and misses essential functions like form validation
 We plan to release a stable version by summer 2014.
 
-</table>
+
