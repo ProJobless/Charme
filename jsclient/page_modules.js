@@ -254,9 +254,10 @@ view_subpage = Backbone.View.extend({
 				$(that.$el.selector).html(template);//that.$el.selector
 				
 			
-				if (this.postRender != null)
-					this.postRender();
-
+				if (that.postRender != null)
+				{ 
+					that.postRender();
+				}
 				// important:!!
 				//	that.undelegateEvents();
 				that.delegateEvents();
@@ -524,10 +525,14 @@ var view_profilepage_info = view_subpage.extend({
 	},
 	getData: function()
 	{
-
 		return this.reqData;
-
-	}
+	},
+	postRender: function()
+	  {
+	  	// Write username in header
+	  	$(".profile_name").text($("#fld_username").text());
+	  	$("td:empty").parent().remove(); // Remove empty Info fields
+	  }
 
 });
 
@@ -540,6 +545,40 @@ var view_profilepage_info = view_subpage.extend({
 
 var view_settings_sub = view_subpage.extend({
 
+
+ events: {
+    'click #but_saveProfile': 'saveProfile'
+
+  },
+  initialize: function()
+  {
+
+  },
+  saveProfile: function()
+  {
+		var s = $("#settingsform").serializeObject();
+
+		var that = this;
+
+			apl_request(
+			    {"requests" : [
+			    {"id" : "profile_save", "data" : s}
+
+			    ]
+			}, function(d){
+
+
+			alert("OK");
+			 console.log("FORM SAVED AND RETURNED:");
+			 console.log(d);
+
+        
+
+		});
+
+
+
+  },
 
 	getData: function()
 	{

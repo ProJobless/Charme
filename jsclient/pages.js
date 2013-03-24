@@ -14,8 +14,11 @@ setCurrent : function(obj)
 {
 	if (this.currentView  != null)
 	{
-		console.log(this.currentView);
-	
+	console.log(this.currentView);
+
+	// Important, we have to "unregister" events from subViews
+	this.currentView.setSub(null);
+
 	this.currentView.undelegateEvents();
 	//	this.currentView.remove();
 	//	this.currentView.unbind();

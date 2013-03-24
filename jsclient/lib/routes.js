@@ -114,9 +114,9 @@ console.log("USEROBJ");
         }
         
 
-        var vsd =  new view_settings_sub({ template: "talks_", navMatch: '#nav_'+id, el: '#page3'});
-        container_main.currentView.setSub(vsd);
-        container_main.currentView.render();
+        //var vsd =  new view_settings_sub({ template: "talks_", navMatch: '#nav_'+id, el: '#page3'});
+       // container_main.currentView.setSub(vsd);
+       // container_main.currentView.render();
 
      
     });
@@ -328,23 +328,36 @@ function login()
 
         }
 */
-        var serverurl = u.split("@")[1]
+      var serverurl = u.split("@")[1];
 
         // TODO: Change server.local to user id val
-        var url = 'http://'+serverurl+'/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
+       // var url = 'http://'+serverurl+'/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
 
 
 
         // always load certificate...
-         $.ajax({
+      
+      /*   $.ajax({
           dataType: "jsonp",
           url: url,
           data: "",
-          success: function(data) {
-            console.log("logged in and received:"+data.status+" on url "+url);
+          success: function(data) {*/
+
+
+
+    apl_request(
+            {"requests" : [
+            {"id" : "user_login", "u" : u, "p" : p}
+
+            ]
+        }, function(data){
+
+
+console.log(data);
+            console.log("logged in and received:"+data.user_login.status+" on url ");
           //  console.log(data);
 
-            if (data.status == "PASS")
+            if (data.user_login.status == "PASS")
             {
                 
 
@@ -365,10 +378,10 @@ function login()
 
                 }
                 console.log("TO DECRYPT:");
-                console.log(data.rsa);
+                console.log(data.user_login.rsa);
                 try {
                     
-                    var tt  = sjcl.decrypt(passphrase, (data.rsa));
+                    var tt  = sjcl.decrypt(passphrase, (data.user_login.rsa));
                     //v.plaintext = sjcl.decrypt(passphrase, ciphertext, {}, rp);
                     console.log("decrpyted rsa key is:");
                     charme_private_rsakey = tt;
@@ -408,7 +421,7 @@ function login()
 
 
             // decrpyt certificate with passphrase
-          }});
+          }, "", serverurl);
 
 
 }

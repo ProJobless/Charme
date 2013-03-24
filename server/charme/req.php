@@ -63,21 +63,21 @@ foreach ($data["requests"] as $item)
 
 	switch ($action) 
 	{
-		case "user.login":
+		case "user_login":
 
 			// Get certificate
 			$col = \App\DB\Get::Collection();
 
-			$p1 = urldecode($_GET["p"]);
+			$p1 = $item["p"];
 			
 			if (!isset($CHARME_SETTINGS["passwordSalt"]))
 				die("CHARME_SETTINGS NOT INCLUDED");
 
 			$p2 =md5($CHARME_SETTINGS["passwordSalt"].$p1);
 
-			$cursor = $col->users->findOne(array("userid"=> urldecode($_GET["u"]), "password"=>$p2), array('userid', "rsa"));
+			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p2), array('userid', "rsa"));
 
-			if ($cursor["userid"]==urldecode($_GET["u"]) && $cursor["userid"] != "")
+			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 				$stat = "PASS";
 			else
 				$stat = "FAIL";
@@ -119,14 +119,31 @@ foreach ($data["requests"] as $item)
 
 			// Send private information if encrypted text found for this user.
 			$col = \App\DB\Get::Collection();
-			$cursor = $col->users->findOne(array("userid"=> urldecode($item["profileId"])), array("info", "firstname", "lastname"));
+			$cursor = $col->users->findOne(array("userid"=> urldecode($item["profileId"])), array("userid", "hometown", "about", "gender", "literature", "music", "movies", "hobbies", "firstname", "lastname"));
 			$returnArray[$action] =   (array("info"=>$cursor));
 
 		break;
 
-		case "profile.followCollection":
+		case "profile_save":
+			$cols = \App\DB\Get::Collection();
 
+			//$item["data"]
+
+			// Filter out possible SPAM fields
+			$item["data"] = (array_intersect_key($item["data"] , array_flip(array("hometown", "about", "gender", "literature", "music", "movies", "hobbies"))));
+
+			// Perform update
+			$cols->users->update(array("userid" => "ms@server.local"),	array('$set' => $item["data"]));
+
+			$returnArray[$action] = array("STATUS" => "OK");
+			// TODO: Validation!!
 		break;
+
+		case "profile_passwordchange":
+			$col = \App\DB\Get::Collection();
+			// TODO: Validation!!
+		break;
+
 
 		case "message.send":
 

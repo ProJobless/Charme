@@ -1,10 +1,10 @@
 .msgItems li a
 {
-border-bottom:1px silver solid;
+
 background-color: #efefef;
 display: block;
 padding: 16px;
-
+border-bottom:1px #fff solid;
 
 }
 .msgItems li a:active, .msgItems li.active  a

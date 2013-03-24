@@ -2,10 +2,11 @@
 		<div class='p32'>
 			<div class='aboutContainer' style='margin-right:32px'>
 				<div class='aboutBox'>
-					<div class='title'>Personal Information</div>
+					<div class='title'>Account</div>
 					<table>
-						<tr><td class='info'>Name:</td><td><%- rc.profile_get.info.firstname %> <%- rc.profile_get.info.lastname %></td></tr>
-
+						<tr><td class='info'>Name:</td><td id='fld_username'><%- rc.profile_get.info.firstname %> <%- rc.profile_get.info.lastname %></td></tr>
+<tr><td class='info'>Hometown:</td><td><%- rc.profile_get.info.hometown %></td></tr>
+<tr><td class='info'>Charme ID:</td><td><%- rc.profile_get.info.userid %></td></tr>
 					</table>
 				</div>
 			</div>
@@ -14,8 +15,14 @@
 				<div class='aboutBox'>
 					<div class='title'>Personal Information</div>
 					<table>
-
+						<tr><td class='info'>About:</td><td><%- rc.profile_get.info.about %></td></tr>
+						<tr><td class='info'>Hobbies:</td><td><%- rc.profile_get.info.hobbies %></td></tr>
+<tr><td class='info'>Literature:</td><td><%- rc.profile_get.info.literature %></td></tr>
+<tr><td class='info'>Books:</td><td><%- rc.profile_get.info.music %></td></tr>
+<tr><td class='info'>Music:</td><td><%- rc.profile_get.info.movies %></td></tr>
 					</table>
+
+
 				</div>
 			</div>
 
