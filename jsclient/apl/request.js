@@ -14,25 +14,47 @@ function apl_request(requests, callback, ses,srv)
 
 
 	// TIPP: http://stackoverflow.com/questions/15047279/how-can-i-retrieve-json-stringified-objects-in-php
-	var url1 = "http://"+srv+"/charme/req.php?d="+encodeURIComponent(JSON.stringify(requests))+ "&session="+ses+"&callback=?";
+	var url1 = "http://"+srv+"/charme/req.php?session="+ses+"";
 
-	console.log("GOT THIS:");
-	console.log(url1);
 
 	$.ajax({
-			  dataType: "jsonp",
-			  url: url1,
+	//  dataType: "json", // before: jsonp, post works only with CORS
+	  url: url1,
+	
 
-			  success: function(data) {
+	type: "POST",
+
+    data: {d:JSON.stringify(requests), test: "test"},
+    dataType: "json",
+
+    crossDomain : true,
 
 
-	if(callback != undefined && typeof callback == 'function') 
-	{
-		if (data.logout == true)
-			logout();!
 
-		callback(data);
-	}
+
+	  error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+      },
+	  success: function(data) {
+
+
+
+		console.log("GOT THIS:");
+		console.log(data);
+		console.log("on:"+url1);
+
+
+		if(callback != undefined && typeof callback == 'function') 
+		{
+			if (data.ERROR == 1)
+			{
+				alert("Server Session expired. Perform logout.");
+				logout();
+			}
+			callback(data);
+		}
+
 	}});
 
 

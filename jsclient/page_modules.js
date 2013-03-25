@@ -547,13 +547,66 @@ var view_settings_sub = view_subpage.extend({
 
 
  events: {
-    'click #but_saveProfile': 'saveProfile'
+    'click #but_saveProfile': 'saveProfile',
+    'click #but_saveImage': 'saveImage',
+    'change #profileImgFileUp' : 'fileChanged'
+
+
+
+
 
   },
   initialize: function()
   {
 
   },
+   saveImage: function()
+   {
+   
+   	alert($('#profileImgFileUp').data("filecontent").result.length);
+   		apl_request(
+			    {"requests" : [
+			    {"id" : "profile_imagechange", "data" : $('#profileImgFileUp').data("filecontent").result}
+
+			    ]
+			}, function(d){
+
+
+			alert("IMAGE SAVED");
+			 console.log(d);
+	
+
+        
+
+		});
+
+
+
+  		//console.log();
+
+   },
+   fileChanged: function(h)
+   {
+		
+		var files = h.target.files; // FileList object
+		//var output = [];
+		// atid = $(x).attr('id'); // ID of attachment container
+
+
+
+		var reader = new FileReader();
+		reader.file = files[0]; //http://stackoverflow.com/questions/4404361/html5-file-api-get-file-object-within-filereader-callback
+
+		reader.onload = function(e) {
+		  //  $('#attachments'+atid).append("<div><a  class='delete' style='float:right' onclick='delAttachment(this)'> </a>"+ escape(this.file.name)+ "</div>");
+			$('#profileImgFileUp').data("filecontent", this);
+
+	    }
+	    reader.readAsDataURL(reader.file) ;
+
+
+
+   },
   saveProfile: function()
   {
 		var s = $("#settingsform").serializeObject();
@@ -584,6 +637,11 @@ var view_settings_sub = view_subpage.extend({
 	{
 		var templateData = {globaldata : []	};
 	    return templateData;
+	},
+	postRender: function()
+	{
+	
+
 	}
 
 });

@@ -1,9 +1,53 @@
 <?php
 header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Content-type: application/json');
 
 
+// Disabled, because of jquery post
+//header('Content-type: application/json');
+
+
+// Enable CORS? May be useful in the future; See http://enable-cors.org/server_php.html
+// header("Access-Control-Allow-Origin: *");
+// See also:
+
+/*
+
+Developers, read this about CORS first:
+
+http://stackoverflow.com/questions/298745/how-do-i-send-a-cross-domain-post-request-via-javascript
+http://stackoverflow.com/questions/5584923/a-cors-post-request-works-from-plain-javascript-but-why-not-with-jquery
+
+*/
+
+/*
+if (isset($_SERVER['REMOTE_HOST']))
+$host = $_SERVER['REMOTE_HOST'];
+else
+$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+
+
+	switch ($host) {
+	   case 'client.local' :
+	    case 'server.local': 
+	    case 'http://charmeproject.com': case 'http://client.charmeproject.com':  // Only allow trusted clients
+	   // header('Access-Control-Allow-Origin: '.$host);
+
+
+	    break;
+	}
+*/
+
+// https://developer.mozilla.org/en-US/docs/HTTP/Access_control_CORS#Access-Control-Allow-Origin
+header('Access-Control-Allow-Origin: http://client.local');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
+header('Access-Control-Max-Age: 1000');
+header('Access-Control-Allow-Headers: Content-Type');
+
+
+
+
+session_start();
 /**
  * req.php
  * Parses incoming client requests
@@ -32,10 +76,13 @@ $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
 
 
-if (isset($_GET["d"]))
-	$data = (json_decode($_GET["d"], true));
+if (isset($_POST["d"]))
+	$data = (json_decode($_POST["d"], true));
 else
 	$data = array();
+
+
+
 
 include_once("config.php");
 /*
@@ -48,10 +95,7 @@ include_once("config.php");
 
 
 
-// JSON Callback, see http://stackoverflow.com/questions/2822609/invalid-label-firebug-error-with-jquery-getjson
-echo $_GET['callback'].'(';
-
-// Iterate through each request:
+// JSON (we use now) does not need callback, JSONP needs Callback, see http://stackoverflow.com/questions/2822609/invalid-label-firebug-error-with-jquery-getjson
 
 $returnArray = array();
 
@@ -66,6 +110,8 @@ foreach ($data["requests"] as $item)
 		case "user_login":
 
 			// Get certificate
+
+
 			$col = \App\DB\Get::Collection();
 
 			$p1 = $item["p"];
@@ -78,7 +124,11 @@ foreach ($data["requests"] as $item)
 			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p2), array('userid', "rsa"));
 
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
+			{
+				
+				$_SESSION["charme_userid"] = $cursor["userid"];
 				$stat = "PASS";
+			}
 			else
 				$stat = "FAIL";
 
@@ -106,6 +156,25 @@ foreach ($data["requests"] as $item)
 		
 		break;
 
+		case "profile_imagechange": 
+			//$_SESSION["charme_userid"], $item["data"]
+
+			include_once("/3rdparty/wideimage/WideImage.php");
+
+			
+			$col = \App\DB\Get::Collection();
+			$image = WideImage::load($item["data"]);
+
+			$grid = $col->getGridFS();
+			$grid->remove(array("fname" => $_SESSION["charme_userid"], "type" => "profileimage"));
+			$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 50)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"]));
+
+			$returnArray[$action] = array("SUCCESS" => true);
+
+
+		break;
+
+
 		case "post.spread": 
 		// Notify post owner when sharing a posting
 
@@ -127,13 +196,26 @@ foreach ($data["requests"] as $item)
 		case "profile_save":
 			$cols = \App\DB\Get::Collection();
 
+			if (!isset($_SESSION["charme_userid"])){
+				$returnArray = array("ERROR" => 1);
+				break; // echo error
+			}
 			//$item["data"]
 
+			// Change Password!...
+			if (isset($item["password"]) && $item["password"] != "")
+			{
+				if ($item["password"] == $item["password2"])
+				{
+					// $item["oldpassword"] == ...
+				}
+
+			}
 			// Filter out possible SPAM fields
 			$item["data"] = (array_intersect_key($item["data"] , array_flip(array("hometown", "about", "gender", "literature", "music", "movies", "hobbies"))));
 
 			// Perform update
-			$cols->users->update(array("userid" => "ms@server.local"),	array('$set' => $item["data"]));
+			$cols->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => $item["data"]));
 
 			$returnArray[$action] = array("STATUS" => "OK");
 			// TODO: Validation!!
@@ -175,7 +257,5 @@ foreach ($data["requests"] as $item)
 // stream: getPosts(Timestamp, max count), post
 echo json_encode($returnArray);
 
-// jQuery Callback end
-echo ')';
 
 ?>
