@@ -498,7 +498,7 @@ var view_profilepage_info = view_subpage.extend({
 
 		    ]
 		}, function(d){
-
+			alert(d);
 		 that.reqData = d;
          that.render();
         
