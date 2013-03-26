@@ -5,7 +5,21 @@ self.onmessage = function(e) {
  var rsa = new RSAKey();
  rsa.generate(parseInt(1024),"10001");
 
- self.postMessage(rsa);
+//console.log(rsa);
+
+
+ self.postMessage(
+
+ 	{n: rsa.n.toString(16),
+ 	 e: rsa.e.toString(16),
+	 d: rsa.d.toString(16),
+	 p: rsa.p.toString(16),
+	 q: rsa.q.toString(16),
+	 dmp1: rsa.dmp1.toString(16),
+	 dmq1: rsa.dmq1.toString(16),
+	 coeff: rsa.coeff.toString(16),
+
+ });
 
 };
 

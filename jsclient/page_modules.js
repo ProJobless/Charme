@@ -517,11 +517,21 @@ $("#box_errors").hide();
 
   var worker = new Worker("lib/crypto/thread_makeSignature.js");
   $("#but_makecert").text("Please Wait...");
+
+
+//alert(rsa.n.toString(16));
+
+
 worker.onmessage = function(e) {
     
-	console.log(e.data)
+	console.log(e.data);
 
-	var certificate={version:1,rsa:e.data};
+
+	// 
+
+	//alert(e.data.n.toString());
+
+	var certificate={version:1,rsa:{n: e.data.n.toString() }};
 
 
 
@@ -536,11 +546,14 @@ worker.onmessage = function(e) {
         passphrase += possible.charAt(Math.floor(Math.random() * possible.length));
 
 
+
+
+
     // Encrypt certificate with passpharse
 	var tt  = sjcl.encrypt(passphrase, JSON.stringify(certificate));
 
 	var pub = {"n": e.data.n, "e" : e.data.e};
-	console.log(JSON.stringify(pub));
+
   	$("#pubkey").val(JSON.stringify(pub));
 
 
