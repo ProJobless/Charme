@@ -109,9 +109,45 @@ foreach ($data["requests"] as $item)
 	{
 		case "profile_pubKey":
 			$col = \App\DB\Get::Collection();
-			$cursor = $col->users->findOne(array("userid"=> ($item["u"])), array('pubKey'));
+			$cursor = $col->users->findOne(array("userid"=> ($item["profileId"])), array('pubKey'));
 			$returnArray[$action] = $cursor["pubKey"];
 		break;
+
+		case "message_register":
+			//
+			$col = \App\DB\Get::Collection();
+			$col->messages->insert(
+				array("receivers"=> ($item["receiver"]),
+					"sender"=> ($item["sender"]),
+					"encMessage"=> ($item["message"])
+
+					));
+
+		break;
+
+		case "message_distribute":
+			$col = \App\DB\Get::Collection();
+			
+			// Send replica to all receiver servers.
+			
+
+			// TODO : Clustering servers!
+
+			// $item["receivers"] {charmeId, aesEnc}
+
+
+			/*$cursor = $col->messages->insert(
+				array("receivers"=> ($item["receivers"]),
+					"sender"=> ($item["sender"]),
+					"encMessage"=> ($item["encMessage"])
+
+					));*/
+
+
+
+			$returnArray[$action] = array("STATUS" => "OK");
+		break;
+
 
 		case "user_login":
 

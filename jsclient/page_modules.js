@@ -6,6 +6,7 @@
 
 
 
+
 // Extend close function to remove events!
 Backbone.View.prototype.close = function(){
 
@@ -31,10 +32,8 @@ function sendMessageForm(receivers)
 	
 		ui_showBox( template );
 
-			$('.userSelect').each (function(index)
-	{
 		//alert("http://"+charmeUser.server+"/charme/auto.php");
-	$(this).tokenInput([
+	$('#inp_receivers').tokenInput([
                 {id: 7, name: "Ruby"},
                 {id: 11, name: "Python"},
                 {id: 13, name: "JavaScript"},
@@ -48,9 +47,8 @@ function sendMessageForm(receivers)
                 {id: 43, name: "C++"},
                 {id: 47, name: "Java"}
             ], {
-                prePopulate: receivers} );
-	});
-
+                prePopulate: receivers, tokenValue: "id"} );
+	
 
 
 
@@ -60,10 +58,55 @@ function sendMessageForm(receivers)
 function sendMessage()
 {
 	// Get Public key...
+	var all = $('#inp_receivers').val().split(",");	
+	var count = 0;
+	var message = "lorem ipsum";
+	// make random key for hybrid encryption
+	// probably more secure, but how to use?: var randKey  = sjcl.random.randomWords(4, 0);
 
-	// Encrypt with public key
+  	var aeskey = randomAesKey(32);
 
-	// Send...
+	var encMessage = sjcl.encrypt(aeskey, message);
+	var receivers = new Array();
+
+	jQuery.each(all, function() {
+	apl_request(
+		    {"requests" : [
+		    {"id" : "profile_pubKey", "profileId" : this}
+
+		    ]
+		}, function(d1){
+			
+			count++;
+		
+			// Encrypt random key  with public key
+			var pk = d1;
+			console.log(pk);
+ 			var rsa = new RSAKey();
+
+ 			
+			rsa.setPublic(pk.n.value, pk.e.value);
+			// RSA encrypt aes key with pubKey:
+			var aesEnc = rsa.encrypt(aeskey);
+
+ 			receivers.push({charmeId: this, aesEnc: aesEnc});
+
+		
+ 			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
+ 			{
+	 				apl_request(
+			    {"requests" : [
+			    {"id" : "message_distribute", "receivers" : receivers, "encMessage" : encMessage, "sender": charmeUser.userId}
+
+			    ]
+				}, function(d2){
+						alert("Message was send");
+						ui_closeBox();
+				});
+
+ 			}
+		});
+	});
 
 }
 
@@ -528,7 +571,7 @@ var view_profilepage = view_page.extend({
   	sendMsg: function()
   	{
 		sendMessageForm( [
-                    {id: this.options.userId, name: $("#fld_username").text()}
+                    {id: this.options.userId, name: container_main.currentView.username}
                    
                 ]);//
   	},
@@ -591,6 +634,7 @@ var view_profilepage_info = view_subpage.extend({
 	  {
 	  	// Write username in header
 	  	$(".profile_name").text($("#fld_username").text());
+	  	container_main.currentView.username = $("#fld_username").text();
 	  	$("td:empty").parent().remove(); // Remove empty Info fields
 	  }
 
