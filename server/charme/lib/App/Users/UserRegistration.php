@@ -4,10 +4,10 @@ namespace App\Users;
 
 class UserRegistration implements \App\Models\Action
 {
-	
-	function __construct()
+	 private $data;
+	function __construct($d)
 	{
-		//$this->data = json_decode($d);
+		$this->data = ($d);
 
 	} 
 	function execute()
@@ -15,7 +15,7 @@ class UserRegistration implements \App\Models\Action
 		global $CHARME_SETTINGS;
 		// Access Attributes over $_GET[formname]
 	
-		
+		$data = $this->data;
 
 		/*$m = new Mongo();
 		$db = $m->charme;
@@ -25,7 +25,8 @@ class UserRegistration implements \App\Models\Action
 		$collection->insert($obj);
 		*/
 		$arr= array("test" => true);
-	
+		
+
 
 
 		/**
@@ -54,15 +55,15 @@ class UserRegistration implements \App\Models\Action
 		* Validation part:
 		*/
 
-		if ($_GET["password"] != $_GET["password2"])
+		if ($data["password"] != $data["password2"])
 			$arr["error"] = 12;
-		else if (strlen($_GET["password"]) < 4 || strlen($_GET["password"]) >30)
+		else if (strlen($data["password"]) < 4 || strlen($data["password"]) >30)
 			$arr["error"] = 4;
-		else if (strlen($_GET["username"]) < 2 || strlen($_GET["username"]) >30)
+		else if (strlen($data["username"]) < 2 || strlen($data["username"]) >30)
 			$arr["error"] = 3;
-		else if ($_GET["rsa"] == "" || !isset($_GET["rsa"] ))
+		else if ($data["rsa"] == "" || !isset($data["rsa"] ))
 			$arr["error"] = 6;
-		if ($_GET["pubkey"]  == "") // Has to be tested AFTER rsa key test.
+		if ($data["pubkey"]  == "") // Has to be tested AFTER rsa key test.
 			$arr["error"] = 13;
 		else
 		{
@@ -70,14 +71,14 @@ class UserRegistration implements \App\Models\Action
 			$arr["success"] = 1; // Registration was successful!
 			
 			$obj = array(
-			"username" => $_GET["username"],
-			"password"=>md5($CHARME_SETTINGS["passwordSalt"].$_GET["password"]),
-			"userid" => $_GET["username"]."@".$_GET["server"],
-			"email" => $_GET["email"],
-			"firstname" => $_GET["firstname"],
-			"lastname" =>$_GET["lastname"],
-			"pubKey" => $_GET["pubkey"],
-			"rsa" => $_GET["rsa"]
+			"username" => $data["username"],
+			"password"=>md5($CHARME_SETTINGS["passwordSalt"].$data["password"]),
+			"userid" => $data["username"]."@".$data["server"],
+			"email" => $data["email"],
+			"firstname" => $data["firstname"],
+			"lastname" =>$data["lastname"],
+			"pubKey" => $data["pubkey"],
+			"rsa" => $data["rsa"]
 		);
 			$col = \App\DB\Get::Collection();
 
@@ -85,7 +86,7 @@ class UserRegistration implements \App\Models\Action
 		}
 
 
-		return json_encode($arr);
+		return ($arr);
 	}
 }
 

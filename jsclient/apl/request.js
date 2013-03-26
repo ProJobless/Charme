@@ -18,14 +18,14 @@ function apl_request(requests, callback, ses,srv)
 
 
 	$.ajax({
-	//  dataType: "json", // before: jsonp, post works only with CORS
+
 	  url: url1,
 	
 
 	type: "POST",
 
     data: {d:JSON.stringify(requests), test: "test"},
-    dataType: "json",
+    dataType: "json",//json
 
     crossDomain : true,
 
@@ -33,8 +33,9 @@ function apl_request(requests, callback, ses,srv)
 
 
 	  error: function (xhr, ajaxOptions, thrownError) {
-        alert(xhr.status);
-        alert(thrownError);
+      console.log(thrownError);
+      console.log(ajaxOptions);
+      console.log(xhr);
       },
 	  success: function(data) {
 

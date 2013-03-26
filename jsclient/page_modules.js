@@ -70,6 +70,8 @@ function sendMessage()
 	var receivers = new Array();
 
 	jQuery.each(all, function() {
+		var str = this;
+
 	apl_request(
 		    {"requests" : [
 		    {"id" : "profile_pubKey", "profileId" : this}
@@ -77,19 +79,24 @@ function sendMessage()
 		    ]
 		}, function(d1){
 			
+			var pk = (jQuery.parseJSON(d1.profile_pubKey));
 			count++;
-		
-			// Encrypt random key  with public key
-			var pk = d1;
 			console.log(pk);
+			// Encrypt random key  with public key
+			
  			var rsa = new RSAKey();
 
- 			
-			rsa.setPublic(pk.n.value, pk.e.value);
+ 			 var rsa2 = new RSAKey();
+ rsa2.generate(parseInt(128),"10001");
+ console.log(rsa2);
+ alert(pk.n.toString(16));
+
+			//alert(pk.n.value);
+			rsa.setPublic(pk.n.value,pk.e.value);
 			// RSA encrypt aes key with pubKey:
 			var aesEnc = rsa.encrypt(aeskey);
 
- 			receivers.push({charmeId: this, aesEnc: aesEnc});
+ 			receivers.push({charmeId: str, aesEnc: aesEnc});
 
 		
  			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
@@ -447,16 +454,19 @@ $("#box_errors").hide();
 	signup: function()
 	{
 
-		var s = $("#form_signup").serialize();
+		var s = $("#form_signup").serializeObject();
 	
-		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?action=newUser.register&'+s+'&callback=?';
-		console.log("Loading JSON: "+u);
-		$.ajax({
-		  dataType: "jsonp",
-		  url: u,
-		  data: "",
-		  success: function(data) {
-		  	console.log(data);
+		var serverurl = $('#inp_server').val();
+
+		apl_request(
+		    {"requests" : [
+		    {"id" : "user_register", "data" : s}
+
+		    ]
+		}, function(d){
+			var data = d.user_register;
+		
+        
 		  	if (data.error != null)
 		  	{	
 		  		$("#box_errors").hide();
@@ -474,9 +484,21 @@ $("#box_errors").hide();
 
 		  		 location.replace('#signup_success');
 
+		  	}
+
+		}, "", serverurl);
+
+/*
+		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?action=newUser.register&'+s+'&callback=?';
+		console.log("Loading JSON: "+u);
+		$.ajax({
+		  dataType: "jsonp",
+		  url: u,
+		  data: "",
+		  success: function(data) {
+		  
 		  }
-		  }
-		});
+		});*/
 
 
 

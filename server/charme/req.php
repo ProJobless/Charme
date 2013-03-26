@@ -129,7 +129,7 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 			
 			// Send replica to all receiver servers.
-			
+
 
 			// TODO : Clustering servers!
 
@@ -188,10 +188,12 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		case "newUser.register":
+		case "user_register":
+
+			
 			// Return error if: Captcha is false, no name, invalid name/password/email
-			$user = new \App\Users\UserRegistration();
-			echo $user->execute();
+			$user = new \App\Users\UserRegistration($item["data"]);
+			$returnArray[$action] = $user->execute();
 		
 
 

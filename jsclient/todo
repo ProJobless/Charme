@@ -8,6 +8,10 @@ http://stackoverflow.com/questions/10429648/backbone-js-how-to-unbind-from-event
 this.undelegateEvents(); in guest container!!
 (Bug: goto welcome, sign in , welcome, sign in, welcome, then login -> multiple call of login())
 
+Cryptography
+
+use toString for RSA
+
 
 Pages:
 
