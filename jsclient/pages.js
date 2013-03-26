@@ -271,7 +271,7 @@ console.log("el"+ this.el);
 
 		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
-		<div style="height:67px; background-color:#000;"><a data-page="profile"><img></a> \
+		<div style="height:67px; background-color:#000;"><a  href="#user/'+(charmeUser.userIdURL)+'"><img src="http://'+charmeUser.server+'/charme/fs.php"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#c2c2c2; padding-top:0; margin-bottom: 0px;"> \
 		     <input style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \

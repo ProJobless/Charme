@@ -107,6 +107,12 @@ foreach ($data["requests"] as $item)
 
 	switch ($action) 
 	{
+		case "profile_pubKey":
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> ($item["u"])), array('pubKey'));
+			$returnArray[$action] = $cursor["pubKey"];
+		break;
+
 		case "user_login":
 
 			// Get certificate
@@ -167,7 +173,7 @@ foreach ($data["requests"] as $item)
 
 			$grid = $col->getGridFS();
 			$grid->remove(array("fname" => $_SESSION["charme_userid"], "type" => "profileimage"));
-			$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 50)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"]));
+			$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 67)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"]));
 
 			$returnArray[$action] = array("SUCCESS" => true);
 

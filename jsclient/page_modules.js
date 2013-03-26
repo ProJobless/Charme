@@ -17,6 +17,55 @@ Backbone.View.prototype.close = function(){
     this.undelegateEvents();*/
 }
 
+function sendMessageForm(receivers)
+{
+
+	$.get("templates/box_messageForm.html", function (d)
+	{
+	
+		var templateData = {receivers: receivers};
+
+		_.templateSettings.variable = "rc";
+		var template = _.template(d, templateData); 
+		
+	
+		ui_showBox( template );
+
+			$('.userSelect').each (function(index)
+	{
+		//alert("http://"+charmeUser.server+"/charme/auto.php");
+	$(this).tokenInput([
+                {id: 7, name: "Ruby"},
+                {id: 11, name: "Python"},
+                {id: 13, name: "JavaScript"},
+                {id: 17, name: "ActionScript"},
+                {id: 19, name: "Scheme"},
+                {id: 23, name: "Lisp"},
+                {id: 29, name: "C#"},
+                {id: 31, name: "Fortran"},
+                {id: 37, name: "Visual Basic"},
+                {id: 41, name: "C"},
+                {id: 43, name: "C++"},
+                {id: 47, name: "Java"}
+            ], {
+                prePopulate: receivers} );
+	});
+
+
+
+
+
+	});
+}
+function sendMessage()
+{
+	// Get Public key...
+
+	// Encrypt with public key
+
+	// Send...
+
+}
 
 view_page = Backbone.View.extend({   
 
@@ -471,7 +520,18 @@ var view_profilepage = view_page.extend({
 	options: {template:'profile'},
 	viewId : 'profileView', // important f
 
-
+	
+	 events: {
+	    'click #but_sendMsg': 'sendMsg'
+	   
+	  },
+  	sendMsg: function()
+  	{
+		sendMessageForm( [
+                    {id: this.options.userId, name: $("#fld_username").text()}
+                   
+                ]);//
+  	},
 	getData: function()
 	{
 
@@ -498,7 +558,7 @@ var view_profilepage_info = view_subpage.extend({
 
 		    ]
 		}, function(d){
-			alert(d);
+			
 		 that.reqData = d;
          that.render();
         
