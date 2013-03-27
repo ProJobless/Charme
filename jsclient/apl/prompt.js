@@ -40,7 +40,7 @@ function ui_showBox(content, func)
   }, 200, function() {
 
  
-$("body .fixedBox input:first").focus();
+//$("body .fixedBox input:first").focus();
   	if (func)
   		func
   	

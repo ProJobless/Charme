@@ -103,6 +103,10 @@ foreach ($data["requests"] as $item)
 {
 
 	$action = $item["id"];
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("user_login", "user_register", "profile_get"))){
+				$returnArray = array("ERROR" => 1);
+				break; // echo error
+	}
 
 
 	switch ($action) 
@@ -162,13 +166,19 @@ foreach ($data["requests"] as $item)
 				die("CHARME_SETTINGS NOT INCLUDED");
 
 			$p2 =md5($CHARME_SETTINGS["passwordSalt"].$p1);
+			
 
+			
 			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p2), array('userid', "rsa"));
 
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
 				
 				$_SESSION["charme_userid"] = $cursor["userid"];
+
+
+				//echo $_SESSION["charme_userid"] ;
+
 				$stat = "PASS";
 			}
 			else
@@ -190,7 +200,7 @@ foreach ($data["requests"] as $item)
 
 		case "user_register":
 
-			
+
 			// Return error if: Captcha is false, no name, invalid name/password/email
 			$user = new \App\Users\UserRegistration($item["data"]);
 			$returnArray[$action] = $user->execute();
@@ -240,10 +250,12 @@ foreach ($data["requests"] as $item)
 		case "profile_save":
 			$cols = \App\DB\Get::Collection();
 
+			/*
 			if (!isset($_SESSION["charme_userid"])){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 			}
+			*/
 			//$item["data"]
 
 			// Change Password!...

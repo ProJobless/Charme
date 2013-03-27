@@ -30,7 +30,8 @@ function sendMessageForm(receivers)
 		var template = _.template(d, templateData); 
 		
 	
-		ui_showBox( template );
+		ui_showBox( template , function(){$("#inp_newmsg").focus();});
+
 
 		//alert("http://"+charmeUser.server+"/charme/auto.php");
 	$('#inp_receivers').tokenInput([
@@ -87,12 +88,13 @@ function sendMessage()
  			var rsa = new RSAKey();
 
  			 var rsa2 = new RSAKey();
- rsa2.generate(parseInt(128),"10001");
- console.log(rsa2);
- alert(pk.n.toString(16));
+			
+			// rsa2.generate(parseInt(128),"10001");
+			// console.log(rsa2);
+			// alert(pk.n.toString(16));
 
 			//alert(pk.n.value);
-			rsa.setPublic(pk.n.value,pk.e.value);
+			rsa.setPublic(pk.n,pk.e);
 			// RSA encrypt aes key with pubKey:
 			var aesEnc = rsa.encrypt(aeskey);
 
@@ -107,7 +109,7 @@ function sendMessage()
 
 			    ]
 				}, function(d2){
-						alert("Message was send");
+						alert("Message has been sent.");
 						ui_closeBox();
 				});
 
@@ -402,7 +404,7 @@ var view_lists = view_page.extend({
 
 
 	options: {template:'profile'},
-	viewId : 'profileView', // important f
+	viewId : 'listView', 
 
 
 	getData: function()
@@ -606,14 +608,14 @@ var view_profilepage = view_page.extend({
   	sendMsg: function()
   	{
 		sendMessageForm( [
-                    {id: this.options.userId, name: container_main.currentView.username}
+                    {id: this.options.userId,  name: container_main.currentView.username}
                    
                 ]);//
   	},
 	getData: function()
 	{
 
-		  return {uid: this.options.userIdRaw};
+		  return {uid: this.options.userIdRaw,  server: this.options.userId.split("@")[1]};
 
 	}
 
@@ -632,7 +634,7 @@ var view_profilepage_info = view_subpage.extend({
 		var that = this;
 		apl_request(
 		    {"requests" : [
-		    {"id" : "profile_get", "profileId" : "ms@server.local"}
+		    {"id" : "profile_get", "profileId" : container_main.currentView.options.userId}
 
 		    ]
 		}, function(d){
