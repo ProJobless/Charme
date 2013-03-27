@@ -216,9 +216,6 @@ function initProfile()
 	$.doTimeout( 'listsave', 1000, function( state ){
 
 
-
-	
-		
 var ar = $('#select_lists a.active').map(function(i,n) {
         return $(n).data("listid");
     }).get();
@@ -228,13 +225,6 @@ var uid = $.urlParam("userId",location.href );
  $.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
         alert(d); 
     });
-
-
-	/*	$('#select_lists a.active').each (function(index)
-		{
-			ar.push(($(this).data("listid")));
-		})*/
-
 
 
 

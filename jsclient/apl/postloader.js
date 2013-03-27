@@ -14,6 +14,16 @@ var obj = {
 */
 
 
+
+// Call after login:
+function apl_setup()
+{
+	// Load Lists
+	// Load friends
+
+
+}
+
 function apl_postloader_check()
 {
 	// get the encrypted json from server, decrypt this json and store into html5 web storage
@@ -35,14 +45,19 @@ function apl_postloader_getAll()
 
 	return ret;
 }
-function apl_postloader_getLists()
-{
-	// Choose an unique identifier here "listitems"
-	return {"items": [
+
+var apl_postloader_lists =
+ {"items": [
 	        {"id": 213123133, "name": "listname"},
 	    	{"id": 233, "name": "listname"},
 	    	{"id": 2133133, "name": "listname"}
 	    ]
 	};
+
+function apl_postloader_getLists()
+{
+	// Choose an unique identifier here "listitems"
+	return apl_postloader_lists;
+
 
 }

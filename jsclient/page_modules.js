@@ -30,7 +30,12 @@ function sendMessageForm(receivers)
 		var template = _.template(d, templateData); 
 		
 	
-		ui_showBox( template , function(){$("#inp_newmsg").focus();});
+		ui_showBox( template , function()
+			{
+		
+
+				$("#inp_newmsg").focus();
+		});
 
 
 		//alert("http://"+charmeUser.server+"/charme/auto.php");
@@ -230,7 +235,13 @@ view_page = Backbone.View.extend({
 			Warning: Do not render subViews here if not yet rendered!
 			http://stackoverflow.com/questions/9604750/backbone-js-firing-event-from-a-view-inside-a-view
 		*/  
-	
+		if (this.options.optionbar!= null)
+		{
+			$(".sbBeta .actionBar").html(this.options.optionbar);
+		}
+	else
+		$(".sbBeta .actionBar").html("");
+
 
 		if (this.options.needLogin && charmeUser == null)
 		{	
@@ -353,7 +364,7 @@ view_subpage = Backbone.View.extend({
 
 				// Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
 				$(that.$el.selector).html(template);//that.$el.selector
-				
+			
 			
 				if (that.postRender != null)
 				{ 
@@ -361,6 +372,7 @@ view_subpage = Backbone.View.extend({
 				}
 				// important:!!
 				//	that.undelegateEvents();
+			
 				that.delegateEvents();
 				
 
@@ -403,8 +415,8 @@ setSCHeight();
 var view_lists = view_page.extend({
 
 
-	options: {template:'profile'},
-	viewId : 'listView', 
+	options: {template:'profile', optionbar: '<a style="background-position: -60px 0px;" data-bgpos="-60" id="addListButton" class="actionButton"></a>'},
+	viewId : 'listView',
 
 
 	getData: function()
@@ -412,6 +424,30 @@ var view_lists = view_page.extend({
 		var templateData = {globaldata : []};
 		templateData["listitems"] = apl_postloader_getLists();
 		return templateData;
+	},
+	postRender: function()
+	{
+
+		// Problem: if opening another list form sidebar event gets unregistred.
+		$('#addListButton').click(function(){
+			var n = prompt("Enter a Name", "New List");
+
+			// TODO: apl request to get id...
+
+		apl_request(
+		    {"requests" : [
+		    {"id" : "lists_add", "name" : n}
+
+		    ]
+		}, function(d1){
+		
+			apl_postloader_lists.items.push({id: d1.id, name: n});
+			//
+
+		});
+
+
+	});
 	}
 
 });
@@ -627,6 +663,35 @@ var view_profilepage_info = view_subpage.extend({
 	reqData: {},
 	asyncRenderMode: true, 
 	canRender: false,
+	events: {
+	//'click #select_lists a' : 'listUpdate', 
+	
+
+},
+	listUpdate : function()
+	{
+	
+		
+		/*$(this).toggleClass("active");
+		$.doTimeout( 'listsave', 1000, function( state ){
+
+
+		var ar = $('#select_lists a.active').map(function(i,n) {
+		return $(n).data("listid");
+		}).get();
+
+		var uid = $.urlParam("userId",location.href );
+		console.log(ar);*/
+
+		// do apl request...
+
+		/*$.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
+		alert(d); 
+		});*/
+
+
+		//}, true);
+	},
 
 	initialize: function()
 	{
@@ -669,10 +734,39 @@ var view_profilepage_info = view_subpage.extend({
 	},
 	postRender: function()
 	  {
+
+
 	  	// Write username in header
 	  	$(".profile_name").text($("#fld_username").text());
 	  	container_main.currentView.username = $("#fld_username").text();
 	  	$("td:empty").parent().remove(); // Remove empty Info fields
+
+
+		$('#select_lists a').click(function(){
+			$(this).toggleClass("active");
+			$.doTimeout( 'listsave', 1000, function( state ){
+
+			var ar = $('#select_lists a.active').map(function(i,n) {
+			return $(n).data("listid");
+			}).get();
+
+			//var uid = $.urlParam("userId",location.href );
+
+
+			alert("ok...");
+
+		}, true);
+/*
+ $.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
+        alert(d); 
+    });*/
+
+
+
+
+
+		});
+
 	  }
 
 });

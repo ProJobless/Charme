@@ -18,7 +18,7 @@ function ui_unblock(content)
 
 
 
-function ui_showBox(content, func)
+function ui_showBox(content, callback)
 {
 	ui_block();
 	if (!$("body .fixedBox").length)
@@ -40,9 +40,10 @@ function ui_showBox(content, func)
   }, 200, function() {
 
  
+
 //$("body .fixedBox input:first").focus();
-  	if (func)
-  		func
+  if(callback != undefined && typeof callback == 'function') callback();
+ 
   	
  
 

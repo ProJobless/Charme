@@ -43,11 +43,12 @@ header('Access-Control-Allow-Origin: http://client.local');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
-
-
+header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie sending
 
 
 session_start();
+
+
 /**
  * req.php
  * Parses incoming client requests
@@ -198,6 +199,8 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+
+
 		case "user_register":
 
 
@@ -232,6 +235,19 @@ foreach ($data["requests"] as $item)
 		case "post.spread": 
 		// Notify post owner when sharing a posting
 
+		break;
+
+		case "list_add" :
+			$col = \App\DB\Get::Collection();
+			$col->lists->insert(array("name" => $item["name"], "owner" => $_SESSION["charme_userid"]));
+			$returnArray[$action] = array("SUCCESS" => true);
+
+		break;
+
+		case "lists_get" :
+			$col = \App\DB\Get::Collection();
+			$returnArray[$action] = $col->lists->find(array("owner" => $_SESSION["charme_userid"]));
+			
 		break;
 
 		case "profile_get":
