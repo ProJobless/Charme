@@ -18,7 +18,7 @@
   */
 
 
-function apl_postloader_setup()
+function apl_postloader_setup(callback)
 {
 	//TODO: Add a callback funciton here
 	apl_request(
@@ -29,8 +29,13 @@ function apl_postloader_setup()
 	}, function(data){
 		console.log(data);
 		apl_postloader_lists.items = data.lists_get;
+		
 
 		// Call Callback...
+		if(callback != undefined && typeof callback == 'function') 
+		{
+			callback();
+		}
 
 	});
 }

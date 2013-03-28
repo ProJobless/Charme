@@ -313,16 +313,27 @@ initialize: function() {
 	},
 });
 
-/*
-alert("start");
-
-var tt = new view_test({la:17, useSidebar:false});
-alert(tt.options.useSidebar+","+tt.options.la2);
-
-var tt = new view_test({la:17});
-alert(tt.options.useSidebar+","+tt.options.la2);
-*/
-
+/****h* jsclient/page_modules.js/view_subpage
+  *  NAME
+  *    view_subpage
+  *  SYNOPSIS
+  *    view_subpage test = new view_subpage();
+  *  FUNCTION
+  *		Generate a sub page. A subpage is a page in a page, like profile info for example.
+  *		All subPages must be registred in lib/router.js. 
+  *  INPUTS
+  *    options{}  	- template: used template from /template folder
+  *					- navMatch: What sidebar element should be active when subpage is open?
+  *  RESULT
+  *    The Object
+  *  EXAMPLE
+  *    	var vsd =  new view_subpage({ template: "user_subscribing", navMatch: '#nav_profile_sub2', el: '#page3'});
+  * 	container_main.currentView.setSub(vsd);
+  *  BUGS
+  *    
+  ******
+  * Lorem ipsum
+  */
 
 
 view_subpage = Backbone.View.extend({   

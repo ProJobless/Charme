@@ -30,13 +30,15 @@ console.log("USEROBJ");
     if (isLoggedIn())
     console.log("is logged in!");
 
+
+    // get apl data, like lists, friends etc. from server
+    apl_postloader_setup(function(){
+
     if (isLoggedIn())
         container_main.render();
     else
         container_guest.render();
 
-    // get apl data, like lists, friends etc. from server
-    apl_postloader_setup();
 
 
  var AppRouter = Backbone.Router.extend({
@@ -287,6 +289,15 @@ app_router.on('route:getWelcome', function (id) {
 
 
 
+    });
+
+
+
+
+
+
+
+
 
 
 });
@@ -395,15 +406,19 @@ console.log(data);
                     // Save server
                     container_main.userIdURL = charmeUser.userIdURL;
 
-                     $("#welcome_main").fadeOut(0, function(){
-                     container_main.render();
+                    // Load Data like lists, friends etc.
+					apl_postloader_setup(function()
+					{
+						// When completed, open main view
+						$("#welcome_main").fadeOut(0, function()
+						{
+							container_main.render();
+							location.href="#stream";
+						});
+					});
 
-                     // Load friends etc.
-                      apl_postloader_setup();
 
-
-                        location.href="#stream";
-                            });
+                      
 
 
                 } catch(e) {

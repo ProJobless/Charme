@@ -16,7 +16,7 @@
 </div> <!-- logo -->
 <hr />
 <a name="jsclient2fapl2frequest2fapl5frequest"></a>
-<a name="robo1"></a><h2>jsclient/apl/request/apl_request [ Functions ]</h2>
+<a name="robo2"></a><h2>jsclient/apl/request/apl_request [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
 <p class="item_name">NAME</p>
@@ -32,7 +32,7 @@
 <pre>    requestData  - Data in json format 
     callback     - Callback function
     SessionId    - Not used currently, Write "null" in here
-    Server       - Server to which the request is send.
+    Server       - Server to which the request is send to. If its null, we will use the host of the logged in user.
 </pre>
 <p class="item_name">RESULT</p>
 <pre>    JSON Object
@@ -51,7 +51,7 @@
 
 <hr />
 <a name="jsclient2fapl2fpostloader2fapl5fpostloader5fsetup2829"></a>
-<a name="robo0"></a><h2>jsclient/apl/postloader/apl_postloader_setup() [ Functions ]</h2>
+<a name="robo1"></a><h2>jsclient/apl/postloader/apl_postloader_setup() [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ Functions ]</p>
 <p class="item_name">NAME</p>
@@ -73,8 +73,36 @@
 <pre>    TODO: Add Callback!!!
 </pre>
 
+<hr />
+<a name="jsclient2fpage5fmodules2ejs2fview5fsubpage"></a>
+<a name="robo0"></a><h2>jsclient/page_modules.js/view_subpage [ Modules ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ Modules ]</p>
+<p class="item_name">NAME</p>
+<pre>    view_subpage
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    view_subpage test = new view_subpage();
+</pre>
+<p class="item_name">FUNCTION</p>
+<pre>             Generate a sub page. A subpage is a page in a page, like profile info for example.
+             All subPages must be registred in lib/router.js. 
+</pre>
+<p class="item_name">INPUTS</p>
+<pre>    options{}        - template: used template from /template folder
+                                     - navMatch: What sidebar element should be active when subpage is open?
+</pre>
+<p class="item_name">RESULT</p>
+<pre>    The Object
+</pre>
+<p class="item_name">EXAMPLE</p>
+<pre>     var vsd =  new view_subpage({ template: "user_subscribing", navMatch: '#nav_profile_sub2', el: '#page3'});
+     container_main.currentView.setSub(vsd);
+</pre>
+<p class="item_name">BUGS</p>
+
 <div id="footer">
-<p>Generated from ./jsclient/ with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.41 on Thu Mar 28 2013 15:13:20
+<p>Generated from ./jsclient/ with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.41 on Thu Mar 28 2013 15:27:45
 </p>
 </div> <!-- footer -->
 </body>

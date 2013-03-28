@@ -48,7 +48,7 @@ function apl_posttest(requests)
   *    requestData  - Data in json format 
   *    callback     - Callback function
   *    SessionId    - Not used currently, Write "null" in here
-  *    Server       - Server to which the request is send.
+  *    Server       - Server to which the request is send to. If its null, we will use the host of the logged in user.
   *  RESULT
   *    JSON Object
   *  EXAMPLE
