@@ -237,16 +237,18 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		case "list_add" :
+		case "lists_add" :
 			$col = \App\DB\Get::Collection();
-			$col->lists->insert(array("name" => $item["name"], "owner" => $_SESSION["charme_userid"]));
-			$returnArray[$action] = array("SUCCESS" => true);
+			$content = array("name" => $item["name"], "owner" => $_SESSION["charme_userid"]);
+
+			$ins = $col->lists->insert($content);
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;
 
 		case "lists_get" :
 			$col = \App\DB\Get::Collection();
-			$returnArray[$action] = $col->lists->find(array("owner" => $_SESSION["charme_userid"]));
+			$returnArray[$action] = iterator_to_array($col->lists->find(array("owner" => $_SESSION["charme_userid"])), false);
 			
 		break;
 

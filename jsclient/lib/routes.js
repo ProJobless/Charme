@@ -35,7 +35,8 @@ console.log("USEROBJ");
     else
         container_guest.render();
 
-
+    // get apl data, like lists, friends etc. from server
+    apl_postloader_setup();
 
 
  var AppRouter = Backbone.Router.extend({
@@ -396,6 +397,11 @@ console.log(data);
 
                      $("#welcome_main").fadeOut(0, function(){
                      container_main.render();
+
+                     // Load friends etc.
+                      apl_postloader_setup();
+
+
                         location.href="#stream";
                             });
 

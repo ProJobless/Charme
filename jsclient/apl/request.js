@@ -1,7 +1,3 @@
-/*
- 	WARNING: Use this funciton only if user is logged in!!!!
-*/
-
 
 // apl posttest: only for debug!
 function apl_posttest(requests)
@@ -40,6 +36,34 @@ function apl_posttest(requests)
 
 
 } 
+
+/****f* jsclient/apl/request/apl_request
+  *  NAME
+  *    apl_request -- 
+  *  SYNOPSIS
+  *    jsondata = apl_request(requestData, callback : function, SessionId,Server)
+  *  FUNCTION
+  *    Make a request to a charme Server
+  *  INPUTS
+  *    requestData  - Data in json format 
+  *    callback     - Callback function
+  *    SessionId    - Not used currently, Write "null" in here
+  *    Server       - Server to which the request is send.
+  *  RESULT
+  *    JSON Object
+  *  EXAMPLE
+  *    apl_request(
+  *          {"requests" : [
+  *         {"id" : "info_about"}
+  *
+  *         ]
+  *      }, function(data){ console.log(data.info_about);}, null, "myserver.com");
+  *  BUGS
+  *    In earlier versions JSONP data accepted only a limited string lenght for data, so we changed to CORS
+  ******
+  * Lorem ipsum
+  */
+
 function apl_request(requests, callback, ses,srv)
 {
 	//apl_posttest(requests);
@@ -97,10 +121,10 @@ function apl_request(requests, callback, ses,srv)
 		}});
 }
 
-/*
-	Helper function for serializing forms.
-	See http://jsfiddle.net/sxGtM/3/ and http://stackoverflow.com/questions/1184624/convert-form-data-to-js-object-with-jquery
-*/
+
+
+
+
 
 $.fn.serializeObject = function()
 {

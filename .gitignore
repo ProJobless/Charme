@@ -1,7 +1,13 @@
 #/web/*
 /dev/*
+/web/phpdoc/*
+/web/doxygen/doxygen.exe
+/web/doxygen/doxysearch.cgi
+/web/doxygen/doxyindexer.exe
+/robodoc.exe
 /server/mongodb.php
 /temp/*
+/old/*
 /doxygen/*
 
 #################

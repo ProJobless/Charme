@@ -423,6 +423,7 @@ var view_lists = view_page.extend({
 	{
 		var templateData = {globaldata : []};
 		templateData["listitems"] = apl_postloader_getLists();
+		console.log(templateData);
 		return templateData;
 	},
 	postRender: function()
@@ -441,7 +442,7 @@ var view_lists = view_page.extend({
 		    ]
 		}, function(d1){
 		
-			apl_postloader_lists.items.push({id: d1.id, name: n});
+			apl_postloader_lists.items.push({ '_id': {'$id': d1.lists_add.id} , name: n});
 			//
 
 		});

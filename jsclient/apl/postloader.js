@@ -1,27 +1,38 @@
-/*
-Possible Errors:
 
 
-Unexpeccted identifier by misplaced  comma:
+/****f* jsclient/apl/postloader/apl_postloader_setup()
+  *  NAME
+  *   apl_postloader_setup
+  *  SYNOPSIS
+  *   apl_postloader_setup();
+  *  FUNCTION
+  *    Loads Posts, Friends etc from Server for views
+  *  RESULT
+  *    NONE
+  *  EXAMPLE
+  *    apl_postloader_setup();
+  *  BUGS
+  *    TODO: Add Callback!!!
+  ******
+  * Lorem ipsum
+  */
 
-var obj = {
-   id: 23,
-   name: "test",  <--
-}
 
-
-
-*/
-
-
-
-// Call after login:
-function apl_setup()
+function apl_postloader_setup()
 {
-	// Load Lists
-	// Load friends
+	//TODO: Add a callback funciton here
+	apl_request(
+    {"requests" : [
+    {"id" : "lists_get"}
 
+    ]
+	}, function(data){
+		console.log(data);
+		apl_postloader_lists.items = data.lists_get;
 
+		// Call Callback...
+
+	});
 }
 
 function apl_postloader_check()
@@ -48,9 +59,7 @@ function apl_postloader_getAll()
 
 var apl_postloader_lists =
  {"items": [
-	        {"id": 213123133, "name": "listname"},
-	    	{"id": 233, "name": "listname"},
-	    	{"id": 2133133, "name": "listname"}
+	       
 	    ]
 	};
 

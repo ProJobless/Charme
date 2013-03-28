@@ -15,7 +15,7 @@ session_start();
  //$_SESSION["charme_userid"] = "a2";
 
 echo $_SESSION["charme_userid"];
-$_SESSION["charme_userid"] = "schuldi@server.local";
+//$_SESSION["charme_userid"] = "schuldi@server.local";
 
 }
 //
