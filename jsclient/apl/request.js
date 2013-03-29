@@ -36,33 +36,31 @@ function apl_posttest(requests)
 
 
 } 
+/***
+  Name:
+  apl_request
 
-/****f* jsclient/apl/request/apl_request
-  *  NAME
-  *    apl_request -- 
-  *  SYNOPSIS
-  *    jsondata = apl_request(requestData, callback : function, SessionId,Server)
-  *  FUNCTION
-  *    Make a request to a charme Server
-  *  INPUTS
-  *    requestData  - Data in json format 
-  *    callback     - Callback function
-  *    SessionId    - Not used currently, Write "null" in here
-  *    Server       - Server to which the request is send to. If its null, we will use the host of the logged in user.
-  *  RESULT
-  *    JSON Object
-  *  EXAMPLE
-  *    apl_request(
-  *          {"requests" : [
-  *         {"id" : "info_about"}
-  *
-  *         ]
-  *      }, function(data){ console.log(data.info_about);}, null, "myserver.com");
-  *  BUGS
-  *    In earlier versions JSONP data accepted only a limited string lenght for data, so we changed to CORS
-  ******
-  * Lorem ipsum
-  */
+  Info:
+  Make a request to a charme Server
+
+  Params:
+  requestData:json:Data in json format 
+  callback:function:Callback function
+  SessionId:string:Not used currently, Write "null" in here
+  Server:string:Server to which the request is send to. If its null, we will use the host of the logged in user.
+
+  Location:
+  apl
+
+  Code:JS:
+  // Send a info_about request to myserver.com
+  apl_request({"requests" :
+    [
+      {"id" : "info_about"}
+    ]
+  }, function(data){ console.log(data.info_about);}, null, "myserver.com");
+*/
+
 
 function apl_request(requests, callback, ses,srv)
 {

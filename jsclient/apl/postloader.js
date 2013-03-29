@@ -1,22 +1,27 @@
 
+/***
+	Name:
+	test
 
-/****f* jsclient/apl/postloader/apl_postloader_setup()
-  *  NAME
-  *   apl_postloader_setup
-  *  SYNOPSIS
-  *   apl_postloader_setup();
-  *  FUNCTION
-  *    Loads Posts, Friends etc from Server for views
-  *  RESULT
-  *    NONE
-  *  EXAMPLE
-  *    apl_postloader_setup();
-  *  BUGS
-  *    TODO: Add Callback!!!
-  ******
-  * Lorem ipsum
-  */
 
+*/
+
+/***
+	Name:
+	apl_postloader_setup
+
+	Info:
+	Loads friends and Lists as `JSON Object` from Server
+
+	Params:
+	callback:function:Callback function
+
+	Location:
+	apl
+
+	Code:JS:
+	apl_postloader_setup(function(){alert("callback");});
+*/
 
 function apl_postloader_setup(callback)
 {
