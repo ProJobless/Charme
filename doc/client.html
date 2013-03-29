@@ -33,12 +33,14 @@ a:hover, #content a:active
 td{vertical-align:top;}
 h1
 {
-	font-size: 24px;
+	font-size: 32px;
 }
 
 h2
 {
-	font-size: 18px;
+	font-size: 24px;
+	border-left: 4px blue solid;
+	padding: 8px;
 }
 h3
 {
@@ -166,34 +168,46 @@ pre .diff .change {
 pre .chunk {
   color: #aaa
 }
-</style><script>hljs.initHighlightingOnLoad();</script></head><body><h1>Charme Documentation</h1><div style='border-bottom:1px silver solid; padding-bottom: 16px; marign-bottom:16px;'>
+</style><script>hljs.initHighlightingOnLoad();</script></head><body><h1>Charme Javascript Client Developer Documentation</h1><div style='border-bottom:1px silver solid; padding-bottom: 16px; marign-bottom:16px;'>
 Welcome to Charme Documentation.
 </div>
-<h2 id='el_2'>test
-
-
-
-</h2><h2 id='el_3'>apl_postloader_setup
+<h2 id='el_1'>apl_postloader_setup
 
 </h2><h3>Info</h3><p>Loads friends and Lists as <code>JSON Object</code> from Server</p>
 <h3>Params</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function</td></tr></table><h3>Example Code</h3><pre><code>apl_postloader_setup(function(){alert(&quot;callback&quot;);});
 
-</code></pre><h2 id='el_4'>  apl_request
+</code></pre><h2 id='el_2'>  apl_request
 
 </h2><h3>Info</h3><p>Make a request to a charme Server</p>
-<h3>Params</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  requestData</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>json</td><td>Data in json format </td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  SessionId</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Not used currently, Write "null" in here</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  Server</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Server to which the request is send to. If its null, we will use the host of the logged in user.</td></tr></table><h3>Example Code</h3><pre><code>  // Send a info_about request to myserver.com
+<h3>Params</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  requestData</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>json</td><td>Data in json format </td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  SessionId</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Not used currently, Write &quot;null&quot; in here</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  Server</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Server to which the request is send to. If its null, we will use the host of the logged in user.</td></tr></table><h3>Example Code</h3><pre><code>  // Send a info_about request to myserver.com
   apl_request({&quot;requests&quot; :
     [
       {&quot;id&quot; : &quot;info_about&quot;}
     ]
   }, function(data){ console.log(data.info_about);}, null, &quot;myserver.com&quot;);
 
-</code></pre><div class='index'><ul><li><a href='#el_3'>  apl_request
+</code></pre><h2 id='el_3'>apl/updater.js
 
-</a></li><li><a href='#el_2'>apl_postloader_setup
+</h2><h3>Info</h3><p>Will be called in certain intervals and looking for new updates like messages etc.</p>
 
-</a></li><li><a href='#el_1'>test
+<p>Set .count fields.</p>
 
+<p>Location:
+jsclient/apl</p>
+<h2 id='el_4'>apl_user
 
+</h2><h3>Info</h3><p>Returns a User Object.</p>
+<h3>Params</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>uid</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>String</td><td>The user id, &quot;me@myserver.com&quot; for example.</td></tr></table><h3>Example Code</h3><pre><code>var user = apl_user(&quot;me@myserver.com&quot;);
+console.log(user.server); // myserver.com
+console.log(user.username); // me
+console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
+
+</code></pre><div class='index'><ul><li><a href='#el_2'>  apl_request
+
+</a></li><li><a href='#el_3'>apl/updater.js
+
+</a></li><li><a href='#el_1'>apl_postloader_setup
+
+</a></li><li><a href='#el_4'>apl_user
 
 </a></li></ul></div></body></html>

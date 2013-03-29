@@ -7,26 +7,43 @@
 */
 
 // Set directories to scan
-$input = array("jsclient/apl", "jsclient/lib");
-
-// Set ouput file path
-$outputfile = "doc/index.html";
-
-// Include sub directorys?
-$recursive = true;
 
 
-$extensions = array("php", "js");
 
-$title = "Charme Developer Documentation";
+$docs = array(
+	array("input" => array("jsclient/apl", "jsclient/lib"),
+		"outputfile" => "doc/client.html",
+		"extensions" => array("js"),
+		"title" => "Charme Javascript Client Developer Documentation",
+		"foreword" => ""
+
+		),
+
+		array("input" => array("server/charme"),
+		"outputfile" => "doc/server.html",
+		"extensions" => array("php"),
+		"title" => "Charme Server Developer Documentation",
+		"foreword" => ""
+
+		)
+);
 
 
-$foreword = <<<'EOD'
+$docs[0]["foreword"] = <<<'EOD'
 <div style='border-bottom:1px silver solid; padding-bottom: 16px; marign-bottom:16px;'>
 Welcome to Charme Documentation.
 </div>
 
 EOD;
+
+$docs[1]["foreword"] = <<<'EOD'
+<div style='border-bottom:1px silver solid; padding-bottom: 16px; marign-bottom:16px;'>
+Welcome to Charme Server Documentation.
+</div>
+
+EOD;
+
+
 /*
 	Plugins:
 */
@@ -1888,12 +1905,14 @@ a:hover, #content a:active
 td{vertical-align:top;}
 h1
 {
-	font-size: 24px;
+	font-size: 32px;
 }
 
 h2
 {
-	font-size: 18px;
+	font-size: 24px;
+	border-left: 4px blue solid;
+	padding: 8px;
 }
 h3
 {
@@ -2025,6 +2044,18 @@ pre .chunk {
 EOD;
 
 
+
+
+foreach ($docs as $doc)
+{
+
+$input = $doc["input"];
+$outputfile = $doc["outputfile"];
+$extensions = $doc["extensions"];
+$title = $doc["title"];
+$foreword = $doc["foreword"];
+
+
 $commands = array("Author:", "Code:PHP:", "Code:JS:", "Namespace:", "Name:", "Info:", "Params:");
 $output = "";
 
@@ -2053,10 +2084,10 @@ function parseBlock($blockId, $content)
 	{	
 		$index[] = array($content, $iteratorIndex);
 
-		$iteratorIndex++;
+		
 
 		fwrite($fh, "<h2 id='el_".$iteratorIndex."'>". $content."</h2>");
-		
+		$iteratorIndex++;
 	}
 
 	if ($blockId == "Info:")
@@ -2091,7 +2122,7 @@ function parseBlock($blockId, $content)
 
 		    		$linea = explode(":", $line2);
 		    		if (Count($linea) > 2)
-		    		$content .= "<tr><td style='font-family: Consolas, monospace; font-weight:bold;'>".$linea[0]."</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>".$linea[1]."</td><td>".$linea[2]."</td></tr>";
+		    		$content .= "<tr><td style='font-family: Consolas, monospace; font-weight:bold;'>".$linea[0]."</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>".$linea[1]."</td><td>".htmlentities($linea[2])."</td></tr>";
 
 		    }
 		    $content  .="</table>";
@@ -2235,13 +2266,7 @@ foreach($objects as $name => $object){
 
 }
 
-// sort index
-function cmpStr($a, $b) 
-{
-  
 
-     return strcasecmp($a[0], $b[0]);
- }
 usort($index, 'cmpStr');
 
 
@@ -2260,8 +2285,14 @@ fwrite($fh, "</body></html>");
 // close File
 fclose($fh);
 
+}
 
 
+// sort index
+function cmpStr($a, $b) 
+{
+  
 
-
+     return strcasecmp($a[0], $b[0]);
+ }
 ?>

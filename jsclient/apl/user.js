@@ -4,6 +4,26 @@
 */
 var charmeUser;
 
+/***
+	Name:
+	apl_user
+
+	Info:
+	Returns a User Object.
+
+	Params:
+	uid:String:The user id, "me@myserver.com" for example.
+
+	Location:
+	apl
+
+	Code:JS:
+	var user = apl_user("me@myserver.com");
+	console.log(user.server); // myserver.com
+	console.log(user.username); // me
+	console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
+*/
+
 
 function apl_user(uid)
 {
@@ -11,7 +31,7 @@ function apl_user(uid)
 	this.userIdURL = encodeURIComponent(uid);
 	this.server = uid.split("@")[1];
 	this.username = uid.split("@")[0];
-	this.sessionID = "lalala";
+
 
 	console.log(this);
 	
