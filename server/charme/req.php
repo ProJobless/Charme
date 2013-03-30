@@ -130,9 +130,35 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		// Get message from server
+		case "message_receive" :
+
+			$col->messages->insert(array(
+							"sender" => $item["sender"],
+							"encMessage" => $item["encMessage"],
+							"receiver" => $item["receiver"]
+							));
+		break;
+
+		// Get message from client
 		case "message_distribute":
 			$col = \App\DB\Get::Collection();
 			
+			$sendername = "Name of id ".$_SESSION["charme_userid"];
+			
+			foreach ($item["receivers"] as $receiver)
+			{
+				// Send MEssage to receiver.
+
+
+			}
+
+
+			$col->testmsg->insert(array(
+				"receivers" => $item["receivers"],
+				"encMessage" => $item["encMessage"],
+				"sender" => $_SESSION["charme_userid"]
+				));
 			// Send replica to all receiver servers.
 
 
@@ -241,7 +267,9 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 			$content = array("name" => $item["name"], "owner" => $_SESSION["charme_userid"]);
 
-			$ins = $col->lists->insert($content);
+			if ($item["name"] != "")
+				$ins = $col->lists->insert($content);
+
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;

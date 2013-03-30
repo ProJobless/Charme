@@ -348,7 +348,14 @@ console.log("el"+ this.el);
 
 
 
+/***
+	Name:
+	page_login
 
+	Info:
+	Container if user is NOT logged in.
+
+*/
 page_login = Backbone.View.extend({   
 
 
@@ -359,12 +366,7 @@ page_login = Backbone.View.extend({
 
      render: function(){
 
-
-
 	$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
-		
-	
-	
 
 
      }

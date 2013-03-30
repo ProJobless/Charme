@@ -2095,7 +2095,6 @@ function parseBlock($blockId, $content)
 		fwrite($fh, "<h3>Info</h3>". (Markdown(($content)))."");
 		
 		//echo "cont;<br><br>".$content."<br><br>";
-		
 	}
 	if ($blockId == "Returns:")
 	{	

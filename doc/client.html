@@ -265,7 +265,35 @@ lib/routes.js</p>
 </h2><h3>Info</h3><p>Main container with navigation. Init at login() or $.ready when user is logged in.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>currentView</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>view_page</td><td>The current page. Do not set!</td></tr></table><h3>Example Code</h3><pre><code>container_main= new page_authenticated({el:'#layout'});
 
-</code></pre><h2 id='el_12'>view_page
+</code></pre><h2 id='el_12'>page_login
+
+</h2><h3>Info</h3><p>Container if user is NOT logged in.</p>
+<h2 id='el_13'>sendMessageForm
+
+</h2><h3>Info</h3><p>Generate a new message box with zthe specified receivers</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>receivers</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>JSON Object</td><td>Receiver list in format [{id</td></tr></table><h3>Example Code</h3><pre><code>// Send a message to Alice
+sendMessage(Form(
+	[
+		{id: 'alice@myserver.com', name: 'Alice'}
+	]);)
+
+</code></pre><h2 id='el_14'>sendMessage
+
+</h2><h3>Info</h3><p>Submit the form generated with <code>sendMessageForm()</code>. Warning: Should only be called after a message form
+has been generated with <code>sendMessageForm()</code>
+exists.</p>
+
+<p>The function itself uses a hybrid cryptosystem to encode the message.
+First a random AES key is generated with <code>randomAESKey()</code> and 
+the  message itself is encoded with this key.</p>
+
+<p>Then the AES Key is encoded with the public RSA key of each receiver.
+Then the encoded AES keys are send to the users server which distributes
+the messages.</p>
+
+<p>Location:
+page_modules.js</p>
+<h2 id='el_15'>view_page
 
 </h2><h3>Info</h3><p>Default page class. Build new pages on this model. <code>postRender</code> is called after rendering is complete.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.template</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which template from templates folder do we us?</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.needLogin</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Only for registred users? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.useSidebar</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Sidebar enabled? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.navMatch</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which element of main navigation should be highlighted? </td></tr></table><h3>Example Code</h3><pre><code>
@@ -291,7 +319,7 @@ postRender: function()
 var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 
-</code></pre><h2 id='el_13'>Introduction to Charme Cryptography
+</code></pre><h2 id='el_16'>Introduction to Charme Cryptography
 
 </h2><h3>Info</h3><p><em>See Also</em></p>
 
@@ -309,9 +337,11 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 </a></li><li><a href='#el_8'>apl_user
 
-</a></li><li><a href='#el_13'>Introduction to Charme Cryptography
+</a></li><li><a href='#el_16'>Introduction to Charme Cryptography
 
 </a></li><li><a href='#el_11'>page_authenticated
+
+</a></li><li><a href='#el_12'>page_login
 
 </a></li><li><a href='#el_1'>randomAesKey
 
@@ -319,10 +349,14 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 </a></li><li><a href='#el_9'>rsa
 
+</a></li><li><a href='#el_14'>sendMessage
+
+</a></li><li><a href='#el_13'>sendMessageForm
+
 </a></li><li><a href='#el_4'>ui_closeBox
 
 </a></li><li><a href='#el_3'>ui_showBox
 
-</a></li><li><a href='#el_12'>view_page
+</a></li><li><a href='#el_15'>view_page
 
 </a></li></ul></div></body></html>

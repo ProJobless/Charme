@@ -18,6 +18,26 @@ Backbone.View.prototype.close = function(){
     this.undelegateEvents();*/
 }
 
+/***
+	Name:
+	sendMessageForm
+
+	Info:
+	Generate a new message box with zthe specified receivers
+
+	Params:
+	receivers:JSON Object:Receiver list in format [{id: 'alice@myserver.com', name: 'Alice'},{id: "bob@myserver.com", name: "Bob"}]
+	Location:
+	apl/page_modules.js
+
+	Code:JS:
+	// Send a message to Alice
+	sendMessage(Form(
+		[
+			{id: 'alice@myserver.com', name: 'Alice'}
+		]);)
+*/
+
 function sendMessageForm(receivers)
 {
 
@@ -61,12 +81,35 @@ function sendMessageForm(receivers)
 
 	});
 }
+
+/***
+	Name:
+	sendMessage
+
+	Info:
+	Submit the form generated with `sendMessageForm()`. Warning: Should only be called after a message form
+	has been generated with `sendMessageForm()`
+	exists.
+
+	The function itself uses a hybrid cryptosystem to encode the message.
+	First a random AES key is generated with `randomAESKey()` and 
+	the  message itself is encoded with this key.
+
+	Then the AES Key is encoded with the public RSA key of each receiver.
+	Then the encoded AES keys are send to the users server which distributes
+	the messages.
+
+	Location:
+	page_modules.js
+
+*/
+
 function sendMessage()
 {
 	// Get Public key...
 	var all = $('#inp_receivers').val().split(",");	
 	var count = 0;
-	var message = "lorem ipsum";
+	var message = $('#inp_newmsg').val();
 	// make random key for hybrid encryption
 	// probably more secure, but how to use?: var randKey  = sjcl.random.randomWords(4, 0);
 
@@ -92,7 +135,7 @@ function sendMessage()
 			
  			var rsa = new RSAKey();
 
- 			 var rsa2 = new RSAKey();
+ 		
 			
 			// rsa2.generate(parseInt(128),"10001");
 			// console.log(rsa2);
@@ -977,8 +1020,6 @@ var view_welcome = view_page.extend({
 		    if (code == 13)
 		    login();
   },
-
-
 
 	postRender: function(){
 		$('#login_user').focus();
