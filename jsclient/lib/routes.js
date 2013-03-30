@@ -5,6 +5,21 @@
     // Start Backbone history a necessary step for bookmarkable URL's
 
 
+/***
+	Name:
+	routes.js
+
+	Info:
+	Provides routing and contains document complete handler.
+
+	Location:
+	lib/routes.js
+
+*/
+
+
+
+
 var container_guest = new page_login();
 var container_main ;
 

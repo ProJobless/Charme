@@ -124,6 +124,48 @@ function sendMessage()
 
 }
 
+/***
+	Name:
+	view_page
+
+	Info:
+	Default page class. Build new pages on this model. `postRender` is called after rendering is complete.
+
+
+	Properties:
+	options.template:string:Which template from templates folder do we us?
+	options.needLogin:bool:Only for registred users? (Default: true)
+	options.useSidebar:bool:Sidebar enabled? (Default: false)
+	options.navMatch:string:Which element of main navigation should be highlighted? 
+
+	Location:
+	apl/crypto.js
+
+	Code:JS:
+
+	// Generate a page extending view_page
+	var view_test= view_page.extend({
+
+	events: 
+	{
+		'click #mybutton': 'myevent'
+	},
+	function myevent()
+	{
+		alert("!!!");
+	},
+	postRender: function()
+	{
+		$('#login_user').focus();
+	}
+
+	});
+	
+	// Open page
+	var pa = new view_test({template: "welcome",  needLogin: false});
+
+*/
+
 view_page = Backbone.View.extend({   
 
 

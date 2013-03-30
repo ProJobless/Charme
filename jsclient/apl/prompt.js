@@ -1,5 +1,8 @@
 
 
+
+
+
 function ui_block(content)
 {
 	if (!$("body .uiBlock").length)
@@ -16,7 +19,24 @@ function ui_unblock(content)
 
 
 
+/***
+	Name:
+	ui_showBox
 
+	Info:
+	Shows a Message box with specified HTML content.
+
+
+	Params:
+	content:string:HTML Content
+	callback:function:Callback function when box animation is complete, Register events here.
+
+	Location:
+	apl/prompt.js
+
+	Code:JS:
+	ui_showBox("Hello World", function(){alert("Box is visible");});
+*/
 
 function ui_showBox(content, callback)
 {
@@ -59,7 +79,20 @@ function ui_Button(name, func)
 return "<a class='button' href='javascript:"+func+";'>"+name+"</a>";	
 }
 
-function ui_closeBox(content)
+/***
+	Name:
+	ui_closeBox
+
+	Info:
+	Close a Message box opened with ui_showBox
+
+	Location:
+	apl/prompt.js
+
+	Code:JS:
+	ui_closeBox();
+*/
+function ui_closeBox()
 {
 	$("body").focus();//Because if not then problem when auto complete focused 
 	ui_unblock();

@@ -24,20 +24,36 @@ self.onmessage = function(e) {
 };
 
 
-/*
 
-http://www-cs-students.stanford.edu/~tjw/jsbn/rsa2.html
+/***
+	Name:
+	rsa
 
-
-For encryption with public key n and e  (rsa.n and rsa.e)
-rsa.setPublic(document.rsatest.n.value, document.rsatest.e.value);
-
-
-
-
-For decryption you need 
-rsa.setPrivateEx(dr.n.value, dr.e.value, dr.d.value, dr.p.value, dr.q.value, dr.dmp1.value, dr.dmq1.value, dr.coeff.value);
+	Info:
+	See also the [RSA Library Documentation](http://www-cs-students.stanford.edu/~tjw/jsbn/rsa2.html).
+	
 
 
+	Location:
+	apl/crypto.js
 
+	Code:JS:
+	var rsa = new RSAKey();
+	// A 1024bit long RSA Key
+	rsa.generate(parseInt(1024),"10001");
+
+
+	Code:JS:
+	// Reuse key:
+	var rsa = new RSAKey();
+
+	// All variables must be in string format!!
+	var e =  rsa.e.toString(16);
+	var n =  rsa.n.toString(16);
+	//...
+
+	// All variables must be in string format!!
+	rsa.setPublic(n, e);
+	// Set properties for encryption
+	rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
 */

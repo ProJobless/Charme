@@ -11,7 +11,7 @@
 
 
 $docs = array(
-	array("input" => array("jsclient/apl", "jsclient/lib"),
+	array("input" => array("jsclient/apl", "jsclient/lib", "jsclient/pages.js", "jsclient/page_modules.js", "jsclient/devnotes.txt"),
 		"outputfile" => "doc/client.html",
 		"extensions" => array("js"),
 		"title" => "Charme Javascript Client Developer Documentation",
@@ -2056,7 +2056,7 @@ $title = $doc["title"];
 $foreword = $doc["foreword"];
 
 
-$commands = array("Author:", "Code:PHP:", "Code:JS:", "Namespace:", "Name:", "Info:", "Params:");
+$commands = array("Properties:","Author:", "Code:PHP:", "Code:JS:", "Namespace:", "Name:", "Info:", "Params:");
 $output = "";
 
 
@@ -2102,15 +2102,13 @@ function parseBlock($blockId, $content)
 		fwrite($fh, "<h3>Info</h3>". $content."");
 		
 	}
-	if ($blockId == "Params:")
+	if ($blockId == "Properties:")
 	{	
 
 		/* Format:
 		Param1: 
 		Param2: 
 		*/
-		
-
 
 			  $arr = explode("\n", $content);
 		
@@ -2127,7 +2125,35 @@ function parseBlock($blockId, $content)
 		    }
 		    $content  .="</table>";
 
-		fwrite($fh, "<h3>Params</h3>".$content."");
+		fwrite($fh, "<h3>Properties</h3>".$content."");
+		
+	}
+
+
+	if ($blockId == "Params:")
+	{	
+
+		/* Format:
+		Param1: 
+		Param2: 
+		*/
+
+			  $arr = explode("\n", $content);
+		
+			$content  ="<table>";
+		    foreach ($arr as $line2) {
+
+		    	
+
+
+		    		$linea = explode(":", $line2);
+		    		if (Count($linea) > 2)
+		    		$content .= "<tr><td style='font-family: Consolas, monospace; font-weight:bold;'>".$linea[0]."</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>".$linea[1]."</td><td>".htmlentities($linea[2])."</td></tr>";
+
+		    }
+		    $content  .="</table>";
+
+		fwrite($fh, "<h3>Parameters</h3>".$content."");
 		
 	}
 
@@ -2236,38 +2262,48 @@ foreach ($input as $path)
 
 $path = realpath($path);
 
-$objects = new RecursiveIteratorIterator(
-               new RecursiveDirectoryIterator($path), 
-               RecursiveIteratorIterator::SELF_FIRST);
-
-foreach($objects as $name => $object){
-
-	//echo $object->getFilename()."<br>";
+echo "<br><br>".$path;
+$pos = strpos($path, '.');
+echo "§..".$pos."...";
 
 
-	$ext = "";
+if ($pos !== false)
+parseFile($path);
+else
+{
 
-	$ar3 = explode( '.', $object->getFilename());
-	if (Count($ar3) > 1)
-		$ext =  ($ar3[1]);
+	$objects = new RecursiveIteratorIterator(
+	               new RecursiveDirectoryIterator($path), 
+	               RecursiveIteratorIterator::SELF_FIRST);
 
-	
+	foreach($objects as $name => $object){
 
-
-    if(in_array($ext , $extensions)) 
-    {
-        parseFile($object->getPathname());
+		//echo $object->getFilename()."<br>";
 
 
-    }
+		$ext = "";
+
+		$ar3 = explode( '.', $object->getFilename());
+		if (Count($ar3) > 1)
+			$ext =  ($ar3[1]);
+
+		
+
+
+	    if(in_array($ext , $extensions)) 
+	    {
+	        parseFile($object->getPathname());
+
+
+	    }
+	}
 }
 
 
-
 }
 
 
-usort($index, 'cmpStr');
+usort ($index, 'cmpStr');
 
 
 
@@ -2293,6 +2329,6 @@ function cmpStr($a, $b)
 {
   
 
-     return strcasecmp($a[0], $b[0]);
+     return strcasecmp ($a[0], $b[0]);
  }
 ?>

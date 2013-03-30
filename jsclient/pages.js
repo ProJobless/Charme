@@ -1,5 +1,21 @@
 
 
+/***
+	Name:
+	page_authenticated
+
+	Info:
+	Main container with navigation. Init at login() or $.ready when user is logged in.
+
+	Properties:
+	currentView:view_page:The current page. Do not set!
+
+	Location:
+	pages.js
+
+	Code:JS:
+	container_main= new page_authenticated({el:'#layout'});
+*/
 
 
 page_authenticated = Backbone.View.extend({   

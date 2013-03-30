@@ -122,7 +122,19 @@ function apl_request(requests, callback, ses,srv)
 
 
 
+/***
+	Name:
+	$.fn.serializeObject
 
+	Info:
+	Serialize form to JSON object.
+
+	Location:
+	apl/request.js
+
+	Code:JS:
+	var json = $('#myform').serializeObject();
+*/
 
 $.fn.serializeObject = function()
 {
