@@ -69,10 +69,10 @@ class UserRegistration implements \App\Models\Action
 		{
 			// Insert user into database...
 			$arr["success"] = 1; // Registration was successful!
-			
+	
 			$obj = array(
 			"username" => $data["username"],
-			"password"=>md5($CHARME_SETTINGS["passwordSalt"].$data["password"]),
+			"password"=>hash('sha256',$CHARME_SETTINGS["passwordSalt"].$data["password"]),
 			"userid" => $data["username"]."@".$data["server"],
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],

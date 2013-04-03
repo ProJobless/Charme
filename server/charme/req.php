@@ -192,7 +192,7 @@ foreach ($data["requests"] as $item)
 			if (!isset($CHARME_SETTINGS["passwordSalt"]))
 				die("CHARME_SETTINGS NOT INCLUDED");
 
-			$p2 =md5($CHARME_SETTINGS["passwordSalt"].$p1);
+			$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
 			
 
 			
