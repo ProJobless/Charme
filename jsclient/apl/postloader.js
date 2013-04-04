@@ -20,6 +20,9 @@
 function apl_postloader_setup(callback)
 {
 	//TODO: Add a callback funciton here
+	if (charmeUser == null)
+		callback();
+
 	apl_request(
     {"requests" : [
     {"id" : "lists_get"}

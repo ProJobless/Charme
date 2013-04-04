@@ -1,0 +1,5 @@
+
+
+ <% _.each( rc.messages, function(item){ %>
+    <li id='nav_<%- item._id.$id %>' ><a  href='#talks/<%- item._id.$id %>'><%- item.sender %><div><%- item.messagePreview %></div></a></li>
+  <% }); %>

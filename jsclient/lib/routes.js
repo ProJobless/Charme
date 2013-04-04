@@ -50,11 +50,14 @@ console.log("USEROBJ");
     apl_postloader_setup(function(){
 
     if (isLoggedIn())
-        container_main.render();
+    {
+        container_main.render();}
     else
+    {
+
         container_guest.render();
 
-
+    }
 
  var AppRouter = Backbone.Router.extend({
         routes: {
@@ -393,7 +396,7 @@ console.log(data);
                 {
 
                    // also ask for certificate
-                   passphrase =prompt("Please enter your passphrase","S7zvY11iYk1tYZlHz1af");
+                   passphrase =prompt("Please enter your passphrase","kzvKiHbQtXZYUOzO5Wz6");
                    // localStorage.setItem("!user_"+u);
 
                    //charme_private_rsakey
@@ -405,14 +408,17 @@ console.log(data);
 
                 }
                 console.log("TO DECRYPT:");
-                console.log(data.user_login.rsa);
+                console.log(data.user_login);
                 try {
+
                     
+
                     var tt  = sjcl.decrypt(passphrase, (data.user_login.rsa));
                     //v.plaintext = sjcl.decrypt(passphrase, ciphertext, {}, rp);
-                    console.log("decrpyted rsa key is:");
-                    charme_private_rsakey = tt;
+                    console.log("decrpyted rsa key is:"+tt);
 
+                    charme_private_rsakey = $.parseJSON(tt);
+                    console.log(charme_private_rsakey);
                     // Success! -> Login!
 
                     // Save PHP Session Key
@@ -482,7 +488,8 @@ function isLoggedIn()
 {
 
 
-    if (charmeUser != null)
+
+    if (charmeUser != null && charmeUser != undefined )
     return true;
     return false;
 }

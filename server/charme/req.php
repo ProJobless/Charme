@@ -104,7 +104,7 @@ foreach ($data["requests"] as $item)
 {
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("user_login", "user_register", "profile_get"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("user_login", "user_register", "profile_get", "message_receive"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -118,26 +118,31 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = $cursor["pubKey"];
 		break;
 
-		case "message_register":
-			//
-			$col = \App\DB\Get::Collection();
-			$col->messages->insert(
-				array("receivers"=> ($item["receiver"]),
-					"sender"=> ($item["sender"]),
-					"encMessage"=> ($item["message"])
+		case "messages_get":
 
-					));
+
+			$col = \App\DB\Get::Collection();
+			$returnArray[$action] = iterator_to_array($col->testmessages2->find(array("receiver" => $_SESSION["charme_userid"])), false);
+			
 
 		break;
 
 		// Get message from server
 		case "message_receive" :
+		echo "RECIEVE";
+	print_r($item);
+			foreach ($item["localreceivers"] as $receiver)
+			{
+				$col = \App\DB\Get::Collection();
+				$col->testmessages2->insert(array(
+				"sender" => $item["sender"],
+				"encMessage" => $item["encMessage"],
+				"aesEnc" => $item["aesEnc"],
+				"receiver" => $receiver, 
+				));
 
-			$col->messages->insert(array(
-							"sender" => $item["sender"],
-							"encMessage" => $item["encMessage"],
-							"receiver" => $item["receiver"]
-							));
+			}
+
 		break;
 
 		// Get message from client
@@ -146,10 +151,38 @@ foreach ($data["requests"] as $item)
 			
 			$sendername = "Name of id ".$_SESSION["charme_userid"];
 			
+		
+
+
+			foreach ($item["receivers"] as $receiver)
+			{
+				// Remove AES keys for other people
+				$item["receivers2"][]  = $receiver["charmeId"];
+			}
+
+
 			foreach ($item["receivers"] as $receiver)
 			{
 				// Send MEssage to receiver.
+			
 
+				$req21 = new \App\Requests\JSON(
+					$receiver["charmeId"],
+					$_SESSION["charme_userid"],
+
+					array("requests" => array(
+
+						"id" => "message_receive",
+						"localreceivers" => array($receiver["charmeId"]),
+						"allreceivers" => $item["receivers2"],
+						"encMessage" => $item["encMessage"],
+						"sender" => $item["sender"],
+						"aesEnc" => $receiver["aesEnc"],
+
+						))
+
+					);
+				$req21->send(true);
 
 			}
 

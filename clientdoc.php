@@ -2044,33 +2044,6 @@ pre .chunk {
 EOD;
 
 
-
-
-foreach ($docs as $doc)
-{
-
-$input = $doc["input"];
-$outputfile = $doc["outputfile"];
-$extensions = $doc["extensions"];
-$title = $doc["title"];
-$foreword = $doc["foreword"];
-
-
-$commands = array("Properties:","Author:", "Code:PHP:", "Code:JS:", "Namespace:", "Name:", "Info:", "Params:");
-$output = "";
-
-
-
-$fh = fopen($outputfile, 'w') or die("can't open file");
-
-
-	fwrite($fh, "<html><script>".$highlight."</script><style>".$css."</style><script>hljs.initHighlightingOnLoad();</script></head><body><h1>".$title."</h1>".$foreword);
-
-
-$index = array();
-$iteratorIndex = 1;
-
-
 function parseBlock($blockId, $content)
 {
 	global $output, $fh, $iteratorIndex, $index;
@@ -2096,11 +2069,43 @@ function parseBlock($blockId, $content)
 		
 		//echo "cont;<br><br>".$content."<br><br>";
 	}
+		if ($blockId == "Namespace:")
+	{
+		fwrite($fh, "<h3>Namespace</h3>". (htmlentities(($content)))."");
+		
+		//echo "cont;<br><br>".$content."<br><br>";
+	}
 	if ($blockId == "Returns:")
 	{	
 		fwrite($fh, "<h3>Info</h3>". $content."");
 		
 	}
+	if ($blockId == "Methods:")
+	{	
+
+		/* Format:
+		Param1: 
+		Param2: 
+		*/
+
+			  $arr = explode("\n", $content);
+		
+			$content  ="<table>";
+		    foreach ($arr as $line2) {
+
+
+		    		$linea = explode(":", $line2);
+		    		if (Count($linea) > 2)
+		    		$content .= "<tr><td style='font-family: Consolas, monospace; font-weight:bold;'>".$linea[0]."</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>".$linea[1]."</td><td>".htmlentities($linea[2])."</td></tr>";
+
+		    }
+		    $content  .="</table>";
+
+		fwrite($fh, "<h3>Methods</h3>".$content."");
+		
+	}
+
+
 	if ($blockId == "Properties:")
 	{	
 
@@ -2248,6 +2253,33 @@ function parseFile($filename)
 		 
 
 }
+
+
+
+foreach ($docs as $doc)
+{
+
+$input = $doc["input"];
+$outputfile = $doc["outputfile"];
+$extensions = $doc["extensions"];
+$title = $doc["title"];
+$foreword = $doc["foreword"];
+
+
+$commands = array("Properties:","Author:","Namespace:", "Methods:", "Code:PHP:", "Code:JS:", "Namespace:", "Name:", "Info:", "Params:");
+$output = "";
+
+
+
+$fh = fopen($outputfile, 'w') or die("can't open file");
+
+
+	fwrite($fh, "<html><script>".$highlight."</script><style>".$css."</style><script>hljs.initHighlightingOnLoad();</script></head><body><h1>".$title."</h1>".$foreword);
+
+
+$index = array();
+$iteratorIndex = 1;
+
 
 
 

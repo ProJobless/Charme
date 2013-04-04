@@ -56,4 +56,5 @@ self.onmessage = function(e) {
 	rsa.setPublic(n, e);
 	// Set properties for encryption
 	rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
+	var str = rsa.decrypt("SOME ENCRYPTED TEXT HERE");
 */

@@ -23,7 +23,7 @@ Backbone.View.prototype.close = function(){
 	sendMessageForm
 
 	Info:
-	Generate a new message box with zthe specified receivers
+	Generate a new message box with the specified receivers
 
 	Params:
 	receivers:JSON Object:Receiver list in format [{id: 'alice@myserver.com', name: 'Alice'},{id: "bob@myserver.com", name: "Bob"}]
@@ -666,8 +666,21 @@ worker.onmessage = function(e) {
 
 	//alert(e.data.n.toString());
 
-	var certificate={version:1,rsa:{n: e.data.n.toString() }};
+	//n, e, d, p, q, dmp1, dmq1, coeff
+	var certificate={version:1,rsa:{
+		n: e.data.n.toString(), 
+		e: e.data.e.toString(), 
+		d: e.data.d.toString(), 
+		p: e.data.p.toString(), 
+		q: e.data.q.toString(), 
+		dmp1: e.data.dmp1.toString(), 
+		dmq1: e.data.dmq1.toString(), 
+		coeff: e.data.coeff.toString(), 
 
+
+	}};
+	console.log("certificate is");
+	console.log( JSON.stringify(certificate));
 
 
  	$('#template_certok').show();
@@ -1040,7 +1053,7 @@ var view_talks = view_page.extend({
 	newMsg: function(ev)
 	{
 	    // Load homepage and append to [sharecontainer]
-alert("New message");
+sendMessageForm({});
 	},
 	getData: function () {
 		var templateData = {globaldata : [], test:"test"	};
@@ -1051,9 +1064,68 @@ alert("New message");
 
 	postRender: function(){
 		setSCHeight();
-		console.log("set talks height");
+	
+		this.loadMessages(0);
+		// Load some messages
 
+	},
+	loadMessages: function (start)
+	{
+		// load template
+
+	
+
+		 apl_request({"requests" :
+    [
+      {"id" : "messages_get"}
+    ]
+  }, function(d2){ 
+
+
+		$.get("templates/control_messagelist.html", function (d)
+		{
+			console.log("RSA PRV");
+			console.log(charme_private_rsakey);
+
+			jQuery.each(d2.messages_get, function() {
+				
+
+				// Decode AES Key with private RSA Key
+				var rsa = new RSAKey();
+
+				rsa.setPrivateEx(charme_private_rsakey.rsa.n, charme_private_rsakey.rsa.e, charme_private_rsakey.rsa.d,
+				 charme_private_rsakey.rsa.p, charme_private_rsakey.rsa.q, charme_private_rsakey.rsa.dmp1, 
+				 charme_private_rsakey.rsa.dmq1, charme_private_rsakey.rsa.coeff);
+
+				 var aeskey = rsa.decrypt(this.aesEnc);
+
+
+
+				 this.messagePreview = sjcl.decrypt(aeskey, this.encMessage);
+			});
+
+
+			var data = {messages: d2.messages_get};
+		
+			_.templateSettings.variable = "rc";
+			var template = _.template(d, data); 
+
+
+
+
+			$(".msgItems").append(template);
+			
+			$(".msgItems li a:first").addClass("active");
+		});
+
+	});
+		// Decrpyt, TODO: in background Thread!
+
+		// append....
+
+		// load first message
 	}
+
 
 });
 
