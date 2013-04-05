@@ -1,5 +1,9 @@
 
 
  <% _.each( rc.messages, function(item){ %>
-    <li id='nav_<%- item._id.$id %>' ><a  href='#talks/<%- item._id.$id %>'><%- item.sender %><div><%- item.messagePreview %></div></a></li>
+    <li id='nav_<%- item._id.$id %>' ><a  href='#talks/<%- item._id.$id %>'><%- item.messageTitle %><div><%- item.messagePreview %></div></a></li>
   <% }); %>
+
+  <a class='more' id='moremsg' style='margin:16px;'>
+ More...
+  </a>

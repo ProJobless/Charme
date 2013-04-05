@@ -491,8 +491,8 @@ view_subpage = Backbone.View.extend({
 
 function setSCHeight()
 {
-$(".msgScrollContainer").css("height", ($(window).height()-82)+"px");
-$('.nano').nanoScroller();
+	$(".msgScrollContainer").css("height", ($(window).height()-82)+"px");
+	$('.nano').nanoScroller();
 }
 
 $(window).resize(function() {
@@ -580,7 +580,7 @@ var view_register = view_page.extend({
 
 
 	postRender: function(){
-		setSCHeight();
+		
 		console.log("set talks height");
 $("#box_errors div").hide();
 $("#box_errors").hide();
@@ -1041,7 +1041,63 @@ var view_welcome = view_page.extend({
 
 });
 
+var view_talks_subpage = view_subpage.extend({
+	options: {template:'talks_', el: '#page3'},
+	initialize: function()
+	{
+		this.loadMessages(0);
+		
+	},
+	loadMessages: function(start)
+	{
 
+		console.log("messages_get_sub_START");
+		apl_request({"requests" :
+		[
+			{"id" : "messages_get_sub", start: start, "superId":  this.options.superId}
+		]
+		}, function(d2){ 
+
+			
+			
+			
+			$.get("templates/control_messageview.html", function (d)
+			{
+				// RSA Decode, for each:
+				// d2.messages_get_sub
+
+				var rsa = new RSAKey();
+				rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
+				 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
+				 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
+				
+
+				//alert(d2.messages_get_sub.aesEnc);
+
+				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
+
+				jQuery.each(d2.messages_get_sub.messages, function() {
+				
+					this.msg = sjcl.decrypt(aeskey, this.encMessage);;
+				});
+				console.log("messages_get_sub:::");
+				console.log(d2);
+				// Decode AES Key with private RSA Key
+				/*
+
+				
+
+				 var aeskey = rsa.decrypt(this.aesEnc);*///sjcl.decrypt(aeskey, this.encMessage);
+
+				_.templateSettings.variable = "rc";
+				var tmpl = _.template(d, d2.messages_get_sub); 
+				$(".talkmessages").append(tmpl);
+
+			});
+
+		});
+	}
+});
 
 
 var view_talks = view_page.extend({
@@ -1049,6 +1105,11 @@ var view_talks = view_page.extend({
 	events: {
 
 		"click  #but_newMessage" : "newMsg"
+	
+	},
+	initialize: function()
+	{
+		this.paginationIndex=0;
 	},
 	newMsg: function(ev)
 	{
@@ -1063,7 +1124,7 @@ sendMessageForm({});
 	},
 
 	postRender: function(){
-		setSCHeight();
+		
 	
 		this.loadMessages(0);
 		// Load some messages
@@ -1073,15 +1134,15 @@ sendMessageForm({});
 	{
 		// load template
 
-	
+	var that = this;
 
 		 apl_request({"requests" :
     [
-      {"id" : "messages_get"}
+      {"id" : "messages_get", start: start}
     ]
   }, function(d2){ 
 
-
+  		
 		$.get("templates/control_messagelist.html", function (d)
 		{
 			console.log("RSA PRV");
@@ -1089,20 +1150,19 @@ sendMessageForm({});
 
 			jQuery.each(d2.messages_get, function() {
 				
-
 				// Decode AES Key with private RSA Key
-				var rsa = new RSAKey();
+				/*var rsa = new RSAKey();
 
-				rsa.setPrivateEx(charme_private_rsakey.rsa.n, charme_private_rsakey.rsa.e, charme_private_rsakey.rsa.d,
-				 charme_private_rsakey.rsa.p, charme_private_rsakey.rsa.q, charme_private_rsakey.rsa.dmp1, 
-				 charme_private_rsakey.rsa.dmq1, charme_private_rsakey.rsa.coeff);
+				rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
+				 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
+				 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
 
-				 var aeskey = rsa.decrypt(this.aesEnc);
+				 var aeskey = rsa.decrypt(this.aesEnc);*///sjcl.decrypt(aeskey, this.encMessage);
+				 this.messageTitle = this.people;
+				 this.messagePreview = this.time;  //.join(", ");
 
-
-
-				 this.messagePreview = sjcl.decrypt(aeskey, this.encMessage);
 			});
+			console.log(d2.messages_get);
 
 
 			var data = {messages: d2.messages_get};
@@ -1110,12 +1170,25 @@ sendMessageForm({});
 			_.templateSettings.variable = "rc";
 			var template = _.template(d, data); 
 
-
-
-
 			$(".msgItems").append(template);
+
+			 $('#moremsg').click(function(){
+				$('#moremsg').remove();
+			 	that.loadMessages(++this.paginationIndex);
+			 });
+
+			 $('.msgItems li a').click(function(){
+			 	$('.msgItems li a').removeClass("active");
+				$(this).addClass("active");
 			
+			 });
+
+
+		
 			$(".msgItems li a:first").addClass("active");
+			 setSCHeight();
+		
+
 		});
 
 	});

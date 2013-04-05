@@ -13,6 +13,11 @@ var charmeUser;
 
 	Params:
 	uid:String:The user id, "me@myserver.com" for example.
+	
+	Properties:
+	sessionId:String:Server Session Id, do not set!
+	sessionPassphrase:String:Passphrase encoded with sessionId
+	certificate: RSA Certificate, initilaized with apl_setup2();
 
 	Location:
 	apl

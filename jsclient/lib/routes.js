@@ -25,29 +25,20 @@ var container_main ;
 
 $(function(){
    
-    // FIRST STEP: CHEKC FOR USER SESSION!!!
-    if ((localStorage.getItem("user") !==  null))
-    charmeUser = new apl_user(localStorage.getItem("user"));
-
-
-
-console.log("USEROBJ");
- console.log(charmeUser);
+    if (isLoggedIn())
+         charmeUser = new apl_user(localStorage.getItem("user"));
 
     if (container_main == null)
      container_main= new page_authenticated({el:'#layout'});
 
 
-    //container_main.userIdURL = charmeUser.userIdURL;
-
-
-
-    if (isLoggedIn())
-    console.log("is logged in!");
-
-
     // get apl data, like lists, friends etc. from server
-    apl_postloader_setup(function(){
+    apl_setup(function(){
+
+    apl_setup2();
+
+
+
 
     if (isLoggedIn())
     {
@@ -125,19 +116,27 @@ console.log("USEROBJ");
 
         if (id == undefined)
             id = "";
-       
-
+    
         if (container_main.currentViewId != "talks")
         {
             var pa = new view_talks({template: "talks", navMatch: "talks"});
             container_main.setCurrent(pa);
-            container_main.currentView.render();
+            
         }
+         if (id != undefined)
+         {
+            var vsd =  new view_talks_subpage({superId: id});
+            container_main.currentView.setSub(vsd);        
+         }
+
+        
+         container_main.currentView.render();
+
+
         
 
-        //var vsd =  new view_settings_sub({ template: "talks_", navMatch: '#nav_'+id, el: '#page3'});
-       // container_main.currentView.setSub(vsd);
-       // container_main.currentView.render();
+      
+       
 
      
     });
@@ -291,7 +290,7 @@ app_router.on('route:getWelcome', function (id) {
      
 
     // Go to stream if no route specified
-    if (charmeUser == null)
+    if (!isLoggedIn())
         location.replace('#welcome');
     else
         location.replace('#stream');
@@ -322,7 +321,29 @@ app_router.on('route:getWelcome', function (id) {
 
 var charme_private_rsakey = null;
 
+/*
 
+
+    Name:
+    login()
+
+    Info:
+
+    Login function - After server login status is OK:
+
+    * Get sessionId
+    * Looking up for password encrypted passphrase in localStorage (`localStorage.getItem("PassPassphrase");`):
+    * If===null: Show input field, and store encrypted with password
+
+    Decrypt with password and 
+    Enrypt with session id
+
+    Location:
+    apl/routes.js
+
+  
+ 
+*/
 function login()
 {
 
@@ -382,54 +403,39 @@ function login()
             ]
         }, function(data){
 
-
 console.log(data);
-            console.log("logged in and received:"+data.user_login.status+" on url ");
-          //  console.log(data);
-
+console.log("u"+u +"p"+p);
             if (data.user_login.status == "PASS")
             {
-                
 
-                var passphrase = "";
-                if (localStorage.getItem("!user_"+u) == null)
-                {
 
-                   // also ask for certificate
-                   passphrase =prompt("Please enter your passphrase","kzvKiHbQtXZYUOzO5Wz6");
-                   // localStorage.setItem("!user_"+u);
-
-                   //charme_private_rsakey
-
-                }
-                else
-                {
-                    // Decrpyt stored item with password.
-
-                }
-                console.log("TO DECRYPT:");
-                console.log(data.user_login);
                 try {
 
-                    
 
-                    var tt  = sjcl.decrypt(passphrase, (data.user_login.rsa));
-                    //v.plaintext = sjcl.decrypt(passphrase, ciphertext, {}, rp);
-                    console.log("decrpyted rsa key is:"+tt);
-
-                    charme_private_rsakey = $.parseJSON(tt);
-                    console.log(charme_private_rsakey);
-                    // Success! -> Login!
-
-                    // Save PHP Session Key
                     localStorage.setItem("user", u);
+
                     charmeUser = new apl_user(u); 
                     // Save server
                     container_main.userIdURL = charmeUser.userIdURL;
 
-                    // Load Data like lists, friends etc.
-					apl_postloader_setup(function()
+					apl_setup(function()
 					{
+                        var passphrase;
+                        if (localStorage.getItem("passPassphrase") !== null)
+                             passphrase =  sjcl.decrypt(p, localStorage.getItem("passPassphrase")); 
+                        else
+                        {
+                            passphrase =prompt("Please enter your passphrase","XD3dPqgxYdfrZCbBUWCP");
+                            localStorage.setItem("passPassphrase", sjcl.encrypt(p, passphrase))
+                        }
+
+                        // Store passphrase encoded with session Id.
+                        localStorage.setItem("sessionPassphrase", (sjcl.encrypt(charmeUser.sessionId, passphrase)));
+
+                        // Store encoded certificate
+                        localStorage.setItem("certificate", (data.user_login.rsa));
+
+                        apl_setup2();
 						// When completed, open main view
 						$("#welcome_main").fadeOut(0, function()
 						{
@@ -449,9 +455,7 @@ console.log(data);
 
 
                 
-              
-
-                console.log(tt);
+             
 
             }
 
@@ -480,19 +484,32 @@ function logout()
     charmeUser = null;
     location.replace("#welcome");
     localStorage.removeItem("user");
-
+    localStorage.removeItem("passphrase");
 
 }
+/***
+    Name:
+    isLoggedIn
 
+    Info:
+    Checks if the user id logged in.
+    Returns true or false.
+    
+    No certificate => Logout
+    No passphrase => Logout
+
+    Location:
+    page_modules.js
+
+*/
 function isLoggedIn()
 {
 
-
-
-    if (charmeUser != null && charmeUser != undefined )
+    if (localStorage.getItem("user") !== null)
     return true;
     return false;
 }
+
 
 
     

@@ -178,7 +178,7 @@ Welcome to Charme Documentation.
 <p>TODO:LV1: Add Mouse movement as <code>Math.random()</code> is vulnerable to cryptoanalysis.</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Key lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
 
-</code></pre><h2 id='el_2'>apl_postloader_setup
+</code></pre><h2 id='el_2'>apl_setup
 
 </h2><h3>Info</h3><p>Loads friends and Lists as <code>JSON Object</code> from Server</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function</td></tr></table><h3>Example Code</h3><pre><code>apl_postloader_setup(function(){alert(&quot;callback&quot;);});
@@ -225,7 +225,7 @@ jsclient/apl</p>
 <h2 id='el_8'>apl_user
 
 </h2><h3>Info</h3><p>Returns a User Object.</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>uid</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>String</td><td>The user id, &quot;me@myserver.com&quot; for example.</td></tr></table><h3>Example Code</h3><pre><code>var user = apl_user(&quot;me@myserver.com&quot;);
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>uid</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>String</td><td>The user id, &quot;me@myserver.com&quot; for example.</td></tr></table><h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>sessionId</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>String</td><td>Server Session Id, do not set!</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>sessionPassphrase</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>String</td><td>Passphrase encoded with sessionId</td></tr></table><h3>Example Code</h3><pre><code>var user = apl_user(&quot;me@myserver.com&quot;);
 console.log(user.server); // myserver.com
 console.log(user.username); // me
 console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
@@ -253,6 +253,7 @@ var n =  rsa.n.toString(16);
 rsa.setPublic(n, e);
 // Set properties for encryption
 rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
+var str = rsa.decrypt(&quot;SOME ENCRYPTED TEXT HERE&quot;);
 
 </code></pre><h2 id='el_10'>routes.js
 
@@ -260,15 +261,26 @@ rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
 
 <p>Location:
 lib/routes.js</p>
-<h2 id='el_11'>page_authenticated
+<h2 id='el_11'>    isLoggedIn
+
+</h2><h3>Info</h3><pre><code>Checks if the user id logged in.
+Returns true or false.
+
+No certificate =&gt; Logout
+No passphrase =&gt; Logout
+
+Location:
+page_modules.js
+</code></pre>
+<h2 id='el_12'>page_authenticated
 
 </h2><h3>Info</h3><p>Main container with navigation. Init at login() or $.ready when user is logged in.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>currentView</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>view_page</td><td>The current page. Do not set!</td></tr></table><h3>Example Code</h3><pre><code>container_main= new page_authenticated({el:'#layout'});
 
-</code></pre><h2 id='el_12'>page_login
+</code></pre><h2 id='el_13'>page_login
 
 </h2><h3>Info</h3><p>Container if user is NOT logged in.</p>
-<h2 id='el_13'>sendMessageForm
+<h2 id='el_14'>sendMessageForm
 
 </h2><h3>Info</h3><p>Generate a new message box with the specified receivers</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>receivers</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>JSON Object</td><td>Receiver list in format [{id</td></tr></table><h3>Example Code</h3><pre><code>// Send a message to Alice
@@ -277,7 +289,7 @@ sendMessage(Form(
 		{id: 'alice@myserver.com', name: 'Alice'}
 	]);)
 
-</code></pre><h2 id='el_14'>sendMessage
+</code></pre><h2 id='el_15'>sendMessage
 
 </h2><h3>Info</h3><p>Submit the form generated with <code>sendMessageForm()</code>. Warning: Should only be called after a message form
 has been generated with <code>sendMessageForm()</code>
@@ -293,7 +305,7 @@ the messages.</p>
 
 <p>Location:
 page_modules.js</p>
-<h2 id='el_15'>view_page
+<h2 id='el_16'>view_page
 
 </h2><h3>Info</h3><p>Default page class. Build new pages on this model. <code>postRender</code> is called after rendering is complete.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.template</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which template from templates folder do we us?</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.needLogin</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Only for registred users? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.useSidebar</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Sidebar enabled? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.navMatch</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which element of main navigation should be highlighted? </td></tr></table><h3>Example Code</h3><pre><code>
@@ -319,7 +331,7 @@ postRender: function()
 var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 
-</code></pre><h2 id='el_16'>Introduction to Charme Cryptography
+</code></pre><h2 id='el_17'>Introduction to Charme Cryptography
 
 </h2><h3>Info</h3><p><em>See Also</em></p>
 
@@ -327,21 +339,23 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 <li><code>randomAESKey</code></li>
 <li><code>rsa</code></li>
 </ul>
-<div class='index'><ul><li><a href='#el_5'>  apl_request
+<div class='index'><ul><li><a href='#el_11'>    isLoggedIn
+
+</a></li><li><a href='#el_5'>  apl_request
 
 </a></li><li><a href='#el_6'>$.fn.serializeObject
 
 </a></li><li><a href='#el_7'>apl/updater.js
 
-</a></li><li><a href='#el_2'>apl_postloader_setup
+</a></li><li><a href='#el_2'>apl_setup
 
 </a></li><li><a href='#el_8'>apl_user
 
-</a></li><li><a href='#el_16'>Introduction to Charme Cryptography
+</a></li><li><a href='#el_17'>Introduction to Charme Cryptography
 
-</a></li><li><a href='#el_11'>page_authenticated
+</a></li><li><a href='#el_12'>page_authenticated
 
-</a></li><li><a href='#el_12'>page_login
+</a></li><li><a href='#el_13'>page_login
 
 </a></li><li><a href='#el_1'>randomAesKey
 
@@ -349,14 +363,14 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 </a></li><li><a href='#el_9'>rsa
 
-</a></li><li><a href='#el_14'>sendMessage
+</a></li><li><a href='#el_15'>sendMessage
 
-</a></li><li><a href='#el_13'>sendMessageForm
+</a></li><li><a href='#el_14'>sendMessageForm
 
 </a></li><li><a href='#el_4'>ui_closeBox
 
 </a></li><li><a href='#el_3'>ui_showBox
 
-</a></li><li><a href='#el_15'>view_page
+</a></li><li><a href='#el_16'>view_page
 
 </a></li></ul></div></body></html>

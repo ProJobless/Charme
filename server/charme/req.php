@@ -118,29 +118,85 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = $cursor["pubKey"];
 		break;
 
+		case "sessionId_get":
+			$returnArray[$action] = array("sessionId" => session_id());
+		break;
+
+		case "messages_get_sub":
+			
+			if (isset($item["start"]))
+				$start = $item["start"];
+			else
+				$start = 0;
+
+			$col = \App\DB\Get::Collection();
+			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), array("aesEnc"));;
+			// Get 10 conversations 
+			$returnArray[$action] = array("messages" => 
+			iterator_to_array(
+				$col->messages->find(array("superid" =>  new MongoId($item["superId"])))
+				->sort(array("time" => 1))
+				->limit(10)
+				->skip(10*$start)
+			, false), "aesEnc" =>  $res["aesEnc"]);
+			
+
+		break;
+
 		case "messages_get":
+
+			if (isset($item["start"]))
+				$start = $item["start"];
+			else
+				$start = 0;
 
 
 			$col = \App\DB\Get::Collection();
-			$returnArray[$action] = iterator_to_array($col->testmessages2->find(array("receiver" => $_SESSION["charme_userid"])), false);
+
+			// Get 10 conversations 
+			$returnArray[$action] =
+			iterator_to_array(
+				$col->conversations->find(array("receiver" => $_SESSION["charme_userid"]))
+				->sort(array("time" => 1))
+				->limit(10)
+				->skip(10*$start)
+			, false);
 			
 
 		break;
 
 		// Get message from server
 		case "message_receive" :
-		echo "RECIEVE";
-	print_r($item);
-			foreach ($item["localreceivers"] as $receiver)
-			{
-				$col = \App\DB\Get::Collection();
-				$col->testmessages2->insert(array(
-				"sender" => $item["sender"],
-				"encMessage" => $item["encMessage"],
-				"aesEnc" => $item["aesEnc"],
-				"receiver" => $receiver, 
-				));
 
+			///echo "RECIEVE";
+			//print_r($item);
+
+			// If receiver-sender relation is already there -> append message!
+
+			$item["localreceivers"][] = $item["sender"];
+			asort($item["localreceivers"]);
+
+			foreach ($item["localreceivers"]as $receiver)
+			{
+				// Find conversation $item["aesEnc"] = aesEnc
+				// if not exists => create conversation
+				$col = \App\DB\Get::Collection();
+
+				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
+
+				$content = array(
+				"people" => $item["sender"],
+				//
+				"aesEnc" => $item["aesEnc"],
+				"receiver" => $receiver,
+				"time" => new MongoDate(time())
+				);
+
+
+				$col->conversations->update(array("aesEnc" => $item["aesEnc"]), $content ,  array("upsert" => true));
+				$res = $col->conversations->findOne(array("aesEnc" => $item["aesEnc"]), array("_id"));
+
+				$col->messages->insert(array("superid" => $res["_id"], "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
 			}
 
 		break;
