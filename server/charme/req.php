@@ -48,7 +48,16 @@ header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie send
 
 session_start();
 
+// logging Function
 
+@unlink("log.txt");
+
+function clog($str)
+{
+	$fd = fopen("log.txt", "a");
+	fwrite($fd, $str . "\n");
+	fclose($fd);
+}
 /**
  * req.php
  * Parses incoming client requests
@@ -129,16 +138,19 @@ foreach ($data["requests"] as $item)
 			else
 				$start = 0;
 
+
+			//echo $item["superId"];
+
 			$col = \App\DB\Get::Collection();
-			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), array("aesEnc"));;
+			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), array("aesEnc", "people", "conversationId"));;
 			// Get 10 conversations 
 			$returnArray[$action] = array("messages" => 
 			iterator_to_array(
-				$col->messages->find(array("superid" =>  new MongoId($item["superId"])))
+				$col->messages->find(array("conversationId" =>  new MongoId($res["conversationId"])))
 				->sort(array("time" => 1))
 				->limit(10)
 				->skip(10*$start)
-			, false), "aesEnc" =>  $res["aesEnc"]);
+			, false), "aesEnc" =>  $res["aesEnc"], "people" => $res["people"], "conversationId" => new MongoId($res["conversationId"]));
 			
 
 		break;
@@ -168,13 +180,14 @@ foreach ($data["requests"] as $item)
 		// Get message from server
 		case "message_receive" :
 
-			///echo "RECIEVE";
-			//print_r($item);
-
+			//echo "!!!".$item["conversationId"];
 			// If receiver-sender relation is already there -> append message!
 
-			$item["localreceivers"][] = $item["sender"];
+			//$item["localreceivers"][] = $item["sender"];
 			asort($item["localreceivers"]);
+
+		
+
 
 			foreach ($item["localreceivers"]as $receiver)
 			{
@@ -183,71 +196,130 @@ foreach ($data["requests"] as $item)
 				$col = \App\DB\Get::Collection();
 
 				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
+				clog(print_r($item, true));
 
-				$content = array(
-				"people" => $item["sender"],
-				//
-				"aesEnc" => $item["aesEnc"],
-				"receiver" => $receiver,
-				"time" => new MongoDate(time())
-				);
+				if (isset($item["aesEnc"]))
+				{
+					$content = array(
+					"people" => $item["localreceivers"],
+					//
+					"aesEnc" => $item["aesEnc"],
+					"conversationId" => new MongoId($item["conversationId"]),
+					"receiver" => $receiver,
+					"messagePreview" => $item["messagePreview"],
+					"time" => new MongoDate(time())
+					);
 
+					// because time changes
+					$col->conversations->update(array("aesEnc" => $item["aesEnc"]), $content ,  array("upsert" => true));
+				}
 
-				$col->conversations->update(array("aesEnc" => $item["aesEnc"]), $content ,  array("upsert" => true));
-				$res = $col->conversations->findOne(array("aesEnc" => $item["aesEnc"]), array("_id"));
-
-				$col->messages->insert(array("superid" => $res["_id"], "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
+				$col->messages->insert(array("conversationId" =>   new MongoId($item["conversationId"]), "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
 			}
 
 		break;
 
+
 		// Get message from client
+		case "message_distribute_answer":
+
+			$col = \App\DB\Get::Collection();
+			$sendername = "Name of id ".$_SESSION["charme_userid"];
+			$convId = new MongoId($item["conversationId"]);
+
+			// Find receivers of this message by $item["conversationId"]
+			$res = $col->conversations->findOne(array("conversationId"=> ($convId)), array('people'));
+
+			foreach ($res["people"] as $receiver)
+			{
+					$data = array("requests" => array(
+
+						"id" => "message_receive",
+						"localreceivers" => array($receiver),
+						"allreceivers" => $res["people"],
+						"encMessage" => $item["encMessage"],
+						"messagePreview" => $item["messagePreview"],
+
+						"sender" => $_SESSION["charme_userid"],
+						"conversationId" => $convId->__toString(),
+						//"aesEnc" => $receiver["aesEnc"], known already by receiver
+
+
+						));
+
+					$req21 = new \App\Requests\JSON(
+					$receiver,
+					$_SESSION["charme_userid"],
+					$data
+					
+					);
+
+
+				$req21->send();
+			}
+
+
+		break;
+
+
 		case "message_distribute":
 			$col = \App\DB\Get::Collection();
 			
 			$sendername = "Name of id ".$_SESSION["charme_userid"];
 			
-		
+			// As this is a new message we generate a unique converation Id
+			
+			clog(print_r($item, true));
+
 
 
 			foreach ($item["receivers"] as $receiver)
 			{
-				// Remove AES keys for other people
+				// Remove AES keys for other people, TODO: Not for answers!
 				$item["receivers2"][]  = $receiver["charmeId"];
 			}
 
+			$convId = new MongoId();
 
 			foreach ($item["receivers"] as $receiver)
 			{
 				// Send MEssage to receiver.
-			
 
-				$req21 = new \App\Requests\JSON(
-					$receiver["charmeId"],
-					$_SESSION["charme_userid"],
-
-					array("requests" => array(
+				// if its a new message
+				$data = array("requests" => array(
 
 						"id" => "message_receive",
 						"localreceivers" => array($receiver["charmeId"]),
 						"allreceivers" => $item["receivers2"],
 						"encMessage" => $item["encMessage"],
-						"sender" => $item["sender"],
 						"aesEnc" => $receiver["aesEnc"],
+						"messagePreview" => $item["messagePreview"],
+						"sender" => $_SESSION["charme_userid"],
+						"sendername" => $sendername,
+						"conversationId" => $convId->__toString(),
+				
 
-						))
+						));
 
+				$req21 = new \App\Requests\JSON(
+					$receiver["charmeId"],
+					$_SESSION["charme_userid"],
+					$data
+					
 					);
-				$req21->send(true);
+
+			
+				$req21->send();
 
 			}
 
-
+				/*
 			$col->testmsg->insert(array(
 				"receivers" => $item["receivers"],
 				"encMessage" => $item["encMessage"],
 				"sender" => $_SESSION["charme_userid"]
-				));
+				));*/
+
 			// Send replica to all receiver servers.
 
 

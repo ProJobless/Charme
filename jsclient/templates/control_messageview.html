@@ -1,19 +1,17 @@
 
+<% if (rc.conversationId) { %>
 <a class='more' id='moremsg2' style='margin:16px;'>
  More...
   </a>
-
-
-
+  <div class='meta' id='msg_aeskey' data-val="<%- rc.aesEnc %>"></div>
+    <div class='meta' id='msg_conversationId' data-val="<%- rc.conversationId.$id %>"></div>
+  <% } %>
 
  <% _.each( rc.messages, function(item){ %>
 
     <div class="message">
 <div class="top">
-	<%- item.sender %>
+	<a href='#user/<%- item.sender %>'><%- item.sender %></a>
 </div><%- item.msg %>
 </div>
   <% }); %>
-
-
-

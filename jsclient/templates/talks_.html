@@ -1,11 +1,11 @@
 <div class="instantanswer"><form>
 	<input type="hidden" name="col_to" value="">
 	<input type="hidden" name="col_type" value="instant">
-	<textarea name="col_description" style="width:100%; "></textarea>
-	<div style="margin-top:8px;"><a class="button" href="javascript:sendMessageInstant()">Send</a>
+	<textarea id="inp_newmsginstant" style="width:100%; "></textarea>
+	<div style="margin-top:8px;"><a class="button" id='but_instantsend' >Send</a>
 	</form></div></div>
 
-	<div class='message'>People: </div>
+	<div class='message'>People: <span id='inp_receiversinstant'></span></div>
 
 <!-- --".implode(", ", $ppl["people"])."-->
 

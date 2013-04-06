@@ -82,6 +82,48 @@ function sendMessageForm(receivers)
 	});
 }
 
+function sendAnswer()
+{
+	var aeskey = ($('#msg_aeskey').data("val"));
+	var conversationId = ($('#msg_conversationId').data("val"));
+	var message = $('#inp_newmsginstant').val();
+	var encMessage = sjcl.encrypt(aeskey, message);
+	var messagePreview = sjcl.encrypt(aeskey, message.substring(0,127));
+
+
+	apl_request(
+	    {"requests" : [
+	    {"id" : "message_distribute_answer", "conversationId" : conversationId , "encMessage" : encMessage, "messagePreview" : messagePreview}
+
+	    ]
+		}, function(d2){
+				
+				
+				
+				$(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
+
+				$.get("templates/control_messageview.html", function (d)
+			{
+				// RSA Decode, for each:
+				// d2.messages_get_sub
+
+				_.templateSettings.variable = "rc";
+				var tmpl = _.template(d, {messages: [{msg: message, sender: charmeUser.userId}]}); 
+
+				$(".talkmessages").append(tmpl);
+
+				$('#moremsg2').remove();
+			 
+				$("html, body").animate({ scrollTop: $(document).height() }, "slow");
+
+				
+
+				});
+			
+		});
+
+}
+
 /***
 	Name:
 	sendMessage
@@ -106,21 +148,28 @@ function sendMessageForm(receivers)
 
 function sendMessage()
 {
-	// Get Public key...
-	var all = $('#inp_receivers').val().split(",");	
+	var all;
+	var message ;
+
+
+
+
+	 all = $('#inp_receivers').val().split(",");	
 	var count = 0;
-	var message = $('#inp_newmsg').val();
+	 message = $('#inp_newmsg').val();
+
 	// make random key for hybrid encryption
 	// probably more secure, but how to use?: var randKey  = sjcl.random.randomWords(4, 0);
 
-  	var aeskey = randomAesKey(32);
+  	
 
-	var encMessage = sjcl.encrypt(aeskey, message);
+	
 	var receivers = new Array();
 
 	jQuery.each(all, function() {
 		var str = this;
 
+		// Get public key for each receiver
 	apl_request(
 		    {"requests" : [
 		    {"id" : "profile_pubKey", "profileId" : this}
@@ -132,32 +181,34 @@ function sendMessage()
 			count++;
 			console.log(pk);
 			// Encrypt random key  with public key
-			
+
+			var aesEnc = "";
  			var rsa = new RSAKey();
 
- 		
-			
-			// rsa2.generate(parseInt(128),"10001");
-			// console.log(rsa2);
-			// alert(pk.n.toString(16));
-
-			//alert(pk.n.value);
+			var aeskey = randomAesKey(32);
 			rsa.setPublic(pk.n,pk.e);
 			// RSA encrypt aes key with pubKey:
-			var aesEnc = rsa.encrypt(aeskey);
+			aesEnc = rsa.encrypt(aeskey);
+		
+			
 
  			receivers.push({charmeId: str, aesEnc: aesEnc});
 
-		
+
+ 			// Send if last public key is here.
  			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
  			{
+ 				var encMessage = sjcl.encrypt(aeskey, message);
+ 				var messagePreview = sjcl.encrypt(aeskey, message.substring(0,127));
+
 	 				apl_request(
 			    {"requests" : [
-			    {"id" : "message_distribute", "receivers" : receivers, "encMessage" : encMessage, "sender": charmeUser.userId}
+			    {"id" : "message_distribute", "receivers" : receivers, "encMessage" : encMessage, "messagePreview": messagePreview,  "sender": charmeUser.userId}
 
 			    ]
 				}, function(d2){
-						alert("Message has been sent.");
+						
+					
 						ui_closeBox();
 				});
 
@@ -1045,6 +1096,9 @@ var view_talks_subpage = view_subpage.extend({
 	options: {template:'talks_', el: '#page3'},
 	initialize: function()
 	{
+		this.messagePaginationIndex = 0;
+
+		if (this.options.superId != "")
 		this.loadMessages(0);
 		
 	},
@@ -1075,10 +1129,16 @@ var view_talks_subpage = view_subpage.extend({
 				//alert(d2.messages_get_sub.aesEnc);
 
 				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
+				d2.messages_get_sub.aesEnc  = aeskey;
 
 				jQuery.each(d2.messages_get_sub.messages, function() {
-				
-					this.msg = sjcl.decrypt(aeskey, this.encMessage);;
+					
+					try{
+					this.msg = sjcl.decrypt(aeskey, this.encMessage);}
+					catch(err)
+					{
+						this.msg =err;
+					}
 				});
 				console.log("messages_get_sub:::");
 				console.log(d2);
@@ -1091,7 +1151,22 @@ var view_talks_subpage = view_subpage.extend({
 
 				_.templateSettings.variable = "rc";
 				var tmpl = _.template(d, d2.messages_get_sub); 
+
 				$(".talkmessages").append(tmpl);
+				 $(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
+				$(window).scrollTop(999999);
+
+
+ 				$('#but_instantsend').click(function(){ sendAnswer(); });
+
+				 $('#moremsg2').click(function(){
+				$('#moremsg2').remove();
+			 	that.loadMessages(++this.messagePaginationIndex);
+
+			
+
+
+			 });
 
 			});
 
@@ -1142,7 +1217,13 @@ sendMessageForm({});
     ]
   }, function(d2){ 
 
-  		
+  		 var rsa = new RSAKey();
+
+		rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
+		 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
+		 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
+
+
 		$.get("templates/control_messagelist.html", function (d)
 		{
 			console.log("RSA PRV");
@@ -1151,15 +1232,11 @@ sendMessageForm({});
 			jQuery.each(d2.messages_get, function() {
 				
 				// Decode AES Key with private RSA Key
-				/*var rsa = new RSAKey();
+				
 
-				rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
-				 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
-				 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
-
-				 var aeskey = rsa.decrypt(this.aesEnc);*///sjcl.decrypt(aeskey, this.encMessage);
+				 var aeskey = rsa.decrypt(this.aesEnc);///sjcl.decrypt(aeskey, this.encMessage);
 				 this.messageTitle = this.people;
-				 this.messagePreview = this.time;  //.join(", ");
+				 this.messagePreview = sjcl.decrypt(aeskey,this.messagePreview);  //.join(", ");
 
 			});
 			console.log(d2.messages_get);
@@ -1183,6 +1260,14 @@ sendMessageForm({});
 			
 			 });
 
+			 // Open first conversation, if no conversation open yet.
+			if ( that.sub.options.superId == "")
+			{
+				that.sub.options.superId = ($('.msgItems li a:first').data("messageid"));
+				that.sub.loadMessages(0);
+
+
+			}
 
 		
 			$(".msgItems li a:first").addClass("active");

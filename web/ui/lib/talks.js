@@ -37,6 +37,8 @@ function initTalks()
 
 	}
 	
+
+	
 $(window).resize(function() {
 setSCHeight();
 });

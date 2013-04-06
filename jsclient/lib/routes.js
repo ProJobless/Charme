@@ -123,8 +123,9 @@ $(function(){
             container_main.setCurrent(pa);
             
         }
-         if (id != undefined)
+        // if (id != "")
          {
+         
             var vsd =  new view_talks_subpage({superId: id});
             container_main.currentView.setSub(vsd);        
          }
