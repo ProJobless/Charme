@@ -426,32 +426,83 @@ foreach ($data["requests"] as $item)
 		// Notify post owner when sharing a posting
 
 		break;
-		case "lists_getRegistred" :
+		case "lists_getActive" :
 
 
 		break;
 
+		case "collection_getAll" :
+			$col = \App\DB\Get::Collection();
+			$returnArray[$action] = iterator_to_array($col->collections->find(array("owner" => $item["userId"])), false);
+
+		break;
+
+		case "collection_add" :
+			$col = \App\DB\Get::Collection();
+			$content = array(
+			  			"owner" => $_SESSION["charme_userid"],
+			  			"name" => $item["name"],
+			  			"description" => $item["description"]
+			  			);
+
+			$col->collections->insert($content);
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
+
+		break;
+
 		case "lists_update":
-		$newlists=  $item["lists"];
-		$oldlists=  $col->listitems->find(array("owner" => $_SESSION["charme_userid"], "userId" => $item["userId"]));
-		
-		/*
-		foreach ($oldlists as $item)
-		{	
-			if (in_array($item["_id"], $selectedNew ) && !in_array($item["_id"], $selectedOld))//item not yet in list
-		  	{
 
-		  		
-		  		addListItem($_SESSION["charme_user"], $item["_id"], $userId);
-		  	}
-		  	else if (!in_array($item["_id"], $selectedNew ) && in_array($item["_id"], $selectedOld))//item has been removed
-			{
+			$col = \App\DB\Get::Collection();
 
-				removeListItem($_SESSION["charme_user"], $item["_id"], $userId);
+			$newLists=  $item["listIds"];
+			$oldLists = array();
+
+
+			$oldListsTmp=  $col->listitems->find(array("owner" => $_SESSION["charme_userid"], "userId" => $item["userId"]));
+			$allLists=  $col->lists->find(array("owner" => $_SESSION["charme_userid"]));
+
+
+			foreach ($oldListsTmp as $item){
+			$oldLists[] = $item["list"];
 			}
-			//else: item is already in list
-		}
-		*/
+
+
+			foreach ($allLists as $listitem)
+			{	
+				// First option. Item is not in old list, but in new list -> Add item
+				if (in_array($listitem["_id"], $newLists ) && !in_array($listitem["_id"], $oldLists))
+			  	{
+			  		$col->listitems->insert(array(
+			  			"owner" => $_SESSION["charme_userid"],
+			  			"userId" => $item["userId"],
+			  			"list" => new MongoId($listitem["_id"]),
+			  			));
+
+			  	
+			  	}
+				// Second option. Item is  in old list, but not in new list -> Remove item
+			  	else if (!in_array($listitem["_id"], $newLists ) && in_array($listitem["_id"], $oldLists))//item has been removed
+				{
+					$col->listitems->remove(array(
+			  			"owner" => $_SESSION["charme_userid"],
+			  			"userId" => $item["userId"],
+			  			"list" => new MongoId($listitem["_id"]),
+			  			));
+
+				}
+			}
+			$returnArray[$action] = array("SUCCESS" => true);
+		
+
+		break;
+
+		// Request future posts from this server.
+		case "register_follow":
+
+		break;
+
+		// Do not receive future posts from this server.
+		case "register_unfollow":
 
 		break;
 
@@ -578,5 +629,13 @@ foreach ($data["requests"] as $item)
 // stream: getPosts(Timestamp, max count), post
 echo json_encode($returnArray);
 
+
+
+/*
+	You just found a train:
+   _______                _______      <>_<>      
+   (_______) |_|_|_|_|_|_|| [] [] | .---|'"`|---.  
+  `-oo---oo-'`-oo-----oo-'`-o---o-'`o"O-OO-OO-O"o' 
+*/
 
 ?>

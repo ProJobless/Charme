@@ -55,7 +55,11 @@ $(function(){
 
             "user/:id/collection/:collection" : "getCollection",
 
+
+            "user/:id/:id2/:id3" : "getUser",
+
             "user/:id/:id2" : "getUser",
+
             "user/:id" : "getUser",
             
             "signup" : "getRegister",
@@ -252,13 +256,28 @@ app_router.on('route:getWelcome', function (id) {
             container_main.currentView.setSub(vsd);
            
         }
-        if (id2 == "subscribing")
+       else if (id2 == "collections")
+        {
+            if (id3 == null)
+            {
+             var vsd =  new view_profilepage_collection({ template: "user_collections", navMatch: '#nav_profile_collections'});
+            container_main.currentView.setSub(vsd);
+            }
+            else
+            {
+
+                
+            }
+
+
+        }
+        else if (id2 == "subscribing")
         {
             var vsd =  new view_subpage({ template: "user_subscribing", navMatch: '#nav_profile_sub2', el: '#page3'});
             container_main.currentView.setSub(vsd);
             
         }
-        if (id2 == "subscribers")
+        else if (id2 == "subscribers")
         {
             var vsd =  new view_subpage({template: "user_subscribers", navMatch: '#nav_profile_sub', el: '#page3'});
             container_main.currentView.setSub(vsd);

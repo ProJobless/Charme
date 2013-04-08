@@ -1,3 +1,7 @@
+Deleted from list
+- notify people who are not in lists any more!
+
+
 
 Build public key cache
 
@@ -15,6 +19,16 @@ http://stackoverflow.com/questions/8006458/backbone-js-how-to-perform-garbage-co
 http://stackoverflow.com/questions/11073877/delegateevents-in-backbone-js
 http://stackoverflow.com/questions/5125958/backbone-js-views-delegateevents-do-not-get-bound-sometimes
 http://stackoverflow.com/questions/10429648/backbone-js-how-to-unbind-from-events-on-model-remove
+
+http://stackoverflow.com/questions/5125958/backbone-js-views-delegateevents-do-not-get-bound-sometimes
+
+	Events are delegated to this.el when the view is initialized. So you need to:
+
+	create the view by give the constructor the "el" option to specify the element
+	define el, tag, id, classname on your view to create or find on the page your element directly.
+	append your rendered view to the "el" element of the view
+	make sure you do not replace the "el" element after the view creation
+
 
 
 this.undelegateEvents(); in guest container!!

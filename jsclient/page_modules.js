@@ -371,12 +371,7 @@ view_page = Backbone.View.extend({
 			Warning: Do not render subViews here if not yet rendered!
 			http://stackoverflow.com/questions/9604750/backbone-js-firing-event-from-a-view-inside-a-view
 		*/  
-		if (this.options.optionbar!= null)
-		{
-			$(".sbBeta .actionBar").html(this.options.optionbar);
-		}
-	else
-		$(".sbBeta .actionBar").html("");
+		
 
 
 		if (this.options.needLogin && charmeUser == null)
@@ -388,7 +383,7 @@ view_page = Backbone.View.extend({
 		}
 		//alert("render");
 
-
+		// Page has changed not changed. Only subpage.
 	 	if (container_main.currentViewId == this.options.template)
         {
    
@@ -398,6 +393,15 @@ view_page = Backbone.View.extend({
         }
         else
         {
+        	
+        	if (this.options.optionbar!= null)
+			{
+
+				$(".sbBeta .actionBar").html(this.options.optionbar);
+			}
+			else
+			$(".sbBeta .actionBar").html("");
+
 
 	        container_main.currentViewId =  this.options.template;
 
@@ -449,27 +453,7 @@ initialize: function() {
 	},
 });
 
-/****h* jsclient/page_modules.js/view_subpage
-  *  NAME
-  *    view_subpage
-  *  SYNOPSIS
-  *    view_subpage test = new view_subpage();
-  *  FUNCTION
-  *		Generate a sub page. A subpage is a page in a page, like profile info for example.
-  *		All subPages must be registred in lib/router.js. 
-  *  INPUTS
-  *    options{}  	- template: used template from /template folder
-  *					- navMatch: What sidebar element should be active when subpage is open?
-  *  RESULT
-  *    The Object
-  *  EXAMPLE
-  *    	var vsd =  new view_subpage({ template: "user_subscribing", navMatch: '#nav_profile_sub2', el: '#page3'});
-  * 	container_main.currentView.setSub(vsd);
-  *  BUGS
-  *    
-  ******
-  * Lorem ipsum
-  */
+
 
 
 view_subpage = Backbone.View.extend({   
@@ -518,7 +502,7 @@ view_subpage = Backbone.View.extend({
 					that.postRender();
 				}
 				// important:!!
-				//	that.undelegateEvents();
+			
 			
 				that.delegateEvents();
 				
@@ -589,7 +573,11 @@ var view_lists = view_page.extend({
 		    ]
 		}, function(d1){
 		
-			apl_postloader_lists.items.push({ '_id': {'$id': d1.lists_add.id} , name: n});
+			apl_postloader_lists.items.push({ '_id': {'$id': d1.lists_add.id.$id} , name: n});
+
+			// Add item to Sidebar
+			$(".sbBeta .subCont").append('<li id="nav_'+d1.lists_add.id.$id+'"><a href="#lists/'+d1.lists_add.id.$id+'">'+n+'</a></li>');
+
 			//
 
 		});
@@ -609,6 +597,14 @@ var view_lists_subpage = view_subpage.extend({
 		"click  #but_deleteList" : "deleteList",
 	
 	},
+	postRender: function()
+	{
+		// Hide Edit/delete button when showing all lists
+		if (this.options.listId == ""){
+			$('#listOptions').hide();
+
+	}
+	},
 	renameList: function()
 	{
 		var that = this;
@@ -617,10 +613,10 @@ var view_lists_subpage = view_subpage.extend({
 			var template = _.template(d, {}); 
 
 			ui_showBox( template , function()
-			{
+			{	
 					var oldName = $("#nav_"+that.options.listId).text();
-					$("#inp_listNameEdit").val(oldName);
-				
+					$("#inp_listNameEdit").val(oldName).focus().select();
+					
 					$('#but_editListOk').click(function()
 					{  
 						// Notify user server about the changed name
@@ -633,6 +629,9 @@ var view_lists_subpage = view_subpage.extend({
 
 						// Update sidebar item with new Text
 						$("#nav_"+that.options.listId+" a").text($("#inp_listNameEdit").val());
+
+						// Update Name
+						apl_postloader_editList(that.options.listId, $("#inp_listNameEdit").val());
 
 						// Close box dialog
 						ui_closeBox();
@@ -666,6 +665,9 @@ var view_lists_subpage = view_subpage.extend({
 						ui_closeBox();
 						$("#nav_"+that.options.listId).remove();
 						$("#page").text("");
+
+						// Delete from script cache:
+						apl_postloader_deleteList(that.options.listId);
 
 				
 						});
@@ -891,6 +893,90 @@ var view_profilepage = view_page.extend({
 
 });
 
+ control_collectionItem = Backbone.View.extend({   
+
+	render: function()
+	{
+
+		this.$el.append("<a href='#user/"+encodeURI(this.options.data.name)+"/collections/"+this.options.data._id.$id+"'>"+this.options.data.name);
+	}
+
+});
+ 
+view_profilepage_collection_show = view_subpage.extend({
+
+
+});
+
+
+
+var view_profilepage_collection = view_subpage.extend({
+
+	el: '#page3',
+
+	postRender : function()
+	{
+		// TODO : JSON HERE!
+
+		apl_request(
+	    {"requests" : [
+	    {"id" : "collection_getAll", "userId" : container_main.currentView.options.userId},
+	    ]
+		}, function(d){
+			
+		jQuery.each(d.collection_getAll, function() {
+
+			var search_view = new control_collectionItem({ el: $("#collection_list"), data: this });
+			 search_view.render();
+
+		});
+
+		 // TODO: Add collection control...
+
+		});
+		 
+
+
+
+		// load collections via json, and add as control to page
+		$('#but_addNewCollection').click(function()
+		{
+			$.get("templates/box_collectionEdit.html", function (d)
+			{
+				_.templateSettings.variable = "rc";
+				var template = _.template(d, {}); 
+				
+				ui_showBox( template , function()
+				{
+						$("#inp_box_name").focus();
+						$('#but_box_save').click(function()
+						{
+							
+							apl_request(
+						    {"requests" : [
+						    {"id" : "collection_add", "name" : $("#inp_box_name").val(), "description" : $("#inp_box_description").val()},
+						    ]
+							}, function(d){
+								
+							var search_view = new control_collectionItem({ el: $("#collection_list"), data: {_id : { $id: d.id}, description: $("#inp_box_description").val(), name:  $("#inp_box_name").val()} });
+							 search_view.render();
+
+							 ui_closeBox();
+							 // TODO: Add collection control...
+
+							});
+
+
+						});
+						
+				});
+			});
+		});
+	}
+
+});
+
+
 var view_profilepage_info = view_subpage.extend({
 
 	el: '#page3',
@@ -989,15 +1075,27 @@ var view_profilepage_info = view_subpage.extend({
 			$(this).toggleClass("active");
 			$.doTimeout( 'listsave', 1000, function( state ){
 
-				// Get ids of selected lists.
+			// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
 			var ar = $('#select_lists a.active').map(function(i,n) {
 			return $(n).data("listid");
 			}).get();
 
-	
+			// Send a request to the user server
+			apl_request(
+			    {"requests" : [
+			    {"id" : "lists_update", "listIds" : ar, "userId": container_main.currentView.options.userId}
 
+			    ]
+			}, function(d){
 
-			alert("ok...");
+				// OK...
+
+			});
+
+			// Notify profile owner server
+			console.log(ar); 
+
+			//alert("ok...");
 
 		}, true);
 /*
