@@ -106,6 +106,16 @@ var apl_postloader_lists =
 	    ]
 	};
 
+
+function apl_postloader_deleteList(id)
+{
+		jQuery.each(apl_postloader_lists.items, function() {
+			if (this._id.$id == id)
+				this = null;
+		});
+
+}
+
 function apl_postloader_getLists()
 {
 	// Choose an unique identifier here "listitems"

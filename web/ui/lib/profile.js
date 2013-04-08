@@ -223,7 +223,7 @@ var ar = $('#select_lists a.active').map(function(i,n) {
 var uid = $.urlParam("userId",location.href );
 
  $.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
-        alert(d); 
+     
     });
 
 

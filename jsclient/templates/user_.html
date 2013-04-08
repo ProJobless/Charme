@@ -15,8 +15,11 @@
 
 					<div style="padding:6px;" id='select_lists'>
 
-						<a id='but_test' class="hotCheckbox" data-listid="50788cabd8cc9ae403000006">hey</a><br>
-						<a class="hotCheckbox" data-listid="50788cabd8cc9ae403000006">hey</a><br>
+						 <% _.each( rc.lists.items, function(item2){ %>
+
+						<a id='but_test' class="hotCheckbox" data-listid="<%- item2._id.$id %>"><%- item2.name %></a><br>
+						  <% }); %>
+				
 					</div>
 				
 

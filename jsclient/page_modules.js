@@ -603,11 +603,84 @@ var view_lists = view_page.extend({
 
 var view_lists_subpage = view_subpage.extend({
 	options: {template:'lists_'},
+	events: {
+
+		"click  #but_renameList" : "renameList",
+		"click  #but_deleteList" : "deleteList",
+	
+	},
+	renameList: function()
+	{
+		var that = this;
+		$.get("templates/box_editlist.html", function (d)
+		{
+			var template = _.template(d, {}); 
+
+			ui_showBox( template , function()
+			{
+					var oldName = $("#nav_"+that.options.listId).text();
+					$("#inp_listNameEdit").val(oldName);
+				
+					$('#but_editListOk').click(function()
+					{  
+						// Notify user server about the changed name
+						apl_request(
+					    {"requests" : [
+					    {"id" : "lists_rename", "listId" : that.options.listId , "newName" : $("#inp_listNameEdit").val()}
+
+					    ]}
+						, function(){
+
+						// Update sidebar item with new Text
+						$("#nav_"+that.options.listId+" a").text($("#inp_listNameEdit").val());
+
+						// Close box dialog
+						ui_closeBox();
+						}
+						);
+						
+					
+						
+					});
+			});
+		});
+	},
+	deleteList: function()
+	{
+		var that = this;
+		$.get("templates/box_deletelist.html", function (d)
+		{
+			var template = _.template(d, {}); 
+
+			ui_showBox( template , function()
+			{
+				$("#but_deleteList").select().focus();
+					$('#but_deleteList').click(function()
+					{  
+						apl_request(
+					    {"requests" : [
+					    {"id" : "lists_delete", "listId" : that.options.listId}
+
+					    ]}
+						, function(d){
+						ui_closeBox();
+						$("#nav_"+that.options.listId).remove();
+						$("#page").text("");
+
+				
+						});
+
+					});
+			});
+		});
+
+	},
 	getData: function()
 	{
-		var templateData = {globaldata : []	};
+		var templateData = {lists: apl_postloader_getLists() };
 	    return templateData;
-	}
+	},
+
 
 });
 
@@ -858,9 +931,17 @@ var view_profilepage_info = view_subpage.extend({
 	{
 
 		var that = this;
+
+		
 		apl_request(
 		    {"requests" : [
-		    {"id" : "profile_get", "profileId" : container_main.currentView.options.userId}
+
+		    // TODO: Send this to profile owner's server, not user server!!!!
+		    {"id" : "profile_get", "profileId" : container_main.currentView.options.userId},
+
+		    // Send this to user server:
+		    {"id" : "lists_getRegistred", "profileId" : container_main.currentView.options.userId}
+
 
 		    ]
 		}, function(d){
@@ -891,6 +972,7 @@ var view_profilepage_info = view_subpage.extend({
 	},
 	getData: function()
 	{
+		this.reqData.lists = apl_postloader_getLists();
 		return this.reqData;
 	},
 	postRender: function()
@@ -907,11 +989,12 @@ var view_profilepage_info = view_subpage.extend({
 			$(this).toggleClass("active");
 			$.doTimeout( 'listsave', 1000, function( state ){
 
+				// Get ids of selected lists.
 			var ar = $('#select_lists a.active').map(function(i,n) {
 			return $(n).data("listid");
 			}).get();
 
-			//var uid = $.urlParam("userId",location.href );
+	
 
 
 			alert("ok...");

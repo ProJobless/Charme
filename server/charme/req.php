@@ -131,6 +131,9 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("sessionId" => session_id());
 		break;
 
+
+
+
 		case "messages_get_sub":
 			
 			if (isset($item["start"]))
@@ -423,6 +426,39 @@ foreach ($data["requests"] as $item)
 		// Notify post owner when sharing a posting
 
 		break;
+		case "lists_getRegistred" :
+
+
+		break;
+
+		case "lists_update":
+		$newlists=  $item["lists"];
+		$oldlists=  $col->listitems->find(array("owner" => $_SESSION["charme_userid"], "userId" => $item["userId"]));
+		
+		/*
+		foreach ($oldlists as $item)
+		{	
+			if (in_array($item["_id"], $selectedNew ) && !in_array($item["_id"], $selectedOld))//item not yet in list
+		  	{
+
+		  		
+		  		addListItem($_SESSION["charme_user"], $item["_id"], $userId);
+		  	}
+		  	else if (!in_array($item["_id"], $selectedNew ) && in_array($item["_id"], $selectedOld))//item has been removed
+			{
+
+				removeListItem($_SESSION["charme_user"], $item["_id"], $userId);
+			}
+			//else: item is already in list
+		}
+		*/
+
+		break;
+
+
+		case "list_add_item":
+
+		break;
 
 		case "lists_add" :
 			$col = \App\DB\Get::Collection();
@@ -432,6 +468,28 @@ foreach ($data["requests"] as $item)
 				$ins = $col->lists->insert($content);
 
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
+
+		break;
+
+		case "lists_delete" :
+			$col = \App\DB\Get::Collection();
+			
+
+		
+			$col->lists->remove(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($item["listId"])));
+
+			$returnArray[$action] = array("SUCCESS" => true);
+
+		break;
+
+		case "lists_rename" :
+			
+			$col = \App\DB\Get::Collection();
+			$col->lists->update(
+			array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($item["listId"])),
+			array('$set' => array("name" => $item["newName"])));
+
+			$returnArray[$action] = array("SUCCESS" => true);
 
 		break;
 

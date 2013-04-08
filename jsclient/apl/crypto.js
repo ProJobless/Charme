@@ -30,3 +30,11 @@ return key;
 
 
 }
+
+
+// TODO: RSA Decryption with Caching
+function rsaCacheDecrypt(lenghtInByte)
+{
+
+
+}
