@@ -235,7 +235,7 @@ app_router.on('route:getWelcome', function (id) {
     
     });
 
-    app_router.on('route:getUser', function (id, id2) {
+    app_router.on('route:getUser', function (id, id2, id3) {
 
         console.log("getuser");
         var userId = decodeURIComponent(id);
@@ -258,15 +258,17 @@ app_router.on('route:getWelcome', function (id) {
         }
        else if (id2 == "collections")
         {
-            if (id3 == null)
+            if (typeof id3 === 'undefined')
             {
-             var vsd =  new view_profilepage_collection({ template: "user_collections", navMatch: '#nav_profile_collections'});
-            container_main.currentView.setSub(vsd);
+
+                 var vsd =  new view_profilepage_collection({ template: "user_collections", navMatch: '#nav_profile_collections'});
+                 container_main.currentView.setSub(vsd);
             }
             else
             {
-
-                
+                var vsd =  new view_profilepage_collection_show();
+                container_main.currentView.setSub(vsd);
+               
             }
 
 

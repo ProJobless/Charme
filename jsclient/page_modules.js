@@ -898,14 +898,14 @@ var view_profilepage = view_page.extend({
 	render: function()
 	{
 
-		this.$el.append("<a href='#user/"+encodeURI(this.options.data.name)+"/collections/"+this.options.data._id.$id+"'>"+this.options.data.name);
+		this.$el.append("<a href='#user/"+encodeURIComponent(container_main.currentView.options.userId)+"/collections/"+this.options.data._id.$id+"'>"+this.options.data.name+"</a>");
 	}
 
 });
  
 view_profilepage_collection_show = view_subpage.extend({
-
-
+options: {template:'user_collections_show', navMatch: '#nav_profile_collections'},
+el: '#page3',
 });
 
 
