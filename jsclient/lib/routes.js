@@ -266,7 +266,7 @@ app_router.on('route:getWelcome', function (id) {
             }
             else
             {
-                var vsd =  new view_profilepage_collection_show();
+                var vsd =  new view_profilepage_collection_show({collectionId: id3});
                 container_main.currentView.setSub(vsd);
                
             }

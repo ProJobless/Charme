@@ -502,6 +502,25 @@ view_subpage = Backbone.View.extend({
 					that.postRender();
 				}
 				// important:!!
+
+
+				// mouse down effect for 32x32 imge buttons
+				$(".actionIcon").mousedown(function(){
+					var x = $(this).data("bgpos");
+
+					if (!$(this).hasClass("active"))
+					$(this).css("background-position",x+"px -48px");
+				}).mouseup(function(){
+					
+					if (!$(this).hasClass("active"))
+					$(this).css("background-position", $(this).data("bgpos")+"px -0px");
+					
+				}).mouseleave(function(){
+					
+					if (!$(this).hasClass("active"))
+					$(this).css("background-position", $(this).data("bgpos")+"px -0px");
+					
+				});
 			
 			
 				that.delegateEvents();
@@ -877,10 +896,37 @@ var view_profilepage = view_page.extend({
 	    'click #but_sendMsg': 'sendMsg'
 	   
 	  },
+	postRender: function()
+	{
+		// ,  name: container_main.currentView.username
+		var that = this
+
+		 if (typeof this.username === 'undefined')
+		{
+			
+			;
+
+			apl_request(
+		    {"requests" : [
+		    {"id" : "profile_get_name", "userId" : container_main.currentView.options.userId},
+		    ]
+			}, function(d){
+
+				container_main.currentView.username = d.profile_get_name.info.firstname+ " " + d.profile_get_name.info.lastname;
+				
+				$(".profile_name").text(container_main.currentView.username);
+
+
+			});
+
+		}
+
+		
+	},
   	sendMsg: function()
   	{
 		sendMessageForm( [
-                    {id: this.options.userId,  name: container_main.currentView.username}
+                    {id: this.options.userId}
                    
                 ]);//
   	},
@@ -893,19 +939,177 @@ var view_profilepage = view_page.extend({
 
 });
 
+// Post field, user can post from here
+ control_postField = Backbone.View.extend({   
+ 	 events: {
+	    'click #mypostbutton': 'doPost'
+	   
+	  },
+	  doPost : function()
+	  {
+	  	var txt = $("#textfield").val();
+	 
+	  	
+	  	apl_request(
+	    {"requests" : [
+	    {"id" : "collection_post", "content" : txt, "collectionId" : this.options.collectionId, "userId" : container_main.currentView.options.userId},
+	    ]
+		}, function(d){
+
+
+			var p2 = new control_postItem({content: txt, time: "the time", el: $(".collectionPostbox"), prepend: true});
+			p2.render();
+
+
+		});
+
+	  },
+	render: function()
+	{
+		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a></div>");
+	}
+
+});
+
+
+
+ control_postItem = Backbone.View.extend({ 
+ 	options : {prepend: false},
+ 	doComment: function()
+ 	{
+ 		alert("do a comment");
+ 	},
+ 	events: {
+ 		'click #doCommentAction' : 'doComment',
+ 		'click #doRepost' : 'doRepost'
+ 		
+ 	},
+ 	doRepost: function()
+ 	{
+ 		alert("repost");
+ 	},
+ 	render: function() 
+ 	{
+ 		var str = "<div class='collectionPost'><div class='cont'>"+this.options.content+"</div><div><a id='doRepost'>Repost</a> - <a id='doCommentAction'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
+
+ 		if (this.options.prepend)
+ 			this.$el.prepend(str);
+ 		else
+ 			this.$el.append(str);
+ 	}
+
+ });
+
+
  control_collectionItem = Backbone.View.extend({   
 
 	render: function()
 	{
 
-		this.$el.append("<a href='#user/"+encodeURIComponent(container_main.currentView.options.userId)+"/collections/"+this.options.data._id.$id+"'>"+this.options.data.name+"</a>");
+		this.$el.append("<a class='collection' href='#user/"+encodeURIComponent(container_main.currentView.options.userId)+"/collections/"+this.options.data._id.$id+"'>"+this.options.data.name+"</a>");
 	}
 
 });
  
 view_profilepage_collection_show = view_subpage.extend({
-options: {template:'user_collections_show', navMatch: '#nav_profile_collections'},
-el: '#page3',
+
+
+	options: {template:'user_collections_show', navMatch: '#nav_profile_collections'},
+	el: '#page3',
+
+
+
+
+	postRender: function()
+	{
+		// Set header name
+		$(".profile_name").text(container_main.currentView.username);
+
+
+		// Add post field, if userId = charmeUser.userID
+		if (container_main.currentView.options.userId == charmeUser.userId)
+		{
+			var t = new  control_postField({el: $("#postFieldContainer"), collectionId: this.options.collectionId });
+			t.render();
+		}
+
+		apl_request(
+	    {"requests" : [
+
+	    // Get posts of collection
+	    {"id" : "collection_posts_get", "userId" : container_main.currentView.options.userId, collectionId: this.options.collectionId },
+
+	    // Get name of collection
+	    {"id" : "collection_getname", collectionId: this.options.collectionId },
+
+	    // Does the user follow the collection?
+ 		{"id" : "register_isfollow", collectionId: this.options.collectionId, "userId" : charmeUser.userId },
+	    
+	    ]
+		}, function(d){
+
+			if(d.register_isfollow.follows)
+			{
+				$('#but_followCollection').css("background-position", "-96px 0px");
+				$('#but_followCollection').data("bgpos", "-96");
+			}
+
+
+		
+
+			
+
+
+			$("#colName").text(d.collection_getname.info.name);
+
+		jQuery.each(d.collection_posts_get, function() {
+
+			var p2 = new control_postItem({content: this.content, time: this.time, el: $(".collectionPostbox")});
+			p2.render();
+
+
+
+		});
+
+
+		$("#but_followCollection").click(function(){
+			
+			var action;
+			if ($('#but_followCollection').data("bgpos") == -96)
+			{
+				action = "unfollow";
+				$('#but_followCollection').css("background-position", "-48px 0px");
+				$('#but_followCollection').data("bgpos", "-48");
+				// Do unsubscribe...
+			}
+			else
+			{
+				action = "follow";
+				$('#but_followCollection').css("background-position", "-96px 0px");
+				$('#but_followCollection').data("bgpos", "-96");
+				// Do subscribe...
+			}
+			apl_request(
+		    {"requests" : [
+		    {"id" : "collection_follow", "userId" : charmeUser.userId, "action": action, collectionId: this.options.collectionId },
+	  
+		    ]
+			}, function(d){
+			
+			});
+
+		});
+
+	});
+
+
+	},
+
+	getData: function()
+	{
+
+		return {uid: charmeUser.userIdURL};
+	}
 });
 
 
@@ -917,6 +1121,9 @@ var view_profilepage_collection = view_subpage.extend({
 	postRender : function()
 	{
 		// TODO : JSON HERE!
+
+		$(".profile_name").text(container_main.currentView.username);
+
 
 		apl_request(
 	    {"requests" : [
@@ -934,6 +1141,9 @@ var view_profilepage_collection = view_subpage.extend({
 		 // TODO: Add collection control...
 
 		});
+
+
+
 		 
 
 
@@ -1064,10 +1274,12 @@ var view_profilepage_info = view_subpage.extend({
 	postRender: function()
 	  {
 
+	  	$(".profile_name").text(container_main.currentView.username);
 
+		
 	  	// Write username in header
-	  	$(".profile_name").text($("#fld_username").text());
-	  	container_main.currentView.username = $("#fld_username").text();
+	
+
 	  	$("td:empty").parent().remove(); // Remove empty Info fields
 
 
@@ -1215,11 +1427,7 @@ var view_settings_sub = view_subpage.extend({
 		var templateData = {globaldata : []	};
 	    return templateData;
 	},
-	postRender: function()
-	{
 	
-
-	}
 
 });
 

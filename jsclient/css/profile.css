@@ -195,18 +195,17 @@ margin:8px;
 .profile_name
 {
 
-position: absolute;
-top:32px;
-left:32px;
-font-size: 16px;
 
+font-size: 16px;
+padding-bottom: 8px;
 }
 .profile_header
 {
-padding:32px;
-margin-top:  27px; /* 19px (Username) +  8 (margin)*/
-padding-bottom: 0;
 
+ /* 19px (Username) +  8 (margin)*/
+
+margin: 0 32px;
+margin-top:  32px;
 
 }
 .photodrop
@@ -220,23 +219,33 @@ padding-bottom: 0;
 .collection:active
 {
 	
-	box-shadow:         inset 0 0 10px #aaa;
+background-color: #efefef;
+}
+.collection:hover
+{
+
 }
 .collection
 {
-	width:67px; 
-	height:67px;
-	border:1px silver solid;
-	background-color: #E6E6E6;
+	width:82px; 
+	height:82px;
+	color:gray;
+	
+	background-color: #fff;
 	margin:8px;
 	display:block;
+	font-weight:  normal;
 	word-wrap: break-word;
-	font-size: 14px;
+
 	padding: 8px;
 	float:left;
 	overflow: hidden;
+	text-transform: uppercase;
 
-	  box-shadow:         inset 0 0 10px #ccc;
+	  box-shadow:    inset      0 0 2px #aaa;
+
+
+
 	  
 }
 

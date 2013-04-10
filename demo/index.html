@@ -238,18 +238,38 @@ img
         letter-spacing: 1px;
         font-size: 12px;
       }
+      .bigButton:active
+      {
+        background-color: #0071A0;
+        color:#fff;
+      }
+      .bigButton:hover
+      {
+        color:#fff;
+      }
+      .bigButton
+      {
+        background-color: #0091A7;
+        color:#fff;
+        border-radius: 4px;
+        padding:8px;
+        float:right;
+        letter-spacing: 1px;
+     
+
+      }
     </style>
   </head>
   <body>
   	<div class='images'>
 <div class='slider'>
  
-	<div class='item'><div class='pinfo'><h1>Hey You!</h1>Charme is an open source and distributed social network. This means you can choose a server, where your data is stored an kept private, or even set up your own.<br><br>It will be released in 2014, but you can contribute to the development on our community, setup a test server or register for a beta account.</div><img style=' margin-left:290px;' src='wel.png'></div>
+	<div class='item'><div class='pinfo'><h1>Hey You!</h1>Charme is a distributed social network with client side encryption. This means you can choose a server, where your data is stored or even set up your own, and the server can not read your messages.</div><img style=' margin-left:290px;' src='wel.png'></div>
 <div class='item'><div class='pinfo'><h1>Multiple Walls</h1>You are not interested in someones private life, but like the music she or he produces?<br><br>Charme allows you to create different walls, so called collections,  which can be subscribed separately. So in this case you would only subscribe to the Music Collection.</div><img style=' margin-left:320px;' src='walls.png'></div>
 <div class='item'><div class='pinfo'><h1>Mobility</h1>We will release Apps for smartphones and talbets.</div><img src='mob.png'></div>
-<div class='item'><div class='pinfo'><h1>Technology and Design at its finest</h1>Charme has a minimalistic design reduced on the important functions. The GUI is fully dynamic, every page is loaded via ajax.</div><img src='collections.png'></div>
-<div class='item'><div class='pinfo'><h1>Everything you expect from a social network</h1>Groups, Messaging, Newsstream, Profiles, Galeries, File Uploads, LaTeX Formulas and more.<br><br>Simply all you need for communication and sharing.</div><img src='collections.png'></div>
-  <div class='item'><div class='pinfo'><h1>The Infrastructure</h1>The Charme network consits of many independent servers and data centers. You can choose a provider where your data is stored or even set up your own server. <br><br>We use GridFS and MongoDB in combination with PHP for a super scalable and fail safe infrastructure which is capable to maintain millions of users on a single data center.
+<div class='item'><div class='pinfo'><h1>Technology and Design at its finest</h1>Charme has a minimalistic design reduced on the important functions. To reduce web traffic we only load JSON Data from server, no html.</div><img src='collections.png'></div>
+<div class='item'><div class='pinfo'><h1>Everything you expect from a social network</h1>Stream, Profile, Messaging and more.<br><br>Simply all you need for communication and sharing.</div><img src='collections.png'></div>
+  <div class='item'><div class='pinfo'><h1>The Infrastructure</h1>The Charme network consits of many independent servers and data centers. You can choose a provider where your data is stored or even set up your own server. <br><br>We use GridFS/MongoDB in combination with PHP for a super scalable and fail safe infrastructure which is capable to maintain millions of users on a single - or multiple data centers.
 
   </div><img src='wel.png'></div>
 
@@ -258,7 +278,11 @@ img
 
 <div class='info' style='  z-index: 9999;'>
 
+
   <div style='position:relative; padding:32px;' id="bubblenav">
+     <a class='bigButton' href='http://github.com/mschultheiss/Charme'>Github</a>
+<a class='bigButton' href='http://client.charmeproject.com' style='margin-right:8px;'>Client</a>
+
     <div class='leftcont'>
  
  <a class='button sel' href='javascript:animate(0)'></a><a href='javascript:animate(1)' class='button'></a><a href='javascript:animate(2)' class='button'></a><a href='javascript:animate(3)' class='button'></a><a href='javascript:animate(4)' class='button'></a><a href='javascript:animate(5)' class='button'></a>
@@ -267,7 +291,10 @@ img
       <a href='javascript:showhome()'><img style='margin:16px 0;' src='logo.png'></a>
       <br>
       <div class='navi'>
-       <a  target="_blank" href='https://github.com/mschultheiss/charme'>GitHub</a> - <a target="_blank" href='http://mschultheiss.tumblr.com/'>Blog</a> - <a href='javascript:showPage(0, "Beta", "beta")'>Beta</a> - <a target="_blank"  href='https://github.com/mschultheiss/charme/wiki'>Wiki</a>  - <a href='javascript:showPage(0, "About", "aboutcharme")'>About</a> 
+       
+      <a target="_blank" href='http://mschultheiss.tumblr.com/'>Blog</a>
+<!--  - <a href='javascript:showPage(0, "Beta", "beta")'>Beta</a> -->
+       - <a target="_blank"  href='https://github.com/mschultheiss/charme/wiki'>Wiki</a>  - <a href='javascript:showPage(0, "About", "aboutcharme")'>About</a> 
     </div></div>
   </div>
   <br style='clear:both'>

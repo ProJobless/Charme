@@ -423,7 +423,8 @@ foreach ($data["requests"] as $item)
 
 
 		case "post.spread": 
-		// Notify post owner when sharing a posting
+
+			// Notify post owner when sharing a posting
 
 		break;
 		case "lists_getActive" :
@@ -431,6 +432,34 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+	
+
+
+		case "collection_posts_get" : 
+			$col = \App\DB\Get::Collection();
+			$returnArray[$action] = iterator_to_array($col->posts->find(array("owner" => $item["userId"],"collectionId" => $item["collectionId"])), false);
+
+		break;
+
+		case "collection_getname":
+		
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->collections->findOne(array("_id"=> new MongoId($item["collectionId"])), array("name"));
+			$returnArray[$action] =   (array("info"=>$cursor));
+
+		break;
+
+
+		case "collection_post" : 
+
+			// 
+			$col = \App\DB\Get::Collection();
+			$content = array("collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
+			$col->posts->insert($content);
+
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);	
+
+		break;
 		case "collection_getAll" :
 			$col = \App\DB\Get::Collection();
 			$returnArray[$action] = iterator_to_array($col->collections->find(array("owner" => $item["userId"])), false);
@@ -506,6 +535,37 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		// Register follow on server of the person who user follows 
+		case "register_collection_follow" :
+
+		break;
+
+		// Register collection follow on followers server
+		case "collection_follow" :
+			
+			$col = \App\DB\Get::Collection();
+
+			$action = $item["action"];
+			$content = array("owner" => $_SESSION["userId"], "collectionId" => new MongoId($item["collectionId"]));
+			if ($action == "subscribe")
+			{
+				$col->following->update($content, $content ,  array("upsert" => true));
+			}
+			else if ($action == "unsubscribe")
+			{
+				$col->following->remove($content);
+			}
+
+		break;
+
+		// Get following state from followers server
+		case "register_isfollow":
+			$col = \App\DB\Get::Collection();
+
+			//$col->findOne();
+			$returnArray[$action] = array("follows" => true);
+		break;
+
 
 		case "list_add_item":
 
@@ -562,6 +622,16 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] =   (array("info"=>$cursor));
 
 		break;
+
+
+		case "profile_get_name":
+		
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> urldecode($item["userId"])), array("firstname", "lastname"));
+			$returnArray[$action] =   (array("info"=>$cursor));
+
+		break;
+
 
 		case "profile_save":
 			$cols = \App\DB\Get::Collection();
