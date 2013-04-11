@@ -24,6 +24,7 @@ var container_guest = new page_login();
 var container_main ;
 
 $(function(){
+
    
     if (isLoggedIn())
          charmeUser = new apl_user(localStorage.getItem("user"));
@@ -218,6 +219,7 @@ app_router.on('route:getWelcome', function (id) {
         if (id == undefined)
             id = "";
 
+          
 
         // only if not yet exists...:
 
@@ -231,6 +233,8 @@ app_router.on('route:getWelcome', function (id) {
         var vsd =  new view_stream_display({streamId: id, template: "stream_", navMatch: '#nav_'+id});
         container_main.currentView.setSub (vsd);
         container_main.currentView.render();
+
+      
 
     
     });

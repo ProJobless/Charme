@@ -1,30 +1,11 @@
 
 
-<div class='p32' style='border-bottom:1px silver solid;'>
+<div class='p32' style='border-bottom:1px silver solid;' id='postboxContainer'>
 
 </div>
 
-<div class='stream'>
-	 <% _.each( rc.streamitems.items, function( item ){ %>
-	 <div class='collectionPost' id='post<%- item.postId %>'>
-          <a class='delete' ></a>
-          <a href='#/user/<%- item.userId %>'><img class='profilePic' src='http://server.local/media/phantom.jpg'></a>
-            <div class='subDiv'>
-                <a href='#/user/<%- item.userId %>'><%- item.name %></a><div class='cont'>
-                <%- item.content %>
-                </div>
-                <div>
-                    <span class='time'>THE time</span>
-                    <a onclick=''>Comments <span class='countComments'>(2)</span></a> - <a class='shareIt' onclick=''>Repost</a>
-                </div>
-
-
-                  <% if ( item.hasOlympicGold ){ %>
-                    <em>*</em>
-                <% } %>
-            </div>
-        </div>
-	<% }); %>
-</div>
+<div class='stream' id='streamContainer'>
+	
+</div>s
 
    

@@ -168,6 +168,8 @@ foreach ($data["requests"] as $item)
 
 			$col = \App\DB\Get::Collection();
 
+			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "talks", 0);
+
 			// Get 10 conversations 
 			$returnArray[$action] =
 			iterator_to_array(
@@ -216,6 +218,7 @@ foreach ($data["requests"] as $item)
 					// because time changes
 					$col->conversations->update(array("aesEnc" => $item["aesEnc"]), $content ,  array("upsert" => true));
 				}
+				\App\Counter\CounterUpdate::inc( $receiver, "talks");
 
 				$col->messages->insert(array("conversationId" =>   new MongoId($item["conversationId"]), "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
 			}
@@ -452,18 +455,30 @@ foreach ($data["requests"] as $item)
 
 		case "register_collection_post":
 
-			
+				
 			$col = \App\DB\Get::Collection();
 			$content = array("post" => $item["post"], "owner"  => $item["follower"]);
 			$col->streamitems->insert($content);
 
+			\App\Counter\CounterUpdate::inc($item["follower"], "stream");
 
 			
 
 			//collection_post
 		break;
 
+
+
+
+
+		case "updates_get":;
+			$returnArray[$action] = \App\Counter\CounterUpdate::get( $_SESSION["charme_userid"], array("talks", "stream"));
+		break;
+
 		case "stream_get":
+
+			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
+
 			if (!isset($item["list"]))
 			{
 				// Get all stream items
@@ -474,6 +489,7 @@ foreach ($data["requests"] as $item)
 				$list = new MongoId($item["list"]);
 
 				// Get people in list...
+
 
 			}
 			// if !
@@ -513,7 +529,7 @@ foreach ($data["requests"] as $item)
 				$data
 				
 				);
-				$req21->send(true);
+				$req21->send();
 
 			}
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);	
@@ -526,14 +542,7 @@ foreach ($data["requests"] as $item)
 		break;
 
 
-		case "collection_registerPost": 
-
-
 		
-
-
-		break;
-
 
 
 		case "collection_getAll" :

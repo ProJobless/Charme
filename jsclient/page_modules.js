@@ -1440,6 +1440,8 @@ var view_stream_display = view_subpage.extend({
 	{
 
 		var templateData = {globaldata : []	};
+
+
 		// this.options.streamId is list, 0 is no list.
 
 		// JSON Nrequest to server....
@@ -1585,6 +1587,7 @@ sendMessageForm({});
 		
 	
 		this.loadMessages(0);
+		$("#item_talks .count").remove();
 		// Load some messages
 
 	},
@@ -1698,6 +1701,10 @@ var view_stream = view_page.extend({
 	    // Load homepage and append to [sharecontainer]
 console.log("share");
 	},
+	postRender: function()
+	{
+		$("#item_stream .count").remove();
+	}
 
 	
 

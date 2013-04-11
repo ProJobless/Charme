@@ -60,14 +60,16 @@ function apl_setup(callback)
 	apl_request(
     {"requests" : [
     {"id" : "lists_get"},
-    {"id" : "sessionId_get"}
+    {"id" : "sessionId_get"}, 
+    {"id" : "updates_get"} 
+
     ]
 	}, function(data){
 		console.log(data);
 		apl_postloader_lists.items = data.lists_get;
 		
 		charmeUser.sessionId = data.sessionId_get.sessionId
-
+		container_main.tempCountData = data.updates_get;
 
 		// Call Callback...
 		if(callback != undefined && typeof callback == 'function') 
