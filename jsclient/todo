@@ -1,7 +1,8 @@
 Deleted from list
 - notify people who are not in lists any more!
 
-
+Verifications of likes, comments etc:
+Generate SHA256 with Salt, and write to verify collection.
 
 Build public key cache
 
@@ -9,6 +10,7 @@ RSA decritipion in web worker
 1) var id = div id
 2) start webworker(encText, id)
 3) oncomplete: add result to div (id)
+
 
 Parallel Requests, like
 var z = parralel_request2(aplrq1(){ z.firstDone=true; }, aplr12(){ z.secondone=true; }, completed(){});
@@ -33,6 +35,10 @@ http://stackoverflow.com/questions/5125958/backbone-js-views-delegateevents-do-n
 
 this.undelegateEvents(); in guest container!!
 (Bug: goto welcome, sign in , welcome, sign in, welcome, then login -> multiple call of login())
+
+Chrome Extension:
+
+Bypass Same Origin Policy with manifest.json 
 
 
 Pages:

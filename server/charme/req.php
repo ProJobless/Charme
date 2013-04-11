@@ -113,7 +113,7 @@ foreach ($data["requests"] as $item)
 {
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("user_login", "user_register", "profile_get", "message_receive"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -304,6 +304,7 @@ foreach ($data["requests"] as $item)
 
 						));
 
+
 				$req21 = new \App\Requests\JSON(
 					$receiver["charmeId"],
 					$_SESSION["charme_userid"],
@@ -449,6 +450,34 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		case "register_collection_post":
+
+			
+			$col = \App\DB\Get::Collection();
+			$content = array("post" => $item["post"], "owner"  => $item["follower"]);
+			$col->streamitems->insert($content);
+
+
+			
+
+			//collection_post
+		break;
+
+		case "stream_get":
+			if (!isset($item["list"]))
+			{
+				// Get all stream items
+
+			}
+			else
+			{
+				$list = new MongoId($item["list"]);
+
+				// Get people in list...
+
+			}
+			// if !
+		break;
 
 		case "collection_post" : 
 
@@ -457,9 +486,56 @@ foreach ($data["requests"] as $item)
 			$content = array("collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
 			$col->posts->insert($content);
 
+			
+
+			// 
+
+			// do foreach with collection followers:
+			$res2 = $col->followers->find();
+
+			foreach ($res2 as $resItem)
+			{
+			
+			$data = array("requests" => array(
+
+				"id" => "register_collection_post",
+				"follower" => $_SESSION["charme_userid"],
+
+				"post" => $content
+			));
+
+
+		
+			
+				$req21 = new \App\Requests\JSON(
+				$resItem["follower"],
+				$_SESSION["charme_userid"],
+				$data
+				
+				);
+				$req21->send(true);
+
+			}
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);	
 
+
+
+
+
+
 		break;
+
+
+		case "collection_registerPost": 
+
+
+		
+
+
+		break;
+
+
+
 		case "collection_getAll" :
 			$col = \App\DB\Get::Collection();
 			$returnArray[$action] = iterator_to_array($col->collections->find(array("owner" => $item["userId"])), false);
@@ -537,33 +613,108 @@ foreach ($data["requests"] as $item)
 
 		// Register follow on server of the person who user follows 
 		case "register_collection_follow" :
+			$col = \App\DB\Get::Collection();
 
+			// TODO Verify server who sent the request
+
+			$content = array("follower" => $item["follower"],
+			 //"collectionOwner" =>  $item["collectionOwner"], 
+			 "collectionId" => new MongoId($item["collectionId"]));
+
+			if ($item["action"] == "follow")
+			{
+				// Add follower
+				$col->followers->update($content, $content ,  array("upsert" => true));
+			}
+			else
+			{
+				$col->followers->remove($content);
+				// Delete follower
+
+			}
 		break;
 
 		// Register collection follow on followers server
 		case "collection_follow" :
 			
+			echo $item["collectionId"];
+
 			$col = \App\DB\Get::Collection();
 
 			$action = $item["action"];
-			$content = array("owner" => $_SESSION["userId"], "collectionId" => new MongoId($item["collectionId"]));
-			if ($action == "subscribe")
+			$content = array("owner" => $_SESSION["charme_userid"], "collectionOwner" =>  $item["collectionOwner"], "collectionId" => new MongoId($item["collectionId"]));
+			if ($action == "follow")
 			{
 				$col->following->update($content, $content ,  array("upsert" => true));
 			}
-			else if ($action == "unsubscribe")
+			else if ($action == "unfollow")
 			{
 				$col->following->remove($content);
 			}
+
+			$data = array("requests" => array(
+
+				"id" => "register_collection_follow",
+				"collectionId" => ($item["collectionId"]),
+				"follower" => $_SESSION["charme_userid"],
+				"action" => $action
+			/*	"localreceivers" => array($receiver),
+				"allreceivers" => $res["people"],
+				"encMessage" => $item["encMessage"],
+				"messagePreview" => $item["messagePreview"],
+
+				"sender" => $_SESSION["charme_userid"],
+				"conversationId" => $convId->__toString(),
+				//"aesEnc" => $receiver["aesEnc"], known already by receiver
+*/
+
+			));
+
+
+			$req21 = new \App\Requests\JSON(
+				$item["collectionOwner"],
+				$_SESSION["charme_userid"],
+				$data
+				
+				);
+
+		
+				$req21->send();
+
+				$returnArray[$action] = array("STATUS" => "OK");
+
 
 		break;
 
 		// Get following state from followers server
 		case "register_isfollow":
 			$col = \App\DB\Get::Collection();
+		
+			$content = array(
+				"owner" => $_SESSION["charme_userid"],
+				"collectionOwner" =>  $item["collectionOwner"],
+				"collectionId" => new MongoId($item["collectionId"]));
 
+
+			$res = $col->following->findOne();
 			//$col->findOne();
-			$returnArray[$action] = array("follows" => true);
+			if (isset($res) && isset($res["owner"]))
+				$returnArray[$action] = array("follows" => true);
+			else
+				$returnArray[$action] = array("follows" => false);
+
+			// Now also notify the server I follow
+
+			// TODO:return status messages
+
+		break;
+
+
+		// register a follower by the content provider
+		case "register_follow":
+
+		// Write to followers
+
 		break;
 
 

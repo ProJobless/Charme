@@ -1022,6 +1022,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 	postRender: function()
 	{
+	
 		// Set header name
 		$(".profile_name").text(container_main.currentView.username);
 
@@ -1043,7 +1044,7 @@ view_profilepage_collection_show = view_subpage.extend({
 	    {"id" : "collection_getname", collectionId: this.options.collectionId },
 
 	    // Does the user follow the collection?
- 		{"id" : "register_isfollow", collectionId: this.options.collectionId, "userId" : charmeUser.userId },
+ 		{"id" : "register_isfollow", collectionId: this.options.collectionId, "collectionOwner" : container_main.currentView.options.userId,  "userId" : charmeUser.userId },
 	    
 	    ]
 		}, function(d){
@@ -1053,11 +1054,6 @@ view_profilepage_collection_show = view_subpage.extend({
 				$('#but_followCollection').css("background-position", "-96px 0px");
 				$('#but_followCollection').data("bgpos", "-96");
 			}
-
-
-		
-
-			
 
 
 			$("#colName").text(d.collection_getname.info.name);
@@ -1071,6 +1067,10 @@ view_profilepage_collection_show = view_subpage.extend({
 
 		});
 
+	});
+
+
+var that = this;
 
 		$("#but_followCollection").click(function(){
 			
@@ -1089,9 +1089,12 @@ view_profilepage_collection_show = view_subpage.extend({
 				$('#but_followCollection').data("bgpos", "-96");
 				// Do subscribe...
 			}
+
+		
+
 			apl_request(
 		    {"requests" : [
-		    {"id" : "collection_follow", "userId" : charmeUser.userId, "action": action, collectionId: this.options.collectionId },
+		    {"id" : "collection_follow", "collectionOwner" : container_main.currentView.options.userId,  "userId" : charmeUser.userId, "action": action, collectionId: that.options.collectionId },
 	  
 		    ]
 			}, function(d){
@@ -1099,9 +1102,6 @@ view_profilepage_collection_show = view_subpage.extend({
 			});
 
 		});
-
-	});
-
 
 	},
 
@@ -1436,20 +1436,14 @@ var view_settings_sub = view_subpage.extend({
 var view_stream_display = view_subpage.extend({
 
 
-	getData: function()
+	postRender: function()
 	{
 
 		var templateData = {globaldata : []	};
-		
+		// this.options.streamId is list, 0 is no list.
 
-		if (this.options.streamId == 0)
-			templateData["streamitems"] = {};
-		else
-			templateData["streamitems"] = apl_postloader_getAll();
+		// JSON Nrequest to server....
 	
-
-
-	    return templateData;
 
 	}
 
