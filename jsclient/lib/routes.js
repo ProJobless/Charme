@@ -17,40 +17,6 @@
 
 */
 
-
-
-
-var container_guest = new page_login();
-var container_main ;
-
-$(function(){
-
-   
-    if (isLoggedIn())
-         charmeUser = new apl_user(localStorage.getItem("user"));
-
-    if (container_main == null)
-     container_main= new page_authenticated({el:'#layout'});
-
-
-    // get apl data, like lists, friends etc. from server
-    apl_setup(function(){
-
-    apl_setup2();
-
-
-
-
-    if (isLoggedIn())
-    {
-        container_main.render();}
-    else
-    {
-
-        container_guest.render();
-
-    }
-
  var AppRouter = Backbone.Router.extend({
         routes: {
 
@@ -93,6 +59,40 @@ $(function(){
     });
     // Instantiate the router
     var app_router = new AppRouter;
+
+
+var container_guest = new page_login();
+var container_main ;
+
+$(function(){
+
+   
+    if (isLoggedIn())
+         charmeUser = new apl_user(localStorage.getItem("user"));
+
+    if (container_main == null)
+     container_main= new page_authenticated({el:'#layout'});
+
+
+    // get apl data, like lists, friends etc. from server
+    apl_setup(function(){
+
+    apl_setup2();
+
+
+
+
+    if (isLoggedIn())
+    {
+        container_main.render();}
+    else
+    {
+
+        container_guest.render();
+
+    }
+
+
  
   app_router.on('route:getLists', function (id) {
 

@@ -961,41 +961,73 @@ var view_profilepage = view_page.extend({
 			p2.render();
 
 
+
+
 		});
 
 	  },
 	render: function()
 	{
 		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a></div>");
+
+
 	}
 
 });
 
 
+var uniIdCounter = 1; // Belongs to control_postItem below:
+var repostTemp = null;
 
  control_postItem = Backbone.View.extend({ 
  	options : {prepend: false},
- 	doComment: function()
- 	{
- 		alert("do a comment");
- 	},
- 	events: {
- 		'click #doCommentAction' : 'doComment',
- 		'click #doRepost' : 'doRepost'
- 		
- 	},
- 	doRepost: function()
- 	{
- 		alert("repost");
- 	},
+ 	
+
+ 
  	render: function() 
  	{
- 		var str = "<div class='collectionPost'><div class='cont'>"+this.options.content+"</div><div><a id='doRepost'>Repost</a> - <a id='doCommentAction'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
+
+ 		// Needed for generating unique element identifiers.
+ 		var uniId = uniIdCounter;
+ 		uniIdCounter++;
+
+
+ 		var str ;
+ 		if (this.options.layout == "stream")
+ 		 str = "<div class='collectionPost'><div class='cont'>"+this.options.content+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
+
+		else
+ 		 str = "<div class='collectionPost'><div class='cont'>"+this.options.content+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
 
  		if (this.options.prepend)
  			this.$el.prepend(str);
  		else
  			this.$el.append(str);
+
+ 		var that = this;
+ 		// Bind events:
+ 		$("#doCommentAction"+uniIdCounter).click(function()
+ 			{
+ 				alert("..."+uniIdCounter);
+ 			});
+
+ 		$("#doRepost"+uniIdCounter).click(function()
+ 			{
+
+ 				repostTemp = {userId: that.options.userId, content: that.options.content, username: that.options.username };
+ 				app_router.navigate("stream", {trigger: true} );
+ 		
+ 				
+ 				appendRepost();
+
+
+ 			});
+
+ 		$("#doLove"+uniIdCounter).click(function()
+ 			{
+ 				alert("like"+uniIdCounter);
+ 			});
+
  	}
 
  });
@@ -1433,20 +1465,63 @@ var view_settings_sub = view_subpage.extend({
 
 
 
+/*
+	GUI Helper for reposts, can be called from #stream or #profile
+	Reposts the post, specified in reposTemp.
+*/
+function appendRepost()
+{
+
+	if (repostTemp != null && $("#repostContainer").length > 0)
+	{
+
+
+		$('#repostContainer').show();
+		$('#repostContainer').text(repostTemp.content);
+		$('#textfield').focus();
+			repostTemp = null;
+	}
+}
+
+
+
 var view_stream_display = view_subpage.extend({
 
-
+	
 	postRender: function()
 	{
 
-		var templateData = {globaldata : []	};
+	
+var t = new  control_postField({el: $("#postFieldContainer"), collectionId: 0 });
+			t.render();
 
 
+		
+
+
+		apl_request({"requests" :
+		[
+			{"id" : "stream_get", list : this.options.streamId}
+		]
+		}, function(d2){ 
+
+			// generate post controls...
+			jQuery.each(d2.stream_get, function() {
+
+				var p2 = new control_postItem({userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+				p2.render();
+
+
+			});
+
+		});
+
+		
 		// this.options.streamId is list, 0 is no list.
 
 		// JSON Nrequest to server....
 	
-
+		appendRepost();
 	}
 
 });
@@ -1704,6 +1779,9 @@ console.log("share");
 	postRender: function()
 	{
 		$("#item_stream .count").remove();
+
+		
+
 	}
 
 	

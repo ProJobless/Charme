@@ -479,9 +479,11 @@ foreach ($data["requests"] as $item)
 
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
 
-			if (!isset($item["list"]))
+			if (!isset($item["list"]) ||$item["list"] == "")
 			{
 				// Get all stream items
+				$col = \App\DB\Get::Collection();
+				$returnArray[$action] = iterator_to_array($col->streamitems->find(array("owner" => $_SESSION["charme_userid"])), false);
 
 			}
 			else
