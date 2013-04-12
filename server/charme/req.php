@@ -417,8 +417,21 @@ foreach ($data["requests"] as $item)
 			$image = WideImage::load($item["data"]);
 
 			$grid = $col->getGridFS();
-			$grid->remove(array("fname" => $_SESSION["charme_userid"], "type" => "profileimage"));
-			$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 67)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"]));
+			$grid->remove(array("owner" => $_SESSION["charme_userid"], "type" => "profileimage"));
+
+			$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 67)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 150));
+			
+			// 200 width
+			$grid->storeBytes($image->resize(200, null, 'fill')->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 200));
+
+			// 64 width square
+
+			$grid->storeBytes($image->resize(64 , 63 , 'outside')->crop('center', 'center', 64, 64)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 64));
+
+			// 24 width square
+			$grid->storeBytes($image->resize(24 , 23 , 'outside')->crop('center', 'center', 24, 24)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 24));
+
+
 
 			$returnArray[$action] = array("SUCCESS" => true);
 

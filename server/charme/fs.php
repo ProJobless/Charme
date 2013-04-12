@@ -14,7 +14,7 @@ $loader->register();
 
 
 	header("Content-type: image/jpg");
-	 $file = $grid->findOne(array('type' => "profileimage"));
+	 $file = $grid->findOne(array('type' => "profileimage", 'owner' => urldecode($_GET["u"]), 'size' => intval($_GET["s"])));
 echo $file->getBytes();
 
 ?>
