@@ -23,7 +23,27 @@ background-color: black;
 	background-color: #c2c2c2;
 }
 
+.likes
+{float:right;
+	position: relative;
+}
+.likes .counter
+{
+	background-color: #efefef;
+	display: inline-block;
+	height: 20px;
+	float:right;
+	padding:4px 8px 0px 8px;
+	position: relative;
 
+}
+.likes img
+{
+
+	display: inline-block;
+	position: relative;
+
+}
 
 
 

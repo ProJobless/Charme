@@ -37,12 +37,14 @@ function apl_user(uid)
 	this.server = uid.split("@")[1];
 	this.username = uid.split("@")[0];
 
-
-	console.log(this);
 	
 	this.getServer = function()
 	{
 		return this.server;
+	}
+	this.getImageURL = function(size)
+	{
+		return "http://"+this.server+"/charme/fs.php?u="+this.userIdURL+"&s="+size;
 	}
 }
 

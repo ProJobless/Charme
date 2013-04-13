@@ -947,17 +947,46 @@ var view_profilepage = view_page.extend({
 	  },
 	  doPost : function()
 	  {
+
 	  	var txt = $("#textfield").val();
-	 
-	  	
+	 	var collectionId = (this.options.collectionId == "");
+	 	var that = this;
+	 	if (this.options.collectionId == "") // If collection Seletor enabled, get value from collection selector
+	 		collectionId = $("#postOptions select").val(); 
+
+	 	var repostdata;
+
+	 	if ( $('#repostContainer').is(':visible') )
+	  		 repostdata = $('#repostContainer').data("postdata");
+
+
+	  		
+
 	  	apl_request(
 	    {"requests" : [
-	    {"id" : "collection_post", "content" : txt, "collectionId" : this.options.collectionId, "userId" : container_main.currentView.options.userId},
+	    {"id" : "collection_post", "content" : txt, "collectionId" : collectionId, "repost" :  repostdata},
+	    { "id": "profile_get_name", userId: charmeUser.userId}
 	    ]
 		}, function(d){
 
+	
 
-			var p2 = new control_postItem({content: txt, time: "the time", el: $(".collectionPostbox"), prepend: true});
+			var name = d.profile_get_name.info.firstname+ " " + d.profile_get_name.info.lastname;
+
+			var elid, layout;
+			if (that.options.collectionId != "")
+			{
+				
+				elid = ".collectionPostbox";
+			}
+			else
+			{
+				layout = "stream";
+				elid = "#streamContainer";
+			}
+
+			// TODO: Add username
+			var p2 = new control_postItem({repost: repostdata, postId: d.collection_post.id,username: name, layout: layout, userId: charmeUser.userId, content: txt, time: "the time", el: $(elid), prepend: true});
 			p2.render();
 
 
@@ -968,9 +997,39 @@ var view_profilepage = view_page.extend({
 	  },
 	render: function()
 	{
-		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a></div>");
+		
+		if (this.options.collectionId == "")
+		{
+			var that = this;
+			// Get collections json....
+			apl_request(
+		    {"requests" : [
+		    {"id" : "collection_getAll", "userId" : charmeUser.userId},
+		    ]
+			}, function(d){
+				
+				var items = "";
+
+				jQuery.each(d.collection_getAll, function() {
+					items += "<option value='"+this._id.$id+"'>"+xssText(this.name)+"</option>";
+					
+
+				});
+				$('#postOptions').html(" in <select style='width:100px;' id='collectionSelector'>"+items+"</select>");
+			
+
+			});
+
+			
+		}
+		
+		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span></div>");
 
 
+	},
+	render2: function()
+	{
+		
 	}
 
 });
@@ -992,12 +1051,27 @@ var repostTemp = null;
  		uniIdCounter++;
 
 
+ 		var repoststr = "";
+ 		var liksstr = "<div class='likes'><span class='counter'>917</span><img src='http://server.local/charme/fs.php?u=schuldi%40server.local&s=24'></div>";
+
+ 		if (this.options.repost != null)
+ 			repoststr = " reposts <a href='#user/"+encodeURIComponent(this.options.repost.userId)+"'>"+this.options.repost.username+"'s post</a> <div class='repost'>"+this.options.repost.content+"</div>";
+ 	
+
+
  		var str ;
  		if (this.options.layout == "stream")
- 		 str = "<div class='collectionPost'><div class='cont'>"+this.options.content+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
+ 		{
 
+ 			var postUser = new apl_user(this.options.userId);
+
+ 			// 
+ 		 str = "<div class='collectionPost'>"+
+ 		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
+ 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div></div>";
+		}
 		else
- 		 str = "<div class='collectionPost'><div class='cont'>"+this.options.content+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
 
  		if (this.options.prepend)
  			this.$el.prepend(str);
@@ -1014,7 +1088,7 @@ var repostTemp = null;
  		$("#doRepost"+uniIdCounter).click(function()
  			{
 
- 				repostTemp = {userId: that.options.userId, content: that.options.content, username: that.options.username };
+ 				repostTemp = {userId: that.options.userId, postId: that.options.postId, content: that.options.content, username: that.options.username };
  				app_router.navigate("stream", {trigger: true} );
  		
  				
@@ -1092,7 +1166,9 @@ view_profilepage_collection_show = view_subpage.extend({
 
 		jQuery.each(d.collection_posts_get, function() {
 
-			var p2 = new control_postItem({content: this.content, time: this.time, el: $(".collectionPostbox")});
+		
+
+			var p2 = new control_postItem({repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time, el: $(".collectionPostbox")});
 			p2.render();
 
 
@@ -1471,13 +1547,23 @@ var view_settings_sub = view_subpage.extend({
 */
 function appendRepost()
 {
-
+	/*
+<div id='repostContainer' style='background-color: #efefef; display:none;'>
+<a id='cancelRepost'>Cancel Repost</a>
+<div id='repostUsername' style='padding-bottom:8px'></div>
+<div id='repostContent'></div>
+	*/
 	if (repostTemp != null && $("#repostContainer").length > 0)
 	{
 
-
+		// repostTemp.username
 		$('#repostContainer').show();
-		$('#repostContainer').text(repostTemp.content);
+
+		// This data will be sent to server:
+		$('#repostContainer').data("postdata", repostTemp);
+		//  Also important: repostTemp.userId, repostTemp.postId
+		$('#repostHeader span').text("You repost "+repostTemp.username+"'s post:");
+		$('#repostContent').text(repostTemp.content);
 		$('#textfield').focus();
 			repostTemp = null;
 	}
@@ -1486,13 +1572,20 @@ function appendRepost()
 
 
 var view_stream_display = view_subpage.extend({
+	 events: {
+    'click #cancelRepost': 'cancelRepost'
 
-	
+  },
+  cancelRepost: function()
+  {
+  	$('#repostContainer').hide();
+  },
+
 	postRender: function()
 	{
 
 	
-var t = new  control_postField({el: $("#postFieldContainer"), collectionId: 0 });
+var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" });
 			t.render();
 
 
@@ -1508,7 +1601,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: 0 })
 			// generate post controls...
 			jQuery.each(d2.stream_get, function() {
 
-				var p2 = new control_postItem({userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+				var p2 = new control_postItem({repost: this.post.repost, postId: this.post._id.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
 				p2.render();
 
 

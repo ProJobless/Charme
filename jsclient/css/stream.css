@@ -62,9 +62,17 @@
 }
 .subDiv
 {
-		margin-left:64px;
+		margin-left:80px;
 
 }
+.repost
+{
+	padding: 8px;
+color:gray;
+	margin-top: 8px; 
+	border-left: 2px silver solid;
+}
+
 .postContent
 {
 

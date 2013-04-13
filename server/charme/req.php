@@ -470,7 +470,7 @@ foreach ($data["requests"] as $item)
 
 				
 			$col = \App\DB\Get::Collection();
-			$content = array("post" => $item["post"], "owner"  => $item["follower"]);
+			$content = array("post" => $item["post"], "owner"  => $item["follower"], "username"  => $item["username"]);
 			$col->streamitems->insert($content);
 
 			\App\Counter\CounterUpdate::inc($item["follower"], "stream");
@@ -513,12 +513,24 @@ foreach ($data["requests"] as $item)
 		case "collection_post" : 
 
 			// 
+
+			// if repost -> append repost
+
+
 			$col = \App\DB\Get::Collection();
-			$content = array("collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
+			$cursor2 = $col->users->findOne(array("userid"=> urldecode($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
+
+			$content = array("username"=> $username,  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
+			
+			if (isset( $item["repost"]))
+				$content["repost"]  = $item["repost"];
+
 			$col->posts->insert($content);
 
 			
-
+	
+			
 			// 
 
 			// do foreach with collection followers:
@@ -531,7 +543,7 @@ foreach ($data["requests"] as $item)
 
 				"id" => "register_collection_post",
 				"follower" => $_SESSION["charme_userid"],
-
+				"username" => $username,
 				"post" => $content
 			));
 

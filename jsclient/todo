@@ -1,6 +1,13 @@
 Deleted from list
 - notify people who are not in lists any more!
 
+collection_update_audience:
+	- Send a collection_remove to the old audience
+	- Send a collection_add to the new audience with RSA encryped AES Key. (Maximal 50 People/List or All people in lists)
+	----------------------
+	list based encryption: Every list 	
+	----------------------
+
 Verifications of likes, comments etc:
 Generate SHA256 with Salt, and write to verify collection.
 
