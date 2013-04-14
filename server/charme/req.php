@@ -131,6 +131,13 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("sessionId" => session_id());
 		break;
 
+		case "lists_getRegistred" : 
+		// 
+			$col = \App\DB\Get::Collection();
+			$returnArray[$action] = iterator_to_array(
+					$col->listitems->find(array("owner" =>   ($_SESSION["charme_userid"]), "userId" =>  ($item["userId"])), array("list")));
+
+		break;
 
 
 

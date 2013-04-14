@@ -14,11 +14,24 @@
 
 					<div style="padding:6px;" id='select_lists'>
 
-						 <% _.each( rc.lists.items, function(item2){ %>
 
-						<a id='but_test' class="hotCheckbox" data-listid="<%- item2._id.$id %>"><%- item2.name %></a><br>
+
+
+						 <% _.each( rc.userlists, function(item2){ %>
+
+						 <% if (item2.isActive) { %>
+						<a id='but_test' class="hotCheckbox active" data-listid="<%- item2.id %>"><%- item2.name %></a><br>
+						<% } %>
+
+						 <% if (!item2.isActive) { %>
+						<a id='but_test' class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
+						<% } %>
+
+
+
 						  <% }); %>
-				
+
+						
 					</div>
 				
 

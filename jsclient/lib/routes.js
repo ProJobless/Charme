@@ -104,7 +104,7 @@ $(function(){
         {
             var pa = new view_lists({template: "lists", navMatch: "lists", useSidebar: true});
             container_main.setCurrent(pa);
-            container_main.currentView.render();
+        
         }
         
 
@@ -160,7 +160,7 @@ $(function(){
         {
             var pa = new view_page({template: "settings", navMatch: "settings", useSidebar: true});
            container_main.setCurrent(pa);
-            container_main.currentView.render();
+          
         }
         
         var vsd =  new view_settings_sub({ template: "settings_"+id, navMatch: '#nav_'+id});

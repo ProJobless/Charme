@@ -366,6 +366,7 @@ view_page = Backbone.View.extend({
     },
 
 	render: function(){
+	
 
 		if (this.options.needLogin && charmeUser == null)
 		{	
@@ -379,7 +380,7 @@ view_page = Backbone.View.extend({
 		// Page has changed not changed. Only subpage. -> Just render subpage
 	 	if (container_main.currentViewId == this.options.template)
         {
-   		
+   	
             // Just update SubView, we are allowed to render it here as parent view is already rendered
             this.sub.render();
 
@@ -1316,21 +1317,63 @@ var view_profilepage_info = view_subpage.extend({
 		    {"id" : "profile_get", "profileId" : container_main.currentView.options.userId},
 
 		    // Send this to user server:
-		    {"id" : "lists_getRegistred", "profileId" : container_main.currentView.options.userId}
+		    {"id" : "lists_getRegistred", "userId" : container_main.currentView.options.userId}
 
 
 		    ]
 		}, function(d2){
 			
+		
+
 
 			$.get("templates/user__.html", function (d)
 			{
+
+				// Mark lists which contain the user
+
+				var userlistsRegistred = new Array();
+				var userlists = new Array();
+				
 			
+				jQuery.each(d2.lists_getRegistred, function() {
+
+
+					
+						userlistsRegistred[this.list.$id] = true;
+				
+
+
+		      	});
+
+				//console.log(userlistsRegistred);
+
+				jQuery.each(apl_postloader_getLists().items, function() {
+
+					
+
+
+					if (userlistsRegistred[this._id.$id] != undefined)
+						userlists.push({name: this.name, id: this._id.$id, isActive: true});
+					else
+						userlists.push( {name: this.name, id: this._id.$id, isActive: false});
+
+		      	});
+
+
+				// Convert it to list (needed for underscore.js)
+				
+
+				
+
+
 				_.templateSettings.variable = "rc";
 
-				d2.lists = apl_postloader_getLists();
+				d2.userlists = userlists;
+d2.test = "userlists";
+
 				var tmpl = _.template(d, d2); 
 
+				console.log(d2.lists);
 				$("#userinfo_container").html(tmpl);
 
 
@@ -1339,22 +1382,28 @@ var view_profilepage_info = view_subpage.extend({
 
 
 				// Get box templates now and append to infopage:
-		      
+
 		        // Init list click events
 		        $('#select_lists a').click(function(){
 					
 						$(this).toggleClass("active");
-						$.doTimeout( 'listsave', 1000, function( state ){
 
-						// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
+						// declare variables here, so that they are avaiable if page has changed after timeout was called
+						var uid = container_main.currentView.options.userId;
 						var ar = $('#select_lists a.active').map(function(i,n) {
 						return $(n).data("listid");
 						}).get();
 
+
+						$.doTimeout( 'listsave', 1000, function( state ){
+						
+						// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
+						
+
 						// Send a request to the user server
 						apl_request(
 						    {"requests" : [
-						    {"id" : "lists_update", "listIds" : ar, "userId": container_main.currentView.options.userId}
+						    {"id" : "lists_update", "listIds" : ar, "userId": uid}
 
 						    ]
 						}, function(d){
