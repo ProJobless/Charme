@@ -211,6 +211,7 @@ foreach ($data["requests"] as $item)
 					"aesEnc" => $item["aesEnc"],
 					"conversationId" => new MongoId($item["conversationId"]),
 					"receiver" => $receiver,
+					"sendername" => $item["sendername"],
 					"messagePreview" => $item["messagePreview"],
 					"time" => new MongoDate(time())
 					);
@@ -220,7 +221,7 @@ foreach ($data["requests"] as $item)
 				}
 				\App\Counter\CounterUpdate::inc( $receiver, "talks");
 
-				$col->messages->insert(array("conversationId" =>   new MongoId($item["conversationId"]), "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
+				$col->messages->insert(array("sendername" => $item["sendername"], "conversationId" =>   new MongoId($item["conversationId"]), "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
 			}
 
 		break;
@@ -230,8 +231,12 @@ foreach ($data["requests"] as $item)
 		case "message_distribute_answer":
 
 			$col = \App\DB\Get::Collection();
-			$sendername = "Name of id ".$_SESSION["charme_userid"];
+		
 			$convId = new MongoId($item["conversationId"]);
+
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
 
 			// Find receivers of this message by $item["conversationId"]
 			$res = $col->conversations->findOne(array("conversationId"=> ($convId)), array('people'));
@@ -245,6 +250,7 @@ foreach ($data["requests"] as $item)
 						"allreceivers" => $res["people"],
 						"encMessage" => $item["encMessage"],
 						"messagePreview" => $item["messagePreview"],
+						"sendername" => $sendername, 
 
 						"sender" => $_SESSION["charme_userid"],
 						"conversationId" => $convId->__toString(),
@@ -271,7 +277,9 @@ foreach ($data["requests"] as $item)
 		case "message_distribute":
 			$col = \App\DB\Get::Collection();
 			
-			$sendername = "Name of id ".$_SESSION["charme_userid"];
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
 			
 			// As this is a new message we generate a unique converation Id
 			
@@ -301,6 +309,7 @@ foreach ($data["requests"] as $item)
 						"aesEnc" => $receiver["aesEnc"],
 						"messagePreview" => $item["messagePreview"],
 						"sender" => $_SESSION["charme_userid"],
+
 						"sendername" => $sendername,
 						"conversationId" => $convId->__toString(),
 				
@@ -518,7 +527,7 @@ foreach ($data["requests"] as $item)
 
 
 			$col = \App\DB\Get::Collection();
-			$cursor2 = $col->users->findOne(array("userid"=> urldecode($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
 			$content = array("username"=> $username,  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);

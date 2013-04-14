@@ -1789,7 +1789,11 @@ sendMessageForm({});
 				
 
 				 var aeskey = rsa.decrypt(this.aesEnc);///sjcl.decrypt(aeskey, this.encMessage);
-				 this.messageTitle = this.people;
+				 this.messageTitle = this.sendername;
+
+				 if (this.people.length  > 1)
+				 	this.messageTitle += " and " + this.people.length + " more";
+
 				 this.messagePreview = sjcl.decrypt(aeskey,this.messagePreview);  //.join(", ");
 
 			});
