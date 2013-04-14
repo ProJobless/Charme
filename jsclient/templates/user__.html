@@ -1,0 +1,48 @@
+<div class='p32'>
+			<div class='aboutContainer' style='margin-right:32px'>
+				<div class='aboutBox'>
+					<div class='title'>Account</div>
+					<table>
+						<tr><td class='info'>Name:</td><td id='fld_username'><%- rc.profile_get.info.firstname %> <%- rc.profile_get.info.lastname %></td></tr>
+<tr><td class='info'>Hometown:</td><td><%- rc.profile_get.info.hometown %></td></tr>
+<tr><td class='info'>Charme ID:</td><td><%- rc.profile_get.info.userid %></td></tr>
+					</table>
+				</div>
+
+				<div class='aboutBox' style='margin-top:32px;'>
+					<div class='title'>Lists</div>
+
+					<div style="padding:6px;" id='select_lists'>
+
+						 <% _.each( rc.lists.items, function(item2){ %>
+
+						<a id='but_test' class="hotCheckbox" data-listid="<%- item2._id.$id %>"><%- item2.name %></a><br>
+						  <% }); %>
+				
+					</div>
+				
+
+				</div>
+
+
+
+			</div>
+
+			<div class='aboutContainer'>
+				<div class='aboutBox'>
+					<div class='title'>Personal Information</div>
+					<table>
+						<tr><td class='info'>About:</td><td><%- rc.profile_get.info.about %></td></tr>
+						<tr><td class='info'>Hobbies:</td><td><%- rc.profile_get.info.hobbies %></td></tr>
+<tr><td class='info'>Literature:</td><td><%- rc.profile_get.info.literature %></td></tr>
+<tr><td class='info'>Books:</td><td><%- rc.profile_get.info.music %></td></tr>
+<tr><td class='info'>Music:</td><td><%- rc.profile_get.info.movies %></td></tr>
+					</table>
+
+
+				</div>
+
+
+			</div>
+
+		</div>

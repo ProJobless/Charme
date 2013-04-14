@@ -367,13 +367,6 @@ view_page = Backbone.View.extend({
 
 	render: function(){
 
-		/*
-			Warning: Do not render subViews here if not yet rendered!
-			http://stackoverflow.com/questions/9604750/backbone-js-firing-event-from-a-view-inside-a-view
-		*/  
-		
-
-
 		if (this.options.needLogin && charmeUser == null)
 		{	
   		
@@ -383,10 +376,10 @@ view_page = Backbone.View.extend({
 		}
 		//alert("render");
 
-		// Page has changed not changed. Only subpage.
+		// Page has changed not changed. Only subpage. -> Just render subpage
 	 	if (container_main.currentViewId == this.options.template)
         {
-   
+   		
             // Just update SubView, we are allowed to render it here as parent view is already rendered
             this.sub.render();
 
@@ -421,11 +414,7 @@ view_page = Backbone.View.extend({
 
 				that.finishRender(d);
 
-				if (that.sub != null)
-				{
-					if (!that.sub.asyncRenderMode)
-					that.sub.render();
-				}
+			
 				//else
 				{
 					
@@ -433,7 +422,7 @@ view_page = Backbone.View.extend({
 				}
 				//console.log("delegateEvents() in view");
 				
-		
+				 that.sub.render();
 
 
 			});
@@ -495,12 +484,11 @@ view_subpage = Backbone.View.extend({
 
 				// Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
 				$(that.$el.selector).html(template);//that.$el.selector
+				
+
+
 			
-			
-				if (that.postRender != null)
-				{ 
-					that.postRender();
-				}
+				
 				// important:!!
 
 
@@ -525,7 +513,10 @@ view_subpage = Backbone.View.extend({
 			
 				that.delegateEvents();
 				
-
+				if (that.postRender != null)
+				{ 
+					that.postRender();
+				}
 
 
 		});
@@ -904,7 +895,7 @@ var view_profilepage = view_page.extend({
 		 if (typeof this.username === 'undefined')
 		{
 			
-			;
+			
 
 			apl_request(
 		    {"requests" : [
@@ -1299,43 +1290,24 @@ var view_profilepage_info = view_subpage.extend({
 
 	el: '#page3',
 	reqData: {},
-	asyncRenderMode: true, 
-	canRender: false,
-	events: {
-	//'click #select_lists a' : 'listUpdate', 
 	
-
-},
-	listUpdate : function()
-	{
-	
-		
-		/*$(this).toggleClass("active");
-		$.doTimeout( 'listsave', 1000, function( state ){
-
-
-		var ar = $('#select_lists a.active').map(function(i,n) {
-		return $(n).data("listid");
-		}).get();
-
-		var uid = $.urlParam("userId",location.href );
-		console.log(ar);*/
-
-		// do apl request...
-
-		/*$.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
-		alert(d); 
-		});*/
-
-
-		//}, true);
-	},
 
 	initialize: function()
 	{
+ 		
 
-		var that = this;
+	},
 
+	postRender: function()
+	  {
+
+	  	//
+	  	//this.reqData.lists = apl_postloader_getLists();
+		// return this.reqData;
+
+	  	var that = this;
+	  	  
+	  	  //#userinfo_container
 		
 		apl_request(
 		    {"requests" : [
@@ -1348,86 +1320,64 @@ var view_profilepage_info = view_subpage.extend({
 
 
 		    ]
-		}, function(d){
+		}, function(d2){
 			
-		 that.reqData = d;
-         that.render();
-        
+
+			$.get("templates/user__.html", function (d)
+			{
+			
+				_.templateSettings.variable = "rc";
+
+				d2.lists = apl_postloader_getLists();
+				var tmpl = _.template(d, d2); 
+
+				$("#userinfo_container").html(tmpl);
+
+
+
+				$("td:empty").parent().remove(); // Remove empty Info fields
+
+
+				// Get box templates now and append to infopage:
+		      
+		        // Init list click events
+		        $('#select_lists a').click(function(){
+					
+						$(this).toggleClass("active");
+						$.doTimeout( 'listsave', 1000, function( state ){
+
+						// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
+						var ar = $('#select_lists a.active').map(function(i,n) {
+						return $(n).data("listid");
+						}).get();
+
+						// Send a request to the user server
+						apl_request(
+						    {"requests" : [
+						    {"id" : "lists_update", "listIds" : ar, "userId": container_main.currentView.options.userId}
+
+						    ]
+						}, function(d){
+
+							// OK...
+
+						});
+
+						// TODO: Notify profile owner server
+
+
+					}, true);
+
+				});
+		    });
+
+
 
 		});
 
 
-
-  		/*var url = 'http://server.local/charme/req.php?u='+(container_main.currentView.options.userIdRaw)+'&action=profile.get&callback=?';//encodeURI
-
-  		var that = this;
-
-         $.ajax({
-          dataType: "jsonp",
-          url: url,
-          data: "",
-          success: function(data) {
-          	that.reqData = data;
-          	that.render();
-
-          }});*/
-
-
-	},
-	getData: function()
-	{
-		this.reqData.lists = apl_postloader_getLists();
-		return this.reqData;
-	},
-	postRender: function()
-	  {
 
 	  	$(".profile_name").text(container_main.currentView.username);
-
-		
-	  	// Write username in header
-	
-
-	  	$("td:empty").parent().remove(); // Remove empty Info fields
-
-
-		$('#select_lists a').click(function(){
-			$(this).toggleClass("active");
-			$.doTimeout( 'listsave', 1000, function( state ){
-
-			// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
-			var ar = $('#select_lists a.active').map(function(i,n) {
-			return $(n).data("listid");
-			}).get();
-
-			// Send a request to the user server
-			apl_request(
-			    {"requests" : [
-			    {"id" : "lists_update", "listIds" : ar, "userId": container_main.currentView.options.userId}
-
-			    ]
-			}, function(d){
-
-				// OK...
-
-			});
-
-			// Notify profile owner server
-			console.log(ar); 
-
-			//alert("ok...");
-
-		}, true);
-/*
- $.post("ui/actions/modList.php", {'ar[]': ar, userId: uid}, function(d) {
-        alert(d); 
-    });*/
-
-
-
-
-
-		});
 
 	  }
 
