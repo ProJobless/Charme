@@ -17,7 +17,7 @@ $(function(){
 
 
 
-$.doTimeout( 'getnotify', 1000*5, function(state){	
+$.doTimeout( 'getnotify', 1000*20, function(state){	
 
 apl_request(
     {"requests" : [

@@ -39,7 +39,7 @@ $host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 */
 
 // https://developer.mozilla.org/en-US/docs/HTTP/Access_control_CORS#Access-Control-Allow-Origin
-header('Access-Control-Allow-Origin: http://client.local');
+header('Access-Control-Allow-Origin: http://client.local');//www.charmeproject.com
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -113,7 +113,7 @@ foreach ($data["requests"] as $item)
 {
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -188,6 +188,61 @@ foreach ($data["requests"] as $item)
 			
 
 		break;
+
+		case "post_like_receive_distribute" : 
+		// Notify other people about the like...
+		$col = \App\DB\Get::Collection();
+		break;
+
+		case "post_like_receive" : 
+			// Save like on post owners server...
+			// ! Has to work without sessionID
+			$col = \App\DB\Get::Collection();
+			// Verify sender ID!, userId must be in database!
+			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"]);
+			$col->likes->update($content, $content ,  array("upsert" => true));
+
+		break;
+
+		case "post_like" : 
+			// Save like on my own server at stream items
+			$col = \App\DB\Get::Collection();
+
+			$query = array('post._id' => new MongoId($item["postId"]),"post.owner" => $item["userId"],  "owner" => $_SESSION["charme_userid"]);
+
+			$col->streamitems->update($query ,	array('$set' => array("like" => true)));//array("upsert" => true)
+
+			$receiver = $item["userId"];
+
+			$data = array("requests" => array(
+
+					"id" => "post_like_receive",
+					"liker" => $_SESSION["charme_userid"],
+					"userId" => $receiver,
+					"postId" => $item["postId"],
+
+					));
+
+					$req21 = new \App\Requests\JSON(
+					$receiver,
+					$_SESSION["charme_userid"],
+					$data
+					
+			);
+
+					$req21 = new \App\Requests\JSON(
+					$receiver,
+					$_SESSION["charme_userid"],
+					$data
+					
+					);
+					$req21->send(true);
+
+			$returnArray[$action] = array("STATUS" => "OK");
+
+
+		break;
+
 
 		// Get message from server
 		case "message_receive" :

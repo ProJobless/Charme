@@ -1044,7 +1044,7 @@ var repostTemp = null;
 
 
  		var repoststr = "";
- 		var liksstr = "<div class='likes'><span class='counter'>917</span><img src='http://server.local/charme/fs.php?u=schuldi%40server.local&s=24'></div>";
+ 		var liksstr = "<div class='likes'><a class='counter' id='counter"+uniIdCounter+"'>0</a><img src='http://server.local/charme/fs.php?u=schuldi%40server.local&s=24'></div>";
 
  		if (this.options.repost != null)
  			repoststr = " reposts <a href='#user/"+encodeURIComponent(this.options.repost.userId)+"'>"+this.options.repost.username+"'s post</a> <div class='repost'>"+this.options.repost.content+"</div>";
@@ -1088,11 +1088,44 @@ var repostTemp = null;
 
 
  			});
+ 		$("#counter"+uniIdCounter).click(function() {
+ 			alert("Load box...");
+ 		});
+
 
  		$("#doLove"+uniIdCounter).click(function()
  			{
- 				alert("like"+uniIdCounter);
- 			});
+	 			if (!this.like)
+	 			{
+	 				$(this).text("Unlove");
+	 				this.like = true;
+
+	 				// increment counter...
+				}
+				else
+				{
+					$(this).text("Love");
+	 				this.like = false;
+
+				}
+
+				// Send like request to post owner:
+				apl_request(
+			    {"requests" : [
+			    // Get posts of collection
+			    {"id" : "post_like", "userId" : that.options.userId, postId: that.options.postId },
+			    // Get name of collection
+			  
+			    ]
+				}, function(d){
+
+				
+						alert("liked it!");
+
+			
+		 		});
+
+		});
 
  	}
 
@@ -1396,10 +1429,8 @@ d2.test = "userlists";
 
 
 						$.doTimeout( 'listsave', 1000, function( state ){
-						
 						// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
 						
-
 						// Send a request to the user server
 						apl_request(
 						    {"requests" : [
@@ -1446,9 +1477,6 @@ var view_settings_sub = view_subpage.extend({
     'click #but_saveProfile': 'saveProfile',
     'click #but_saveImage': 'saveImage',
     'change #profileImgFileUp' : 'fileChanged'
-
-
-
 
 
   },

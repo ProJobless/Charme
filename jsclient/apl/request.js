@@ -80,7 +80,7 @@ function apl_request(requests, callback, ses,srv)
 
 		url: url1,
 		type: "POST",
-		data: {d:JSON.stringify(requests), test: "test"},
+		data: {d:JSON.stringify(requests)},
 		dataType: "json",
 		crossDomain : true,
 		xhrFields: {
