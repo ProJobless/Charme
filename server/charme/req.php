@@ -112,8 +112,11 @@ $returnArray = array();
 foreach ($data["requests"] as $item)
 {
 
+
+
+
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive","post_comment_distribute", "post_comment_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -211,6 +214,75 @@ foreach ($data["requests"] as $item)
 
 
 		break;
+		case "post_comment_receive_distribute":
+			echo "update all stream items with post id..., set multiple=true";
+
+		break;
+		case "post_comment_distribute" :
+		// Send to all post followers, receive a post_comment here
+		// $item[userId] is receiver
+
+		/*
+			1. Get collectionId
+			2. Get collection followers
+			3. Send post to these followers
+		*/
+		$cursor2 = $col->posts->findOne(array("userid"=> new MongoId($item["postId"])), array("collectionId", "owner"));
+		$cursor3 = $col->followers->find(array("collectionId" => new MongoId($cursor2["collectionId"]) ));
+
+		foreach ($cursor3 as $receiver)
+		{
+			$data = array("requests" => array(
+
+					"id" => "post_comment_receive_distribute",
+					"content" => $item["content"],
+					"userId" => $receiver["follower"],
+					"postId" => $item["postId"],
+			
+
+					));
+
+
+			$req21 = new \App\Requests\JSON(
+			$receiver["follower"],
+			$cursor2["owner"],
+			$data);
+
+			$req21->send();
+		}
+
+
+		break;
+		case "post_comment" :
+
+			// Send to server owner
+			$col = \App\DB\Get::Collection();
+			$receiver = $item["userId"];
+	
+	
+			$data = array("requests" => array(
+
+					"id" => "post_comment_distribute",
+					"content" => $item["content"],
+					"userId" => $receiver,
+					"postId" => $item["postId"],
+			
+
+					));
+
+	
+
+
+			$req21 = new \App\Requests\JSON(
+			$receiver,
+			$_SESSION["charme_userid"],
+			$data);
+
+			$req21->send();
+
+			$returnArray[$action] = array("STATUS" => "OK");
+
+		break;
 
 		case "post_like" : 
 			// Save like on my own server at stream items
@@ -238,20 +310,13 @@ foreach ($data["requests"] as $item)
 
 					));
 
-					$req21 = new \App\Requests\JSON(
-					$receiver,
-					$_SESSION["charme_userid"],
-					$data
-					
-			);
+			
 
 
 			$req21 = new \App\Requests\JSON(
 			$receiver,
 			$_SESSION["charme_userid"],
-			$data
-			
-			);
+			$data			);
 			$req21->send();
 
 			$returnArray[$action] = array("STATUS" => "OK");
@@ -620,10 +685,8 @@ foreach ($data["requests"] as $item)
 			
 	
 			
-			// 
 
-			// do foreach with collection followers:
-			$res2 = $col->followers->find();
+			$res2 = $col->followers->find(array("collectionId" => new MongoId($item["collectionId"]) ));
 
 			foreach ($res2 as $resItem)
 			{

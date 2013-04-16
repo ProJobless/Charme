@@ -1082,10 +1082,14 @@ var repostTemp = null;
  			// 
  		 str = "<div class='collectionPost'>"+
  		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
- 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div></div>";
+ 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> <span class='time'>"+this.options.time+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <a id='doCommentAction"+uniIdCounter+"'>Comment</a><span class='time'>"+this.options.time+"</span></div></div>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> <span class='time'>"+this.options.time+"</span>";
+
+ 		str += "<div class='commenBox'><div class='postComments'>[Comments]</div><textarea style=' height: 32px; width:400px; margin-bottom:8px;'></textarea><br><a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a></div>";
+ 		str += "</div></div>";
+
 
  		if (this.options.prepend)
  			this.$el.prepend(str);
@@ -1094,10 +1098,26 @@ var repostTemp = null;
 
  		var that = this;
  		// Bind events:
- 		$("#doCommentAction"+uniIdCounter).click(function()
+ 		$("#submitComment"+uniIdCounter).click(function()
  			{
- 				alert("..."+uniIdCounter);
+ 				// Get Text
+ 				var content = $(this).parent().children("textarea").val();
+ 				apl_request(
+			    {"requests" : [
+			    // Get posts of collection
+			    {"id" : "post_comment", "userId" : that.options.userId, "content" : content,  "postId": that.options.postId },
+			    // Get name of collection
+			  
+			    ]
+				}, function(d){
+
+				});
+
+
+
  			});
+
+ 		
 
  		$("#doRepost"+uniIdCounter).click(function()
  			{
