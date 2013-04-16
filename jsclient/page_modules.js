@@ -1034,17 +1034,39 @@ var repostTemp = null;
  	options : {prepend: false},
  	
 
- 
+ 	setLikeText: function(itemCounter)
+ 	{
+ 	
+ 			var count = parseInt($("#counter"+itemCounter+"").text());
+
+ 				if (this.options.like)
+	 			{
+	 				count++;
+	 				$("#doLove"+itemCounter).text("Unlove");
+	 				$("#counter"+itemCounter).text(count);
+
+	 				// increment counter...
+				}
+				else
+				{
+					count--;
+					$("#doLove"+itemCounter).text("Love");
+	 				$("#counter"+itemCounter).text(count);
+
+				}
+ 	},
  	render: function() 
  	{
+
 
  		// Needed for generating unique element identifiers.
  		var uniId = uniIdCounter;
  		uniIdCounter++;
 
+ 		
 
  		var repoststr = "";
- 		var liksstr = "<div class='likes'><a class='counter' id='counter"+uniIdCounter+"'>0</a><img src='http://server.local/charme/fs.php?u=schuldi%40server.local&s=24'></div>";
+ 		var liksstr = "<div class='likes'><a class='counter' id='counter"+uniIdCounter+"'>0</a></div>";
 
  		if (this.options.repost != null)
  			repoststr = " reposts <a href='#user/"+encodeURIComponent(this.options.repost.userId)+"'>"+this.options.repost.username+"'s post</a> <div class='repost'>"+this.options.repost.content+"</div>";
@@ -1093,35 +1115,29 @@ var repostTemp = null;
  		});
 
 
+ 		this.setLikeText(uniIdCounter);
  		$("#doLove"+uniIdCounter).click(function()
  			{
-	 			if (!this.like)
-	 			{
-	 				$(this).text("Unlove");
-	 				this.like = true;
+	 			
 
-	 				// increment counter...
-				}
-				else
-				{
-					$(this).text("Love");
-	 				this.like = false;
-
-				}
 
 				// Send like request to post owner:
 				apl_request(
 			    {"requests" : [
 			    // Get posts of collection
-			    {"id" : "post_like", "userId" : that.options.userId, postId: that.options.postId },
+			    {"id" : "post_like", "userId" : that.options.userId, status: !!!that.options.like,  postId: that.options.postId },
 			    // Get name of collection
 			  
 			    ]
 				}, function(d){
 
-				
-						alert("liked it!");
+					
+						if (that.options.like)
+							that.options.like= false;
+						else
+							that.options.like= true;
 
+ 						that.setLikeText(uniIdCounter);
 			
 		 		});
 
@@ -1628,7 +1644,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 			// generate post controls...
 			jQuery.each(d2.stream_get, function() {
 
-				var p2 = new control_postItem({repost: this.post.repost, postId: this.post._id.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+				var p2 = new control_postItem({like: this.like, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
 				p2.render();
 
 

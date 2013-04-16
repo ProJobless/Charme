@@ -195,12 +195,20 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "post_like_receive" : 
+
+	
 			// Save like on post owners server...
 			// ! Has to work without sessionID
 			$col = \App\DB\Get::Collection();
 			// Verify sender ID!, userId must be in database!
 			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"]);
-			$col->likes->update($content, $content ,  array("upsert" => true));
+			
+			if ($item["status"] == false)
+				$col->likes->delete($content);
+			else
+				$col->likes->update($content, $content ,  array("upsert" => true));
+
+
 
 		break;
 
@@ -208,9 +216,15 @@ foreach ($data["requests"] as $item)
 			// Save like on my own server at stream items
 			$col = \App\DB\Get::Collection();
 
-			$query = array('post._id' => new MongoId($item["postId"]),"post.owner" => $item["userId"],  "owner" => $_SESSION["charme_userid"]);
+			// "post.owner" => $item["userId"], 
+			$query = array('postId' => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]);
 
-			$col->streamitems->update($query ,	array('$set' => array("like" => true)));//array("upsert" => true)
+
+			if ($item["status"] == false)
+			$col->streamitems->update($query ,	array('$set' => array("like" => false)));//array("upsert" => true)
+			else
+			$col->streamitems->update($query ,	array('$set' => array("like" => true)));
+
 
 			$receiver = $item["userId"];
 
@@ -220,6 +234,7 @@ foreach ($data["requests"] as $item)
 					"liker" => $_SESSION["charme_userid"],
 					"userId" => $receiver,
 					"postId" => $item["postId"],
+					"status" => $item["status"]
 
 					));
 
@@ -230,13 +245,14 @@ foreach ($data["requests"] as $item)
 					
 			);
 
-					$req21 = new \App\Requests\JSON(
-					$receiver,
-					$_SESSION["charme_userid"],
-					$data
-					
-					);
-					$req21->send(true);
+
+			$req21 = new \App\Requests\JSON(
+			$receiver,
+			$_SESSION["charme_userid"],
+			$data
+			
+			);
+			$req21->send();
 
 			$returnArray[$action] = array("STATUS" => "OK");
 
@@ -537,20 +553,7 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		case "register_collection_post":
-
-				
-			$col = \App\DB\Get::Collection();
-			$content = array("post" => $item["post"], "owner"  => $item["follower"], "username"  => $item["username"]);
-			$col->streamitems->insert($content);
-
-			\App\Counter\CounterUpdate::inc($item["follower"], "stream");
-
-			
-
-			//collection_post
-		break;
-
+	
 
 
 
@@ -580,6 +583,21 @@ foreach ($data["requests"] as $item)
 			}
 			// if !
 		break;
+
+		case "register_collection_post":
+
+				
+			$col = \App\DB\Get::Collection();
+			$content = array("post" => $item["post"], "postId" => new MongoId($item["postId"]), "owner"  => $item["follower"], "username"  => $item["username"]);
+			$col->streamitems->insert($content);
+
+			\App\Counter\CounterUpdate::inc($item["follower"], "stream");
+
+			
+
+			//collection_post
+		break;
+
 
 		case "collection_post" : 
 
@@ -615,7 +633,8 @@ foreach ($data["requests"] as $item)
 				"id" => "register_collection_post",
 				"follower" => $_SESSION["charme_userid"],
 				"username" => $username,
-				"post" => $content
+				"post" => $content,
+				"postId" => $content["_id"]
 			));
 
 
