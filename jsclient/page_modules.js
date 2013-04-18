@@ -1087,7 +1087,7 @@ var repostTemp = null;
 		else
  		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> <span class='time'>"+this.options.time+"</span>";
 
- 		str += "<div class='commenBox'><div class='postComments'>[Comments]</div><textarea style=' height: 32px; width:400px; margin-bottom:8px;'></textarea><br><a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a></div>";
+ 		str += "<div class='commenBox'><div class='postComments'>[Comments]</div><input class='box' type='text' style='width:250px; margin-bottom:8px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
  		str += "</div></div>";
 
 
@@ -1716,6 +1716,8 @@ var view_talks_subpage = view_subpage.extend({
 
 		if (this.options.superId != "")
 		this.loadMessages(0);
+	console.log("cert");
+	console.log(charmeUser.certificate);
 		
 	},
 	loadMessages: function(start)
