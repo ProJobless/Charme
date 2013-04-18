@@ -200,7 +200,7 @@ foreach ($data["requests"] as $item)
 
 
 		break;
-		
+
 		case "post_comment_distribute" :
 
 		/*
@@ -220,13 +220,13 @@ foreach ($data["requests"] as $item)
 			
 			$data = array("requests" => array(
 
-					"id" => "post_comment_receive_distribute",
-					"content" => $item["content"],
-					"userId" => $receiver["follower"],
-					"postId" => $item["postId"],
-			
+				"id" => "post_comment_receive_distribute",
+				"content" => $item["content"],
+				"userId" => $receiver["follower"],
+				"postId" => $item["postId"],
+				"postowner" => $item["userId"]
 
-					));
+			));
 
 
 			$req21 = new \App\Requests\JSON(
@@ -234,7 +234,7 @@ foreach ($data["requests"] as $item)
 			$cursor2["owner"],
 			$data);
 
-			$req21->send(true);
+			$req21->send();
 		}
 
 
@@ -264,7 +264,7 @@ foreach ($data["requests"] as $item)
 			$_SESSION["charme_userid"],
 			$data);
 
-			$req21->send(true);
+			$req21->send();
 
 			$returnArray[$action] = array("STATUS" => "OK");
 
@@ -645,11 +645,14 @@ foreach ($data["requests"] as $item)
 
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
 
+			$stra = array();
+			$col = \App\DB\Get::Collection();
+
 			if (!isset($item["list"]) ||$item["list"] == "")
 			{
 				// Get all stream items
-				$col = \App\DB\Get::Collection();
-				$returnArray[$action] = iterator_to_array($col->streamitems->find(array("owner" => $_SESSION["charme_userid"])), false);
+				
+				$stra=  iterator_to_array($col->streamitems->find(array("owner" => $_SESSION["charme_userid"])), false);
 
 			}
 			else
@@ -660,6 +663,20 @@ foreach ($data["requests"] as $item)
 
 
 			}
+			// Append last 3 comments for each item.
+			foreach ($stra  as $key => $item2)
+			{
+			
+			
+				$stra[$key ]["comments"] = 
+				iterator_to_array($col->streamcomments->find(array("postId" => $item2["postId"]->__toString(), "postowner" => $item2["owner"]) ), false);
+
+				//print_r($item["comments"]);
+			}
+	
+
+			$returnArray[$action] = $stra;
+
 			// if !
 		break;
 
@@ -728,7 +745,7 @@ foreach ($data["requests"] as $item)
 				$req21->send();
 
 			}
-			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);	
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString());	
 
 
 

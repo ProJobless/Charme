@@ -1055,7 +1055,9 @@ var repostTemp = null;
  	},
  	render: function() 
  	{
- 		
+ 			
+
+
 
 
  		// Needed for generating unique element identifiers.
@@ -1097,10 +1099,31 @@ var repostTemp = null;
 
  		var that = this;
 
+
+ 		var maxComments = 15;
+		var iComments = 0; // !!! Please remove, we will get sued for this name
+
+
  		// append some comments
-		var item = new control_commentItem ({content: "test", "username" :"UNDEFINED", userId: 0, el: $('#postComments'+uniIdCounter)});
-		item.render();
-	
+
+ 		if (this.options.comments != undefined)
+ 		{
+ 	
+	 		jQuery.each(this.options.comments, function() {
+			
+			iComments++;
+			if (iComments > maxComments)
+				return;
+
+		
+
+			var item = new control_commentItem (
+				{content: this.content, "username" :"UNDEFINED", userId:  this.userId, el: $('#postComments'+uniIdCounter)});
+
+				item.render();
+			});
+		}
+		
 
 
 		$("#inputComment"+uniIdCounter).keypress(function(e) {
@@ -1108,7 +1131,7 @@ var repostTemp = null;
 		{
 			// Write comment
 		    	// Get Text
-		    	alert(that.options.postId);
+		    
  				var content = $(this).val();
  				var that2 = this;
  				apl_request(
@@ -1687,8 +1710,11 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 
 			// generate post controls...
 			jQuery.each(d2.stream_get, function() {
+				console.log("this.comments");
+				console.log(this);
 
-				var p2 = new control_postItem({like: this.like, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+
+				var p2 = new control_postItem({comments: this.comments, like: this.like, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
 				p2.render();
 
 
