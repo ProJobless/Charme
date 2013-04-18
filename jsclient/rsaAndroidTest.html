@@ -58,6 +58,10 @@ q: "c2819071d858c07eab5406f563c5170b74f3af4207d87f127bc5dd775a91893ac27e89e30189
 	 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
 	 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
 
+// This does also work:
+//rsa.setPrivate(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d);
+
+
 	rsa.setPublic(charmeUser.certificate.rsa.n,charmeUser.certificate.rsa.e);
 
 	var enc = rsa.encrypt("Hello World");
@@ -70,7 +74,7 @@ $("#layout").append("<br>Decrpyted is:<br>" + rsa.decrypt(enc));
 
 	var someEncrypted = "102540CB79E79ECCA57914E09C4D66A666C0DBEBABD96BCF0F54A12C8A6D8D2C63DE791942477E9767F59FCA5B8BE129854A4EAC03D6EC1AFC4260B4E8B3423EA3E5E699DE1D483EB03A914674E2D76E930BD69EDEB0FCA3040F625A227B4E388F01F21A642BE80908208077ECA989B0083F6D3289E3CAE1DD991C2A47E99249"; // encrypted by Java, decrypt it
 
-	
+
 $("#layout").append("<br>Decrpyted form Java is:<br>" + rsa.decrypt(someEncrypted));
 
 
