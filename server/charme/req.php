@@ -192,46 +192,32 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		case "post_like_receive_distribute" : 
-		// Notify other people about the like...
-		$col = \App\DB\Get::Collection();
-		break;
-
-		case "post_like_receive" : 
-
 	
-			// Save like on post owners server...
-			// ! Has to work without sessionID
-			$col = \App\DB\Get::Collection();
-			// Verify sender ID!, userId must be in database!
-			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"]);
-			
-			if ($item["status"] == false)
-				$col->likes->delete($content);
-			else
-				$col->likes->update($content, $content ,  array("upsert" => true));
-
-
-
-		break;
 		case "post_comment_receive_distribute":
-			echo "update all stream items with post id..., set multiple=true";
+	
+			$col = \App\DB\Get::Collection();
+			$col->streamcomments->insert($item); // TODO: Remove id in item
+
 
 		break;
+		
 		case "post_comment_distribute" :
-		// Send to all post followers, receive a post_comment here
-		// $item[userId] is receiver
 
 		/*
 			1. Get collectionId
 			2. Get collection followers
 			3. Send post to these followers
 		*/
-		$cursor2 = $col->posts->findOne(array("userid"=> new MongoId($item["postId"])), array("collectionId", "owner"));
+
+		$col = \App\DB\Get::Collection();
+
+		$cursor2 = $col->posts->findOne(array("_id"=> new MongoId($item["postId"])), array("collectionId", "owner"));
 		$cursor3 = $col->followers->find(array("collectionId" => new MongoId($cursor2["collectionId"]) ));
 
+	
 		foreach ($cursor3 as $receiver)
 		{
+			
 			$data = array("requests" => array(
 
 					"id" => "post_comment_receive_distribute",
@@ -248,7 +234,7 @@ foreach ($data["requests"] as $item)
 			$cursor2["owner"],
 			$data);
 
-			$req21->send();
+			$req21->send(true);
 		}
 
 
@@ -278,9 +264,37 @@ foreach ($data["requests"] as $item)
 			$_SESSION["charme_userid"],
 			$data);
 
-			$req21->send();
+			$req21->send(true);
 
 			$returnArray[$action] = array("STATUS" => "OK");
+
+		break;
+
+		case "post_like_receive_distribute" : 
+		// Notify other people about the like...
+		$col = \App\DB\Get::Collection();
+		break;
+
+		case "post_like_receive" : 
+
+	
+			// Save like on post owners server...
+			// ! Has to work without sessionID
+			$col = \App\DB\Get::Collection();
+			// Verify sender ID!, userId must be in database!
+			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"]);
+			
+			if ($item["status"] == false)
+			{
+				$col->likes->delete($content);
+			}
+			else
+			{
+				$col->likes->update($content, $content ,  array("upsert" => true));
+			}
+			// Get total likes
+
+
 
 		break;
 
@@ -651,6 +665,7 @@ foreach ($data["requests"] as $item)
 
 		case "register_collection_post":
 
+
 				
 			$col = \App\DB\Get::Collection();
 			$content = array("post" => $item["post"], "postId" => new MongoId($item["postId"]), "owner"  => $item["follower"], "username"  => $item["username"]);
@@ -682,7 +697,8 @@ foreach ($data["requests"] as $item)
 
 			$col->posts->insert($content);
 
-			
+
+
 	
 			
 
@@ -697,7 +713,7 @@ foreach ($data["requests"] as $item)
 				"follower" => $_SESSION["charme_userid"],
 				"username" => $username,
 				"post" => $content,
-				"postId" => $content["_id"]
+				"postId" => $content["_id"]->__toString()
 			));
 
 

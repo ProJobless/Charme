@@ -1026,37 +1026,36 @@ var view_profilepage = view_page.extend({
 
 });
 
+ control_commentItem = Backbone.View.extend({ 
+ 	render : function()
+ 	{
+
+ 		this.$el.append("<div class='comment'><div class='head'><a href='#/user/"+encodeURIComponent(this.options.userId)+"'>"+this.options.username+ "</a></div>"+ this.options.content+"</div>");
+ 	}
+});
 
 var uniIdCounter = 1; // Belongs to control_postItem below:
 var repostTemp = null;
 
  control_postItem = Backbone.View.extend({ 
- 	options : {prepend: false},
+ 	options : {prepend: false, counter: 1000},
  	
 
  	setLikeText: function(itemCounter)
  	{
- 	
- 			var count = parseInt($("#counter"+itemCounter+"").text());
-
- 				if (this.options.like)
-	 			{
-	 				count++;
-	 				$("#doLove"+itemCounter).text("Unlove");
-	 				$("#counter"+itemCounter).text(count);
-
-	 				// increment counter...
-				}
-				else
-				{
-					count--;
-					$("#doLove"+itemCounter).text("Love");
-	 				$("#counter"+itemCounter).text(count);
-
-				}
+ 		$("#counter"+itemCounter).text(this.options.counter);
+		if (this.options.like)
+		{
+			$("#doLove"+itemCounter).text("Unlove");
+		}
+		else
+		{
+			$("#doLove"+itemCounter).text("Love");
+		}
  	},
  	render: function() 
  	{
+ 		
 
 
  		// Needed for generating unique element identifiers.
@@ -1082,12 +1081,12 @@ var repostTemp = null;
  			// 
  		 str = "<div class='collectionPost'>"+
  		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
- 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> <span class='time'>"+this.options.time+"</span></div>";
+ 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+this.options.time+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> <span class='time'>"+this.options.time+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
 
- 		str += "<div class='commenBox'><div class='postComments'>[Comments]</div><input class='box' type='text' style='width:250px; margin-bottom:8px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
+ 		str += "<div class='commenBox'><div class='postcomments' id='postComments"+uniIdCounter+"'></div><input id='inputComment"+uniIdCounter+"' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
  		str += "</div></div>";
 
 
@@ -1097,11 +1096,21 @@ var repostTemp = null;
  			this.$el.append(str);
 
  		var that = this;
- 		// Bind events:
- 		$("#submitComment"+uniIdCounter).click(function()
- 			{
- 				// Get Text
- 				var content = $(this).parent().children("textarea").val();
+
+ 		// append some comments
+		var item = new control_commentItem ({content: "test", "username" :"UNDEFINED", userId: 0, el: $('#postComments'+uniIdCounter)});
+		item.render();
+	
+
+
+		$("#inputComment"+uniIdCounter).keypress(function(e) {
+		if(e.which == 13)
+		{
+			// Write comment
+		    	// Get Text
+		    	alert(that.options.postId);
+ 				var content = $(this).val();
+ 				var that2 = this;
  				apl_request(
 			    {"requests" : [
 			    // Get posts of collection
@@ -1111,12 +1120,16 @@ var repostTemp = null;
 			    ]
 				}, function(d){
 
+						var item2 = new control_commentItem ({"content": content, "username" :"UNDEFINED", userId: 0, el: $('#postComments'+uniIdCounter)});
+		item2.render();
+		$(that2).val("");
+
 				});
 
+		}});
 
 
- 			});
-
+ 		
  		
 
  		$("#doRepost"+uniIdCounter).click(function()
@@ -1130,16 +1143,21 @@ var repostTemp = null;
 
 
  			});
+
+ 	
  		$("#counter"+uniIdCounter).click(function() {
  			alert("Load box...");
  		});
 
 
  		this.setLikeText(uniIdCounter);
+
+ 		$("#doLove"+uniIdCounter).data("uniid", uniIdCounter);
+
  		$("#doLove"+uniIdCounter).click(function()
  			{
 	 			
-
+ 				var that2 = this;
 
 				// Send like request to post owner:
 				apl_request(
@@ -1152,12 +1170,18 @@ var repostTemp = null;
 				}, function(d){
 
 					
-						if (that.options.like)
-							that.options.like= false;
-						else
-							that.options.like= true;
 
- 						that.setLikeText(uniIdCounter);
+						if (that.options.like)
+						{	that.options.counter--;
+							that.options.like= false;
+						}
+						else
+						{
+							that.options.counter++;
+							that.options.like= true;
+						}
+			
+ 						that.setLikeText($(that2).data("uniid"));
 			
 		 		});
 
