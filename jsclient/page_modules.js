@@ -1029,8 +1029,11 @@ var view_profilepage = view_page.extend({
  control_commentItem = Backbone.View.extend({ 
  	render : function()
  	{
-
- 		this.$el.append("<div class='comment'><div class='head'><a href='#/user/"+encodeURIComponent(this.options.userId)+"'>"+this.options.username+ "</a></div>"+ this.options.content+"</div>");
+ 		var str= "<div class='comment'><div class='head'><a href='#/user/"+encodeURIComponent(this.options.userId)+"'>"+this.options.username+ "</a></div>"+ this.options.content+"</div>";
+ 		if (this.options.prepend)
+ 			this.$el.prepend(str);
+ 		else
+ 			this.$el.append(str);
  	}
 });
 
@@ -1038,7 +1041,7 @@ var uniIdCounter = 1; // Belongs to control_postItem below:
 var repostTemp = null;
 
  control_postItem = Backbone.View.extend({ 
- 	options : {prepend: false, counter: 1000},
+ 	options : {prepend: false, counter: 1000, commentCount: 0},
  	
 
  	setLikeText: function(itemCounter)
@@ -1053,6 +1056,27 @@ var repostTemp = null;
 			$("#doLove"+itemCounter).text("Love");
 		}
  	},
+ 	addComments: function(items, parentId, prepend)
+ 	{
+ 		var maxComments = 15;
+		var iComments = 0; // !!! Please remove, we will get sued for this name
+
+
+ 		jQuery.each(items, function() {
+			
+			iComments++;
+			if (iComments > maxComments)
+				return;
+
+		
+
+			var item = new control_commentItem (
+				{content: this.content, "username" : this.sendername, userId:  this.userId, prepend: prepend, el: $('#postComments'+parentId)});
+
+				item.render();
+			});
+
+ 	},
  	render: function() 
  	{
  			
@@ -1060,9 +1084,13 @@ var repostTemp = null;
 
 
 
- 		// Needed for generating unique element identifiers.
- 		var uniId = uniIdCounter;
- 		uniIdCounter++;
+ 		// Needed for generating unique element identifiers.,
+		uniIdCounter++;
+
+		
+		//Use uniId inside events like .click() etc., because uniIdCounter is global!!
+		var uniId = uniIdCounter;
+ 		
 
  		
 
@@ -1088,7 +1116,7 @@ var repostTemp = null;
 		else
  		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
 
- 		str += "<div class='commenBox'><div class='postcomments' id='postComments"+uniIdCounter+"'></div><input id='inputComment"+uniIdCounter+"' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
+ 		str += "<div class='commentBox' id='commentBox"+uniIdCounter+"'><div class='postcomments' id='postComments"+uniIdCounter+"'></div><input id='inputComment"+uniIdCounter+"' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
  		str += "</div></div>";
 
 
@@ -1100,31 +1128,74 @@ var repostTemp = null;
  		var that = this;
 
 
- 		var maxComments = 15;
-		var iComments = 0; // !!! Please remove, we will get sued for this name
+
 
 
  		// append some comments
-
- 		if (this.options.comments != undefined)
+ 		var itemStartTime;
+ 		if (this.options.comments != undefined && this.options.comments.length>0)
  		{
  	
-	 		jQuery.each(this.options.comments, function() {
-			
-			iComments++;
-			if (iComments > maxComments)
-				return;
+	 		that.addComments(this.options.comments, uniIdCounter, false);
 
-		
+	 		itemStartTime = this.options.comments[0].itemTime.sec;
 
-			var item = new control_commentItem (
-				{content: this.content, "username" :"UNDEFINED", userId:  this.userId, el: $('#postComments'+uniIdCounter)});
-
-				item.render();
-			});
 		}
-		
 
+
+
+
+		if (this.options.commentCount > 3)
+		$('#commentBox'+uniIdCounter).prepend("<a class='morecomments'>More</a>"); //data-start=TotalComments-6
+
+
+
+
+
+
+		$('#commentBox'+uniIdCounter+ " .morecomments").click(function(){
+
+			
+
+			if (that.options.start == undefined)
+				that.options.start = -1;
+			
+	
+
+		apl_request(
+		    {"requests" : [
+		    {"id" : "comments_get", "postowner" : that.options.userId, "itemStartTime": itemStartTime, "start" : that.options.start, "amount":3 , "postId": that.options.postId },
+		    ]
+			}, function(d){
+
+				if (that.options.start == 0)
+				$('#commentBox'+uniId+ " .morecomments").remove();
+
+				console.log(d.comments_get);
+				if (that.options.start == -1) // Save given start id
+					that.options.start = d.comments_get.start;
+				else
+					that.options.start -= 3; // Succes -> Load further comments from here
+				
+				
+
+
+				that.addComments(d.comments_get.comments, uniId, true);
+
+
+			
+				if (that.options.start < 0)
+				{
+					that.options.start  = 0;
+		
+				}
+
+		});
+
+		});
+
+	
+		var zu = uniIdCounter;
 
 		$("#inputComment"+uniIdCounter).keypress(function(e) {
 		if(e.which == 13)
@@ -1143,9 +1214,9 @@ var repostTemp = null;
 			    ]
 				}, function(d){
 
-						var item2 = new control_commentItem ({"content": content, "username" :"UNDEFINED", userId: 0, el: $('#postComments'+uniIdCounter)});
-		item2.render();
-		$(that2).val("");
+						var item2 = new control_commentItem ({"content": content, "username" : d.post_comment.username, userId: 0, el: $('#postComments'+uniId)});
+						item2.render();
+						$(that2).val("");
 
 				});
 
@@ -1714,7 +1785,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 				console.log(this);
 
 
-				var p2 = new control_postItem({comments: this.comments, like: this.like, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
 				p2.render();
 
 

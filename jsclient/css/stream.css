@@ -1,24 +1,23 @@
-.commentBox
-{
 
-	display: none;
-}
-.postcomments{padding-top: 8px;}
-.postcomments .morecomments:active
+.commentBox{padding-top: 8px;}
+.commentBox .morecomments:active
 {
-	background-color: #efefef;
+	background-color: #ccc;
 
 }
-.postcomments .morecomments
+.commentBox .morecomments
 {
 
 	padding:8px;
 	text-align: center;
 	
 	display: block;
-	border-top:1px silver dotted;
+	border:1px silver solid;
 	text-align: center;
+	background-color: #efefef;
+
 	color:#000;
+	width: 242px;
 }
 .postcomments .comment:first-child
 {
@@ -41,12 +40,6 @@
 
 	padding-bottom:8px;
 
-}
-.commentBox textarea
-{
-	margin: 8px 0;
-	height: 32px;
-	width:100%;
 }
 
 

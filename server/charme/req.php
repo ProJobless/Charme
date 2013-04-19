@@ -196,6 +196,8 @@ foreach ($data["requests"] as $item)
 		case "post_comment_receive_distribute":
 	
 			$col = \App\DB\Get::Collection();
+
+			// userId is follower
 			$col->streamcomments->insert($item); // TODO: Remove id in item
 
 
@@ -214,20 +216,34 @@ foreach ($data["requests"] as $item)
 		$cursor2 = $col->posts->findOne(array("_id"=> new MongoId($item["postId"])), array("collectionId", "owner"));
 		$cursor3 = $col->followers->find(array("collectionId" => new MongoId($cursor2["collectionId"]) ));
 
+		
 	
+
+		// insert in owners collection
+
+		$itemdata= array("id" => "post_comment_receive_distribute",
+				"content" => $item["content"],
+				"userId" => $item["sender"], // NO!
+				"postId" => $item["postId"],
+				"sendername" => $item["sendername"],
+				"postowner" => $item["userId"],
+				"itemTime"  => new MongoDate());
+
+		$data = array("requests" => 
+
+				$itemdata
+
+		);
+
+
+		$col->comments->insert($itemdata);
+
+		// Comment count (=° comment number)
+		//$count = $col->comments->count(array("postId" => $item2["postId"]->__toString(), "postowner" => $item2["userId"]) );
+
+
 		foreach ($cursor3 as $receiver)
 		{
-			
-			$data = array("requests" => array(
-
-				"id" => "post_comment_receive_distribute",
-				"content" => $item["content"],
-				"userId" => $receiver["follower"],
-				"postId" => $item["postId"],
-				"postowner" => $item["userId"]
-
-			));
-
 
 			$req21 = new \App\Requests\JSON(
 			$receiver["follower"],
@@ -244,14 +260,20 @@ foreach ($data["requests"] as $item)
 			// Send to server owner
 			$col = \App\DB\Get::Collection();
 			$receiver = $item["userId"];
-	
-	
+			
+			// Get sender name
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
+
 			$data = array("requests" => array(
 
 					"id" => "post_comment_distribute",
 					"content" => $item["content"],
 					"userId" => $receiver,
 					"postId" => $item["postId"],
+					"sender" => $_SESSION["charme_userid"],
+					"sendername" => $sendername
 			
 
 					));
@@ -266,7 +288,7 @@ foreach ($data["requests"] as $item)
 
 			$req21->send();
 
-			$returnArray[$action] = array("STATUS" => "OK");
+			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername );
 
 		break;
 
@@ -637,8 +659,42 @@ foreach ($data["requests"] as $item)
 
 
 
-		case "updates_get":;
+		case "updates_get":
 			$returnArray[$action] = \App\Counter\CounterUpdate::get( $_SESSION["charme_userid"], array("talks", "stream"));
+		break;
+
+		case "comments_get" : 
+			
+			$col = \App\DB\Get::Collection();
+
+		
+			//echo "START:".$item["start"];
+
+
+			if ($item["start"] == "-1" || !isset($item["start"]) )
+			{
+				// Get count of items < timestamp.
+				$count = $col->comments->count(array('itemTime' => array('$lt' =>  new MongoDate($item["itemStartTime"] )), "postId" => $item["postId"], "postowner" => $item["postowner"]) );
+				
+				$returnArray[$action]["start"] = $count-6; // Return start position
+				$item["start"] = $count-3;
+			}
+
+		//echo "Count:".$count."!!!STARTTIME".$item["postId"]."!!!";
+
+			if ($item["start"] < 0) $item["start"] = 0;
+
+
+			$returnArray[$action]["comments"] = array_reverse (iterator_to_array(
+			$col->comments->find(
+				array("postId" => $item["postId"], "postowner" => $item["postowner"]) )->sort(array('itemTime' => 1))
+			->skip($item["start"])
+			->limit(3), false));
+
+
+
+
+
 		break;
 
 		case "stream_get":
@@ -666,10 +722,25 @@ foreach ($data["requests"] as $item)
 			// Append last 3 comments for each item.
 			foreach ($stra  as $key => $item2)
 			{
+				// start $item[start]
+
+
+
+				// Total comments
+				$count = $col->streamcomments->count(array("postId" => $item2["postId"]->__toString(), "postowner" => $item2["owner"]) );
+				$stra[$key ]["commentCount"] = $count ;
 			
-			
+				$groupCount = 3;
+
+				if (!isset($item["start"]))
+					$start = $count -$groupCount;
+				else
+					$start = $item["start"];
+
+				if ($start<0) $start = 0;
+
 				$stra[$key ]["comments"] = 
-				iterator_to_array($col->streamcomments->find(array("postId" => $item2["postId"]->__toString(), "postowner" => $item2["owner"]) ), false);
+				iterator_to_array($col->streamcomments->find(array("postId" => $item2["postId"]->__toString(), "postowner" => $item2["owner"]) )->skip($start)->limit($groupCount), false);
 
 				//print_r($item["comments"]);
 			}
