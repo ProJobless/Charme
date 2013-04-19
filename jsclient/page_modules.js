@@ -1483,7 +1483,7 @@ var view_profilepage_info = view_subpage.extend({
 	initialize: function()
 	{
  		
-
+	
 	},
 
 	postRender: function()

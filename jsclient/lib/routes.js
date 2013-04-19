@@ -254,7 +254,7 @@ app_router.on('route:getWelcome', function (id) {
 
         if (id2 == null)
         {
-            console.log("router: id2 is null");
+       
 
             var vsd =  new view_profilepage_info({ template: "user_", navMatch: '#nav_profile_info'});
             container_main.currentView.setSub(vsd);

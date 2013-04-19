@@ -798,7 +798,8 @@ foreach ($data["requests"] as $item)
 			$data = array("requests" => array(
 
 				"id" => "register_collection_post",
-				"follower" => $_SESSION["charme_userid"],
+				"follower" => $resItem["follower"],
+
 				"username" => $username,
 				"post" => $content,
 				"postId" => $content["_id"]->__toString()
@@ -806,6 +807,7 @@ foreach ($data["requests"] as $item)
 
 
 		
+
 			
 				$req21 = new \App\Requests\JSON(
 				$resItem["follower"],
@@ -936,12 +938,16 @@ foreach ($data["requests"] as $item)
 
 			$action = $item["action"];
 			$content = array("owner" => $_SESSION["charme_userid"], "collectionOwner" =>  $item["collectionOwner"], "collectionId" => new MongoId($item["collectionId"]));
+			
+
+
 			if ($action == "follow")
 			{
 				$col->following->update($content, $content ,  array("upsert" => true));
 			}
 			else if ($action == "unfollow")
 			{
+
 				$col->following->remove($content);
 			}
 
@@ -989,7 +995,7 @@ foreach ($data["requests"] as $item)
 				"collectionId" => new MongoId($item["collectionId"]));
 
 
-			$res = $col->following->findOne();
+			$res = $col->following->findOne($content);
 			//$col->findOne();
 			if (isset($res) && isset($res["owner"]))
 				$returnArray[$action] = array("follows" => true);
