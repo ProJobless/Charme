@@ -705,8 +705,7 @@ var view_lists_subpage = view_subpage.extend({
 	},
 	getData: function()
 	{
-		var templateData = {lists: apl_postloader_getLists() };
-	    return templateData;
+		return this.options.data;
 	},
 
 

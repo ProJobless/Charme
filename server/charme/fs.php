@@ -14,6 +14,10 @@ $loader->register();
 
 
 	header("Content-type: image/jpg");
+
+	header("Cache-Control: public, max-age=3600, s-maxage=3600"); // 60 second Cache
+
+
 	 $file = $grid->findOne(array('type' => "profileimage", 'owner' => urldecode($_GET["u"]), 'size' => intval($_GET["s"])));
 echo $file->getBytes();
 

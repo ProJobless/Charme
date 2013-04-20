@@ -190,7 +190,7 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("count" => $count,  "messages" =>
 			iterator_to_array(
 				$col->conversations->find(array("receiver" => $_SESSION["charme_userid"]))
-				->sort(array("time" => 1))
+				->sort(array("time" => -1))
 				->limit(7)
 				->skip(7*$start)
 			, false));
@@ -863,6 +863,20 @@ foreach ($data["requests"] as $item)
 
 			$col->collections->insert($content);
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
+
+		break;
+
+		case "list_getItems":
+
+			$col = \App\DB\Get::Collection();
+			$sel = array("owner" => $_SESSION["charme_userid"]);
+
+			if ($item["listId"] != "")
+				$sel["list"] = new MongoId($item["listId"] );
+			//$col->listitems->ensureIndex('userId', array("unique" => 1, "dropDups" => 1));
+			$returnArray[$action] =  iterator_to_array($col->listitems->find($sel));
+			//
+
 
 		break;
 

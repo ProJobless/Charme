@@ -107,10 +107,22 @@ $(function(){
         
         }
         
+           apl_request(
+            {"requests" : [
+            {"id" : "list_getItems", "listId" : id},
 
-        var vsd =  new view_lists_subpage({ template: "lists_",  listId: id, navMatch: '#nav_'+id, el: '#page'});
-        container_main.currentView.setSub(vsd);
-        container_main.currentView.render();
+
+            ]
+            }, function(d2){
+
+                console.log("HERE");
+                console.log(d2);
+                var vsd =  new view_lists_subpage({ data: d2, template: "lists_",  listId: id, navMatch: '#nav_'+id, el: '#page'});
+                container_main.currentView.setSub(vsd);
+                container_main.currentView.render();
+
+    });
+
 
      
     });
