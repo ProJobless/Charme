@@ -162,11 +162,33 @@ $(function(){
            container_main.setCurrent(pa);
           
         }
-        
-        var vsd =  new view_settings_sub({ template: "settings_"+id, navMatch: '#nav_'+id});
-        container_main.currentView.setSub(vsd);
-        container_main.currentView.render();
+        var data={};
+    
 
+        if (id == "")
+        {
+          
+            apl_request(
+            {"requests" : [
+            {"id" : "profile_get", "profileId" : charmeUser.userId},
+
+
+            ]
+            }, function(d2){
+            	
+            
+				var vsd =  new view_settings_sub({ template: "settings_"+id, navMatch: '#nav_'+id, data: d2});
+				container_main.currentView.setSub(vsd);
+				container_main.currentView.render();
+
+            });
+        }
+        else
+        {
+			var vsd =  new view_settings_sub({ template: "settings_"+id, navMatch: '#nav_'+id});
+			container_main.currentView.setSub(vsd);
+			container_main.currentView.render();
+        }
      
     });
 

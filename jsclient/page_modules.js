@@ -108,7 +108,7 @@ function sendAnswer()
 				// d2.messages_get_sub
 
 				_.templateSettings.variable = "rc";
-				var tmpl = _.template(d, {messages: [{msg: message, sender: charmeUser.userId}]}); 
+				var tmpl = _.template(d, {messages: [{msg: message, sender: charmeUser.userId, sendername: d2.message_distribute_answer.sendername}]}); 
 
 				$(".talkmessages").append(tmpl);
 
@@ -154,22 +154,37 @@ function sendMessage()
 
 
 
-	 all = $('#inp_receivers').val().split(",");	
+	 all = $('#inp_receivers').val().split(",");
+	 all.push();
+
+
 	var count = 0;
 	 message = $('#inp_newmsg').val();
 
 	// make random key for hybrid encryption
 	// probably more secure, but how to use?: var randKey  = sjcl.random.randomWords(4, 0);
 
-  	
+  	var receivers = new Array();
 
-	
-	var receivers = new Array();
+
+
+	var aeskey = randomAesKey(32);
+
+	// Encrypt RSA Key for sender
+	var aesEnc = "";
+	var rsa = new RSAKey();	
+	rsa.setPublic(charmeUser.certificate.rsa.n,charmeUser.certificate.rsa.e);
+	aesEnc = rsa.encrypt(aeskey);
+
+
+
+	receivers.push({charmeId: charmeUser.userId, aesEnc: aesEnc});
+
 
 	jQuery.each(all, function() {
 		var str = this;
 
-		// Get public key for each receiver
+		// Get public key for each receiver, Warning: It's asynchronous!!!!!!
 	apl_request(
 		    {"requests" : [
 		    {"id" : "profile_pubKey", "profileId" : this}
@@ -185,7 +200,7 @@ function sendMessage()
 			var aesEnc = "";
  			var rsa = new RSAKey();
 
-			var aeskey = randomAesKey(32);
+			
 			rsa.setPublic(pk.n,pk.e);
 			// RSA encrypt aes key with pubKey:
 			aesEnc = rsa.encrypt(aeskey);
@@ -315,7 +330,7 @@ view_page = Backbone.View.extend({
 
     finishRender: function(d, d2)
     {
-		console.log("finishRender()");
+	
 
 //alert("find"+this.options.useSidebar);
 
@@ -1713,8 +1728,11 @@ var view_settings_sub = view_subpage.extend({
 
 	getData: function()
 	{
-		var templateData = {globaldata : []	};
-	    return templateData;
+		if (this.options.data != undefined)
+			return this.options.data;
+		else
+			return {};
+	
 	},
 	
 
@@ -1948,12 +1966,16 @@ sendMessageForm({});
 	loadMessages: function (start)
 	{
 		// load template
+		var cr = false;
+		if (start == 0)
+			cr = true;
 
-	var that = this;
 
+		var that = this;
+	
 		 apl_request({"requests" :
     [
-      {"id" : "messages_get", start: start}
+      {"id" : "messages_get", start: start, countReturn: cr}
     ]
   }, function(d2){ 
 
@@ -1966,10 +1988,14 @@ sendMessageForm({});
 
 		$.get("templates/control_messagelist.html", function (d)
 		{
-			console.log("RSA PRV");
-			console.log(charme_private_rsakey);
+		
+			if (d2.messages_get.count != -1)
+				that.maxMessages = d2.messages_get.count;
 
-			jQuery.each(d2.messages_get, function() {
+	
+
+
+			jQuery.each(d2.messages_get.messages, function() {
 				
 				// Decode AES Key with private RSA Key
 				
@@ -1983,19 +2009,28 @@ sendMessageForm({});
 				 this.messagePreview = sjcl.decrypt(aeskey,this.messagePreview);  //.join(", ");
 
 			});
-			console.log(d2.messages_get);
+	
 
 
-			var data = {messages: d2.messages_get};
+			var data = {messages: d2.messages_get.messages};
 		
 			_.templateSettings.variable = "rc";
 			var template = _.template(d, data); 
 
 			$(".msgItems").append(template);
 
+		
+			if ((that.paginationIndex+1)*7 > that.maxMessages)
+				$('#moremsg').remove();
+
 			 $('#moremsg').click(function(){
 				$('#moremsg').remove();
-			 	that.loadMessages(++this.paginationIndex);
+
+				that.paginationIndex+=1;
+			 	that.loadMessages(that.paginationIndex);
+
+
+
 			 });
 
 			 $('.msgItems li a').click(function(){
