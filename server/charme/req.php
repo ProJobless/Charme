@@ -146,24 +146,49 @@ foreach ($data["requests"] as $item)
 
 		case "messages_get_sub":
 			
-			if (isset($item["start"]))
-				$start = $item["start"];
-			else
-				$start = 0;
-
-
-			//echo $item["superId"];
-
 			$col = \App\DB\Get::Collection();
 			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), array("aesEnc", "people", "conversationId"));;
+
+			// Total message count, -1 if no result provided
+			$count = -1; // (= undefined!)
+			
+			// How many messages do we turn back?
+			$msgCount = 10;
+			$sel = array("conversationId" =>  new MongoId($res["conversationId"]));
+
+			if (isset($item["start"]) && $item["start"] != "-1")
+				$start = $item["start"];
+			else
+			{
+
+				// Also return total message Count!
+				$count = $col->messages->count($sel);
+				$start =$count -$msgCount;
+
+			}
+
+		
+
+			//echo $item["superId"];
+			if ($start <0)
+				$start = 0;
+
+		
+			if ($item["limit"] > 0)
+				$limit = $item["limit"];
+			else
+				$limit = $msgCount;
+
+
+			
 			// Get 10 conversations 
 			$returnArray[$action] = array("messages" => 
 			iterator_to_array(
-				$col->messages->find(array("conversationId" =>  new MongoId($res["conversationId"])))
-				->sort(array("time" => 1))
-				->limit(10)
-				->skip(10*$start)
-			, false), "aesEnc" =>  $res["aesEnc"], "people" => $res["people"], "conversationId" => new MongoId($res["conversationId"]));
+				$col->messages->find($sel)
+				->sort(array("time" => -1))
+				->skip($start)->limit($limit)
+				
+			, false), "count" => $count, "aesEnc" =>  $res["aesEnc"], "people" => $res["people"], "conversationId" => new MongoId($res["conversationId"]));
 			
 
 		break;
@@ -698,13 +723,18 @@ foreach ($data["requests"] as $item)
 		//echo "Count:".$count."!!!STARTTIME".$item["postId"]."!!!";
 
 			if ($item["start"] < 0) $item["start"] = 0;
+			
 
+			if ($item["limit"] > 0)
+				$limit = $item["limit"];
+			else
+				$limit = 3;
 
 			$returnArray[$action]["comments"] = array_reverse (iterator_to_array(
 			$col->comments->find(
 				array("postId" => (string)$item["postId"], "postowner" => $item["postowner"]) )->sort(array('itemTime' => 1))
 			->skip($item["start"])
-			->limit(3), false));
+			->limit($limit), false));
 
 
 
@@ -873,8 +903,27 @@ foreach ($data["requests"] as $item)
 
 			if ($item["listId"] != "")
 				$sel["list"] = new MongoId($item["listId"] );
+
+
+			
+
+
+			$ar = iterator_to_array($col->listitems->find($sel), true);
+			$keys = array();
+			$ar2 = array(); 
+
+			// Filter out duplicates
+			foreach ($ar as $key => $value) {
+
+				if (!in_array($value["userId"], $keys))
+				{
+					$keys[] = $value["userId"];
+					$ar2 [] = $value;
+				}
+			}
+
 			//$col->listitems->ensureIndex('userId', array("unique" => 1, "dropDups" => 1));
-			$returnArray[$action] =  iterator_to_array($col->listitems->find($sel));
+			$returnArray[$action] =  array("items" => $ar2, "number" => Count($keys));
 			//
 
 

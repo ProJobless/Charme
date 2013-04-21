@@ -7,7 +7,7 @@
 
 
 
-	<div style="font-size: 16px">All lists</div><div style="padding: 8px 0 0px 0;">22 People
+	<div style="font-size: 16px">All lists</div><div style="padding: 8px 0 0px 0;"><%- rc.list_getItems.number %> People
 
 <span id='listOptions' > - 
 <a id='but_renameList'>Edit list</a> - 
@@ -20,7 +20,7 @@
 <div class="p16" id="friendItemContainer">
 <div class='usergrid'>
 
- <% _.each( rc.list_getItems, function(item2){ %>
+ <% _.each( rc.list_getItems.items, function(item2){ %>
 
 
 

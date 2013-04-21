@@ -116,7 +116,7 @@ function sendAnswer()
 			 
 				$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 
-				
+				$('#inp_newmsginstant').val("").focus();
 
 				});
 			
@@ -491,10 +491,11 @@ view_subpage = Backbone.View.extend({
 					
 				}
 				//console.log(templateData);
+			
 
 				var template = _.template(d, templateData); 
 
-	
+		
 
 				console.log(that.$el);
 
@@ -1172,20 +1173,33 @@ var repostTemp = null;
 			
 
 			if (that.options.start == undefined)
-				that.options.start = -1;
+			{
+				that.options.start = that.options.commentCount-6;
+				if (that.options.start<0)
+					that.options.start = 0;
+			}
+
 			
-	
+			var limit = 3;
+
+			if (that.options.start == 0)
+			{
+				
+				limit = that.options.commentCount%limit;
+				
+			}
+
 
 		apl_request(
 		    {"requests" : [
-		    {"id" : "comments_get", "postowner" : that.options.userId, "itemStartTime": itemStartTime, "start" : that.options.start, "amount":3 , "postId": that.options.postId },
+		    {"id" : "comments_get", "postowner" : that.options.userId, "itemStartTime": itemStartTime, "start" : that.options.start, "limit": limit ,  "postId": that.options.postId },
 		    ]
 			}, function(d){
 
 				if (that.options.start == 0)
 				$('#commentBox'+uniId+ " .morecomments").remove();
 
-				console.log(d.comments_get);
+			
 				if (that.options.start == -1) // Save given start id
 					that.options.start = d.comments_get.start;
 				else
@@ -1853,7 +1867,7 @@ var view_talks_subpage = view_subpage.extend({
 		this.messagePaginationIndex = 0;
 
 		if (this.options.superId != "")
-		this.loadMessages(0);
+		this.loadMessages(-1);
 	console.log("cert");
 	console.log(charmeUser.certificate);
 		
@@ -1861,15 +1875,24 @@ var view_talks_subpage = view_subpage.extend({
 	loadMessages: function(start)
 	{
 
-		console.log("messages_get_sub_START");
+		var limit = -1;
+		
+		if (start == 0)
+			limit = this.countAll%10;
+
+		var that = this;
 		apl_request({"requests" :
 		[
-			{"id" : "messages_get_sub", start: start, "superId":  this.options.superId}
+			{"id" : "messages_get_sub", limit:limit, start: start, "superId":  this.options.superId}
 		]
 		}, function(d2){ 
 
-			
-			
+			var newstart = start-10;
+			if (d2.messages_get_sub.count != -1)
+			{
+				that.countAll = d2.messages_get_sub.count;
+				newstart = that.countAll-20;
+			}
 			
 			$.get("templates/control_messageview.html", function (d)
 			{
@@ -1896,8 +1919,7 @@ var view_talks_subpage = view_subpage.extend({
 						this.msg =err;
 					}
 				});
-				console.log("messages_get_sub:::");
-				console.log(d2);
+			
 				// Decode AES Key with private RSA Key
 				/*
 
@@ -1908,16 +1930,30 @@ var view_talks_subpage = view_subpage.extend({
 				_.templateSettings.variable = "rc";
 				var tmpl = _.template(d, d2.messages_get_sub); 
 
-				$(".talkmessages").append(tmpl);
+				$(".talkmessages").prepend(tmpl);
 				 $(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
+				
+				 if (start == -1)
 				$(window).scrollTop(999999);
 
 
  				$('#but_instantsend').click(function(){ sendAnswer(); });
+ 				
+ 				
+ 				if (start == 0 || that.countAll<10)
+ 					$('#moremsg2').remove();
+
+
+ 				if (newstart<0)
+ 					newstart =0;
+
+ 			
+
 
 				 $('#moremsg2').click(function(){
+				 
 				$('#moremsg2').remove();
-			 	that.loadMessages(++this.messagePaginationIndex);
+			 	that.loadMessages(newstart);
 
 			
 
@@ -2042,7 +2078,7 @@ sendMessageForm({});
 			if ( that.sub.options.superId == "")
 			{
 				that.sub.options.superId = ($('.msgItems li a:first').data("messageid"));
-				that.sub.loadMessages(0);
+				that.sub.loadMessages(-1);
 
 
 			}
