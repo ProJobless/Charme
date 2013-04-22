@@ -1612,11 +1612,11 @@ d2.test = "userlists";
 
 						$.doTimeout( 'listsave', 1000, function( state ){
 						// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
-						
+					
 						// Send a request to the user server
 						apl_request(
 						    {"requests" : [
-						    {"id" : "lists_update", "listIds" : ar, "userId": uid}
+						    {"id" : "lists_update", "listIds" : ar, "userId": uid, "username" : container_main.currentView.username}
 
 						    ]
 						}, function(d){

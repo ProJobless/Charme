@@ -19,6 +19,13 @@ RSA decritipion in web worker
 3) oncomplete: add result to div (id)
 
 
+Consitency:
+- Update user name if:
+	- get name_update command
+	- open profile and name is different from saved name
+
+
+
 Parallel Requests, like
 var z = parralel_request2(aplrq1(){ z.firstDone=true; }, aplr12(){ z.secondone=true; }, completed(){});
 

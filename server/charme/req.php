@@ -326,6 +326,9 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername );
 
 		break;
+		case "post_likes_get" :
+
+		break;
 
 		case "post_like_receive_distribute" : 
 		// Notify other people about the like...
@@ -339,20 +342,59 @@ foreach ($data["requests"] as $item)
 			// ! Has to work without sessionID
 			$col = \App\DB\Get::Collection();
 			// Verify sender ID!, userId must be in database!
-			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"]);
+			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"], "postId" => $item["postId"]);
 			
 			if ($item["status"] == false)
 			{
-				$col->likes->delete($content);
+				$col->likes->remove($content);
 			}
 			else
 			{
 				$col->likes->update($content, $content ,  array("upsert" => true));
 			}
 			// Get total likes
+			$count = $col->likes->count(array("postId" => $item["postId"], "owner" => $item["userId"]));
+
+			$query = array('_id' => new MongoId($item["postId"]), "owner" => $item["userId"]);
+
+			$col->posts->update($query, array('$set' => array("likecount" => $count)));
+			// Get collection followers and distribute likes!
+
+			
+			// TODO: Get collection id, then distribute
+
+			/*$res2 = $col->followers->find(array("collectionId" => new MongoId($item["collectionId"]) ));
+
+			foreach ($res2 as $resItem)
+			{
+			
+			$data = array("requests" => array(
+
+				"id" => "post_like_receive_distribute",
+				"follower" => $resItem["follower"],
+
+				"post" => $content,
+				"postId" => $content["_id"]->__toString()
+			));
+
+
+		
+
+			
+				$req21 = new \App\Requests\JSON(
+				$resItem["follower"],
+				$_SESSION["charme_userid"],
+				$data
+				
+				);
+				$req21->send();
+
+			}*/
 
 
 
+
+	
 		break;
 
 		case "post_like" : 
@@ -954,6 +996,7 @@ foreach ($data["requests"] as $item)
 			  		$col->listitems->insert(array(
 			  			"owner" => $_SESSION["charme_userid"],
 			  			"userId" => $item["userId"],
+			  			"username" => $item["username"],
 			  			"list" => new MongoId($listitem["_id"]),
 			  			));
 
