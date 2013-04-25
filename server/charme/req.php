@@ -116,7 +116,7 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive","post_comment_distribute", "post_comment_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive","post_comment_distribute", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -333,6 +333,10 @@ foreach ($data["requests"] as $item)
 		case "post_like_receive_distribute" : 
 		// Notify other people about the like...
 		$col = \App\DB\Get::Collection();
+		
+		$col->streamitems->update(array("owner" => $item["owner"], "postId" => new MongoId($item["postId"])) ,	array('$set' => array("likecount" => $item["count"])));
+
+	
 		break;
 
 		case "post_like_receive" : 
@@ -355,15 +359,26 @@ foreach ($data["requests"] as $item)
 			// Get total likes
 			$count = $col->likes->count(array("postId" => $item["postId"], "owner" => $item["userId"]));
 
+		
+
 			$query = array('_id' => new MongoId($item["postId"]), "owner" => $item["userId"]);
 
 			$col->posts->update($query, array('$set' => array("likecount" => $count)));
-			// Get collection followers and distribute likes!
+
+
+
+			// Get collection followers and distribute like count!
 
 			
 			// TODO: Get collection id, then distribute
+			//$item["postId"]
+$result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
+	array("collectionId", "owner")
+	);
 
-			/*$res2 = $col->followers->find(array("collectionId" => new MongoId($item["collectionId"]) ));
+
+
+			$res2 = $col->followers->find(array("collectionId" => new MongoId($result["collectionId"]) ));
 
 			foreach ($res2 as $resItem)
 			{
@@ -371,25 +386,21 @@ foreach ($data["requests"] as $item)
 			$data = array("requests" => array(
 
 				"id" => "post_like_receive_distribute",
-				"follower" => $resItem["follower"],
+				"owner" => $result["owner"],
+				"postId" => $item["postId"],
+				"count" => $count
 
-				"post" => $content,
-				"postId" => $content["_id"]->__toString()
 			));
 
-
-		
-
-			
 				$req21 = new \App\Requests\JSON(
 				$resItem["follower"],
-				$_SESSION["charme_userid"],
+				$result["owner"],
 				$data
 				
 				);
 				$req21->send();
 
-			}*/
+			}
 
 
 

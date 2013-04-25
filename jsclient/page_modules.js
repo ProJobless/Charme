@@ -1056,7 +1056,7 @@ var uniIdCounter = 1; // Belongs to control_postItem below:
 var repostTemp = null;
 
  control_postItem = Backbone.View.extend({ 
- 	options : {prepend: false, counter: 1000, commentCount: 0},
+ 	options : {prepend: false, counter: 0, commentCount: 0},
  	
 
  	setLikeText: function(itemCounter)
@@ -1816,7 +1816,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 				console.log(this);
 
 
-				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
 				p2.render();
 
 
