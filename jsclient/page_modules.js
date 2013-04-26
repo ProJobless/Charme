@@ -958,8 +958,11 @@ var view_profilepage = view_page.extend({
 	  	var txt = $("#textfield").val();
 	 	var collectionId = (this.options.collectionId == "");
 	 	var that = this;
+
 	 	if (this.options.collectionId == "") // If collection Seletor enabled, get value from collection selector
 	 		collectionId = $("#postOptions select").val(); 
+	 	else
+	 		collectionId = this.options.collectionId;
 
 	 	var repostdata;
 
@@ -1129,7 +1132,11 @@ var repostTemp = null;
  		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+this.options.time+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+liksstr+""+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
+
+
+
+ 		
 
  		str += "<div class='commentBox' id='commentBox"+uniIdCounter+"'><div class='postcomments' id='postComments"+uniIdCounter+"'></div><input id='inputComment"+uniIdCounter+"' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
  		str += "</div></div>";
@@ -1343,6 +1350,7 @@ view_profilepage_collection_show = view_subpage.extend({
 		// Add post field, if userId = charmeUser.userID
 		if (container_main.currentView.options.userId == charmeUser.userId)
 		{
+
 			var t = new  control_postField({el: $("#postFieldContainer"), collectionId: this.options.collectionId });
 			t.render();
 		}
@@ -1351,7 +1359,9 @@ view_profilepage_collection_show = view_subpage.extend({
 	    {"requests" : [
 
 	    // Get posts of collection
-	    {"id" : "collection_posts_get", "userId" : container_main.currentView.options.userId, collectionId: this.options.collectionId },
+	    {"id" : "collection_posts_get", "userId" : container_main.currentView.options.userId, 
+	    claimedUserId: charmeUser.userId,
+	    collectionId: this.options.collectionId },
 
 	    // Get name of collection
 	    {"id" : "collection_getname", collectionId: this.options.collectionId },
@@ -1375,7 +1385,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 		
 
-			var p2 = new control_postItem({repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time, el: $(".collectionPostbox")});
+			var p2 = new control_postItem({counter: this.likecount, comments: this.comments, commentCount: this.commentCount,  like: this.likeit, repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time, el: $(".collectionPostbox")});
 			p2.render();
 
 

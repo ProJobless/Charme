@@ -735,7 +735,44 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 		case "collection_posts_get" : 
 			$col = \App\DB\Get::Collection();
-			$returnArray[$action] = iterator_to_array($col->posts->find(array("owner" => $item["userId"],"collectionId" => $item["collectionId"])), false);
+
+			$array2 = iterator_to_array($col->posts->find(array("owner" => $item["userId"],"collectionId" => $item["collectionId"]))->sort(array('_id' => -1)), false);
+
+			// Add comments
+			foreach ($array2 as $key => $value) {
+				
+				$postId = $value["_id"]->__toString();
+
+				// TODO: If visibility feature implmented,
+				// check for access
+				
+				$iter = $col->comments->find(array("postId" => $postId))->sort(array('_id' => -1))->limit(3);
+
+	
+
+
+
+				$array2[$key]["comments"] = 
+				array_reverse(
+					iterator_to_array($iter, false))
+				;
+
+				if ($col->likes->count(array("liker" => $item["claimedUserId"], "postId" => $postId)) > 0)
+				$array2[$key]["likeit"] = true; 
+					else
+				$array2[$key]["likeit"] = false; 
+
+
+			$array2[$key]["commentCount"] =  $col->comments->count(array("postId" => $postId));
+
+
+			}
+			
+
+			// Check if user likes post
+			//...Add like true/false
+
+			$returnArray[$action] = $array2;
 
 		break;
 
