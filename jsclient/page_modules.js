@@ -246,6 +246,7 @@ function sendMessage()
 	options.needLogin:bool:Only for registred users? (Default: true)
 	options.useSidebar:bool:Sidebar enabled? (Default: false)
 	options.navMatch:string:Which element of main navigation should be highlighted? 
+	options.forceNewRender: true if view should be rendered new at route change
 
 	Location:
 	apl/crypto.js
@@ -323,10 +324,7 @@ view_page = Backbone.View.extend({
     	this.sub = s;
 
 	},
-	testClick: function()
-    {alert();
-    	
-	},
+
 
     finishRender: function(d, d2)
     {
@@ -393,7 +391,7 @@ view_page = Backbone.View.extend({
 		//alert("render");
 
 		// Page has changed not changed. Only subpage. -> Just render subpage
-	 	if (container_main.currentViewId == this.options.template)
+	 	if (container_main.currentViewId == this.options.template && !this.options.forceNewRender)
         {
    	
             // Just update SubView, we are allowed to render it here as parent view is already rendered
@@ -1132,11 +1130,11 @@ var repostTemp = null;
  		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+this.options.time+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont'>"+liksstr+""+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+liksstr+""+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
 
 
 
- 		
+
 
  		str += "<div class='commentBox' id='commentBox"+uniIdCounter+"'><div class='postcomments' id='postComments"+uniIdCounter+"'></div><input id='inputComment"+uniIdCounter+"' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
  		str += "</div></div>";
@@ -1274,10 +1272,41 @@ var repostTemp = null;
  			});
 
  	
- 		$("#counter"+uniIdCounter).click(function() {
- 			alert("Load box...");
- 		});
+ 		$("#counter"+uniIdCounter).click(function()
+ 		{
+ 			
 
+
+ 	
+				// ! Request to profile owners server
+ 				apl_request(
+			    {"requests" : [
+			    // Get posts of collection
+			    {"id" : "post_getLikes",  postId: that.options.postId },
+			    // Get name of collection
+			  
+			    ]
+				}, function(d2){
+			
+
+			$.get("templates/box_likes.html", function (d)
+			{
+				_.templateSettings.variable = "rc";
+				var template = _.template(d, d2); 
+				
+				ui_showBox( template , function()
+				{
+
+				});
+
+			});
+
+				}
+ 			
+ 				, "", that.options.userId.split("@")[1]);
+
+
+ 		});
 
  		this.setLikeText(uniIdCounter);
 
@@ -1342,6 +1371,54 @@ view_profilepage_collection_show = view_subpage.extend({
 
 	postRender: function()
 	{
+		var that = this;
+		$("#but_editCollection").click(function(){
+			
+			// Get current collection information
+			apl_request(
+						    {"requests" : [
+						    {"id" : "collection_editPrepare","collectionId": that.options.collectionId }
+						    ]
+							}, function(d2){
+						
+					console.log(d2);
+
+
+			$.get("templates/box_collectionEdit.html", function (d)
+			{
+				_.templateSettings.variable = "rc";
+				var template = _.template(d, {}); 
+				
+				ui_showBox( template , function()
+				{
+
+						$("#inp_box_name").focus().val(d2.collection_editPrepare.name);
+						$('#inp_box_description').val(d2.collection_editPrepare.description);
+
+						$('#but_box_save').click(function()
+						{
+							
+							apl_request(
+						    {"requests" : [
+						    {"id" : "collection_edit","collectionId": that.options.collectionId,  "name" : $("#inp_box_name").val(), "description" : $("#inp_box_description").val()},
+						    ]
+							}, function(d){
+								
+					
+							$("#colName").text($("#inp_box_name").val());
+							 ui_closeBox();
+							 // TODO: Add collection control...
+
+							});
+
+
+						});
+						
+				});
+
+		});
+		});
+				});
 	
 		// Set header name
 		$(".profile_name").text(container_main.currentView.username);
@@ -1437,7 +1514,21 @@ var that = this;
 	}
 });
 
+var view_profilepage_listitems= view_subpage.extend({
 
+	postRender : function()
+	{
+	
+		$(".profile_name").text(container_main.currentView.username);
+	},
+	getData: function()
+	{
+		 
+
+
+		return this.options.data;
+	}
+});
 
 var view_profilepage_collection = view_subpage.extend({
 
@@ -1601,6 +1692,13 @@ d2.test = "userlists";
 				console.log(d2.lists);
 				$("#userinfo_container").html(tmpl);
 
+
+				
+
+				if (container_main.currentView.options.userId == charmeUser.userId)
+					$("#profileListBox").hide();
+				else
+					$("#editButton").hide();
 
 
 				$("td:empty").parent().remove(); // Remove empty Info fields

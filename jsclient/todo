@@ -24,6 +24,8 @@ Consitency:
 	- get name_update command
 	- open profile and name is different from saved name
 
+Lists
+- Option: Show in profile
 
 
 Parallel Requests, like

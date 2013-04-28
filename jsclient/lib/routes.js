@@ -275,15 +275,23 @@ app_router.on('route:getWelcome', function (id) {
 
     app_router.on('route:getUser', function (id, id2, id3) {
 
+        // Close popup windows
+        ui_closeBox();
+
         console.log("getuser");
         var userId = decodeURIComponent(id);
 
 
-        if (container_main.currentViewId != "user")
+
+        if (container_main.currentViewId != "user"
+            || container_main.currentView.options.userId != userId
+            )
         {
+        
             console.log("CREATE NEW PARENT VIEW");
         console.log("Instantiate ParentView : User");
-        container_main.setCurrent(new view_profilepage({userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'}));
+        container_main.setCurrent(new view_profilepage({forceNewRender:true, userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'}));
+    
         }
 
         if (id2 == null)
@@ -292,6 +300,7 @@ app_router.on('route:getWelcome', function (id) {
 
             var vsd =  new view_profilepage_info({ template: "user_", navMatch: '#nav_profile_info'});
             container_main.currentView.setSub(vsd);
+            container_main.currentView.render();
            
         }
        else if (id2 == "collections")
@@ -301,50 +310,45 @@ app_router.on('route:getWelcome', function (id) {
 
                  var vsd =  new view_profilepage_collection({ template: "user_collections", navMatch: '#nav_profile_collections'});
                  container_main.currentView.setSub(vsd);
+
             }
             else
             {
+           
                 var vsd =  new view_profilepage_collection_show({collectionId: id3});
                 container_main.currentView.setSub(vsd);
                
             }
-
+            container_main.currentView.render();
 
         }
-        else if (id2 == "subscribing")
+        else if (id2 == "lists")
         {
-            var vsd =  new view_subpage({ template: "user_subscribing", navMatch: '#nav_profile_sub2', el: '#page3'});
-            container_main.currentView.setSub(vsd);
+        
+              apl_request(
+            {"requests" : [
+            {"id" : "lists_getProfile",  "userId": userId},
+
+
+            ]
+            }, function(d2){
+
+
+                 var vsd =  new view_profilepage_listitems(
+                { data: d2, template: "user_lists", navMatch: '#nav_profile_lists', el: '#page3'});
+
+                container_main.currentView.setSub(vsd);
+                 container_main.currentView.render();
+
+
+               });
             
         }
-        else if (id2 == "subscribers")
-        {
-            var vsd =  new view_subpage({template: "user_subscribers", navMatch: '#nav_profile_sub', el: '#page3'});
-            container_main.currentView.setSub(vsd);
-            
-        }
-        container_main.currentView.render();
+   
+   
 
     });
-    app_router.on('route:getUserSubscribing', function (id) {
-
-     //   var userId = decodeURIComponent(id);
-
-
-
-       // var pa = new userView({template: "stream", useSidebar: true, navMatch: 'stream'});
-
-      //  if (container_main.currentView != null && container_main.currentView.viewId != "userView")
-    //    container_main.openPage(userView);
-
-        //do that: container_main.currentView.loadSubPage();
-
-
-       
-
-        //currentView
-
-    });
+  
 
     app_router.on('route:defaultRoute', function (actions) {
      
