@@ -59,7 +59,11 @@ function sendMessageForm(receivers)
 
 
 		//alert("http://"+charmeUser.server+"/charme/auto.php");
-	$('#inp_receivers').tokenInput([
+	
+$('#inp_receivers').tokenInput("http://"+charmeUser.getServer()+"/charme/auto.php", { prePopulate: receivers, crossDomain: true});
+
+
+	/*$('#inp_receivers').tokenInput([
                 {id: 7, name: "Ruby"},
                 {id: 11, name: "Python"},
                 {id: 13, name: "JavaScript"},
@@ -73,7 +77,8 @@ function sendMessageForm(receivers)
                 {id: 43, name: "C++"},
                 {id: 47, name: "Java"}
             ], {
-                prePopulate: receivers, tokenValue: "id"} );
+                prePopulate: receivers, tokenValue: "id"} );*/
+
 	
 
 
@@ -931,7 +936,7 @@ var view_profilepage = view_page.extend({
   	sendMsg: function()
   	{
 		sendMessageForm( [
-                    {id: this.options.userId}
+                    {id: this.options.userId, name: container_main.currentView.username}
                    
                 ]);//
   	},

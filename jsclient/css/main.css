@@ -128,6 +128,9 @@ padding: 8px 0;
 	margin-bottom: 8px;
 	width:85px;
 	height:85px;
+	border-radius: 150px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
 }
 .infobox
 {

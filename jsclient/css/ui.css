@@ -263,6 +263,12 @@ border-radius:2px;margin:0;
 	
 float:left;
 margin-right:16px;
+border-radius: 150px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+
+
+
 }
 textarea
 {
