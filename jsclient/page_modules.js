@@ -374,6 +374,10 @@ view_page = Backbone.View.extend({
 			$('.sbBeta').hide();
 		}	
 
+
+		if (charmeUser == undefined)
+			$(".loggedOutOnly").show();
+
 			if (this.postRender != null)
 			{
 				this.postRender();
@@ -788,6 +792,7 @@ $("#box_errors").hide();
 		  success: function(data) {
 		  
 		  }
+
 		});*/
 
 
@@ -1132,10 +1137,10 @@ var repostTemp = null;
  			// 
  		 str = "<div class='collectionPost'>"+
  		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
- 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+this.options.time+"</span></div>";
+ 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+this.options.time+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+liksstr+""+xssText(this.options.content)+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+liksstr+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
 
 
 
@@ -1934,6 +1939,8 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 
 
 			});
+
+			$('#textfield').autosize();  
 
 		});
 

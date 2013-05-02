@@ -847,6 +847,10 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 		case "stream_get":
 
+
+	
+
+
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
 
 			$stra = array();
@@ -856,7 +860,12 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			{
 				// Get all stream items
 				
-				$stra=  iterator_to_array($col->streamitems->find(array("owner" => $_SESSION["charme_userid"])), false);
+
+				$col->streamitems->ensureIndex('owner');
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]));
+
+
+				$stra=  iterator_to_array($iter , false);
 
 			}
 			else
@@ -873,7 +882,11 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				// start $item[start]
 
 				clog(print_r($item2["post"], true));
-			
+				
+
+				// increased performance from 400ms to 170ms
+				$col->streamcomments->ensureIndex('postId');
+				$col->streamcomments->ensureIndex('postowner');
 
 				// Total comments
 				$count = $col->streamcomments->count(array("postId" => (string)$item2["postId"], "postowner" => $item2["post"]["owner"]) );
@@ -899,6 +912,9 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				//print_r($item["comments"]);
 			}
 	
+
+		
+
 
 			$returnArray[$action] = $stra;
 
