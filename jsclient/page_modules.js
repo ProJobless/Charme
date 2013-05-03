@@ -389,10 +389,10 @@ view_page = Backbone.View.extend({
 
 	render: function(){
 	
-
-		if (this.options.needLogin && charmeUser == null)
+	
+		if (this.options.noLogin != true && !isLoggedIn())
 		{	
-  		
+
 			logout();
 			return;
 			
@@ -418,11 +418,8 @@ view_page = Backbone.View.extend({
 			else
 			$(".sbBeta .actionBar").html("");
 
-
 	        container_main.currentViewId =  this.options.template;
-
 			var that = this;
-
 
 			$.get("templates/"+this.options.template+".html", function (d)
 			{
@@ -1957,7 +1954,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 var view_welcome = view_page.extend({
 
     events: {
-    'keyup #login_password': 'keypass'
+    'keypress #login_password': 'keypass'
     ,'keypress #login_user': 'keyuser'
   }
   ,keyuser: function(e) {
@@ -1970,7 +1967,7 @@ var view_welcome = view_page.extend({
 
 		code= (e.keyCode ? e.keyCode : e.which);
 		    if (code == 13)
-		    login();
+		   login();
   },
 
 	postRender: function(){

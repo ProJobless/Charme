@@ -881,12 +881,11 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			{
 				// start $item[start]
 
-				clog(print_r($item2["post"], true));
 				
 
 				// increased performance from 400ms to 170ms
-				$col->streamcomments->ensureIndex('postId');
-				$col->streamcomments->ensureIndex('postowner');
+				$col->streamcomments->ensureIndex(array('postId', "postowner"));
+				//$col->streamcomments->ensureIndex('postowner');
 
 				// Total comments
 				$count = $col->streamcomments->count(array("postId" => (string)$item2["postId"], "postowner" => $item2["post"]["owner"]) );
@@ -1233,8 +1232,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				foreach ($dataReq["collection_3newest"]["items"] as $post)
 				{
-					clog(print_r($post,true));
-					
+				
 					$like = $post["liketemp"];
 					
 					unset($post["liketemp"]);
@@ -1268,8 +1266,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				$col->following->remove($content);
 
-				clog(print_r(array("owner" => $_SESSION["charme_userid"], "collectionId" => $item["collectionId"] , "post.owner" => $item["collectionOwner"]), true));
-
+			
 				$col->streamitems->remove(array("owner" => $_SESSION["charme_userid"], "collectionId" => new MongoId($item["collectionId"] ), "post.owner" => $item["collectionOwner"]));
 
 				// Remove stream items

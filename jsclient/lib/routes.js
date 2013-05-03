@@ -66,6 +66,8 @@ var container_main ;
 
 $(function(){
 
+
+
    
     if (isLoggedIn())
          charmeUser = new apl_user(localStorage.getItem("user"));
@@ -77,9 +79,10 @@ $(function(){
     // get apl data, like lists, friends etc. from server
     apl_setup(function(){
 
+
     apl_setup2();
 
-
+   
 
 
     if (isLoggedIn())
@@ -91,6 +94,8 @@ $(function(){
         container_guest.render();
 
     }
+
+
 
 
  
@@ -208,7 +213,7 @@ $(function(){
 
 
     
-        var pa = new view_register({needLogin: false});
+        var pa = new view_register({noLogin: true});
         container_main.setCurrent(pa);
         pa.render();
         //console.log("navMatch1:"+pa.options.navMatch);
@@ -221,7 +226,7 @@ $(function(){
 
 
     
-        var pa = new view_page({template: id, navMatch: id, needLogin: false});
+        var pa = new view_page({template: id, navMatch: id, noLogin: true});
         
         if (charmeUser != null)
         {
@@ -238,7 +243,7 @@ app_router.on('route:getWelcome', function (id) {
 
 
 
-        var pa = new view_welcome({template: "welcome",  needLogin: false});
+        var pa = new view_welcome({template: "welcome",  noLogin: true});
         
 
         container_main.setCurrent(pa);
@@ -351,13 +356,12 @@ app_router.on('route:getWelcome', function (id) {
   
 
     app_router.on('route:defaultRoute', function (actions) {
-     
+        
+        if (!isLoggedIn())
+            location.href= "#welcome";
+        else
+            location.href="#stream";
 
-    // Go to stream if no route specified
-    if (!isLoggedIn())
-        location.replace('#welcome');
-    else
-        location.replace('#stream');
 
     });
 
@@ -370,12 +374,12 @@ app_router.on('route:getWelcome', function (id) {
 
 
 
+
     });
 
 
 
-
-
+  
 
 
 
@@ -424,7 +428,7 @@ function login()
         {$('#login_error').show();
         $('#login_user').focus().select();}
         if (d==2)
-        
+         var serverurl = u.split("@")[1];
   
 
      
@@ -443,7 +447,7 @@ function login()
 
         }
 */
-      var serverurl = u.split("@")[1];
+     
 
         // TODO: Change server.local to user id val
        // var url = 'http://'+serverurl+'/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
@@ -503,6 +507,7 @@ console.log("u"+u +"p"+p);
 						// When completed, open main view
 						$("#welcome_main").fadeOut(0, function()
 						{
+
 							container_main.render();
 							location.href="#stream";
 						});
@@ -522,6 +527,8 @@ console.log("u"+u +"p"+p);
              
 
             }
+            else
+                alert("Wrong mail or password.");
 
 /*
 *  ON SUCCESS
@@ -543,14 +550,36 @@ function LoadSimplePage(pageName)
 function logout()
 {
 
+
     container_guest.render();
     main_container = null;
     charmeUser = null;
-    location.replace("#welcome");
+   
     localStorage.removeItem("user");
     localStorage.removeItem("passphrase");
+localStorage.removeItem("sessionPassphrase"); // important!
+    
+    container_guest.render();
+
+    location.href = "#welcome";
+   
+
 
 }
+function delTemp()
+{
+    alert("Deleted temporaray data");
+}
+function resendPassword()
+{
+alert("not working in beta yet. please contact your server admin.");
+var m = $("#inp_pw_mail").val();
+var uid = $("#inp_pw_uid").val();
+alert(m);
+
+
+}
+
 /***
     Name:
     isLoggedIn
@@ -569,7 +598,11 @@ function logout()
 function isLoggedIn()
 {
 
-    if (localStorage.getItem("user") !== null)
+    if (localStorage.getItem("user") !== null
+        && localStorage.getItem("passPassphrase")  !== null
+  
+
+        )
     return true;
     return false;
 }

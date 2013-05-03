@@ -18,6 +18,8 @@ RSA decritipion in web worker
 2) start webworker(encText, id)
 3) oncomplete: add result to div (id)
 
+Geospatial indexing, see bottom:
+http://php.net/manual/en/mongocollection.ensureindex.php
 
 Consitency:
 - Update user name if:

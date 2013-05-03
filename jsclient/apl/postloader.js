@@ -48,36 +48,63 @@ CharmeUser.certificate.
 
 function apl_setup(callback)
 {
+	
+
 	//TODO: Add a callback funciton here
-	if (charmeUser == null)
+	if (!isLoggedIn())
+	{
+
 		callback();
 
-
-	var cert1 = localStorage.getItem("certificate");
-	charme_private_rsakey = $.parseJSON(cert1);
-
-
-	apl_request(
-    {"requests" : [
-    {"id" : "lists_get"},
-    {"id" : "sessionId_get"}, 
-    {"id" : "updates_get"} 
-
-    ]
-	}, function(data){
-		console.log(data);
-		apl_postloader_lists.items = data.lists_get;
+	}
+	else
+	{
 		
-		charmeUser.sessionId = data.sessionId_get.sessionId
-		container_main.tempCountData = data.updates_get;
 
-		// Call Callback...
-		if(callback != undefined && typeof callback == 'function') 
-		{
-			callback(data.sessionId_get.sessionId);
-		}
+		var cert1 = localStorage.getItem("certificate");
+		charme_private_rsakey = $.parseJSON(cert1);
 
-	});
+
+
+		apl_request(
+	    {"requests" : [
+	    {"id" : "lists_get"},
+	    {"id" : "sessionId_get"}, 
+	    {"id" : "updates_get"} 
+
+	    ]
+		}, function(data){
+
+	
+		
+
+
+			console.log(data);
+			apl_postloader_lists.items = data.lists_get;
+			
+			if (charmeUser != null)
+			charmeUser.sessionId = data.sessionId_get.sessionId
+			container_main.tempCountData = data.updates_get;
+
+			// Call Callback...
+			if(callback != undefined && typeof callback == 'function') 
+			{
+					
+
+
+				if (data.sessionId_get != undefined)
+					callback(data.sessionId_get.sessionId);
+				else
+						callback();
+			}
+			else
+			{
+				
+				callback();
+			}
+
+		});
+	}
 }
 
 function apl_postloader_check()
