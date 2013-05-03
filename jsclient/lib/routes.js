@@ -33,6 +33,7 @@
 
             "stream" : "getStream",
             "stream/:id" : "getStream",
+            "find/:id" : "getFind",
 
 
             "settings/:id" : "getSettings",
@@ -208,6 +209,67 @@ $(function(){
         }
      
     });
+
+     
+    app_router.on('route:getFind', function (id) {
+
+
+
+        // JSON...
+
+        // if contains a @ char -> direct display user:
+
+
+        var realId = decodeURIComponent(id);
+
+        if (realId.indexOf("@") !== -1)
+        {
+  apl_request(
+                {"requests" : [
+           
+                {"id" : "profile_get_name", "userId" : realId  },
+          
+                ]
+                }, function(d){
+                   
+              var pa = new view_find({q: decodeURIComponent(id), forceNewRender:true, data: {
+               info:  d.profile_get_name.info, direct:true, userId: realId}
+            });
+               container_main.setCurrent(pa);
+            pa.render();
+
+                },
+            "", realId.split("@")[1]);
+          
+        }
+        else
+        {
+              
+
+  $.ajax("http://"+charmeUser.getServer()+"/charme/auto.php?q="+id, 
+
+               {crossDomain : true,
+                dataType: "jsonp",
+                xhrFields: {
+                withCredentials: true
+              },
+
+              success: function(data) { 
+                console.log(data);
+        
+            var pa = new view_find({q: decodeURIComponent(id), forceNewRender:true, data: data});
+               container_main.setCurrent(pa);
+            pa.render();
+
+            }});
+        }
+     
+
+     
+        //console.log("navMatch1:"+pa.options.navMatch);
+     
+    });
+
 
     app_router.on('route:getRegister', function (id) {
 

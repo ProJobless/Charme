@@ -116,7 +116,7 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}

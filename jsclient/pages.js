@@ -28,6 +28,9 @@ events: {
 },
 setCurrent : function(obj)
 {
+
+
+
 	if (this.currentView  != null)
 	{
 	console.log(this.currentView);
@@ -290,7 +293,7 @@ console.log("el"+ this.el);
 		<div style="height:67px; background-color:#000;"><a  href="#user/'+(charmeUser.userIdURL)+'"><img src="http://'+charmeUser.server+'/charme/fs.php?s=150&u='+(charmeUser.userIdURL)+'"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#c2c2c2; padding-top:0; margin-bottom: 0px;"> \
-		     <input style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
+		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a></div> \
 		    <div class="sbBetaCont"> \
@@ -330,6 +333,14 @@ console.log("el"+ this.el);
 	// Set a color scheme (See lib/colors.js for function)
 	setColor("#1A3C87","#000614");
 
+	$("#searchField").keypress(function(e) {
+		
+
+		if(e.which == 13)
+			location.href='#find/'+encodeURIComponent($("#searchField").val());
+
+
+	});
 	    // Mouse Down effect for icons above main navigation
     $(".actionBar a").mousedown(function(){
     

@@ -333,7 +333,9 @@ view_page = Backbone.View.extend({
 
     finishRender: function(d, d2)
     {
-	
+    
+		if (container_main.currentViewId  != "find")
+			$("#searchField").val(""); // Reset search box
 
 //alert("find"+this.options.useSidebar);
 
@@ -442,6 +444,8 @@ view_page = Backbone.View.extend({
 				}
 				//console.log("delegateEvents() in view");
 				
+				// Render SubView if exists
+				if (that.sub != undefined)
 				 that.sub.render();
 
 
@@ -715,6 +719,26 @@ var view_lists_subpage = view_subpage.extend({
 
 
 });
+
+
+var view_find = view_page.extend({
+	options: {template:'find'}
+
+	,postRender: function()
+	{
+		//
+		$("#fld_q").text(this.options.q);;
+	},
+	getData: function()
+
+	{
+		console.log("this.options.data");
+		console.log(this.options.data);
+		return this.options.data;
+
+	}
+	});
+
 
 /*
 	The registration view

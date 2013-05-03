@@ -1,0 +1,52 @@
+
+<div class='p32' style='padding-bottom:0'>
+<h1>Results for <span id='fld_q'></span></h1>
+</div>
+
+
+
+
+<% if (rc.direct == true) { %>
+
+
+<div class='p32'>
+
+<div style='margin-top:8px;'>
+<a href="#/user/<%- encodeURIComponent(rc.userId) %>">
+
+<img style='float:left; margin-right:8px; ' src="http://<%- rc.userId.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(rc.userId) %>&amp;s=64">
+
+<%- rc.info.firstname %> <%- rc.info.lastname %>
+</a>
+</div>
+
+
+</div>
+
+
+ <% } else { %>
+
+<div class="p16" id="friendItemContainer">
+<div class='usergrid'>
+
+
+	 <% _.each( rc, function(item2){ %>
+
+
+
+
+		<div class="item ui-draggable" data-userid="schuldie@localhost">
+
+			<a href="#/user/<%- encodeURIComponent(item2.id) %>">
+				<img src="http://<%- item2.id.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.id) %>&amp;s=64">
+			<%- item2.name %>
+			</a>
+		</div>
+
+	  <% }); %>
+
+
+</div>
+</div>
+ <% } %>
+

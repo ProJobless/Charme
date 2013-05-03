@@ -6,7 +6,10 @@
   font-family: OpenSansLight;
   src: url(fonts/Open_Sans/OpenSans-Light.ttf);
 }  
-
+.loggedOutOnly
+{
+	display: none;
+}
 
 .button:active
 {
