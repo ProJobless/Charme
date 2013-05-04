@@ -1,7 +1,8 @@
 <?php
 // Autocomplete JSONP provider
+include_once("config.php");
 
-header('Access-Control-Allow-Origin: http://client.local');
+header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');

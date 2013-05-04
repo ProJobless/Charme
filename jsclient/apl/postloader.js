@@ -46,14 +46,14 @@ CharmeUser.certificate.
 	apl_postloader_setup(function(){alert("callback");});
 */
 
-function apl_setup(callback)
+function apl_setup(callback, onLogin)
 {
 	
 
 	//TODO: Add a callback funciton here
-	if (!isLoggedIn())
+	if (!isLoggedIn() && onLogin != true)
 	{
-
+	
 		callback();
 
 	}

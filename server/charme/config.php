@@ -19,6 +19,9 @@ $CHARME_SETTINGS["serverURL"] ="localhost";
 //If you want to create a private network leave this empty
 $CHARME_SETTINGS["NETWORK_ID"] ="";
 
+$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] ="http://10.149.35.85";
+// http://client.local
+
 
 //Will be updated automatically to block evil servers or users
 //you should leave this empty if your not part of the CHARME network

@@ -2,6 +2,9 @@
 header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
+include_once("config.php");
+
+error_reporting(E_ALL);
 
 // Disabled, because of jquery post
 //header('Content-type: application/json');
@@ -39,7 +42,8 @@ $host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 */
 
 // https://developer.mozilla.org/en-US/docs/HTTP/Access_control_CORS#Access-Control-Allow-Origin
-header('Access-Control-Allow-Origin: http://client.local');//www.charmeproject.com
+
+header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -94,7 +98,7 @@ else
 
 
 
-include_once("config.php");
+
 /*
 	TODO:
 	- Validate User idenity
@@ -229,7 +233,7 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 
 		
-
+			clog("receive distribute2....");
 
 			unset($item["id"]);
 			unset($item["_id"]);
@@ -248,13 +252,15 @@ foreach ($data["requests"] as $item)
 			3. Send post to these followers
 		*/
 
+			// problem: 
 		$col = \App\DB\Get::Collection();
 
 		$cursor2 = $col->posts->findOne(array("_id"=> new MongoId($item["postId"])), array("collectionId", "owner"));
+		
+
+
 		$cursor3 = $col->followers->find(array("collectionId" => new MongoId($cursor2["collectionId"]) ));
 
-		
-	
 
 		// insert in owners collection
 
@@ -265,6 +271,10 @@ foreach ($data["requests"] as $item)
 				"sendername" => $item["sendername"],
 				"postowner" => $item["userId"],
 				"itemTime"  => new MongoDate());
+
+	//	clog(print_r($itemdata, true));
+
+
 
 		$data = array("requests" => 
 
@@ -278,8 +288,7 @@ foreach ($data["requests"] as $item)
 		// Send comment to other servers
 		foreach ($cursor3 as $receiver)
 		{
-
-
+		
 			$req21 = new \App\Requests\JSON(
 			$receiver["follower"],
 			$cursor2["owner"],
@@ -301,6 +310,10 @@ foreach ($data["requests"] as $item)
 			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
 
 
+			//clog("postcomment ....: postId: ".$item["postId"]);
+	
+
+
 			$data = array("requests" => array(
 
 					"id" => "post_comment_distribute",
@@ -313,6 +326,8 @@ foreach ($data["requests"] as $item)
 
 					));
 
+
+
 	
 
 
@@ -320,6 +335,7 @@ foreach ($data["requests"] as $item)
 			$receiver,
 			$_SESSION["charme_userid"],
 			$data);
+
 
 			$req21->send();
 
@@ -704,7 +720,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 		case "profile_imagechange": 
 			//$_SESSION["charme_userid"], $item["data"]
 
-			include_once("/3rdparty/wideimage/WideImage.php");
+			include_once("3rdparty/wideimage/WideImage.php");
 
 			
 			$col = \App\DB\Get::Collection();
@@ -860,9 +876,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			{
 				// Get all stream items
 				
-
-				$col->streamitems->ensureIndex('owner');
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]));
+			//	$col->streamitems->ensureIndex('owner');
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('_id' => 1));;
 
 
 				$stra=  iterator_to_array($iter , false);
@@ -884,11 +899,17 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				
 
 				// increased performance from 400ms to 170ms
-				$col->streamcomments->ensureIndex(array('postId', "postowner"));
+				
+				//$col->streamcomments->deleteIndex (array('postId', "postowner"));
 				//$col->streamcomments->ensureIndex('postowner');
 
 				// Total comments
 				$count = $col->streamcomments->count(array("postId" => (string)$item2["postId"], "postowner" => $item2["post"]["owner"]) );
+				
+			
+
+			//	clog((string)$item2["postId"]."-- owner: ". $item2["post"]["owner"]."-- count: ".$count );
+
 				$stra[$key ]["commentCount"] = $count ;
 			
 				$groupCount = 3;
@@ -904,6 +925,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				if (!isset($stra[$key ]["likecount"]))
 					$stra[$key ]["likecount"] = 0;
 
+			
 
 				$stra[$key ]["comments"] = 
 				iterator_to_array($col->streamcomments->find(array("postId" => (string)$item2["postId"], "postowner" => $item2["post"]["owner"]) )->skip($start)->limit($groupCount), false);
@@ -923,7 +945,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 		case "register_collection_post":
 
 
-				
+			// IMPORTANT: $content must match with collection follow sub requests (3newest etc.)
+
 			$col = \App\DB\Get::Collection();
 			$content = array("post" => $item["post"], "postId" => new MongoId($item["postId"]), "owner"  => $item["follower"],"collectionId"  => new MongoId($item["collectionId"]), "username"  => $item["username"]);
 			
@@ -1177,6 +1200,19 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				$items[$key]["liketemp"] = false;
 					else
 				$items[$key]["liketemp"] = true;
+
+				// also return 3 newest comments:
+
+				$iter = $col->comments->find(array("postId" => $value["_id"]->__toString()))->sort(array('_id' => -1))->limit(3);
+
+				$items[$key]["comments"] = 
+				array_reverse(
+					iterator_to_array($iter, false))
+				;
+
+				// IMPORANT TO KEEP ID:
+				$items[$key]["_id"] = $value["_id"]->__toString();
+
 			}
 
 			if (Count($items) > 0)
@@ -1195,7 +1231,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 		case "collection_follow" :
 			
-			echo $item["collectionId"];
+		
 
 			$col = \App\DB\Get::Collection();
 
@@ -1209,6 +1245,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				
 
 				$col->following->update($content, $content ,  array("upsert" => true));
+				
+
 
 				$data = array("requests" => array(
 
@@ -1229,14 +1267,23 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				$dataReq = $req21->send();
 
 			//clog(print_r($dataReq["collection_3newest"],true));
+				//$col->streamitems->remove(array("collectionId" => new MongoId($item["collectionId"]), 
+				//	"post.owner" =>  $item["collectionOwner"], "owner" => $_SESSION["charme_userid"]));
 
+					$col->streamitems->remove(array("owner" => $_SESSION["charme_userid"], "collectionId" => new MongoId($item["collectionId"] ), "post.owner" => $item["collectionOwner"]));
+
+
+					
 				foreach ($dataReq["collection_3newest"]["items"] as $post)
 				{
+					//clog("ITEM ID".print_r($post, true));
 				
-					$like = $post["liketemp"];
-					
-					unset($post["liketemp"]);
 
+					$like = $post["liketemp"];
+					$comments = $post["comments"];
+
+					unset($post["liketemp"]);
+					unset($post["comments"]);
 					$ins = array(
 						"owner" => $_SESSION["charme_userid"],
 						"username" => $dataReq["collection_3newest"]["username"],
@@ -1244,10 +1291,17 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						"postId" => new MongoId($post["_id"]),
 					 	"post" => $post,
 					 	"collectionId" => new MongoId($item["collectionId"]) ,
-					 	"test" => array("test1" => 1)
+					 
 
 						);
 
+					//clog(print_r($comments, true));
+					foreach ($comments as $comment)
+					{
+						unset($comment["id"]);
+						unset($comment["_id"]);
+					$col->streamcomments->update($comment,$comment, array("upsert" => true));
+					}
 		
 					if (Count( $post) > 0)
 					$col->streamitems->insert($ins);

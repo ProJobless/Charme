@@ -534,12 +534,13 @@ function login()
         }, function(data){
 
 console.log(data);
-console.log("u"+u +"p"+p);
+
             if (data.user_login.status == "PASS")
             {
 
 
-                try {
+               // try
+               {
 
 
                     localStorage.setItem("user", u);
@@ -555,10 +556,10 @@ console.log("u"+u +"p"+p);
                              passphrase =  sjcl.decrypt(p, localStorage.getItem("passPassphrase")); 
                         else
                         {
-                            passphrase =prompt("Please enter your passphrase","XD3dPqgxYdfrZCbBUWCP");
+                            passphrase =prompt("Please enter your passphrase","");
                             localStorage.setItem("passPassphrase", sjcl.encrypt(p, passphrase))
                         }
-
+                        console.log("SESSION ID:"+charmeUser.sessionId);
                         // Store passphrase encoded with session Id.
                         localStorage.setItem("sessionPassphrase", (sjcl.encrypt(charmeUser.sessionId, passphrase)));
 
@@ -573,16 +574,18 @@ console.log("u"+u +"p"+p);
 							container_main.render();
 							location.href="#stream";
 						});
-					});
+					}, true);
 
 
                       
 
 
-                } catch(e) {
+                } 
+                
+                /*catch(e) {
                   alert("Can't decrypt RSA Key (Wrong passphrase?)");
                   return;
-                 }
+                 }*/
 
 
                 

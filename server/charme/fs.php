@@ -21,4 +21,29 @@ $loader->register();
 	 $file = $grid->findOne(array('type' => "profileimage", 'owner' => urldecode($_GET["u"]), 'size' => intval($_GET["s"])));
 echo $file->getBytes();
 
+
+
+if (!isset($file))
+{
+
+
+	$name = 'imgs/u64.jpg';
+	$fp = fopen($name, 'rb');
+
+	// send the right headers
+
+	header("Content-Length: " . filesize($name));
+
+	// dump the picture and stop the script
+	fpassthru($fp);
+	exit;
+
+}
+/*
+
+
+*/
+
+
+
 ?>
