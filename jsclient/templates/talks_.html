@@ -2,12 +2,22 @@
 	<input type="hidden" name="col_to" value="">
 	<input type="hidden" name="col_type" value="instant">
 	<textarea id="inp_newmsginstant" style="width:100%; "></textarea>
-	<div style="margin-top:8px;"><a class="button" id='but_instantsend' >Send</a>
+	<div style="margin-top:8px;">
+
+		<span style='float:right; padding-top:12px; display:inline-block;'>
+		<a  id='but_file'>Upload file</a>
+
+		<input style='display:none' type="file" id="theFile"  />
+
+
+</span>
+		<a class="button" id='but_instantsend' >Send</a>
 	</form></div></div>
 
 	<div class='message'>People: <span id='inp_receiversinstant'></span></div>
 
 <!-- --".implode(", ", $ppl["people"])."-->
+
 
 	<div class='talkmessages'>
 
@@ -15,6 +25,7 @@
 
 
 	</div>
+	<img id='uploadPreview'>asd
 <!--
 <div class='infobox'>You do not have any conversation yet. Click the plus button to start a new conversation.</div>
 -->

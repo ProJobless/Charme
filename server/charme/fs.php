@@ -12,14 +12,23 @@ $loader->register();
 		
 			$grid = $col->getGridFS();
 
+	if (!isset($enc))
+{	header("Content-type: image/jpg");
 
-	header("Content-type: image/jpg");
+$file = $grid->findOne(array('_id' => ($_GET["id"])));
 
-	header("Cache-Control: public, max-age=3600, s-maxage=3600"); // 60 second Cache
+
+}
+else
+{
+	header("Content-type: text/plain"); // return encoded picture
+}
+//	header("Cache-Control: public, max-age=3600, s-maxage=3600"); // 60 second Cache
 
 
 	 $file = $grid->findOne(array('type' => "profileimage", 'owner' => urldecode($_GET["u"]), 'size' => intval($_GET["s"])));
-echo $file->getBytes();
+
+
 
 
 
@@ -27,7 +36,7 @@ if (!isset($file))
 {
 
 
-	$name = 'imgs/u64.jpg';
+	$name = 'imgs/u'.$_GET["s"].'.jpg';
 	$fp = fopen($name, 'rb');
 
 	// send the right headers
@@ -39,6 +48,8 @@ if (!isset($file))
 	exit;
 
 }
+else
+echo $file->getBytes();
 /*
 
 

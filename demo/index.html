@@ -101,7 +101,7 @@ $('.info').animate({   height: $(window).height() }, 320, function(){$('.info').
     <style>
     body
     {
-      font-family: "Tahoma", "Sans Serif";
+      font-family: "Century Gothic", "Sans Serif";
       font-size: 12px;
     	margin:0;
     }
@@ -118,7 +118,7 @@ position: absolute;
 .betaform
 {
   margin: 16px 0;
-  letter-spacing: 1px;
+  letter-spacing: 0px;
   line-height: 16px;
   font-size: 12px;
   width: 500px;
@@ -166,8 +166,11 @@ a.button.sel:active
 {
   margin: 0;
   padding: 0;
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 16px;
+  text-transform:  uppercase;;
+  font-family:  "Century Gothic";
+
 
 }
 h1
@@ -180,14 +183,24 @@ h1
 }
 .pinfo
 {
-  background-color:  #000;
+  background-color:  #fff;
   padding:32px;
   position: absolute;
   top:32px;
   left:32px;
-  width:200px;
-  color:#fff;
-  letter-spacing: 1px;
+  width:220px;
+  border: 1px #00B2C9 solid;
+   font-size: 13px;
+  color:#000;
+
+  font-family: Tahoma;
+
+  letter-spacing: 0.05em;
+
+    line-height: 21px;
+
+ box-shadow:         0px 0px 10px  #ddd;
+
   z-index: 999;
 }
 img
@@ -264,7 +277,7 @@ img
   	<div class='images'>
 <div class='slider'>
  
-	<div class='item'><div class='pinfo'><h1>Hey You!</h1>Charme is a distributed social network with client side encryption. This means you can choose a server, where your data is stored or even set up your own, and the server can not read your messages.</div><img style=' margin-left:290px;' src='wel.png'></div>
+	<div class='item'><div class='pinfo'><h1>Hi there,</h1>Charme is a distributed social network with client side encryption. This means you can choose a server, where your data is stored or even set up your own, and the server can not read your messages.</div><img style=' margin-left:290px;' src='wel.png'></div>
 <div class='item'><div class='pinfo'><h1>Multiple Walls</h1>You are not interested in someones private life, but like the music she or he produces?<br><br>Charme allows you to create different walls, so called collections,  which can be subscribed separately. So in this case you would only subscribe to the Music Collection.</div><img style=' margin-left:320px;' src='walls.png'></div>
 <div class='item'><div class='pinfo'><h1>Mobility</h1>We will release Apps for smartphones and talbets.</div><img src='mob.png'></div>
 <div class='item'><div class='pinfo'><h1>Technology and Design at its finest</h1>Charme has a minimalistic design reduced on the important functions. To reduce web traffic we only load JSON Data from server, no html.</div><img src='collections.png'></div>

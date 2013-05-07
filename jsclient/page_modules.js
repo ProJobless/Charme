@@ -391,7 +391,12 @@ view_page = Backbone.View.extend({
 
 	render: function(){
 	
-	
+		if (this.options.expViewId == undefined)
+			this.options.expViewId = this.options.template;
+
+		console.log("exp:"+this.options.expViewId );
+		console.log("cur:"+this.options.expViewId );
+
 		if (this.options.noLogin != true && !isLoggedIn())
 		{	
 
@@ -402,7 +407,7 @@ view_page = Backbone.View.extend({
 		//alert("render");
 
 		// Page has changed not changed. Only subpage. -> Just render subpage
-	 	if (container_main.currentViewId == this.options.template && !this.options.forceNewRender)
+	 	if (container_main.currentViewId == this.options.expViewId && !this.options.forceNewRender)
         {
    	
             // Just update SubView, we are allowed to render it here as parent view is already rendered
@@ -420,7 +425,7 @@ view_page = Backbone.View.extend({
 			else
 			$(".sbBeta .actionBar").html("");
 
-	        container_main.currentViewId =  this.options.template;
+	        container_main.currentViewId =  this.options.expViewId;
 			var that = this;
 
 			$.get("templates/"+this.options.template+".html", function (d)
@@ -949,8 +954,9 @@ var view_profilepage = view_page.extend({
 			}, function(d){
 
 				container_main.currentView.username = d.profile_get_name.info.firstname+ " " + d.profile_get_name.info.lastname;
-				
 				$(".profile_name").text(container_main.currentView.username);
+				
+				
 
 
 			});
@@ -1025,7 +1031,7 @@ var view_profilepage = view_page.extend({
 			}
 
 			// TODO: Add username
-			var p2 = new control_postItem({repost: repostdata, postId: d.collection_post.id,username: name, layout: layout, userId: charmeUser.userId, content: txt, time: "the time", el: $(elid), prepend: true});
+			var p2 = new control_postItem({repost: repostdata, postId: d.collection_post.id,username: name, layout: layout, userId: charmeUser.userId, content: txt, time: new Date().getTime(), el: $(elid), prepend: true});
 			p2.render();
 
 
@@ -1158,10 +1164,10 @@ var repostTemp = null;
  			// 
  		 str = "<div class='collectionPost'>"+
  		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
- 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+this.options.time+"</span></div>";
+ 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+formatDate(this.options.time)+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+liksstr+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+this.options.time+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+liksstr+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+formatDate(this.options.time)+"</span>";
 
 
 
@@ -1402,6 +1408,10 @@ view_profilepage_collection_show = view_subpage.extend({
 
 	postRender: function()
 	{
+
+		$(".profile_name").text(container_main.currentView.username);
+
+
 		var that = this;
 		$("#but_editCollection").click(function(){
 			
@@ -1493,7 +1503,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 		
 
-			var p2 = new control_postItem({counter: this.likecount, comments: this.comments, commentCount: this.commentCount,  like: this.likeit, repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time, el: $(".collectionPostbox")});
+			var p2 = new control_postItem({counter: this.likecount, comments: this.comments, commentCount: this.commentCount,  like: this.likeit, repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time.sec*1000, el: $(".collectionPostbox")});
 			p2.render();
 
 
@@ -1541,7 +1551,7 @@ var that = this;
 	getData: function()
 	{
 
-		return {uid: charmeUser.userIdURL};
+		return {userId: container_main.currentView.options.userId};
 	}
 });
 
@@ -1567,7 +1577,8 @@ var view_profilepage_collection = view_subpage.extend({
 
 	postRender : function()
 	{
-		// TODO : JSON HERE!
+
+	
 
 		$(".profile_name").text(container_main.currentView.username);
 
@@ -1955,7 +1966,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 				console.log(this);
 
 
-				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time, el: $("#streamContainer"), prepend: true});
+				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time.sec*1000, el: $("#streamContainer"), prepend: true});
 				p2.render();
 
 
@@ -2003,6 +2014,8 @@ var view_welcome = view_page.extend({
 
 var view_talks_subpage = view_subpage.extend({
 	options: {template:'talks_', el: '#page3'},
+	   
+
 	initialize: function()
 	{
 		this.messagePaginationIndex = 0;
@@ -2012,6 +2025,102 @@ var view_talks_subpage = view_subpage.extend({
 	console.log("cert");
 	console.log(charmeUser.certificate);
 		
+	},
+	fileChanged: function(h)
+	{
+		var that= this;
+
+			var files = h.target.files; // FileList object
+		//var output = [];
+		// atid = $(x).attr('id'); // ID of attachment container
+
+		alert("changed");
+		var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+ 
+
+
+		var reader = new FileReader();
+		reader.file = files[0];
+		
+
+		reader.onload = function(e) {
+
+			// Working:
+			//document.getElementById("uploadPreview").src = e.target.result;
+			var str = e.target.result;
+
+			// encrypt:
+			var startUpload = function(file, thumb)
+			{
+				// encrypt here
+				var thumbEnc = sjcl.encrypt(that.aes, thumb);
+				var fileEnc= sjcl.encrypt(that.aes, str);
+				alert(thumbEnc);
+
+				var conversationId = ($('#msg_conversationId').data("val"));
+
+				apl_request(
+	    {"requests" : [
+	    {"id" : "message_distribute_answer", "conversationId" : conversationId ,  "encFile" : fileEnc, "encFileThumb" : thumbEnc,}
+
+	    ]
+		}, function(d2){
+			alert("has been sent. please reload page. Todo: refactor, make function append(serverrply){...}");
+		});
+
+				// Append thumb...
+
+
+				// Send apl request here
+
+			};
+
+			var img = new Image;
+			img.src = e.target.result;
+
+			img.onload = function(e3){
+
+
+				startUpload(e.target.result, makeThumb(img));
+			};
+
+
+
+
+	    }
+	  //  if (!rFilter.test(reader.file))
+	   // { alert("You must select a valid image file!"); return; }
+
+	    reader.readAsDataURL(reader.file) ;
+
+	},
+	postRender: function()
+	{var that = this;
+			$('#theFile').on("change", function(e){  that.fileChanged(e); });
+
+		},
+	uploadFile: function()
+	{	
+		
+
+
+	
+		
+
+		$("#theFile").trigger('click');
+
+		
+
+	
+
+
+
+		// Check if image?
+		// if yes -> make thumbnail!
+
+		// encrypt file&thumbnail base64 with aes key.
+
+
 	},
 	loadMessages: function(start)
 	{
@@ -2027,6 +2136,7 @@ var view_talks_subpage = view_subpage.extend({
 			{"id" : "messages_get_sub", limit:limit, start: start, "superId":  this.options.superId}
 		]
 		}, function(d2){ 
+
 
 			var newstart = start-10;
 			if (d2.messages_get_sub.count != -1)
@@ -2049,6 +2159,9 @@ var view_talks_subpage = view_subpage.extend({
 				//alert(d2.messages_get_sub.aesEnc);
 
 				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
+
+				that.aes = aeskey;
+
 				d2.messages_get_sub.aesEnc  = aeskey;
 
 				jQuery.each(d2.messages_get_sub.messages, function() {
@@ -2077,6 +2190,13 @@ var view_talks_subpage = view_subpage.extend({
 				 if (start == -1)
 				$(window).scrollTop(999999);
 
+				$("#but_file").click(function()
+				{
+
+					that.uploadFile();
+
+				}
+				);
 
  				$('#but_instantsend').click(function(){ sendAnswer(); });
  				
@@ -2177,12 +2297,17 @@ sendMessageForm({});
 				
 
 				 var aeskey = rsa.decrypt(this.aesEnc);///sjcl.decrypt(aeskey, this.encMessage);
+				 if (this.pplCount < 2)
 				 this.messageTitle = this.sendername;
+				else
+ 				this.messageTitle = this.sendername+" and "+ (this.pplCount-1)+" more";
 
-				 if (this.people.length  > 1)
-				 	this.messageTitle += " and " + this.people.length + " more";
 
-				 this.messagePreview = sjcl.decrypt(aeskey,this.messagePreview);  //.join(", ");
+				if (this.messagePreview)
+				 this.messagePreview = sjcl.decrypt(aeskey,this.messagePreview);
+				 else
+				 this.messagePreview = "";
+				   //.join(", ");
 
 			});
 	

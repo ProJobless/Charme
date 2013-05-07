@@ -8,3 +8,8 @@ function xssText(str)
 	return $("<div/>").html(str).text();
 
 }
+function formatDate(milliseconds)
+{
+	var d = new Date(milliseconds);
+	return moment(milliseconds).fromNow();
+}

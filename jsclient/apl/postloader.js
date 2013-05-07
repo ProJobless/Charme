@@ -16,14 +16,22 @@ CharmeUser.certificate.
 	 if (charmeUser != null && charmeUser.sessionId != null)
 	 {
 
-	 
+	 	try
+	 	{
 		var passphrase = sjcl.decrypt(charmeUser.sessionId, localStorage.getItem("sessionPassphrase"));
 		var certEnc = localStorage.getItem("certificate");
-
-
-
 		var cert=(sjcl.decrypt(passphrase,certEnc ));
 		charmeUser.certificate = jQuery.parseJSON(cert);
+
+		}
+		catch(e)
+		{
+			alert("Certificate decrpytion error. Logout.");
+			logout();
+		}
+
+
+		
 
 	}
 

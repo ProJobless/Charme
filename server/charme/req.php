@@ -44,6 +44,9 @@ $host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 // https://developer.mozilla.org/en-US/docs/HTTP/Access_control_CORS#Access-Control-Allow-Origin
 
 header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
+
+header('Access-Control-Allow-Origin: http://client.local');
+
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -61,6 +64,11 @@ function clog($str)
 	$fd = fopen("log.txt", "a");
 	fwrite($fd, $str . "\r\n");
 	fclose($fd);
+}
+
+function clog2($ar)
+{
+	clog(print_r($ar, true));
 }
 /**
  * req.php
@@ -189,7 +197,7 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("messages" => 
 			iterator_to_array(
 				$col->messages->find($sel)
-				->sort(array("time" => -1))
+				->sort(array("time" => 1))
 				->skip($start)->limit($limit)
 				
 			, false), "count" => $count, "aesEnc" =>  $res["aesEnc"], "people" => $res["people"], "conversationId" => new MongoId($res["conversationId"]));
@@ -487,8 +495,10 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			//$item["localreceivers"][] = $item["sender"];
 			asort($item["localreceivers"]);
 
-		
+			// Warning! One message per server only!
 
+			$blockWrite = false;
+		//	clog(print_r($item["localreceivers"], true));
 
 			foreach ($item["localreceivers"]as $receiver)
 			{
@@ -502,23 +512,72 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				if (isset($item["aesEnc"]))
 				{
 					$content = array(
-					"people" => $item["localreceivers"],
+					"people" => $item["people"], // is this important?
 					//
 					"aesEnc" => $item["aesEnc"],
 					"conversationId" => new MongoId($item["conversationId"]),
 					"receiver" => $receiver,
 					"sendername" => $item["sendername"],
 					"messagePreview" => $item["messagePreview"],
-					"time" => new MongoDate(time())
+					"time" => new MongoDate(time()),
+					"pplCount" =>  Count($item["people"])
 					);
 
 					// because time changes
-					$col->conversations->update(array("aesEnc" => $item["aesEnc"]), $content ,  array("upsert" => true));
-				}
-				\App\Counter\CounterUpdate::inc( $receiver, "talks");
 
-				$col->messages->insert(array("sendername" => $item["sendername"], "conversationId" =>   new MongoId($item["conversationId"]), "encMessage" => $item["encMessage"], "sender" => $item["sender"]));
-			}
+					// aesEnc is not attached in direct replys.
+
+					// Direct Replies are clustered!
+
+					// For every user...
+
+					// If its the first conversation, insert messages
+				
+
+					$c = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"])));
+					if ($c > 0)
+						$blockWrite = true;
+
+
+					$col->conversations->update(array("aesEnc" => $item["aesEnc"], "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
+					\App\Counter\CounterUpdate::inc( $receiver, "talks");
+
+					// Inc counter for people on my server in this conversation...
+					// Get conversation:
+						
+				}
+				else
+				{
+				
+					if (isset($item["messagePreview"]))
+					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => array("messagePreview" => $item["messagePreview"])),array('multiple' => true)); 
+					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
+					
+					// Increment receivers Counters
+					foreach ($ppl["people"] as $val) {
+
+						if ( $item["sender"] !=  $val)
+						\App\Counter\CounterUpdate::inc($val, "talks");
+					}
+				
+
+				}
+				
+				if (!$blockWrite)
+				{
+				
+				$ins = array("sendername" => $item["sendername"],
+
+				 "time" => new MongoDate(), "fileId"=> $item["fileId"], "conversationId" =>   new MongoId($item["conversationId"]),
+				 "encMessage" => $item["encMessage"], "sender" => $item["sender"]);
+				
+				if ($ins["fileId"] == 0)
+				unset($ins["fileId"]);
+
+				$col->messages->insert($ins);
+				}
+
+		}
 
 		break;
 
@@ -537,7 +596,29 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			// Find receivers of this message by $item["conversationId"]
 			$res = $col->conversations->findOne(array("conversationId"=> ($convId)), array('people'));
 
-			foreach ($res["people"] as $receiver)
+
+			$clustered = \App\Requests\Cluster::ClusterPeople($res["people"]);
+
+			clog2($clustered);
+
+			// if enc file exists...
+
+			// TODO: Add size limit
+			$fileId = 0;
+
+			if (isset($item["encFile"]))
+			{
+				$col = \App\DB\Get::Collection();
+		
+				$grid = $col->getGridFS();
+
+				$fileId = (string)$grid->storeBytes($item["encFile"], array('type'=>"encMsg",'owner' => $_SESSION["charme_userid"]));
+				$ret2 = $grid->storeBytes($item["encFileThumb"], array('type'=>"encMsgThumb",'owner' => $_SESSION["charme_userid"], "orgId" => $fileId));
+				
+			} 
+
+
+			foreach ($clustered as $receiver)
 			{
 					$data = array("requests" => array(
 
@@ -547,6 +628,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						"encMessage" => $item["encMessage"],
 						"messagePreview" => $item["messagePreview"],
 						"sendername" => $sendername, 
+						"fileId" => $fileId,
 
 						"sender" => $_SESSION["charme_userid"],
 						"conversationId" => $convId->__toString(),
@@ -554,6 +636,12 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 
 						));
+
+					if (isset($item["messagePreview"]))
+					$data["requests"][0]["messagePreview"] = $item["messagePreview"];
+					if (isset($item["encMessage"]))
+							$data["requests"][0]["encMessage"] = $item["encMessage"];					
+
 
 					$req21 = new \App\Requests\JSON(
 					$receiver,
@@ -596,6 +684,9 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 			$convId = new MongoId();
 
+
+
+			// Do not cluster here, because of AES Key!
 			foreach ($item["receivers"] as $receiver)
 			{
 				// Send MEssage to receiver.
@@ -605,7 +696,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 						"id" => "message_receive",
 						"localreceivers" => array($receiver["charmeId"]),
-						"allreceivers" => $item["receivers2"],
+						"people" => $item["receivers2"],
 						"encMessage" => $item["encMessage"],
 						"aesEnc" => $receiver["aesEnc"],
 						"messagePreview" => $item["messagePreview"],
@@ -863,10 +954,6 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 		case "stream_get":
 
-
-	
-
-
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
 
 			$stra = array();
@@ -877,7 +964,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				// Get all stream items
 				
 			//	$col->streamitems->ensureIndex('owner');
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('_id' => 1));;
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('post.time' => 1, '_id' => -1))->limit(15);;
 
 
 				$stra=  iterator_to_array($iter , false);
@@ -971,7 +1058,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
-			$content = array("username"=> $username,  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
+			$content = array("username"=> $username, "time"=> new MongoDate(),  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
 			
 			if (isset( $item["repost"]))
 				$content["repost"]  = $item["repost"];
@@ -1047,7 +1134,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			  			"description" => $item["description"]
 			  			);
 
-			$col->collections->update(array("_id" => new MongoId($item["collectionId"])), $content);
+			$col->collections->update(array("_id" => new MongoId($item["collectionId"]), "owner" => $_SESSION["charme_userid"]), $content);
 			
 			$returnArray[$action] = array("SUCCESS" => true);
 

@@ -305,7 +305,16 @@ app_router.on('route:getWelcome', function (id) {
 
 
 
-        var pa = new view_welcome({template: "welcome",  noLogin: true});
+        var pa = new view_welcome(
+            {   template: "welcome",  noLogin: true
+            });
+
+        pa.getData = function()
+        {   
+
+            return  {username: localStorage.getItem("userAutoComplete")};
+        }
+
         
 
         container_main.setCurrent(pa);
@@ -350,14 +359,13 @@ app_router.on('route:getWelcome', function (id) {
 
 
 
-        if (container_main.currentViewId != "user"
-            || container_main.currentView.options.userId != userId
+        if (container_main.currentViewId != "profile_"+id
             )
         {
-        
+      
             console.log("CREATE NEW PARENT VIEW");
         console.log("Instantiate ParentView : User");
-        container_main.setCurrent(new view_profilepage({forceNewRender:true, userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'}));
+        container_main.setCurrent(new view_profilepage({ expViewId: "profile_"+id,  userIdRaw: id,userId: userId, template: "user", navMatch: 'profile'}));
     
         }
 
@@ -411,6 +419,8 @@ app_router.on('route:getWelcome', function (id) {
                });
             
         }
+
+    
    
    
 
@@ -539,8 +549,7 @@ console.log(data);
             {
 
 
-               // try
-               {
+             
 
 
                     localStorage.setItem("user", u);
@@ -551,41 +560,61 @@ console.log(data);
 
 					apl_setup(function()
 					{
-                        var passphrase;
-                        if (localStorage.getItem("passPassphrase") !== null)
-                             passphrase =  sjcl.decrypt(p, localStorage.getItem("passPassphrase")); 
-                        else
+                          try
                         {
-                            passphrase =prompt("Please enter your passphrase","");
-                            localStorage.setItem("passPassphrase", sjcl.encrypt(p, passphrase))
-                        }
-                        console.log("SESSION ID:"+charmeUser.sessionId);
-                        // Store passphrase encoded with session Id.
-                        localStorage.setItem("sessionPassphrase", (sjcl.encrypt(charmeUser.sessionId, passphrase)));
+                            var passphrase;
+                            if (localStorage.getItem("passPassphrase") !== null)
+                                 passphrase =  sjcl.decrypt(p, localStorage.getItem("passPassphrase")); 
+                            else
+                            {
+                                passphrase =prompt("Please enter your passphrase","");
+                                localStorage.setItem("passPassphrase", sjcl.encrypt(p, passphrase))
 
-                        // Store encoded certificate
-                        localStorage.setItem("certificate", (data.user_login.rsa));
+                            }
 
-                        apl_setup2();
-						// When completed, open main view
-						$("#welcome_main").fadeOut(0, function()
-						{
+                           
 
-							container_main.render();
-							location.href="#stream";
-						});
+                            // Store passphrase encoded with session Id.
+                            localStorage.setItem("sessionPassphrase", (sjcl.encrypt(charmeUser.sessionId, passphrase)));
+                            
+                         
+                            // Store encoded certificate
+                            localStorage.setItem("certificate", (data.user_login.rsa));
+
+                             localStorage.setItem("userAutoComplete", u);
+
+
+                            apl_setup2();
+    						// When completed, open main view
+    						$("#welcome_main").fadeOut(0, function()
+    						{
+
+    							container_main.render();
+    							location.href="#stream";
+    						});
+
+                         } 
+                    
+                        catch(e) {
+                          alert("Can't decrypt RSA Key (Wrong passphrase?)");
+                           localStorage.removeItem("sessionPassphrase");
+                            localStorage.removeItem("certificate");
+                             localStorage.removeItem("passPassphrase");
+                             localStorage.removeItem("user");
+
+
+
+                          return;
+                         }
+
+
 					}, true);
 
 
                       
 
 
-                } 
                 
-                /*catch(e) {
-                  alert("Can't decrypt RSA Key (Wrong passphrase?)");
-                  return;
-                 }*/
 
 
                 
