@@ -2056,7 +2056,7 @@ var view_talks_subpage = view_subpage.extend({
 			{
 				// encrypt here
 				var thumbEnc = sjcl.encrypt(that.aes, thumb);
-				var fileEnc= sjcl.encrypt(that.aes, str);
+				var fileEnc= sjcl.encrypt(that.aes, file);
 		
 
 				var conversationId = ($('#msg_conversationId').data("val"));
@@ -2080,10 +2080,19 @@ var view_talks_subpage = view_subpage.extend({
 			var img = new Image;
 			img.src = e.target.result;
 
+		
+
+
+
 			img.onload = function(e3){
 
+				var img2 = new Image;
+				img2.src = e.target.result;
 
-				startUpload(e.target.result, makeThumb(img));
+				img2.onload = function(e4){
+					startUpload(scaleImage(img2), makeThumb(img));
+				};
+
 			};
 
 
@@ -2201,6 +2210,7 @@ var view_talks_subpage = view_subpage.extend({
 				$(".imageid").each(function( index ) {
 					var that = this;
 					var loc = $(this).data("location");
+					var par = $(that).parent();
 
 					$.get(loc, function(d)
 					{
@@ -2216,10 +2226,10 @@ var view_talks_subpage = view_subpage.extend({
 
 						//</a>
 
-						$(that).parent().append(
+						$(par).append(
 							$('<a class="imgThumb"></a>').click(function(){
 
-								$(that).parent().append(
+							$(par).append(
 								'<span class="imgLoading">Loading...</span>');
 
 
@@ -2242,7 +2252,7 @@ var view_talks_subpage = view_subpage.extend({
 								}
 
 								// Add cancel decryption button
-								$(that).parent().append(
+								$(par).append(
 								$('<a class="cancelDec">Cancel Decryption</a>').click(function(){
 									
 									$(this).remove();
@@ -2260,7 +2270,7 @@ var view_talks_subpage = view_subpage.extend({
 
 							);
 							//remove class imageid
-							$(that).hide();
+							$(that).remove();
 
 
 
