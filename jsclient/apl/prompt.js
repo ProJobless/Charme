@@ -16,8 +16,19 @@ function ui_unblock(content)
 	$("body .uiBlock").fadeOut(400);
 
 }
+function ui_showImgBox(src, callback)
+{
+	ui_block();
+
+	$("body").parent().append(
+							$('<a class="imagePreview"><img src="'+src+'" class=""></a>').click(function(){
+								ui_closeBox();
+								$('.imagePreview').remove();
+							}));
 
 
+
+}
 
 /***
 	Name:

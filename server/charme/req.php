@@ -570,7 +570,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				 "time" => new MongoDate(), "fileId"=> $item["fileId"], "conversationId" =>   new MongoId($item["conversationId"]),
 				 "encMessage" => $item["encMessage"], "sender" => $item["sender"]);
-				
+
 				if ($ins["fileId"] == 0)
 				unset($ins["fileId"]);
 
@@ -620,13 +620,13 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 			foreach ($clustered as $receiver)
 			{
-					$data = array("requests" => array(
+					$reqdata = array(
 
 						"id" => "message_receive",
 						"localreceivers" => array($receiver),
 						"allreceivers" => $res["people"],
-						"encMessage" => $item["encMessage"],
-						"messagePreview" => $item["messagePreview"],
+						//"encMessage" => $item["encMessage"],
+						//"messagePreview" => $item["messagePreview"],
 						"sendername" => $sendername, 
 						"fileId" => $fileId,
 
@@ -635,12 +635,19 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						//"aesEnc" => $receiver["aesEnc"], known already by receiver
 
 
-						));
+						);
 
+					
 					if (isset($item["messagePreview"]))
-					$data["requests"][0]["messagePreview"] = $item["messagePreview"];
+					$reqdata["messagePreview"] = $item["messagePreview"];
 					if (isset($item["encMessage"]))
-							$data["requests"][0]["encMessage"] = $item["encMessage"];					
+							$reqdata["encMessage"] = $item["encMessage"];					
+
+
+
+$data = array("requests" => $reqdata
+
+					);
 
 
 					$req21 = new \App\Requests\JSON(

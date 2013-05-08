@@ -89,12 +89,14 @@ $('#inp_receivers').tokenInput("http://"+charmeUser.getServer()+"/charme/auto.ph
 
 function sendAnswer()
 {
+
 	var aeskey = ($('#msg_aeskey').data("val"));
 	var conversationId = ($('#msg_conversationId').data("val"));
 	var message = $('#inp_newmsginstant').val();
 	var encMessage = sjcl.encrypt(aeskey, message);
 	var messagePreview = sjcl.encrypt(aeskey, message.substring(0,127));
 
+	if (message == "") return;
 
 	apl_request(
 	    {"requests" : [
@@ -2034,7 +2036,7 @@ var view_talks_subpage = view_subpage.extend({
 		//var output = [];
 		// atid = $(x).attr('id'); // ID of attachment container
 
-		alert("changed");
+	
 		var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
  
 
@@ -2055,7 +2057,7 @@ var view_talks_subpage = view_subpage.extend({
 				// encrypt here
 				var thumbEnc = sjcl.encrypt(that.aes, thumb);
 				var fileEnc= sjcl.encrypt(that.aes, str);
-				alert(thumbEnc);
+		
 
 				var conversationId = ($('#msg_conversationId').data("val"));
 
@@ -2065,7 +2067,7 @@ var view_talks_subpage = view_subpage.extend({
 
 	    ]
 		}, function(d2){
-			alert("has been sent. please reload page. Todo: refactor, make function append(serverrply){...}");
+			location.reload();
 		});
 
 				// Append thumb...
@@ -2167,6 +2169,9 @@ var view_talks_subpage = view_subpage.extend({
 				jQuery.each(d2.messages_get_sub.messages, function() {
 					
 					try{
+						if (this.encMessage == "" || this.encMessage==undefined)
+							this.encMessage = "";
+						else
 					this.msg = sjcl.decrypt(aeskey, this.encMessage);}
 					catch(err)
 					{
@@ -2184,7 +2189,97 @@ var view_talks_subpage = view_subpage.extend({
 				_.templateSettings.variable = "rc";
 				var tmpl = _.template(d, d2.messages_get_sub); 
 
+				
+
+;
+
+
+
 				$(".talkmessages").prepend(tmpl);
+
+				// Decode images
+				$(".imageid").each(function( index ) {
+					var that = this;
+					var loc = $(this).data("location");
+
+					$.get(loc, function(d)
+					{
+						var i = new Image();
+						i.src = sjcl.decrypt(aeskey, d);
+
+
+
+						
+
+
+						//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
+
+						//</a>
+
+						$(that).parent().append(
+							$('<a class="imgThumb"></a>').click(function(){
+
+								$(that).parent().append(
+								'<span class="imgLoading">Loading...</span>');
+
+
+							$.get(loc+"&type=original", function(d2)
+							{
+								$(".imgLoading").remove();
+							 	
+
+
+							 	var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+
+
+								worker.onmessage = function(e) {
+								    
+								    // Hide cancel descryption button
+									$(".cancelDec").hide();
+									ui_showImgBox(e.data);
+
+								}
+
+								// Add cancel decryption button
+								$(that).parent().append(
+								$('<a class="cancelDec">Cancel Decryption</a>').click(function(){
+									
+									$(this).remove();
+									worker.terminate();
+								}));
+
+								worker.postMessage({key:aeskey, encData:d2 });
+
+							
+							
+							});
+
+
+							}).html($(i))
+
+							);
+							//remove class imageid
+							$(that).hide();
+
+
+
+						
+					});
+
+						// TODO: in own thread!
+
+					// Open filestream
+
+					// Decode
+
+
+
+				});
+				//
+
+
+
 				 $(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
 				
 				 if (start == -1)

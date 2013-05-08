@@ -235,6 +235,12 @@ float: left;
 	overflow:visible;
 
 }
+.imgThumb
+{
+	height:100px;
+	width:100px;
+	background-color: #efefef;
+}
 #whitebg
 {
 	height:100%;
