@@ -49,63 +49,69 @@ setCurrent : function(obj)
 	this.currentView = obj;
 	console.log("Set current view");
 },
-showNotifications : function(obj)
+showNotifications : function()
 {
 	var obj = $('#button_notifications');
-
 	var x = $(obj).data("bgpos");
-
-	
-	obj.css("background-position",x+"px -62px");
-
-
-	//$('.actionCont').append("");
-	$('#notificationMain').html("<div class='item'>Someone has commented your status.</div>");
-
-
-
-
-
-	$('.actionCont').css("left", $('#button_notifications').offset().left);
-
-
-
-
 	if ($('.actionCont').is(":visible"))
-	{
-		$('.actionBar a').removeClass("active");
-		$('.actionCont').hide();
-		obj.css("background-position",x+"px -0px");
-  	
-	}
-	else
-	{
-		obj.addClass("active");
-		$('.actionCont').show().css("top", 31);;
-	}
-	
-	
+			{
+				$('.actionBar a').removeClass("active");
+				$('.actionCont').hide();
+				obj.css("background-position",x+"px -0px");
+				return;
+		  	
+			}
 
 
-/*
-	if ($('.actionCont:visible').position().top > 0)
+	$.get("templates/notifications.html", function (d)
 	{
-		$('.actionBar a').removeClass("active");
-		obj.css("background-position",x+"px -0px");
+		apl_request(
+	    {"requests" : [
+	    {"id" : "notifications_get"}
+
+	    ]
+		}, function(d2){
+
 		
-		$('.actionCont').animate({
-	    top: '-205'}, 0, function() {
-	 	 });
-  	
-	}
-	else
-	{
-		$('.actionCont').animate({
-	    opacity: 1.0,
-	    top: '31'}, 0, function() {
-	   
-	  	});
-	}*/
+			var templateData = d2;
+
+			_.templateSettings.variable = "rc";
+			var template = _.template(d, templateData); 
+				
+
+			
+$("#button_notifications").text("0");
+			
+
+			
+			obj.css("background-position",x+"px -62px");
+
+
+			//$('.actionCont').append("");
+				$('#notificationMain').html(template);
+
+
+
+
+
+			$('.actionCont').css("left", $('#button_notifications').offset().left);
+
+
+
+
+			
+		
+			{
+				obj.addClass("active");
+				$('.actionCont').show().css("top", 31);;
+			}
+		});
+
+	});
+		
+	
+
+
 	
 	
 	

@@ -52,6 +52,15 @@ if (jsondata.counter_talks != undefined && jsondata.counter_talks > 0 && !$("#it
 if (jsondata.counter_stream != undefined &&  jsondata.counter_stream > 0 && !$("#item_stream").parent().hasClass("active"))
 	$("#item_stream").append('<span class="count">'+jsondata.counter_stream+'</span>');
 
+if (jsondata.counter_notify == undefined)
+	$("#button_notifications").text("0");
+else
+{
+	if (jsondata.counter_notify > 9)
+		jsondata.counter_notify = "9+";
+
+	$("#button_notifications").text(jsondata.counter_notify);
+}
 
 }
 

@@ -1628,7 +1628,7 @@ var view_profilepage_collection = view_subpage.extend({
 						    ]
 							}, function(d){
 								
-							var search_view = new control_collectionItem({ el: $("#collection_list"), data: {_id : { $id: d.id}, description: $("#inp_box_description").val(), name:  $("#inp_box_name").val()} });
+							var search_view = new control_collectionItem({ el: $("#collection_list"), data: {_id : { $id: d.collection_add.id.$id}, description: $("#inp_box_description").val(), name:  $("#inp_box_name").val()} });
 							 search_view.render();
 
 							 ui_closeBox();

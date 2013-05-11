@@ -355,8 +355,10 @@ foreach ($data["requests"] as $item)
 		case "post_like_receive_distribute" : 
 		// Notify other people about the like...
 		$col = \App\DB\Get::Collection();
-		
-		$col->streamitems->update(array("owner" => $item["owner"], "postId" => new MongoId($item["postId"])) ,	array('$set' => array("likecount" => $item["count"])));
+		//clog($item["postId"]);
+		// "owner" => $item["owner"],
+
+		$col->streamitems->update(array( "postId" => new MongoId($item["postId"])) ,	array('$set' => array("likecount" => $item["count"])), array("multiple" => true));
 
 	
 		break;
@@ -371,26 +373,42 @@ foreach ($data["requests"] as $item)
 
 		case "post_like_receive" : 
 
-	
+
+		
 			// Save like on post owners server...
 			// ! Has to work without sessionID
 			$col = \App\DB\Get::Collection();
 			// Verify sender ID!, userId must be in database!
-			$content = array("_id" => new MongoId($item["postId"]),"owner" => $item["userId"], "liker" =>  $item["liker"], "postId" => $item["postId"], "username" => $item["username"]);
 			
-			if ($item["status"] == false)
+
+			//"_id" => new MongoId($item["postId"])
+			$content = array("owner" => $item["userId"], "liker" =>  $item["liker"], "postId" => $item["postId"], "username" => $item["username"]);
+			
+		
+
+			if ($item["status"] != true)
 			{
 				$col->likes->remove(array("liker" => $item["liker"], "postId" => $item["postId"]));
+			
+
 			}
 			else
 			{
-				$col->likes->update($content, $content ,  array("upsert" => true));
+				
+				$res = $col->likes->update(array("liker" => $item["liker"], "postId" => $item["postId"]), $content ,  array("upsert" => true));
+				
+			//	$col->likes->insert($content);
+
+
+				//clog("IS IS".$res["_id"]);
 			}
 			// Get total likes
 			$count = $col->likes->count(array("postId" => $item["postId"], "owner" => $item["userId"]));
 
 		
 
+
+			// Multiple??
 			$query = array('_id' => new MongoId($item["postId"]), "owner" => $item["userId"]);
 
 			$col->posts->update($query, array('$set' => array("likecount" => $count)));
@@ -421,6 +439,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				"count" => $count
 
 			));
+
+
 
 				$req21 = new \App\Requests\JSON(
 				$resItem["follower"],
@@ -913,11 +933,14 @@ $data = array("requests" => $reqdata
 
 	
 
-
+		case "notifications_get":
+			\App\Counter\Notify::set($_SESSION["charme_userid"],0);
+			$returnArray[$action] =  (\App\Counter\Notify::getNotifications($_SESSION["charme_userid"]));
+		break;
 
 
 		case "updates_get":
-			$returnArray[$action] = \App\Counter\CounterUpdate::get( $_SESSION["charme_userid"], array("talks", "stream"));
+			$returnArray[$action] = \App\Counter\CounterUpdate::get( $_SESSION["charme_userid"], array("talks", "stream", "notify"));
 		break;
 
 		case "comments_get" : 
@@ -1256,6 +1279,29 @@ $data = array("requests" => $reqdata
 			$col = \App\DB\Get::Collection();
 
 			// TODO Verify server who sent the request
+
+			// Get collection owner
+			$res1 = $col->collections->findOne(
+				array(
+				 "_id" => new MongoId($item["collectionId"])
+				), array("owner", "name")
+			);
+
+			if ($item["action"] == "follow")
+			{
+				// Add following notificaiton
+			$notifyItem = 
+			array("type" => \App\Counter\Notify::notifyNewCollection,
+				"name" => "somename", "follower" => $item["follower"],
+				"collectionName" => $res1["name"],
+				"collectionId" => $item["collectionId"]
+
+				);
+			//\App\Counter\Notify::addNotification(array());
+			\App\Counter\Notify::addNotification($res1["owner"], $notifyItem);
+			}
+
+
 
 			$content = array("follower" => $item["follower"],
 			 //"collectionOwner" =>  $item["collectionOwner"], 
