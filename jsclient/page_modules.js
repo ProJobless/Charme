@@ -2133,6 +2133,36 @@ var view_talks_subpage = view_subpage.extend({
 
 
 	},
+	addPeople: function()
+	{
+		alert("add people...");
+	},
+	leaveConversation: function()
+	{
+		alert("leave conversation...");
+	},
+	showMedia: function(on)
+	{
+		$("#but_showMessages").toggle();
+	$("#but_showMedia").toggle();
+
+		if (on)
+		{
+			this.mediaDisplayOn = true;
+			$("#mediaDisplayOff").hide();
+			$("#mediaDisplayOn").show();
+			
+
+		}
+		else
+		{
+			$("#mediaDisplayOff").show();
+			$("#mediaDisplayOn").hide();
+
+		
+		}
+	},
+
 	loadMessages: function(start)
 	{
 
@@ -2196,13 +2226,25 @@ var view_talks_subpage = view_subpage.extend({
 				 var aeskey = rsa.decrypt(this.aesEnc);*///sjcl.decrypt(aeskey, this.encMessage);
 
 				_.templateSettings.variable = "rc";
+
 				var tmpl = _.template(d, d2.messages_get_sub); 
 
-				
+				if (d2.messages_get_sub.people.length > 0)
+				{
+					jQuery.each(d2.messages_get_sub.people, function(i) {
+						
+						if (i != 0)
+							$("#inp_receiversinstant").append(", ");
 
-;
+						$("#inp_receiversinstant").append("<a href='#user/"+
+						encodeURIComponent(this)+ "'>"+this+ "</a>");
 
 
+
+					});
+
+
+				}
 
 				$(".talkmessages").prepend(tmpl);
 
@@ -2293,7 +2335,11 @@ var view_talks_subpage = view_subpage.extend({
 				 $(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
 				
 				 if (start == -1)
+				 {
+				
 				$(window).scrollTop(999999);
+
+
 
 				$("#but_file").click(function()
 				{
@@ -2302,9 +2348,41 @@ var view_talks_subpage = view_subpage.extend({
 
 				}
 				);
+				$("#but_showMedia").click(function()
+				{
+
+					that.showMedia(true);
+
+				}
+				);
+				$("#but_showMessages").click(function()
+				{
+
+					that.showMedia(false);
+
+				}
+				);
+				$("#but_addPeople").click(function()
+				{
+
+					that.addPeople();
+
+				}
+				);
+
+				$("#but_leaveConversation").click(function()
+				{
+
+					that.leaveConversation();
+
+				}
+				);
+
 
  				$('#but_instantsend').click(function(){ sendAnswer(); });
  				
+				}
+
  				
  				if (start == 0 || that.countAll<10)
  					$('#moremsg2').remove();

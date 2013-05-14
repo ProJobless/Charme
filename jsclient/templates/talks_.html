@@ -5,7 +5,10 @@
 	<div style="margin-top:8px;">
 
 		<span style='float:right; padding-top:12px; display:inline-block;'>
-		<a  id='but_file'>Upload file</a>
+		<a id='but_showMedia'>Show Media</a>
+<a id='but_showMessages' style='display:none'>Show Messages</a>
+
+		 - <a id='but_addPeople'>Add People</a> - <a id='but_leaveConversation'>Leave Conversation</a> - <a  id='but_file'>Upload file</a>
 
 		<input style='display:none' type="file" id="theFile"  />
 
@@ -14,7 +17,15 @@
 		<a class="button" id='but_instantsend' >Send</a>
 	</form></div></div>
 
-	<div class='message'>People: <span id='inp_receiversinstant'></span></div>
+	
+<div id='mediaDisplayOff'>
+	
+	<div class='message'>People: <span id='inp_receiversinstant'>
+
+
+
+
+	</span></div>
 
 <!-- --".implode(", ", $ppl["people"])."-->
 
@@ -25,6 +36,12 @@
 
 
 	</div>
+</div>
+<div id='mediaDisplayOn' class='p16'>
+Images..
+</div>
+
+
 	<img id='uploadPreview'>
 <!--
 <div class='infobox'>You do not have any conversation yet. Click the plus button to start a new conversation.</div>

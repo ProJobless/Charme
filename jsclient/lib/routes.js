@@ -303,8 +303,10 @@ $(function(){
 
 app_router.on('route:getWelcome', function (id) {
 
-
-
+        if (isLoggedIn()){
+            location.replace("#stream");
+            return;
+        }
         var pa = new view_welcome(
             {   template: "welcome",  noLogin: true
             });

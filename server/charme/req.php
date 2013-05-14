@@ -154,12 +154,39 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		
 
+		case "messages_get_media":
+
+
+		break;
+
+		case "messages_leave":
+
+
+		break;
+
+		case "messages_appendPeople":
+
+
+		break;
 
 		case "messages_get_sub":
 			
+			$startSet = false;
+			if (isset($item["start"]) && $item["start"] != "-1")
+				$startSet = true;
+
+
 			$col = \App\DB\Get::Collection();
-			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), array("aesEnc", "people", "conversationId"));;
+			$query = array("aesEnc", "people");
+
+			if (!$startSet)
+				$query[] = "conversationId";
+
+
+
+			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), $query);;
 
 			// Total message count, -1 if no result provided
 			$count = -1; // (= undefined!)
@@ -168,7 +195,8 @@ foreach ($data["requests"] as $item)
 			$msgCount = 10;
 			$sel = array("conversationId" =>  new MongoId($res["conversationId"]));
 
-			if (isset($item["start"]) && $item["start"] != "-1")
+
+			if ($startSet )
 				$start = $item["start"];
 			else
 			{
@@ -176,6 +204,8 @@ foreach ($data["requests"] as $item)
 				// Also return total message Count!
 				$count = $col->messages->count($sel);
 				$start =$count -$msgCount;
+
+
 
 			}
 
@@ -200,7 +230,7 @@ foreach ($data["requests"] as $item)
 				->sort(array("time" => 1))
 				->skip($start)->limit($limit)
 				
-			, false), "count" => $count, "aesEnc" =>  $res["aesEnc"], "people" => $res["people"], "conversationId" => new MongoId($res["conversationId"]));
+			, false), "count" => $count, "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
 			
 
 		break;
@@ -217,9 +247,11 @@ foreach ($data["requests"] as $item)
 
 			$count = -1;
 			if ($item["countReturn"])
+			{
 			$count = $col->conversations->count(array("receiver" => $_SESSION["charme_userid"]));
 
 
+			}
 		
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "talks", 0);
 
@@ -241,7 +273,7 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 
 		
-			clog("receive distribute2....");
+		//	clog("receive distribute2....");
 
 			unset($item["id"]);
 			unset($item["_id"]);
@@ -619,7 +651,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 			$clustered = \App\Requests\Cluster::ClusterPeople($res["people"]);
 
-			clog2($clustered);
+		//	clog2($clustered);
 
 			// if enc file exists...
 
