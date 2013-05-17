@@ -177,53 +177,55 @@ foreach ($data["requests"] as $item)
 			if (isset($item["start"]) && $item["start"] != "-1")
 				$startSet = true;
 
-
+			// TODO: Do not return at pagination??
 			$col = \App\DB\Get::Collection();
-			$query = array("aesEnc", "people");
+			$query = array("aesEnc", "people", "conversationId");
 
-			if (!$startSet)
-				$query[] = "conversationId";
+			
+			// Only need conversationId at the beginning
+			//if (!$startSet)
+			//	$query[] = ;
 
 
+			
 
-			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), $query);;
+
+			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), $query);
 
 			// Total message count, -1 if no result provided
 			$count = -1; // (= undefined!)
 			
 			// How many messages do we turn back?
 			$msgCount = 10;
+
+
+if (isset($item["onlyFiles"]) &&
+				$item["onlyFiles"] == true)
+$sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" => array('$exists' => true));
+			else
 			$sel = array("conversationId" =>  new MongoId($res["conversationId"]));
+
 
 
 			if ($startSet )
 				$start = $item["start"];
 			else
 			{
-
 				// Also return total message Count!
 				$count = $col->messages->count($sel);
 				$start =$count -$msgCount;
 
-
-
 			}
 
-		
 
-			//echo $item["superId"];
 			if ($start <0)
 				$start = 0;
 
-		
 			if ($item["limit"] > 0)
 				$limit = $item["limit"];
 			else
 				$limit = $msgCount;
 
-
-			
-			// Get 10 conversations 
 			$returnArray[$action] = array("messages" => 
 			iterator_to_array(
 				$col->messages->find($sel)
@@ -602,7 +604,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				{
 				
 					if (isset($item["messagePreview"]))
-					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => array("messagePreview" => $item["messagePreview"])),array('multiple' => true)); 
+					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => array("messagePreview" => $item["messagePreview"], "time" => new MongoDate())),array('multiple' => true)); 
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
 					
 					// Increment receivers Counters
@@ -727,21 +729,27 @@ $data = array("requests" => $reqdata
 
 			
 			// As this is a new message we generate a unique converation Id
-			
-		
+			$convId = new MongoId();
 
+			if (!isset($item["receivers2"]))
+				$item["receivers2"] = array();
 
-
-
-			foreach ($item["receivers"] as $receiver)
+			foreach ($item["receivers"] as $key => $value)
 			{
 				// Remove AES keys for other people, TODO: Not for answers!
-				$item["receivers2"][]  = $receiver["charmeId"];
+
+				// Filter out double receivers
+				if (in_array( $value["charmeId"], $item["receivers2"]))
+					unset($item["receivers"][$key]);
+				else
+				$item["receivers2"][]  = $value["charmeId"];
+
+
 			}
 
 
 
-			$convId = new MongoId();
+			
 
 
 

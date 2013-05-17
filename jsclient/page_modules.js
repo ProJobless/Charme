@@ -115,7 +115,7 @@ function sendAnswer()
 				// d2.messages_get_sub
 
 				_.templateSettings.variable = "rc";
-				var tmpl = _.template(d, {messages: [{msg: message, sender: charmeUser.userId, sendername: d2.message_distribute_answer.sendername}]}); 
+				var tmpl = _.template(d, {messages: [{msg: message, sender: charmeUser.userId,  time: {sec: new  Date().getTime()/1000}, sendername: d2.message_distribute_answer.sendername}]}); 
 
 				$(".talkmessages").append(tmpl);
 
@@ -2141,6 +2141,23 @@ var view_talks_subpage = view_subpage.extend({
 	{
 		alert("leave conversation...");
 	},
+	loadMedia: function(start)
+	{
+		var limit = -1;
+				// APL request:
+				apl_request({"requests" :
+				[
+						{"id" : "messages_get_sub", limit:limit, start: start, "superId":  this.options.superId, onlyFiles:true
+					}
+				]
+				}, function(d2){ 
+
+					
+				});
+
+
+	}
+	,
 	showMedia: function(on)
 	{
 		$("#but_showMessages").toggle();
@@ -2151,6 +2168,8 @@ var view_talks_subpage = view_subpage.extend({
 			this.mediaDisplayOn = true;
 			$("#mediaDisplayOff").hide();
 			$("#mediaDisplayOn").show();
+
+			this.loadMedia(-1);
 			
 
 		}
@@ -2162,9 +2181,92 @@ var view_talks_subpage = view_subpage.extend({
 		
 		}
 	},
+	decodeImages: function()
+	{
+		var that2 = this;
+		$(".imageid").each(function( index ) {
+					var that = this;
+					var loc = $(this).data("location");
+					var par = $(that).parent();
 
+					$.get(loc, function(d)
+					{
+						var i = new Image();
+						i.src = sjcl.decrypt(that2.aes, d);
+
+
+
+						
+
+
+						//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
+
+						//</a>
+
+						$(par).append(
+							$('<a class="imgThumb"></a>').click(function(){
+
+							$(par).append(
+								'<span class="imgLoading">Loading...</span>');
+
+
+							$.get(loc+"&type=original", function(d2)
+							{
+								$(".imgLoading").remove();
+							 	
+
+
+							 	var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+
+
+								worker.onmessage = function(e) {
+								    
+								    // Hide cancel descryption button
+									$(".cancelDec").hide();
+									ui_showImgBox(e.data);
+
+								}
+
+								// Add cancel decryption button
+								$(par).append(
+								$('<a class="cancelDec">Cancel Decryption</a>').click(function(){
+									
+									$(this).remove();
+									worker.terminate();
+								}));
+
+								worker.postMessage({key:that2.aes, encData:d2 });
+
+							
+							
+							});
+
+
+							}).html($(i))
+
+							);
+							//remove class imageid
+							$(that).remove();
+
+
+
+						
+					});
+
+						// TODO: in own thread!
+
+					// Open filestream
+
+					// Decode
+
+
+
+				});
+	},
 	loadMessages: function(start)
 	{
+
 
 		var limit = -1;
 		
@@ -2229,16 +2331,23 @@ var view_talks_subpage = view_subpage.extend({
 
 				var tmpl = _.template(d, d2.messages_get_sub); 
 
-				if (d2.messages_get_sub.people.length > 0)
+				 if (start == -1)
 				{
 					jQuery.each(d2.messages_get_sub.people, function(i) {
 						
 						if (i != 0)
 							$("#inp_receiversinstant").append(", ");
 
-						$("#inp_receiversinstant").append("<a href='#user/"+
-						encodeURIComponent(this)+ "'>"+this+ "</a>");
-
+						if ($.isArray(this)) // just userid
+						{
+							$("#inp_receiversinstant").append("<a href='#user/"+
+							encodeURIComponent(this.userId)+ "'>"+this.username+ "</a>");
+						}
+						else // {userid, name}
+						{
+							$("#inp_receiversinstant").append("<a href='#user/"+
+							encodeURIComponent(this)+ "'>"+this+ "</a>");
+						}
 
 
 					});
@@ -2248,7 +2357,9 @@ var view_talks_subpage = view_subpage.extend({
 
 				$(".talkmessages").prepend(tmpl);
 
-				// Decode images
+				that.decodeImages();
+				// Decode images 
+				/*
 				$(".imageid").each(function( index ) {
 					var that = this;
 					var loc = $(this).data("location");
@@ -2328,7 +2439,8 @@ var view_talks_subpage = view_subpage.extend({
 
 
 				});
-				//
+*/
+				// END DECODE IMAGES!
 
 
 
@@ -2511,6 +2623,8 @@ sendMessageForm({});
 				$('#moremsg').remove();
 
 				that.paginationIndex+=1;
+
+
 			 	that.loadMessages(that.paginationIndex);
 
 

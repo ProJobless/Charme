@@ -11,13 +11,21 @@
 
     <div class="message">
 <div class="top">
+	 <span class='time' style='float:right'><%- formatDate(item.time.sec*1000) %></span>
 	<a href='#user/<%- item.sender %>'><%- item.sendername %></a>
 </div>
 
+
+
  <% if (item.fileId)  { %>
+ <div>
 <span class=' imageid' style='height:100px; display:inline-block; width:100px;' data-location='http://<%- item.sender.split("@")[1] %>/charme/fs.php?enc=1&id=<%- item.fileId %>'></span>
+</div>
  <% } %>
+
+
 <%- item.msg %>
+
 
 
 </div>

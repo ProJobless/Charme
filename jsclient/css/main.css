@@ -239,7 +239,9 @@ float: left;
 {
 	height:100px;
 	width:100px;
-	background-color: #efefef;
+	background-color: #ddd;
+	display: block;
+
 }
 #whitebg
 {
