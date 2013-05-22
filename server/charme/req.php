@@ -156,10 +156,6 @@ foreach ($data["requests"] as $item)
 
 		
 
-		case "messages_get_media":
-
-
-		break;
 
 		case "messages_leave":
 
@@ -196,13 +192,16 @@ foreach ($data["requests"] as $item)
 			$count = -1; // (= undefined!)
 			
 			// How many messages do we turn back?
+
 			$msgCount = 10;
 
 
 if (isset($item["onlyFiles"]) &&
 				$item["onlyFiles"] == true)
+{
 $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" => array('$exists' => true));
-			else
+	$msgCount = 30; // Return even 30 Images
+  }			else
 			$sel = array("conversationId" =>  new MongoId($res["conversationId"]));
 
 
@@ -1034,11 +1033,12 @@ $data = array("requests" => $reqdata
 				// Get all stream items
 				
 			//	$col->streamitems->ensureIndex('owner');
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('post.time' => 1, '_id' => -1))->limit(15);;
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->limit(15)->sort(array('post.time.sec' => -1))->limit(15); // ->slice(-15)
+
 
 
 				$stra=  iterator_to_array($iter , false);
-
+		
 			}
 			else
 			{

@@ -54,6 +54,8 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie sending
 
+if (isset($_GET["cache"]))
+header("Cache-Control: public, max-age=3600, s-maxage=3600");
 
 
 	header("Content-type: text/plain"); // return encoded picture

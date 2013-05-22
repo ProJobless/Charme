@@ -12,6 +12,23 @@ padding: 16px;
  	background-color: #fff;
 
  }
+ .imgThumb
+{
+	height:100px;
+	width:100px;
+	background-color: #ccc;
+	overflow: hidden;
+	display: block;
+
+
+}
+.mediaview .imgThumb
+{
+	margin: 1px;
+	float: left;
+
+
+}
 .talkbarbg
 {
 width:300px;

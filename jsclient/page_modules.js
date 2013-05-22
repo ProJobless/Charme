@@ -1968,7 +1968,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 				console.log(this);
 
 
-				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time.sec*1000, el: $("#streamContainer"), prepend: true});
+				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time.sec*1000, el: $("#streamContainer"), prepend: false});
 				p2.render();
 
 
@@ -2143,6 +2143,7 @@ var view_talks_subpage = view_subpage.extend({
 	},
 	loadMedia: function(start)
 	{
+		var that = this;
 		var limit = -1;
 				// APL request:
 				apl_request({"requests" :
@@ -2151,7 +2152,38 @@ var view_talks_subpage = view_subpage.extend({
 					}
 				]
 				}, function(d2){ 
+						
+				$.get("templates/control_mediaview.html", function (d)
+				{
+					_.templateSettings.variable = "rc";
 
+					var tmpl = _.template(d, d2.messages_get_sub); 
+					$("#mediaDisplayOn").html(tmpl);
+					that.decodeImages();
+
+		
+				});
+					/*	var rsa = new RSAKey();
+				rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
+				 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
+				 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
+				
+
+					//alert(d2.messages_get_sub.aesEnc);
+
+						var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
+*/
+
+						//that.aes = aeskey;
+
+						//d2.messages_get_sub.aesEnc  = aeskey;
+
+						//that.aes
+
+
+						/*jQuery.each(d2.messages_get_sub.messages, function(i) {
+
+						});*/
 					
 				});
 
