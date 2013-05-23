@@ -177,12 +177,14 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 			$query = array("aesEnc", "people", "conversationId");
 
-			
+			// Set read=true
+
+
 			// Only need conversationId at the beginning
 			//if (!$startSet)
 			//	$query[] = ;
 
-
+$col->conversations->update(array("_id" =>  new MongoId($item["superId"])), array('$set' => array("read" => true))); 
 			
 
 
@@ -592,7 +594,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						$blockWrite = true;
 
 
-					$col->conversations->update(array("aesEnc" => $item["aesEnc"], "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
+					$col->conversations->update(array("aesEnc" => $item["aesEnc"], "read" => false,  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
 					\App\Counter\CounterUpdate::inc( $receiver, "talks");
 
 					// Inc counter for people on my server in this conversation...
@@ -603,7 +605,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				{
 				
 					if (isset($item["messagePreview"]))
-					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => array("messagePreview" => $item["messagePreview"], "time" => new MongoDate())),array('multiple' => true)); 
+					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => array("messagePreview" => $item["messagePreview"],"read" => false, "time" => new MongoDate())),array('multiple' => true)); 
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
 					
 					// Increment receivers Counters

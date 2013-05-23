@@ -61,38 +61,19 @@ function sendMessageForm(receivers)
 		//alert("http://"+charmeUser.server+"/charme/auto.php");
 	
 $('#inp_receivers').tokenInput("http://"+charmeUser.getServer()+"/charme/auto.php", { prePopulate: receivers, crossDomain: true});
-
-
-	/*$('#inp_receivers').tokenInput([
-                {id: 7, name: "Ruby"},
-                {id: 11, name: "Python"},
-                {id: 13, name: "JavaScript"},
-                {id: 17, name: "ActionScript"},
-                {id: 19, name: "Scheme"},
-                {id: 23, name: "Lisp"},
-                {id: 29, name: "C#"},
-                {id: 31, name: "Fortran"},
-                {id: 37, name: "Visual Basic"},
-                {id: 41, name: "C"},
-                {id: 43, name: "C++"},
-                {id: 47, name: "Java"}
-            ], {
-                prePopulate: receivers, tokenValue: "id"} );*/
-
-	
-
-
-
-
 	});
 }
+function addPeopleOk()
+{
+	// DO NOT USE AES HERE, as no message has to be encrypted.
 
+}
 function sendAnswer()
 {
 
 	var aeskey = ($('#msg_aeskey').data("val"));
 	var conversationId = ($('#msg_conversationId').data("val"));
-	var message = $('#inp_newmsginstant').val();
+	var message = smilieParse($('#inp_newmsginstant').html());
 	var encMessage = sjcl.encrypt(aeskey, message);
 	var messagePreview = sjcl.encrypt(aeskey, message.substring(0,127));
 
@@ -114,6 +95,8 @@ function sendAnswer()
 				// RSA Decode, for each:
 				// d2.messages_get_sub
 
+
+
 				_.templateSettings.variable = "rc";
 				var tmpl = _.template(d, {messages: [{msg: message, sender: charmeUser.userId,  time: {sec: new  Date().getTime()/1000}, sendername: d2.message_distribute_answer.sendername}]}); 
 
@@ -123,7 +106,7 @@ function sendAnswer()
 			 
 				$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 
-				$('#inp_newmsginstant').val("").focus();
+				$('#inp_newmsginstant').html("").focus();
 
 				});
 			
@@ -982,6 +965,138 @@ var view_profilepage = view_page.extend({
 	}
 
 });
+ control_smilies = Backbone.View.extend({   
+ 	render: function()
+ 	{
+ 		this.$el.append("<div class='smiliebox'></div>");
+
+ 		// Smiliebox append...
+ 		var width = Array(6,4,8,6,5,8,7);
+ 		for (var i =0; i<8; i++)
+ 		{
+ 			for (var j=0;j<width[i]; j++)
+ 			{
+ 				var pos = "-"+(j*32)+"px -"+(i*32)+"px";
+
+ 				this.$el.children(".smiliebox").append("<a data-y='"+i+"' data-x='"+j+"' style='background-position: "+pos+"'></a>");
+ 			}
+ 		}
+ 		var that = this;
+
+
+ 		var $textBox = that.options.area;
+
+
+	   
+ 		 replaceSelectedText = function(replacementText) {
+ 		 	var e = $(replacementText);
+
+		    var sel, range;
+		    if (window.getSelection)
+		    {
+		        sel = window.getSelection();
+		        if (sel.rangeCount)
+		        {
+		            range = sel.getRangeAt(0);
+		            range.deleteContents();
+		            range.insertNode(e[0]); // document.createTextNode(replacementText)
+		 ///range.setStartAfter (e);
+		  
+
+		        }
+
+		    }
+		    else if (document.selection && document.selection.createRange) {
+		        range = document.selection.createRange();
+		         range.insertNode(e[0]);
+				 // range.setStartAfter (e);
+
+
+		    }
+	}
+
+
+	    restoreSelection = function(savedSelection) {
+
+	    	if (!savedSelection)
+	    		return;
+
+	        var sel = window.getSelection();
+	        sel.removeAllRanges();
+
+	        for (var i = 0, len = savedSelection.length; i < len; ++i) {
+	        	savedSelection[i].focusOff
+	            sel.addRange(savedSelection[i]);
+
+	        }
+	    };
+		
+
+
+		var save_selection;
+
+
+		$textBox.bind("mouseup keyup",function() {
+
+			
+
+			 saveSelection = function() {
+	        var sel = window.getSelection(), ranges = [];
+	        if (sel.rangeCount) {
+	            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+	                ranges.push(sel.getRangeAt(i));
+	            }
+	        }
+	       
+	        return ranges;
+	    };
+
+
+		
+		   save_selection =  saveSelection();
+		   
+		
+		});
+
+		
+
+
+
+
+ 		$(".smiliebox a").click(function()
+ 			{
+ 				
+
+
+ 				var x = $(this).data("x");
+ 				var y = $(this).data("y");
+
+ 				var pos = "-"+(x*32)+"px -"+(y*32)+"px";
+
+			 that.options.area.focus();
+ 			
+ 			restoreSelection(save_selection);
+				
+
+				replaceSelectedText("<img data-code=\""+x+","+y+"\" src='css/d.png' style='background-position: "+pos+"'>");
+				
+				
+
+
+ 			
+ 				
+ 				// that.options.area.focus();
+
+
+
+ 			});
+
+ 		// Make click handler!, append to options.areaId
+
+ 	}
+});
+
+
 
 // Post field, user can post from here
  control_postField = Backbone.View.extend({   
@@ -2135,7 +2250,19 @@ var view_talks_subpage = view_subpage.extend({
 	},
 	addPeople: function()
 	{
-		alert("add people...");
+		
+			$.get("templates/box_addPeople.html", function (d)
+		{
+			var template = _.template(d, {}); 
+
+			ui_showBox( template , function()
+			{
+
+			$('#inp_receivers').tokenInput("http://"+charmeUser.getServer()+"/charme/auto.php", { crossDomain: true});
+	
+
+			});
+		});
 	},
 	leaveConversation: function()
 	{
@@ -2514,6 +2641,23 @@ var view_talks_subpage = view_subpage.extend({
 				}
 				);
 
+	$("#but_smilies").click(function()
+				{
+					if ($("#msg_smiliecontainer").html() == "")
+					{
+					var t = new  control_smilies({el: $("#msg_smiliecontainer"), area: $('#inp_newmsginstant')});
+					t.render();
+					}
+					else
+					{
+						$("#msg_smiliecontainer").html("");
+					}
+						$(".talkmessages").css("margin-bottom", ($(".instantanswer").height()+48)+"px");
+
+				}
+				);
+
+
 				$("#but_leaveConversation").click(function()
 				{
 
@@ -2666,14 +2810,19 @@ sendMessageForm({});
 			 $('.msgItems li a').click(function(){
 			 	$('.msgItems li a').removeClass("active");
 				$(this).addClass("active");
+
+				$(this).parent().removeClass("new");
 			
 			 });
 
 			 // Open first conversation, if no conversation open yet.
 			if ( that.sub.options.superId == "")
 			{
+				// Problem here, is really the first item selected?
 				that.sub.options.superId = ($('.msgItems li a:first').data("messageid"));
 				that.sub.loadMessages(-1);
+
+				$('.msgItems li:first').removeClass("new");
 
 
 			}

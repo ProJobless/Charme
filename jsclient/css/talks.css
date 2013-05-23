@@ -7,6 +7,11 @@ padding: 16px;
 
 
 }
+.msgItems li.new a
+ {
+ 	background-color: #F9FFD3;
+
+ }
 .msgItems li a:active, .msgItems li a.active
  {
  	background-color: #fff;

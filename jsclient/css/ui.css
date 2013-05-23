@@ -1,6 +1,42 @@
-math /* Increase MAthML font size*/
+.smiliebox a
 {
-	font-size: 14px;
+ width:32px;
+ height: 32px;
+ 	background-image:url(smilies.png);
+	display: inline-block;
+	margin: 4px;
+}
+.smiliearea img
+{
+width:32px;
+ height: 32px;
+ 	background-image:url(smilies.png);
+	display: inline-block;
+	border:0;
+	margin: 1px;
+
+}
+.smilie
+{
+	width:32px;
+ height: 32px;
+ 	background-image:url(smilies.png);
+	display: inline-block;
+	border:0;
+	margin: 1px;
+}
+.button32 a
+{
+	background-image:url(buttons.png);
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	opacity: .4;
+	margin-left: 8px;
+}
+.button32 a:active
+{
+	opacity: 1.0;
 }
 .more
 {

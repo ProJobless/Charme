@@ -1,14 +1,21 @@
 <div class="instantanswer"><form>
+	<div id='msg_smiliecontainer' style='margin-bottom:8px;'></div>
 	<input type="hidden" name="col_to" value="">
 	<input type="hidden" name="col_type" value="instant">
-	<textarea id="inp_newmsginstant" style="width:100%; "></textarea>
+	<div class='box'>
+	<div id="inp_newmsginstant" class='smiliearea'  contenteditable="plaintext-only" style="width:100%; outline: 0; "></div>
+	</div>
+
 	<div style="margin-top:8px;">
 
-		<span style='float:right; padding-top:12px; display:inline-block;'>
-		<a id='but_showMedia'>Show Media</a>
-<a id='but_showMessages' style='display:none'>Show Messages</a>
+		<span style='float:right; display:inline-block;' class='button32'>
 
-		 - <a id='but_addPeople'>Add People</a> - <a id='but_leaveConversation'>Leave Conversation</a> - <a  id='but_file'>Upload file</a>
+
+		
+
+		 <a  id='but_addPeople'></a>
+		
+		 <a  style='background-position: -32px 0;' id='but_file'></a><a  style='background-position: -96px 0;' id='but_smilies'></a><a id='but_showMedia' style='background-position: -64px 0;'></a><a id='but_showMessages' style='display:none'></a><a  style='background-position: 128px 0;' id='but_leaveConversation'></a>
 
 		<input style='display:none' type="file" id="theFile"  />
 
