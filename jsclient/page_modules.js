@@ -971,8 +971,8 @@ var view_profilepage = view_page.extend({
  		this.$el.append("<div class='smiliebox'></div>");
 
  		// Smiliebox append...
- 		var width = Array(6,4,8,6,5,8,7);
- 		for (var i =0; i<8; i++)
+ 		var width = Array(20,9,9,8,11,10,8,3,3,6);
+ 		for (var i =0; i<10; i++)
  		{
  			for (var j=0;j<width[i]; j++)
  			{

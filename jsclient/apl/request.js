@@ -73,7 +73,7 @@ function apl_request(requests, callback, ses,srv)
 
 
 	// TIPP: http://stackoverflow.com/questions/15047279/how-can-i-retrieve-json-stringified-objects-in-php
-	var url1 = "http://"+srv+"/charme/req.php?session="+ses+"";
+	var url1 = "http://"+srv+"/charme/req.php";
 
 
 	$.ajax({

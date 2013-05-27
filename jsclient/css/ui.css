@@ -5,6 +5,17 @@
  	background-image:url(smilies.png);
 	display: inline-block;
 	margin: 4px;
+
+}
+.smiliebox
+{
+	height: 200px; 
+	overflow: auto;
+}
+.smiliebox a:active
+{
+-webkit-filter: brightness(0.5) ;
+
 }
 .smiliearea img
 {
@@ -31,7 +42,7 @@ width:32px;
 	display: inline-block;
 	width: 32px;
 	height: 32px;
-	opacity: .4;
+	opacity: .5;
 	margin-left: 8px;
 }
 .button32 a:active
