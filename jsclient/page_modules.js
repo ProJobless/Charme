@@ -310,6 +310,10 @@ view_page = Backbone.View.extend({
     		//Problem: #page is removed
     	
     		this.sub.undelegateEvents();
+
+    		// Hide notification menu when opening new page
+    		if (container_main)
+    		 container_main.hideNotificationsMenu();
     	}
     	this.sub = s;
 
@@ -1122,11 +1126,15 @@ var view_profilepage = view_page.extend({
 	  		 repostdata = $('#repostContainer').data("postdata");
 
 
-	  		
+	  	var x = $('#inp_postImg').data("filecontent");
+	  	if (x!= undefined)
+	  		x=x.result;
+
+	  	//if (x == undefined || x == "")
 
 	  	apl_request(
 	    {"requests" : [
-	    {"id" : "collection_post", "content" : txt, "collectionId" : collectionId, "repost" :  repostdata},
+	    {"id" : "collection_post", "content" : txt, "collectionId" : collectionId, "repost" :  repostdata, "imgdata" : x },
 	    { "id": "profile_get_name", userId: charmeUser.userId}
 	    ]
 		}, function(d){
@@ -1147,8 +1155,11 @@ var view_profilepage = view_page.extend({
 				elid = "#streamContainer";
 			}
 
+			// Remove image
+				$("#but_remImg").trigger('click');
 			// TODO: Add username
-			var p2 = new control_postItem({repost: repostdata, postId: d.collection_post.id,username: name, layout: layout, userId: charmeUser.userId, content: txt, time: new Date().getTime(), el: $(elid), prepend: true});
+		
+			var p2 = new control_postItem({repost: repostdata, postId: d.collection_post.id,username: name, layout: layout, userId: charmeUser.userId, content: txt, time: new Date().getTime(), el: $(elid), prepend: true, hasImage: d.collection_post.hasImage});
 			p2.render();
 
 
@@ -1157,12 +1168,13 @@ var view_profilepage = view_page.extend({
 		});
 
 	  },
+	
 	render: function()
 	{
-		
+		var that = this;
 		if (this.options.collectionId == "")
 		{
-			var that = this;
+			
 			// Get collections json....
 			apl_request(
 		    {"requests" : [
@@ -1177,15 +1189,52 @@ var view_profilepage = view_page.extend({
 					
 
 				});
-				$('#postOptions').html(" in <select style='width:100px;' id='collectionSelector'>"+items+"</select>");
+				$('#postOptions').append(" in <select style='width:100px;' id='collectionSelector'>"+items+"</select>");
+
 			
 
+			
 			});
 
 			
 		}
 		
-		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span></div>");
+		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
+
+		$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
+
+		$('#inp_postImg').on("change", function(e){  that.fileChanged(e); });
+
+			$('#but_addImg').click(function(){
+			
+				$("#inp_postImg").trigger('click');
+			});
+
+			$('#but_remImg').click(function(){
+			
+				$('#inp_postImg').data("filecontent", null);
+				 $("#but_remImg").hide();
+	     $("#but_addImg").show();
+
+			});
+
+	
+
+
+	},
+	fileChanged: function(h)
+	{
+
+		var files = h.target.files; // FileList object
+		var reader = new FileReader();
+		reader.file = files[0];
+		reader.onload = function(e) {
+			$('#inp_postImg').data("filecontent", this);
+	    }
+	    reader.readAsDataURL(reader.file) ;
+	    $("#but_remImg").show();
+	     $("#but_addImg").hide();
+	     $("#imgPreview").html("preview");
 
 
 	},
@@ -1268,11 +1317,20 @@ var repostTemp = null;
  		var liksstr = "<div class='likes'><a class='counter' id='counter"+uniIdCounter+"'>0</a></div>";
 
  		if (this.options.repost != null)
- 			repoststr = " reposts <a href='#user/"+encodeURIComponent(this.options.repost.userId)+"'>"+this.options.repost.username+"'s post</a> <div class='repost'>"+this.options.repost.content+"</div>";
+ 			repoststr = " reposts <a href='#user/"+encodeURIComponent(this.options.repost.userId)+"/post/"+this.options.repost.postId
+ 		+"'>"+this.options.repost.username+"'s post</a> <div class='repost'>"+$.charmeMl(xssText(this.options.repost.content))+"</div>";
  	
 
 
  		var str ;
+ 		var imgcont = "";
+
+ 		if (this.options.hasImage)
+ 		{
+ 			//
+ 			imgcont = "<div style='margin-bottom:8px'><a target='_blank' href='http://"+this.options.userId.split("@")[1]+"/charme/fs.php?type=post&size=250&post="+this.options.postId+"'><img src='http://"+this.options.userId.split("@")[1]+"/charme/fs.php?type=post&size=250&post="+this.options.postId+"'></a></div>";
+
+ 		}
  		if (this.options.layout == "stream")
  		{
 
@@ -1281,10 +1339,10 @@ var repostTemp = null;
  			// 
  		 str = "<div class='collectionPost'>"+
  		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
- 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+formatDate(this.options.time)+"</span></div>";
+ 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+imgcont+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+formatDate(this.options.time)+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+liksstr+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+formatDate(this.options.time)+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+imgcont+liksstr+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+formatDate(this.options.time)+"</span>";
 
 
 
@@ -1620,7 +1678,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 		
 
-			var p2 = new control_postItem({counter: this.likecount, comments: this.comments, commentCount: this.commentCount,  like: this.likeit, repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time.sec*1000, el: $(".collectionPostbox")});
+			var p2 = new control_postItem({counter: this.likecount, comments: this.comments, commentCount: this.commentCount,  like: this.likeit, repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time.sec*1000, el: $(".collectionPostbox"), hasImage: this.hasImage});
 			p2.render();
 
 
@@ -1671,6 +1729,50 @@ var that = this;
 		return {userId: container_main.currentView.options.userId};
 	}
 });
+
+
+var view_profilepage_posts= view_subpage.extend({
+
+	postRender : function()
+	{
+		var that=this;
+	
+		$(".profile_name").text(container_main.currentView.username);
+
+		 apl_request(
+        {"requests" : [
+
+        // Get posts of collection
+        {"id" : "collection_posts_get", "userId" : container_main.currentView.options.userId, 
+        claimedUserId: charmeUser.userId,
+        postId: that.options.postId },
+        ]
+        }, function(d){
+
+        jQuery.each(d.collection_posts_get, function() {
+
+        
+
+            var p2 = new control_postItem({counter: this.likecount, comments: this.comments, commentCount: this.commentCount,  like: this.likeit, repost: this.repost, postId: this._id.$id, content: this.content,username: this.username,userId: this.owner, time: this.time.sec*1000, el: $(".collectionPostbox"), hasImage: this.hasImage});
+            p2.render();
+
+
+
+        });
+
+    });
+
+
+
+	},
+	getData: function()
+	{
+
+		return this.options.data;
+	}
+});
+
+
 
 var view_profilepage_listitems= view_subpage.extend({
 
@@ -2042,7 +2144,7 @@ function appendRepost()
 		$('#repostContainer').data("postdata", repostTemp);
 		//  Also important: repostTemp.userId, repostTemp.postId
 		$('#repostHeader span').text("You repost "+repostTemp.username+"'s post:");
-		$('#repostContent').text(repostTemp.content);
+		$('#repostContent').html($.charmeMl(xssText(repostTemp.content)));
 		$('#textfield').focus();
 			repostTemp = null;
 	}
@@ -2083,7 +2185,7 @@ var t = new  control_postField({el: $("#postFieldContainer"), collectionId: "" }
 				console.log(this);
 
 
-				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time.sec*1000, el: $("#streamContainer"), prepend: false});
+				var p2 = new control_postItem({commentCount: this.commentCount, comments: this.comments, like: this.like, counter: this.likecount, repost: this.post.repost, postId: this.postId.$id, username: this.username, userId: this.post.owner, layout: "stream", content: this.post.content, time: this.post.time.sec*1000, el: $("#streamContainer"), prepend: false, hasImage: this.post.hasImage});
 				p2.render();
 
 

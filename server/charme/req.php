@@ -128,7 +128,7 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -278,6 +278,14 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 		
 		//	clog("receive distribute2....");
 
+
+
+
+
+
+
+
+
 			unset($item["id"]);
 			unset($item["_id"]);
 		
@@ -288,6 +296,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 		break;
 
 		case "post_comment_distribute" :
+
 
 		/*
 			1. Get collectionId
@@ -307,6 +316,8 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 		// insert in owners collection
 
+		
+
 		$itemdata= array("id" => "post_comment_receive_distribute",
 				"content" => $item["content"],
 				"userId" => $item["sender"], // NO!
@@ -315,7 +326,32 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				"postowner" => $item["userId"],
 				"itemTime"  => new MongoDate());
 
-	//	clog(print_r($itemdata, true));
+		
+
+
+		 try {
+        
+          
+	
+
+		$notifyItem = 
+		array("type" => \App\Counter\Notify::notifyComment,
+			"name" => $item["sendername"], "userId" => $item["userId"],
+			"postId" => $item["postId"]
+	
+			);
+
+		//\App\Counter\Notify::addNotification(array());
+		\App\Counter\Notify::addNotification($item["userId"], $notifyItem);
+
+
+		  }
+		  catch (MyException $e) {
+              clog($e->getMessage());
+            }
+
+
+
 
 
 
@@ -339,6 +375,8 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 			$req21->send();
 		}
+
+
 
 
 		break;
@@ -431,6 +469,18 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			{
 				
 				$res = $col->likes->update(array("liker" => $item["liker"], "postId" => $item["postId"]), $content ,  array("upsert" => true));
+
+				// Insert notification
+					// Insert notification
+				$notifyItem = 
+				array("type" => \App\Counter\Notify::notifyLike,
+					"name" => $item["username"], "liker" => $item["liker"],
+					"postId" => $item["postId"]
+			
+					);
+				$item["userId"];
+				//\App\Counter\Notify::addNotification(array());
+				\App\Counter\Notify::addNotification($item["userId"], $notifyItem);
 				
 			//	$col->likes->insert($content);
 
@@ -470,6 +520,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				"id" => "post_like_receive_distribute",
 				"owner" => $result["owner"],
+
 				"postId" => $item["postId"],
 				"count" => $count
 
@@ -924,7 +975,19 @@ $data = array("requests" => $reqdata
 		case "collection_posts_get" : 
 			$col = \App\DB\Get::Collection();
 
+
+			// 1st option: get a lot of posts
+
+			if (!isset($item["postId"]))
+			{
 			$array2 = iterator_to_array($col->posts->find(array("owner" => $item["userId"],"collectionId" => $item["collectionId"]))->sort(array('_id' => -1)), false);
+			}
+			else
+			{
+				$array2 = iterator_to_array($col->posts->find(array("_id" => new MongoId($item["postId"]))), false);
+			}
+			// or just get a single post
+
 
 			// Add comments
 			foreach ($array2 as $key => $value) {
@@ -1122,25 +1185,50 @@ $data = array("requests" => $reqdata
 		case "collection_post" : 
 
 			// 
-
+				$hasImage = false;
 			// if repost -> append repost
-
+			if (isset($item["imgdata"]) && $item["imgdata"] != null)
+				$hasImage = true;
 
 			$col = \App\DB\Get::Collection();
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
-			$content = array("username"=> $username, "time"=> new MongoDate(),  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"]);
+			$content = array("username"=> $username, "time"=> new MongoDate(),  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
 			
 			if (isset( $item["repost"]))
 				$content["repost"]  = $item["repost"];
 
-			$col->posts->insert($content);
+			$res = $col->posts->insert($content);
 
 
 
-	
-			
+			if ($hasImage)
+			{
+				// Insert post image
+				include_once("3rdparty/wideimage/WideImage.php");
+
+				$col = \App\DB\Get::Collection();
+				$image = WideImage::load($item["imgdata"]);
+				$grid = $col->getGridFS();
+
+				// 250 width
+				$grid->storeBytes($image->resize(250, null, 'fill')->output('jpg'), array('type'=>"postimage",'owner' => $_SESSION["charme_userid"], 'size' => 250, "post" => new MongoId($content["_id"])));
+
+				// 800 width
+				$grid->storeBytes($image->resize(800, null, 'fill')->output('jpg'), array('type'=>"postimage",'owner' => $_SESSION["charme_userid"], 'size' => 800, "post" => new MongoId($content["_id"])));
+
+
+			}
+			/*// 64 width square
+
+			$grid->storeBytes($image->resize(64 , 63 , 'outside')->crop('center', 'center', 64, 64)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 64));
+
+			// 24 width square
+			$grid->storeBytes($image->resize(24 , 23 , 'outside')->crop('center', 'center', 24, 24)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 24));
+
+			*/
+
 
 			$res2 = $col->followers->find(array("collectionId" => new MongoId($item["collectionId"]) ));
 
@@ -1170,7 +1258,7 @@ $data = array("requests" => $reqdata
 				$req21->send();
 
 			}
-			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString());	
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString(), "hasImage" => $hasImage);	
 
 
 
@@ -1271,11 +1359,20 @@ $data = array("requests" => $reqdata
 			$allLists=  $col->lists->find(array("owner" => $_SESSION["charme_userid"]));
 
 
+
+
+			// Get sender name
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
+
+
+
 			foreach ($oldListsTmp as $item){
 			$oldLists[] = $item["list"];
 			}
 
-
+			$notify = false;
 			foreach ($allLists as $listitem)
 			{	
 				// First option. Item is not in old list, but in new list -> Add item
@@ -1287,7 +1384,11 @@ $data = array("requests" => $reqdata
 			  			"username" => $item["username"],
 			  			"list" => new MongoId($listitem["_id"]),
 			  			));
+			  		$notify = true;
 
+
+			  
+	
 			  	
 			  	}
 				// Second option. Item is  in old list, but not in new list -> Remove item
@@ -1301,13 +1402,45 @@ $data = array("requests" => $reqdata
 
 				}
 			}
+
+			if ($notify)
+			{
+
+				// notify owner........
+				$data= $data = array("requests" => 
+
+					array("id" => "list_receive_notify",
+					"adder" => $_SESSION["charme_userid"],
+					"username" => $sendername,
+					"added" => $item["userId"]));
+				
+				$req21 = new \App\Requests\JSON(
+				$item["userId"],  // receiver
+				$_SESSION["charme_userid"], // sender
+				$data);
+
+				$req21->send();
+			}
 			$returnArray[$action] = array("SUCCESS" => true);
 		
 
 		break;
 
+
 		// Request future posts from this server.
-		case "register_follow":
+		case "list_receive_notify":
+			
+			$notifyItem = 
+			array("type" => \App\Counter\Notify::notifyListAdded,
+				"name" => $item["username"], "owner" => $item["added"],
+				"adder" => $item["adder"]
+				
+
+				);
+			//\App\Counter\Notify::addNotification(array());
+			\App\Counter\Notify::addNotification($item["added"], $notifyItem);
+
+
 
 		break;
 
@@ -1331,10 +1464,20 @@ $data = array("requests" => $reqdata
 
 			if ($item["action"] == "follow")
 			{
+
+			// Get collection name
+			$res1 = $col->collections->findOne(
+				array(
+				 "_id" => new MongoId($item["collectionId"])
+				), array("owner", "name")
+			);
+
+
+
 				// Add following notificaiton
 			$notifyItem = 
 			array("type" => \App\Counter\Notify::notifyNewCollection,
-				"name" => "somename", "follower" => $item["follower"],
+				"name" => $item["username"], "follower" => $item["follower"],
 				"collectionName" => $res1["name"],
 				"collectionId" => $item["collectionId"]
 
@@ -1508,12 +1651,20 @@ $data = array("requests" => $reqdata
 				// Remove stream items
 			}
 
+			
+			// Get sender name
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
+
+
 			$data = array("requests" => array(
 
 				"id" => "register_collection_follow",
 				"collectionId" => ($item["collectionId"]),
 				"follower" => $_SESSION["charme_userid"],
-				"action" => $action
+				"action" => $action,
+				"username" => $sendername
 			/*	"localreceivers" => array($receiver),
 				"allreceivers" => $res["people"],
 				"encMessage" => $item["encMessage"],

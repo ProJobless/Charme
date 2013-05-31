@@ -88,7 +88,10 @@ $(function(){
 
     if (isLoggedIn())
     {
-        container_main.render();}
+        container_main.render();
+       
+
+    }
     else
     {
 
@@ -102,6 +105,7 @@ $(function(){
  
   app_router.on('route:getLists', function (id) {
 
+    
         if (id == undefined)
             id = "";
        
@@ -301,6 +305,7 @@ $(function(){
      
     });
 
+
 app_router.on('route:getWelcome', function (id) {
 
         if (isLoggedIn()){
@@ -396,6 +401,16 @@ app_router.on('route:getWelcome', function (id) {
                 container_main.currentView.setSub(vsd);
                
             }
+            container_main.currentView.render();
+
+        }
+        else if (id2 == "post")
+        {
+             
+
+
+             var vsd =  new view_profilepage_posts({ postId: id3, template: "user_postview", el:'#page3', navMatch: '#none'});
+            container_main.currentView.setSub(vsd);
             container_main.currentView.render();
 
         }

@@ -1,1 +1,76 @@
-<div class='item'>Someone has commented your status.!</div>
+<!--
+Type:
+See server/charme/Lib/Counter/Notify.php
+
+
+#: not implemented yet
+-->
+
+
+  <% _.each( rc.notifications_get, function(item){ %>
+
+
+
+ <% if (item.type == 4)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.adder) %>'><%- item.name %></a> 
+added you to the lists.
+</div>
+
+
+  <% } %>
+
+
+
+
+
+ <% if (item.type == 3)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.follower) %>'><%- item.name %></a>
+follows your  
+<a href='#user/<%- encodeURIComponent(item.owner) %>/collections/<%- item.collectionId %>'><%- item.collectionName %> collection.</a>
+</div>
+
+
+  <% } %>
+
+ 
+ <% if (item.type == 5)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.liker) %>'><%- item.name %></a>
+likes your 
+<a href='#user/<%- encodeURIComponent(item.owner) %>/post/<%- item.postId %>'>status</a>
+</div>
+
+
+  <% } %>
+
+
+ <% if (item.type == 6)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.userId) %>'><%- item.name %></a>
+commented your
+<a href='#user/<%- encodeURIComponent(item.owner) %>/post/<%- item.postId %>'>status</a>
+</div>
+
+
+  <% } %>
+
+
+
+
+
+
+
+
+
+  <% }); %>
+

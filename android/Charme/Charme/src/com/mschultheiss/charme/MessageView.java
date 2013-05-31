@@ -1,5 +1,6 @@
 package com.mschultheiss.charme;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.os.Bundle;
@@ -7,15 +8,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListView;
 
 public class MessageView extends FragmentActivity {
 
@@ -119,11 +119,42 @@ public class MessageView extends FragmentActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
 					R.layout.fragment_message_view_dummy, container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+		
+			
+			
+		//	TextView dummyTextView = (TextView) rootView
+			//		.findViewById(R.id.section_label);
+			
+			
+		//	dummyTextView.setText(Integer.toString(getArguments().getInt(
+		//			ARG_SECTION_NUMBER)));
+			
+			//Spanned sp = new Spanned();				 // content.getText()
+			
+			ArrayList<Spanned> chats = new ArrayList<Spanned>();
+			ChatListAdapter mAdapter = new ChatListAdapter(rootView.getContext(), chats);
+			
+			
+			for (int i = 0; i<100; i++)
+			{
+			SpannableString str = new SpannableString("test");
+			chats.add(str);		
+			
+			}
+			mAdapter.notifyDataSetChanged();
+			
+		
+			
+			final ListView lv = (ListView)rootView.findViewById(R.id.listView1);  
+			lv.setAdapter(mAdapter);
+			
+			lv.setClickable(true);
+			
+			
+			
 			return rootView;
+			
+			
 		}
 	}
 

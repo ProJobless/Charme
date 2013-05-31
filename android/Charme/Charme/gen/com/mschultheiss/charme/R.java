@@ -28,18 +28,25 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int smilies=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0009;
-        public static final int button1=0x7f0a0006;
-        public static final int buttonLogin=0x7f0a0005;
-        public static final int editText1=0x7f0a0004;
-        public static final int editText2=0x7f0a0003;
-        public static final int item_text=0x7f0a0008;
+        public static final int action_settings=0x7f0a000f;
+        public static final int button1=0x7f0a0007;
+        public static final int buttonLogin=0x7f0a0006;
+        public static final int chat_content=0x7f0a000d;
+        public static final int editText1=0x7f0a0005;
+        public static final int editText2=0x7f0a0004;
+        public static final int emoticons_button=0x7f0a000c;
+        public static final int emoticons_grid=0x7f0a000a;
+        public static final int item=0x7f0a000b;
+        public static final int item_text=0x7f0a0009;
         public static final int listView1=0x7f0a0000;
         public static final int pager=0x7f0a0001;
         public static final int pager_title_strip=0x7f0a0002;
-        public static final int section_label=0x7f0a0007;
+        public static final int post_button=0x7f0a000e;
+        public static final int section_label=0x7f0a0008;
+        public static final int texteditbox=0x7f0a0003;
     }
     public static final class layout {
         public static final int activity_message_select=0x7f030000;
@@ -49,6 +56,9 @@ public final class R {
         public static final int fragment_message_select_dummy=0x7f030004;
         public static final int fragment_message_view_dummy=0x7f030005;
         public static final int message_item=0x7f030006;
+        public static final int smilie_grid=0x7f030007;
+        public static final int smilie_item=0x7f030008;
+        public static final int text_editbox=0x7f030009;
     }
     public static final class menu {
         public static final int message_select=0x7f090000;

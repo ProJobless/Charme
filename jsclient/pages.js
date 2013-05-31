@@ -38,6 +38,9 @@ setCurrent : function(obj)
 	// Important, we have to "unregister" events from subViews
 	this.currentView.setSub(null);
 
+	
+
+
 	this.currentView.undelegateEvents();
 	//	this.currentView.remove();
 	//	this.currentView.unbind();
@@ -48,20 +51,43 @@ setCurrent : function(obj)
 	}
 	this.currentView = obj;
 	console.log("Set current view");
+
+	//this.hideNotificationsMenu();
+},
+
+hideNotificationsMenu: function()
+{
+	 	$('.actionBar a').removeClass("active");
+		$('.actionCont').hide();
+
+			var obj = $('#button_notifications');
+			var x = $(obj).data("bgpos");
+
+		$(obj).css("background-position",x+"px -0px");
+		
+		return;
+
+},
+posNotificationMenu:function()
+{
+$('.actionCont').css("left", $('#button_notifications').offset().left);
 },
 showNotifications : function()
 {
+	
+
+
 	var obj = $('#button_notifications');
 	var x = $(obj).data("bgpos");
-	if ($('.actionCont').is(":visible"))
-			{
-				$('.actionBar a').removeClass("active");
-				$('.actionCont').hide();
-				obj.css("background-position",x+"px -0px");
-				return;
-		  	
-			}
+	var that = this;
+	
 
+	if ($(obj).hasClass("active"))
+	{
+		that.hideNotificationsMenu();
+		return;
+	}
+	
 
 	$.get("templates/notifications.html", function (d)
 	{
@@ -80,27 +106,14 @@ showNotifications : function()
 				
 
 			
-$("#button_notifications").text("0");
-			
+			$("#button_notifications").text("0");
 
-			
 			obj.css("background-position",x+"px -62px");
-
 
 			//$('.actionCont').append("");
 				$('#notificationMain').html(template);
 
-
-
-
-
-			$('.actionCont').css("left", $('#button_notifications').offset().left);
-
-
-
-
-			
-		
+			that.posNotificationMenu();
 			{
 				obj.addClass("active");
 				$('.actionCont').show().css("top", 31);;
@@ -360,6 +373,28 @@ console.log("el"+ this.el);
         $(this).css("background-position",x+"px -0px");
         
     });
+
+    var that = this;
+    // Hide notification menu when clicking anywhere
+    $(document).click(function(e) {
+    if ( $(e.target).closest('.actionCont').length === 0 
+    	&& 
+    	$(e.target).closest('#button_notifications').length === 0 
+
+    	) {
+        	that.hideNotificationsMenu();
+
+	    }
+	});
+
+	$(window).resize(function() {
+	that.posNotificationMenu();
+
+
+	});
+
+
+
 
  
 		apl_update_apply(this.tempCountData);

@@ -13,16 +13,27 @@ $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
 
 
-	$col = \App\DB\Get::Collection();
+$col = \App\DB\Get::Collection();
 		
-			$grid = $col->getGridFS();
+$grid = $col->getGridFS();
 
 if (!isset($_GET["enc"]))
 {	
-
-
 	header("Content-type: image/jpg");
-	 $file = $grid->findOne(array('type' => "profileimage", 'owner' => urldecode($_GET["u"]), 'size' => intval($_GET["s"])));
+	if (isset($_GET["type"]) && $_GET["type"] == "post")
+	{
+	
+	header("Cache-Control: public, max-age=31536000, s-maxage=31536000");
+
+	
+$file = $grid->findOne(array('post' => new MongoId($_GET["post"]), 'size' => intval($_GET["size"])));
+	echo $file->getBytes();
+	}
+
+	else
+	{
+	
+	 	$file = $grid->findOne(array('type' => "profileimage", 'owner' => urldecode($_GET["u"]), 'size' => intval($_GET["s"])));
 
 	 	if (!isset($file))
 		{
@@ -42,7 +53,7 @@ if (!isset($_GET["enc"]))
 		}
 		else
 		echo $file->getBytes();
-
+	}
 
 }
 else
@@ -57,9 +68,8 @@ header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie send
 if (isset($_GET["cache"]))
 header("Cache-Control: public, max-age=3600, s-maxage=3600");
 
-
+	// Encoded 
 	header("Content-type: text/plain"); // return encoded picture
-
 	if (isset($_GET["type"]) && $_GET["type"] == "original")
 	$file = $grid->findOne(array('_id' => new MongoId($_GET["id"])));
 	else

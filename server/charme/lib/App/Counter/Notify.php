@@ -8,11 +8,11 @@ namespace App\Counter;
 
 class Notify
 {
-
+	const notifyComment = 6;
     const notifyNewCollection = 3;
     const notifyListAdded = 4;
     const notifyLike = 5;
-
+    
 	
 	public static function set($userId, $value)
 	{
@@ -35,7 +35,7 @@ class Notify
 	public static function getNotifications($userId)
 	{
 		$col = \App\DB\Get::Collection();
-		return iterator_to_array($col->notifications->find(array("owner" => $userId))->sort(array("time"))->limit(10), false);
+		return iterator_to_array($col->notifications->find(array("owner" => $userId))->sort(array("time" => -1))->limit(10), false);
 	} 
 
 
