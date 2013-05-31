@@ -1158,7 +1158,7 @@ var view_profilepage = view_page.extend({
 			// Remove image
 				$("#but_remImg").trigger('click');
 			// TODO: Add username
-		
+
 			var p2 = new control_postItem({repost: repostdata, postId: d.collection_post.id,username: name, layout: layout, userId: charmeUser.userId, content: txt, time: new Date().getTime(), el: $(elid), prepend: true, hasImage: d.collection_post.hasImage});
 			p2.render();
 
@@ -1328,7 +1328,7 @@ var repostTemp = null;
  		if (this.options.hasImage)
  		{
  			//
- 			imgcont = "<div style='margin-bottom:8px'><a target='_blank' href='http://"+this.options.userId.split("@")[1]+"/charme/fs.php?type=post&size=250&post="+this.options.postId+"'><img src='http://"+this.options.userId.split("@")[1]+"/charme/fs.php?type=post&size=250&post="+this.options.postId+"'></a></div>";
+ 			imgcont = "<div style='margin-bottom:8px'><a target='_blank' href='http://"+this.options.userId.split("@")[1]+"/charme/fs.php?type=post&size=800&post="+this.options.postId+"'><img src='http://"+this.options.userId.split("@")[1]+"/charme/fs.php?type=post&size=250&post="+this.options.postId+"'></a></div>";
 
  		}
  		if (this.options.layout == "stream")
