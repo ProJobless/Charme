@@ -53,7 +53,8 @@ Charme is a distributed and open source social network. In contrast to classic s
 
     </tr>
     
-    </table>
+</table>
+
 
 ## Installation
 
@@ -66,7 +67,9 @@ Charme is a distributed and open source social network. In contrast to classic s
   * Protect /admin with a .htaccess file
   * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
 
+
 ## Version
+
 
 Warning: This version is for preview puposes only. This version is NOT stable and misses essential functions like form validation.
 We plan to release a stable version by summer 2014.
@@ -75,7 +78,7 @@ We plan to release a stable version by summer 2014.
 
 ## Libraries
 
-## Libraries
+
 
 
 <table>
