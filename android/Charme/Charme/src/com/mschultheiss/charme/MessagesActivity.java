@@ -2,10 +2,10 @@ package com.mschultheiss.charme;
 
 
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -16,7 +16,8 @@ import com.mschultheiss.charme.HTTP.ConnectionTask;
 import com.mschultheiss.charme.HTTP.ConnectionTaskParams;
 import com.mschultheiss.charme.HTTP.OnConnectionTaskCompleted;
 
-public class MessagesActivity extends Activity implements OnConnectionTaskCompleted {
+
+public class MessagesActivity extends Activity  {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +44,13 @@ public class MessagesActivity extends Activity implements OnConnectionTaskComple
 		final MessagesActivity that = this;
 		
 		  final Button button = (Button) findViewById(R.id.buttonLogin);
+		  button.setEnabled(true);
 		     button.setOnClickListener(new View.OnClickListener() {
 		         public void onClick(View v) {
 		        	 
 		        	// button.setEnabled(false);
 		        	 doLogin();
-		        	 
-		        	 
+		        	 button.setEnabled(false);
 		        	 // Start new activity for selecting messages
 		        	 
 		        	 
@@ -62,23 +63,46 @@ public class MessagesActivity extends Activity implements OnConnectionTaskComple
 		 });
 	}
 	
-	@Override
-	public void OnConnectionTaskCompleted(String result) {
-		 Toast.makeText(getApplicationContext(), "Task completed"+result, Toast.LENGTH_SHORT).show();
-
-
-		
-	}
+	
+	public static String passphrase = "neeiZk2PTlkrv76xxqY7";
 	public boolean doLogin()
 	{
 		
 		  try {
-			JSONObject object = new JSONObject();
-			object.put("u", "testuser@10.159.35.85");
-		    object.put("p", "password");
-		    object.put("id", "user_login");
+			  // JSON Tutorial at http://www.mkyong.com/java/json-simple-example-read-and-write-json/
+			
+			  JSONObject object = new JSONObject();
+			  
+			  JSONArray list = new JSONArray();
+			  
+			
+			
+			  JSONObject r1 = new JSONObject();
+			  r1.put("u", "testuser@10.159.35.85");
+			  r1.put("p", "testuser");
+			  r1.put("id", "user_login");
+			  
+			  list.put(r1);
+			  
+			  object.put("requests", list);
 		    
-		    new ConnectionTask().execute(
+		    
+		    new ConnectionTask(new OnConnectionTaskCompleted() {
+				
+				@Override
+				public void OnConnectionTaskCompleted(String result) {
+					
+					if (result == "")
+						Toast.makeText(getApplicationContext(), "Something went wrong. Check your internet connection.", Toast.LENGTH_SHORT).show();
+					else
+					System.out.println("GOT RESULT:"+result);
+					
+					
+					  final Button button = (Button) findViewById(R.id.buttonLogin);
+						 button.setEnabled(true);
+					
+				}
+			}).execute(
 			    		new ConnectionTaskParams(
 			    		object.toString()
 			    		)

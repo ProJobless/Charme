@@ -2,11 +2,11 @@ package com.mschultheiss.charme.HTTP;
 
 public class ConnectionTaskParams {
 
-    public String data;
+    public String PostData;
 
 
     public ConnectionTaskParams(String d) {
-        this.data = d;
+        this.PostData = d;
  
     }
 }

@@ -1216,7 +1216,7 @@ $data = array("requests" => $reqdata
 				$grid->storeBytes($image->resize(250, null, 'fill')->output('jpg'), array('type'=>"postimage",'owner' => $_SESSION["charme_userid"], 'size' => 250, "post" => new MongoId($content["_id"])));
 
 				// 800 width
-				$grid->storeBytes($image->resize(800, null, 'fill')->output('jpg'), array('type'=>"postimage",'owner' => $_SESSION["charme_userid"], 'size' => 800, "post" => new MongoId($content["_id"])));
+				$grid->storeBytes($image->resize(800, null, 'fill', 'down')->output('jpg'), array('type'=>"postimage",'owner' => $_SESSION["charme_userid"], 'size' => 800, "post" => new MongoId($content["_id"])));
 
 
 			}

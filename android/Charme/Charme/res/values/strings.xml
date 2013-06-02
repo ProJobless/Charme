@@ -12,5 +12,6 @@
     <string name="title_section2">Firstname Lastname + 13</string>
     <string name="title_section3">Firstname Lastname + 4</string>
     <string name="title_activity_message_select">MessageSelect</string>
+    <string name="login_passphrase">Passphrase</string>
 
 </resources>

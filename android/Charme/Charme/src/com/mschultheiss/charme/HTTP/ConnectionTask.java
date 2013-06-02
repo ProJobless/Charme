@@ -2,28 +2,28 @@ package com.mschultheiss.charme.HTTP;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import android.os.AsyncTask;
 
 public class ConnectionTask extends AsyncTask<ConnectionTaskParams, Void, String> {  
 
-	 	private OnConnectionTaskCompleteListener listener;
-		public void ConnectionTask(OnConnectionTaskCompleteListener occ)
+	 	private OnConnectionTaskCompleted listener;
+		public  ConnectionTask(OnConnectionTaskCompleted occ)
 		{
 			this.listener=occ;
 		}
-		interface OnConnectionTaskCompleteListener {
-		    void onLoginComplete(String response);
-		}
+	
 	
 		 @Override
 		 protected void onPostExecute(String result) {
 			 // Call Callback...
-		     this.listener.onLoginComplete(result);
+		     this.listener.OnConnectionTaskCompleted(result);
 		       
 		 }
 		 
@@ -31,7 +31,7 @@ public class ConnectionTask extends AsyncTask<ConnectionTaskParams, Void, String
 		
 			
 		 @Override
-		 protected String doInBackground(ConnectionTaskParams... data)
+		 protected String doInBackground(ConnectionTaskParams... data2)
 		 {
 				URL url;
 			    try {
@@ -45,10 +45,29 @@ public class ConnectionTask extends AsyncTask<ConnectionTaskParams, Void, String
 			                .openConnection();
 			        
 			        urlConnection.setRequestMethod("POST");
-			        
+			        urlConnection.setDoInput(true);
+			        urlConnection.setDoOutput(true);
 			        // Set cookie manager for maintaining sessions.
 			        CookieManager cookieManager = new CookieManager();  
 			        CookieHandler.setDefault(cookieManager);
+			        
+			    
+			        // WARNING:
+			        // is data2[0].PostData ok?
+			        //
+			        String param="d=" + URLEncoder.encode(data2[0].PostData,"UTF-8")
+			        		
+			        		
+			        		
+			        		//+"&param2="+URLEncoder.encode("value2","UTF-8")
+			        		;
+			        urlConnection.setFixedLengthStreamingMode(param.getBytes().length);
+			        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			        PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+			        System.out.println(param);
+			        
+			        out.print(param);
+			        out.close();
 			        
 			    
 			         BufferedReader rd = new BufferedReader
@@ -75,8 +94,8 @@ public class ConnectionTask extends AsyncTask<ConnectionTaskParams, Void, String
 			        
 			        
 			    } catch (Exception e) {
-			       
-			      return null;
+			    	  System.out.println("CHAR2"+e.toString());
+			    	  return "";
 			      
 			    }
 		 }
