@@ -55,9 +55,9 @@ public class ConnectionTask extends AsyncTask<ConnectionTaskParams, Void, String
 			        // WARNING:
 			        // is data2[0].PostData ok?
 			        //
-			        String param="d=" + URLEncoder.encode(data2[0].PostData,"UTF-8")
+			        String param="d=" + URLEncoder.encode(data2[0].PostData,"UTF-8");
 			        		
-			        		
+			        		System.out.println("PARAM"+param);
 			        		
 			        		//+"&param2="+URLEncoder.encode("value2","UTF-8")
 			        		;

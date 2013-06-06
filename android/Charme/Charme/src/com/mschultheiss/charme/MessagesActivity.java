@@ -3,6 +3,7 @@ package com.mschultheiss.charme;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -37,7 +38,7 @@ public class MessagesActivity extends Activity  {
 		 */
 		
 	
-		
+		//System.out.println("DECRYPTED AES: "+CharmeCrypto.DecryptAES("cbN9TYEFmKuhjuc", "key"));
 		
 		setContentView(R.layout.activity_messages);
 		
@@ -78,7 +79,7 @@ public class MessagesActivity extends Activity  {
 			
 			
 			  JSONObject r1 = new JSONObject();
-			  r1.put("u", "testuser@10.159.35.85");
+			  r1.put("u", "testuser@10.149.35.85");
 			  r1.put("p", "testuser");
 			  r1.put("id", "user_login");
 			  
@@ -95,8 +96,33 @@ public class MessagesActivity extends Activity  {
 					if (result == "")
 						Toast.makeText(getApplicationContext(), "Something went wrong. Check your internet connection.", Toast.LENGTH_SHORT).show();
 					else
+					{
+						// Parse returned JSON here.
 					System.out.println("GOT RESULT:"+result);
 					
+					try {
+						JSONObject jo = new JSONObject(result);
+						if (jo.getString("status") == "PASS")
+						{
+							// Now the Session exists!, lets go!
+							String rsaStr = jo.getJSONObject("user_login").getString("rsa");
+							System.out.println("rsa22"+rsaStr);
+							
+							// Get public and private key encrypted with passphrase
+							JSONObject rsaEnc = new JSONObject(rsaStr);
+							
+							// AES Decode it
+							rsaEnc.getString("ct");
+							
+						}
+						
+						
+						
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					}
 					
 					  final Button button = (Button) findViewById(R.id.buttonLogin);
 						 button.setEnabled(true);

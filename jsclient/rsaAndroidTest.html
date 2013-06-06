@@ -78,6 +78,10 @@ $("#layout").append("<br>Decrpyted is:<br>" + rsa.decrypt(enc));
 $("#layout").append("<br>Decrpyted form Java is:<br>" + rsa.decrypt(someEncrypted));
 
 
+var aesJSON = sjcl.encrypt("hello world", "key");
+$("#layout").append("Enc AES: "+JSON.stringify(aesJSON));
+
+
 });
 </script>
 
