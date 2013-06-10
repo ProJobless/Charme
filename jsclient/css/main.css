@@ -53,13 +53,18 @@ background-color: black;
 .delete
 {
 
-	background-color: red;
+
 	width:16px;
 	height: 16px;
 	float:right;
+	margin: 4px 8px;
 	display: inline-block;
 	background-image: url("del.gif");
 
+}
+.comment .delete
+{
+	margin: 0;
 }
 
 .subCont li.dp-active

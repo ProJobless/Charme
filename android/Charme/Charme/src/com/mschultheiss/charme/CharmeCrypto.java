@@ -1,16 +1,17 @@
 package com.mschultheiss.charme;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
+import java.security.AlgorithmParameters;
 import java.security.KeyPair;
+import java.security.spec.KeySpec;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.tools.shell.Global;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import android.util.Base64;
 
 public class CharmeCrypto {
 	
@@ -29,49 +30,77 @@ public class CharmeCrypto {
 		return  "";
 	}
 
-	 private static Context createAndInitializeContext(Global global) {
-	        Context context = ContextFactory.getGlobal().enterContext();
-	        global.init(context);
-	        context.setOptimizationLevel(-1);
-	        context.setLanguageVersion(Context.VERSION_1_5);
-	        return context;
-	    }
 	 
-	public static void encryptAES(String cryptedText, String key)
+	 
+	public static String encryptAES(String base64EncryptedData, String password)
 	{
-        try
-        {
-			
-		   	Global global = new Global();
-	        Context context  = createAndInitializeContext( global );
-	        Scriptable scope = context.initStandardObjects( global );
-	 
-	        URL url = new URL("https://github.com/bitwiseshiftleft/sjcl/raw/version-0.8/sjcl.js");
-	        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-	        compileAndExec(in, "classpath:" + url.toString(), context, scope);
-	        in.close();
-	        exec("var result = sjcl.encrypt('password', 'data')", "start", context,scope);
-	        Object result = scope.get("result", scope);
-	        if (result != Scriptable.NOT_FOUND) {
-	            String json =  Context.toString(result);
-	           	System.out.println("CHARME JSON");
-	            System.out.println(json);
-	        }
-	        
-        }
-        catch(Exception ex)
-        {
-        	System.out.println("CHARME ERROR 42");
-        }
+		
+		
+       return "";
 		
 	}
-	public static void exec(String script, String name, Context context, Scriptable scope) {
-        context.compileString(script, name, 1, null).exec(context,scope);
-    }
-    public static void compileAndExec(Reader in, String name, Context rhinoContext, Scriptable scope) throws IOException {
-        rhinoContext.compileReader(in, name, 1, null).exec(rhinoContext,scope);
-    }
+	public static String decryptAES(String base64EncryptedData, String password)
+	{
+		
 	
+		/*
+		 * 
+		 * {\"iv\":\"UgEhBgfdJWlIt2x+2JMxUw\",\"v\":1,\"iter\":1000,\"ks\":128,\"ts\":64,\"mode\":\"ccm\"
+		 * ,\"adata\":\"\",\"
+		 * cipher\":\"aes\",\"salt\":\"Ji5UquwKRxw\",\"ct\":\"R5jf8sAYpz6OOKQ\"}"
+		 */
+		
+  	    /*
+	     * 
+	     * *SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 1024, 256);
+SecretKey tmp = factory.generateSecret(spec);
+SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+String plaintext = new String(cipher.doFinal(ciphertext), "UTF-8");
+return plaintext;/
+	     */
+		
+		
+			 try
+		        {
+		        		// SJCL uses PBKDF2WithHmacSHA256, see sjcl discussion on google groups
+		        	  
+		        	    byte[] salt = new String("Ji5UquwKRxw").getBytes(); // SALT!!
+		        	    int itCount = 1000; // TODO: from json
+		        	    int keyLenght = 128; // TODO: From json
+		        	    SecretKey key;
+		        	    
+		        	    // PBKDF2WithHmacSHA1
+		        	    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+		               
+		        	    KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, itCount, keyLenght);
+		                SecretKey tmp = factory.generateSecret(spec);
+		                key = new SecretKeySpec(tmp.getEncoded(), "AES");
+		                Cipher aescipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		                
+		              //  aescipher.init(Cipher.DECRYPT_MODE, key); // Change for encryption here!
+		               AlgorithmParameters params = aescipher.getParameters();
+		                
+		        	    byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+		        	    
+		        	    aescipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+		        	    byte[] decryptedData = Base64.decode(base64EncryptedData, Base64.DEFAULT);
+		        	    byte[] utf8 = aescipher.doFinal(decryptedData);
+		                return  new String(utf8, "UTF8");
+				  
+			        
+		        }
+		        catch(Exception ex)
+		        {
+		        	System.out.println("CHARME ERROR 42");
+		        	ex.printStackTrace();
+		        	return "DECRPYPTION ERROR";
+		        }
+	
+	}
 	
     
    public static String bytesToHex(byte[] bytes) {

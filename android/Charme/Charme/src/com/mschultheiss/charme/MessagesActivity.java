@@ -36,7 +36,7 @@ public class MessagesActivity extends Activity  {
 		  
 		 
 		 */
-		
+		System.out.println("DECRYPTED AES: "+CharmeCrypto.decryptAES("R5jf8sAYpz6OOKQ", "key"));
 	
 		//System.out.println("DECRYPTED AES: "+CharmeCrypto.DecryptAES("cbN9TYEFmKuhjuc", "key"));
 		

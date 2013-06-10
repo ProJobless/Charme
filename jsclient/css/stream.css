@@ -33,6 +33,8 @@
 	background-color: #efefef;
 	width:244px;
 
+	  word-wrap: break-word;
+
 	
 }
 .postcomments .comment .head

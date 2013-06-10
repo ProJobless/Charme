@@ -376,7 +376,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			$req21->send();
 		}
 
-
+		$returnArray[$action] = array("commentId" => $itemdata["_id"]);
 
 
 		break;
@@ -418,9 +418,9 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			$data);
 
 
-			$req21->send();
+			$arr = $req21->send();
 
-			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername );
+			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["commentId"] );
 
 		break;
 		
@@ -1739,6 +1739,16 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;
+
+
+		case "entity_delete" :
+
+		break;
+
+		case "entity_delete_receive" :
+
+		break;
+
 
 		case "lists_delete" :
 			$col = \App\DB\Get::Collection();

@@ -1248,11 +1248,33 @@ var view_profilepage = view_page.extend({
  control_commentItem = Backbone.View.extend({ 
  	render : function()
  	{
- 		var str= "<div class='comment'><div class='head'><a href='#/user/"+encodeURIComponent(this.options.userId)+"'>"+this.options.username+ "</a></div>"+ this.options.content+"</div>";
+ 		uniIdCounter++;
+
+
+ 		var delitem = "<a data-commentid='"+this.options.commentId+"' id='delete_"+uniIdCounter+"' class='delete'></a>";
+
+
+
+
+
+
+ 		var str= "<div class='comment'>"+delitem+"<div class='head'><a href='#/user/"+encodeURIComponent(this.options.userId)+"'>"+this.options.username+ "</a></div>"+ this.options.content+"</div>";
  		if (this.options.prepend)
  			this.$el.prepend(str);
  		else
  			this.$el.append(str);
+
+
+ 		// Imporant: Attach event handler AFTER ITEM HAS BEEN ADDED!
+ 		$('#delete_'+uniIdCounter).click(function(){
+
+ 			// Send this to MY server.
+ 			// server will find out host  server and notify host server
+ 			alert($(this).data("commentid"));
+
+ 		});
+
+
  	}
 });
 
@@ -1290,7 +1312,7 @@ var repostTemp = null;
 		
 
 			var item = new control_commentItem (
-				{content: this.content, "username" : this.sendername, userId:  this.userId, prepend: prepend, el: $('#postComments'+parentId)});
+				{content: this.content, commentId: this._id.$id,  "username" : this.sendername, userId:  this.userId, prepend: prepend, el: $('#postComments'+parentId)});
 
 				item.render();
 			});
@@ -1324,6 +1346,7 @@ var repostTemp = null;
 
  		var str ;
  		var imgcont = "";
+ 		var delitem = "<a class='delete'></a>";
 
  		if (this.options.hasImage)
  		{
@@ -1339,10 +1362,10 @@ var repostTemp = null;
  			// 
  		 str = "<div class='collectionPost'>"+
  		 "<a href='#user/"+postUser.userIdURL+"'><img class='profilePic' src='"+postUser.getImageURL(64)+"'></a>"
- 		 +"<div class='subDiv'>"+liksstr+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+imgcont+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+formatDate(this.options.time)+"</span></div>";
+ 		 +"<div class='subDiv'>"+liksstr+delitem+"<a href='#user/"+postUser.userIdURL+"'>"+xssText(this.options.username)+"</a>"+repoststr+"<div class='cont'>"+imgcont+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> -  <span class='time'>"+formatDate(this.options.time)+"</span></div>";
 		}
 		else
- 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+imgcont+liksstr+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+formatDate(this.options.time)+"</span>";
+ 		 str = "<div class='collectionPost'>"+repoststr+"<div class='cont' style='padding-top:0'>"+imgcont+liksstr+delitem+""+$.charmeMl(xssText(this.options.content))+"</div><div><a id='doLove"+uniIdCounter+"'>Love</a> - <a id='doRepost"+uniIdCounter+"'>Repost</a> - <span class='time'>"+formatDate(this.options.time)+"</span>";
 
 
 
@@ -1459,7 +1482,7 @@ var repostTemp = null;
 			    ]
 				}, function(d){
 
-						var item2 = new control_commentItem ({"content": content, "username" : d.post_comment.username, userId: 0, el: $('#postComments'+uniId)});
+						var item2 = new control_commentItem ({"content": content, "username" : d.post_comment.username, userId: 0, el: $('#postComments'+uniId), commentId: d.post_comment.commentId});
 						item2.render();
 						$(that2).val("");
 
