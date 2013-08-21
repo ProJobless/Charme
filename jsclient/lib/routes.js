@@ -581,20 +581,25 @@ console.log(data);
                         {
                             var passphrase;
                             if (localStorage.getItem("passPassphrase") !== null)
-                                 passphrase =  sjcl.decrypt(p, localStorage.getItem("passPassphrase")); 
+                                 passphrase =  aes_decrypt(p, localStorage.getItem("passPassphrase")); 
                             else
                             {
                                 passphrase =prompt("Please enter your passphrase","");
-                                localStorage.setItem("passPassphrase", sjcl.encrypt(p, passphrase))
+                                localStorage.setItem("passPassphrase", aes_encrypt(p, passphrase))
 
                             }
 
                            
 
                             // Store passphrase encoded with session Id.
-                            localStorage.setItem("sessionPassphrase", (sjcl.encrypt(charmeUser.sessionId, passphrase)));
+                            localStorage.setItem("sessionPassphrase", (aes_encrypt(charmeUser.sessionId, passphrase)));
                             
-                         
+                         console.log("CERTIFICATE IS");
+
+
+                            console.log(data.user_login.rsa);
+
+
                             // Store encoded certificate
                             localStorage.setItem("certificate", (data.user_login.rsa));
 

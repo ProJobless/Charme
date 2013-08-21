@@ -74,8 +74,8 @@ function sendAnswer()
 	var aeskey = ($('#msg_aeskey').data("val"));
 	var conversationId = ($('#msg_conversationId').data("val"));
 	var message = smilieParse($('#inp_newmsginstant').html());
-	var encMessage = sjcl.encrypt(aeskey, message);
-	var messagePreview = sjcl.encrypt(aeskey, message.substring(0,127));
+	var encMessage = aes_encrypt(aeskey, message);
+	var messagePreview = aes_encrypt(aeskey, message.substring(0,127));
 
 	if (message == "") return;
 
@@ -203,8 +203,8 @@ function sendMessage()
  			// Send if last public key is here.
  			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
  			{
- 				var encMessage = sjcl.encrypt(aeskey, message);
- 				var messagePreview = sjcl.encrypt(aeskey, message.substring(0,127));
+ 				var encMessage = aes_encrypt(aeskey, message);
+ 				var messagePreview = aes_encrypt(aeskey, message.substring(0,127));
 
 	 				apl_request(
 			    {"requests" : [
@@ -870,10 +870,15 @@ worker.onmessage = function(e) {
 
 
 
-
+    console.log(JSON.stringify(certificate));
+	
 
     // Encrypt certificate with passpharse
-	var tt  = sjcl.encrypt(passphrase, JSON.stringify(certificate));
+	var tt  = aes_encrypt(passphrase, JSON.stringify(certificate));
+
+
+	(aes_decrypt(passphrase, tt));
+
 
 	var pub = {"n": e.data.n, "e" : e.data.e};
 
@@ -2295,8 +2300,8 @@ var view_talks_subpage = view_subpage.extend({
 			var startUpload = function(file, thumb)
 			{
 				// encrypt here
-				var thumbEnc = sjcl.encrypt(that.aes, thumb);
-				var fileEnc= sjcl.encrypt(that.aes, file);
+				var thumbEnc = aes_encrypt(that.aes, thumb);
+				var fileEnc= aes_encrypt(that.aes, file);
 		
 
 				var conversationId = ($('#msg_conversationId').data("val"));
@@ -2476,7 +2481,7 @@ var view_talks_subpage = view_subpage.extend({
 					$.get(loc, function(d)
 					{
 						var i = new Image();
-						i.src = sjcl.decrypt(that2.aes, d);
+						i.src = aes_decrypt(that2.aes, d);
 
 
 
@@ -2597,7 +2602,7 @@ var view_talks_subpage = view_subpage.extend({
 						if (this.encMessage == "" || this.encMessage==undefined)
 							this.encMessage = "";
 						else
-					this.msg = sjcl.decrypt(aeskey, this.encMessage);}
+					this.msg = aes_decrypt(aeskey, this.encMessage);}
 					catch(err)
 					{
 						this.msg =err;
@@ -2900,7 +2905,7 @@ sendMessageForm({});
 
 
 				if (this.messagePreview)
-				 this.messagePreview = sjcl.decrypt(aeskey,this.messagePreview);
+				 this.messagePreview = aes_decrypt(aeskey,this.messagePreview);
 				 else
 				 this.messagePreview = "";
 				   //.join(", ");

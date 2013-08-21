@@ -11,7 +11,10 @@ public class ActivityLogin extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_login);
     }
-
+    public void tryLogin(String username, String password, String passphrase)
+    {
+    	
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

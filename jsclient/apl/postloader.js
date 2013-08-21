@@ -18,14 +18,30 @@ CharmeUser.certificate.
 
 	 	try
 	 	{
-		var passphrase = sjcl.decrypt(charmeUser.sessionId, localStorage.getItem("sessionPassphrase"));
+	 	
+		var passphrase = aes_decrypt(charmeUser.sessionId, localStorage.getItem("sessionPassphrase"));
+
+
 		var certEnc = localStorage.getItem("certificate");
-		var cert=(sjcl.decrypt(passphrase,certEnc ));
+		alert(certEnc);
+
+
+			alert("passphrase is "+passphrase);
+alert("enc cert is "+certEnc);
+
+
+
+		var cert=(aes_decrypt(passphrase,certEnc));
+	alert(" cert is "+certEnc);
+
 		charmeUser.certificate = jQuery.parseJSON(cert);
 
 		}
+		
 		catch(e)
 		{
+			console.log(e);
+			//throw(e);
 			alert("Certificate decrpytion error. Logout.");
 			logout();
 		}

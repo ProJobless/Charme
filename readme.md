@@ -62,6 +62,7 @@ Charme is a distributed and open source social network. In contrast to classic s
   * Make sure short_open_tag is set to true in php.ini, otherwise 
     PHP will not parse php files. 
   *  Make sure curl is enabled in php.ini
+  * install gd extenstion for wide image apt-get install php5-gd
   * Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
   *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
   * Protect /admin with a .htaccess file
@@ -71,8 +72,20 @@ Charme is a distributed and open source social network. In contrast to classic s
 ## Version
 
 
-Warning: This version is for preview puposes only. This version is NOT stable and misses essential functions like form validation.
-We plan to release a stable version by summer 2014.
+**Warning: This version is for preview puposes only. This version is NOT stable and misses essential functions like a public key manager.
+We plan to release a stable version by summer 2014.**
+
+## Crypto
+    * We use a RSA/AES Cryptosystem to encrypt messages and privat data
+    * The private key is stored on a server, encrypted with a 15 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password. Use PGP instead, if you want less comfort and more security.
+    * To validate public keys we will implement a Web-Of-Trust like key veryfication system, that checks if all friends of a user own the same public key of him in the Background. You can also manually check the public keys in the key manager.
+
+
+## How to Contribute?
+
+    * Write Code, generate Documentation, check Crypto Concepts
+    * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
+    * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
 
 
@@ -136,9 +149,9 @@ We plan to release a stable version by summer 2014.
     </tr>
 
  <tr>
-        <td>Stanford Crypto Library</td>
-        <td>BSD</td>
-        <td>jsclient/lib/crypto/sjcl.js</td>
+        <td>Gibberish AES</td>
+        <td>MIT</td>
+        <td>jsclient/lib/crypto/gibberish.js</td>
     </tr>
 
  <tr>
