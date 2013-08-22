@@ -62,7 +62,7 @@ Charme is a distributed and open source social network. In contrast to classic s
   * Make sure short_open_tag is set to true in php.ini, otherwise 
     PHP will not parse php files. 
   *  Make sure curl is enabled in php.ini
-  * install gd extenstion for wide image apt-get install php5-gd
+  * install gd extenstion for wide image: apt-get install php5-gd
   * Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
   *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
   * Protect /admin with a .htaccess file

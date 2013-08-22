@@ -1,4 +1,16 @@
+// Returns certificate
+function getCert()
+{
+	 if (charmeUser != null && charmeUser.sessionId != null)
+	 {
+	var passphrase = aes_decrypt(charmeUser.sessionId, localStorage.getItem("sessionPassphrase"));
 
+	var certEnc = localStorage.getItem("certificate");
+	return (aes_decrypt(passphrase,certEnc));
+	}
+	return null;
+
+}
 
 // need: sessionID
 function apl_setup2()
@@ -23,16 +35,12 @@ CharmeUser.certificate.
 
 
 		var certEnc = localStorage.getItem("certificate");
-		alert(certEnc);
 
-
-			alert("passphrase is "+passphrase);
-alert("enc cert is "+certEnc);
 
 
 
 		var cert=(aes_decrypt(passphrase,certEnc));
-	alert(" cert is "+certEnc);
+
 
 		charmeUser.certificate = jQuery.parseJSON(cert);
 
@@ -85,7 +93,8 @@ function apl_setup(callback, onLogin)
 	{
 		
 
-		var cert1 = localStorage.getItem("certificate");
+		var cert1 = getCert();
+
 		charme_private_rsakey = $.parseJSON(cert1);
 
 
