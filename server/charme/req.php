@@ -6,6 +6,9 @@ include_once("config.php");
 
 error_reporting(E_ALL);
 
+ini_set('display_errors', 'On');
+
+
 // Disabled, because of jquery post
 //header('Content-type: application/json');
 
@@ -1040,6 +1043,55 @@ $data = array("requests" => $reqdata
 		case "notifications_get":
 			\App\Counter\Notify::set($_SESSION["charme_userid"],0);
 			$returnArray[$action] =  (\App\Counter\Notify::getNotifications($_SESSION["charme_userid"]));
+		break;
+
+		case "keys_get":
+			$returnArray[$action] = array();
+		break;
+	
+	case "privateinfo_getall":
+			$returnArray[$action] = array();
+		break;
+
+
+		// Returns encrypted private key for correct password
+		case "key_update_phase1":
+	
+			$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$item["password"]);
+
+
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"]), "password"=>$p2), array('userid', "keyring"));
+
+			if (isset($cursor["userid"]))
+			{
+				if (isset($cursor["keyring"]))
+				$returnArray[$action] =   (array("keyring"=>$cursor["keyring"]));
+				else
+				$returnArray[$action] =  array("keyring" => "");	
+			}
+			else
+					$returnArray[$action] =  array("error" => true);
+
+		break;
+
+		case "key_update_phase2":
+
+		$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$item["password"]);
+
+
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"]), "password"=>$p2), array('userid', "keyring"));
+
+			if (isset($cursor["userid"]))
+			{
+
+			$col->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => array("keyring" => $item["newkeyring"])));
+
+			}
+
+
+
 		break;
 
 

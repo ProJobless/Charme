@@ -25,7 +25,10 @@ public class ActivityLogin extends Activity {
     	buttonLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				tryLogin("","","");
+				
+				Intent intent = new Intent(getBaseContext(), Talks.class);
+		    	startActivity(intent);
+				//tryLogin("","","");
 			}
 		});
     	

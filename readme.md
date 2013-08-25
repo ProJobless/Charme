@@ -61,7 +61,7 @@ Charme is a distributed and open source social network. In contrast to classic s
   * Install PHP
   * Make sure short_open_tag is set to true in php.ini, otherwise 
     PHP will not parse php files. 
-  *  Make sure curl is enabled in php.ini
+  *  Make sure curl is enabled in php.ini (apt-get install php5-curl on debian apache2)
   * install gd extenstion for wide image: apt-get install php5-gd
   * Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
   *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
@@ -77,7 +77,7 @@ We plan to release a stable version by summer 2014.**
 
 ## Crypto
     * We use a RSA/AES Cryptosystem to encrypt messages and privat data
-    * The private key is stored on a server, encrypted with a 15 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password. Use PGP instead, if you want less comfort and more security.
+    * The private key is stored on a server, encrypted with a 20 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password or private PGP key.
     * To validate public keys we will implement a Web-Of-Trust like key veryfication system, that checks if all friends of a user own the same public key of him in the Background. You can also manually check the public keys in the key manager.
 
 
@@ -87,6 +87,9 @@ We plan to release a stable version by summer 2014.**
     * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
     * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
+
+## Developers
+    * We use Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin to write code.
 
 
 ## Libraries
