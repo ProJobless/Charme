@@ -1053,6 +1053,15 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] = array();
 		break;
 
+			case "key_get":
+				// Return public key and revision
+					$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> ($item["profileId"])), array('publickey'));
+			$returnArray[$action] = $cursor["publickey"];
+
+
+
+			break;
 
 		// Returns encrypted private key for correct password
 		case "key_update_phase1":
@@ -1086,7 +1095,7 @@ $data = array("requests" => $reqdata
 			if (isset($cursor["userid"]))
 			{
 
-			$col->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => array("keyring" => $item["newkeyring"])));
+			$col->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => array("keyring" => $item["newkeyring"], "publickey" => $item["publickey"])));
 
 			}
 

@@ -76,20 +76,21 @@ Charme is a distributed and open source social network. In contrast to classic s
 We plan to release a stable version by summer 2014.**
 
 ## Crypto
-    * We use a RSA/AES Cryptosystem to encrypt messages and privat data
-    * The private key is stored on a server, encrypted with a 20 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password or private PGP key.
-    * To validate public keys we will implement a Web-Of-Trust like key veryfication system, that checks if all friends of a user own the same public key of him in the Background. You can also manually check the public keys in the key manager.
+
+* We use a RSA/AES Cryptosystem to encrypt messages and privat data
+* The private key is stored on a server, encrypted with a 20 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password or private PGP key.
+* To validate public keys we will implement a Web-Of-Trust like key veryfication system, that checks if all friends of a user own the same public key of him in the Background. You can also manually check the public keys in the key manager.
 
 
 ## How to Contribute?
 
-    * Write Code, generate Documentation, check Crypto Concepts
-    * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
-    * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
+* Write Code, generate Documentation, check Crypto Concepts
+* Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
+* Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
 
 ## Developers
-    * We use Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin to write code.
+* We use Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin to write code.
 
 
 ## Libraries
