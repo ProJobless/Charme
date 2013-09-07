@@ -77,8 +77,8 @@ class UserRegistration implements \App\Models\Action
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],
 			"lastname" =>$data["lastname"],
-			"pubKey" => $data["pubkey"],
-			"rsa" => $data["rsa"]
+			"publickey" => $data["pubkey"], // Unencrypted public key
+			"keyring" => $data["rsa"] // Encrypted AES keyring
 		);
 			$col = \App\DB\Get::Collection();
 

@@ -30,19 +30,9 @@ CharmeUser.certificate.
 
 	 	try
 	 	{
-	 	
-		var passphrase = aes_decrypt(charmeUser.sessionId, localStorage.getItem("sessionPassphrase"));
 
-
-		var certEnc = localStorage.getItem("certificate");
-
-
-
-
-		var cert=(aes_decrypt(passphrase,certEnc));
-
-
-		charmeUser.certificate = jQuery.parseJSON(cert);
+		var keyring = localStorage.getItem("keyring");
+		charmeUser.keyring = jQuery.parseJSON(keyring);
 
 		}
 		

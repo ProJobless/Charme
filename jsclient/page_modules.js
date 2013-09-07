@@ -176,14 +176,17 @@ function sendMessage() {
 	// Encrypt RSA Key for sender
 	var aesEnc = "";
 	var rsa = new RSAKey();
-	rsa.setPublic(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e);
+
+	// Message to me
+	rsa.setPublic(getKeyByRevision(0).rsa.n, getKeyByRevision(0).rsa.e);
 	aesEnc = rsa.encrypt(aeskey);
 
 
 
 	receivers.push({
 		charmeId: charmeUser.userId,
-		aesEnc: aesEnc
+		aesEnc: aesEnc,
+		revision: getKeyByRevision(0).revision
 	});
 
 
@@ -200,7 +203,7 @@ function sendMessage() {
 			]
 		}, function(d1) {
 
-			var pk = (jQuery.parseJSON(d1.profile_pubKey));
+			var pk = $.parseJSON(d1.profile_pubKey);
 			count++;
 			console.log(pk);
 			// Encrypt random key  with public key
@@ -209,17 +212,20 @@ function sendMessage() {
 			var rsa = new RSAKey();
 
 
-			rsa.setPublic(pk.n, pk.e);
+			rsa.setPublic(pk.publickey.n, pk.publickey.e);
 			// RSA encrypt aes key with pubKey:
 			aesEnc = rsa.encrypt(aeskey);
 
 
-
+			// Add to receivers
 			receivers.push({
 				charmeId: str,
-				aesEnc: aesEnc
+				aesEnc: aesEnc,
+				revision: pk.revision
 			});
 
+			console.log("RECEIVERS");
+			console.log(receivers);
 
 			// Send if last public key is here.
 			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
@@ -234,6 +240,7 @@ function sendMessage() {
 							"encMessage": encMessage,
 							"messagePreview": messagePreview,
 							"sender": charmeUser.userId
+						
 						}
 
 					]
@@ -841,8 +848,8 @@ var view_register = view_page.extend({
 			//alert(e.data.n.toString());
 
 			//n, e, d, p, q, dmp1, dmq1, coeff
-			var certificate = {
-				version: 1,
+			var certificate = [{
+				revision: 1,
 				rsa: {
 					n: e.data.n.toString(),
 					e: e.data.e.toString(),
@@ -855,8 +862,8 @@ var view_register = view_page.extend({
 
 
 				}
-			};
-			console.log("certificate is");
+			}];
+			console.log("keyring is");
 			console.log(JSON.stringify(certificate));
 
 
@@ -879,11 +886,17 @@ var view_register = view_page.extend({
 			var tt = aes_encrypt(passphrase, JSON.stringify(certificate));
 
 
+				var pub = {
+								revision: 1,
+								publickey: {
+									n: e.data.n,
+									e: e.data.e
+								}
+							};
 
-			var pub = {
-				"n": e.data.n,
-				"e": e.data.e
-			};
+
+
+			
 
 			$("#pubkey").val(JSON.stringify(pub));
 
@@ -2632,10 +2645,22 @@ var view_talks_subpage = view_subpage.extend({
 				// RSA Decode, for each:
 				// d2.messages_get_sub
 
+
+
 				var rsa = new RSAKey();
-				rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
-					charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1,
-					charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
+
+				var key1 = getKeyByRevision(d2.messages_get_sub.revision);
+					var key = key1.rsa;
+
+					rsa.setPrivateEx(key.n, key.e, key.d,
+						key.p, key.q, key.dmp1,
+						key.dmq1, key.coeff);
+
+
+
+				//rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
+				//	charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1,
+				//	charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
 
 
 				//alert(d2.messages_get_sub.aesEnc);
@@ -2912,12 +2937,7 @@ var view_talks = view_page.extend({
 			}]
 		}, function(d2) {
 
-			var rsa = new RSAKey();
-
-			rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
-				charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1,
-				charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
-
+		
 
 			$.get("templates/control_messagelist.html", function(d) {
 
@@ -2930,14 +2950,23 @@ var view_talks = view_page.extend({
 
 					// Decode AES Key with private RSA Key
 
+					var rsa = new RSAKey();
+
+					// TODO: Cache keys for performance reasons!
+
+					var key1 = getKeyByRevision(this.revision);
+					var key = key1.rsa;
+
+					rsa.setPrivateEx(key.n, key.e, key.d,
+						key.p, key.q, key.dmp1,
+						key.dmq1, key.coeff);
+
 
 					var aeskey = rsa.decrypt(this.aesEnc); ///sjcl.decrypt(aeskey, this.encMessage);
 					if (this.pplCount < 2)
 						this.messageTitle = this.sendername;
 					else
 						this.messageTitle = this.sendername + " and " + (this.pplCount - 1) + " more";
-
-
 					if (this.messagePreview)
 						this.messagePreview = aes_decrypt(aeskey, this.messagePreview);
 					else

@@ -4,6 +4,51 @@
 */
 var charmeUser;
 
+
+/***
+	Name:
+	getKeyByRevision
+
+	Info:
+	Returns a key from the keyring
+
+	Params:
+	revision: the revision
+	
+	Location:
+	apl/user.js
+
+	Code:JS:
+	var key = getKeyByRevision(4);
+*/
+
+
+function getKeyByRevision(revision)
+{
+
+	// Newest key
+	if (revision == 0)
+	{
+		return charmeUser.keyring[charmeUser.keyring.length-1];
+	}
+
+	var itemtemp = null;
+	// Key by revision
+	$.each(charmeUser.keyring, function(index, item) {
+		
+		if (item.revision == revision)
+			{	
+				itemtemp = item;
+			}
+	
+
+	});
+
+	return itemtemp;
+
+}
+
+
 /***
 	Name:
 	apl_user
@@ -17,7 +62,7 @@ var charmeUser;
 	Properties:
 	sessionId:String:Server Session Id, do not set!
 	sessionPassphrase:String:Passphrase encoded with sessionId
-	certificate: RSA Certificate, initilaized with apl_setup2();
+	keyring: key pairs, initilaized with apl_setup2();
 
 	Location:
 	apl
@@ -28,6 +73,8 @@ var charmeUser;
 	console.log(user.username); // me
 	console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
 */
+
+
 
 
 function apl_user(uid)

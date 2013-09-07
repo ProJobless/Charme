@@ -177,8 +177,11 @@ $(function() {
             if (id == "keymanager") {
                 apl_request({
                     "requests": [{
-                            "id": "keys_get"
+                            "id": "key_getAll"
                         },
+                        {
+                            "id" : "key_getPrivateKeyring"
+                        }
 
 
                     ]
@@ -192,6 +195,9 @@ $(function() {
                     });
                     container_main.currentView.setSub(vsd);
                     container_main.currentView.render();
+
+
+
 
                 });
             } else if (id == "privateinfo") {
@@ -549,7 +555,7 @@ var charme_private_rsakey = null;
     * Get sessionId
     * Looking up for password encrypted passphrase in localStorage (`localStorage.getItem("PassPassphrase");`):
     * If===null: Show input field, and store encrypted with password
-
+    
     Decrypt with password and 
     Enrypt with session id
 
@@ -624,6 +630,8 @@ function login() {
 
 
 
+
+
             localStorage.setItem("user", u);
 
             charmeUser = new apl_user(u);
@@ -646,15 +654,20 @@ function login() {
                     // Store passphrase encoded with session Id.
                     localStorage.setItem("sessionPassphrase", (aes_encrypt(charmeUser.sessionId, passphrase)));
 
-                    console.log("CERTIFICATE IS");
+                  
 
 
-                    console.log(data.user_login.rsa);
 
+                    // The keyring contains a list of 
+                    // Keypairs, where the last item is the newest key
+                    var keyringAES = data.user_login.ret.keyring;
 
+                    // each item has format {revision, rsa}
+                    var keyring = aes_decrypt(passphrase, keyringAES);
+                   
+                   
                     // Store encoded certificate
-                    localStorage.setItem("certificate", (data.user_login.rsa));
-
+                    localStorage.setItem("keyring", keyring);
                     localStorage.setItem("userAutoComplete", u);
 
 
@@ -667,9 +680,9 @@ function login() {
                     });
 
                 } catch (e) {
-                    alert("Can't decrypt RSA Key (Wrong passphrase?)");
+                    alert("Can not decrypt RSA Key (Wrong passphrase?)");
                     localStorage.removeItem("sessionPassphrase");
-                    localStorage.removeItem("certificate");
+                    localStorage.removeItem("keyring");
                     localStorage.removeItem("passPassphrase");
                     localStorage.removeItem("user");
 
@@ -723,7 +736,12 @@ function logout() {
 }
 
 function delTemp() {
-    alert("Deleted temporaray data");
+
+                    localStorage.removeItem("sessionPassphrase");
+                    localStorage.removeItem("certificate");
+                    localStorage.removeItem("passPassphrase");
+                    localStorage.removeItem("user");
+    alert("Deleted temporary data.");    
 }
 
 function resendPassword() {

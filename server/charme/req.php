@@ -131,7 +131,7 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -141,8 +141,8 @@ foreach ($data["requests"] as $item)
 	{
 		case "profile_pubKey":
 			$col = \App\DB\Get::Collection();
-			$cursor = $col->users->findOne(array("userid"=> ($item["profileId"])), array('pubKey'));
-			$returnArray[$action] = $cursor["pubKey"];
+			$cursor = $col->users->findOne(array("userid"=> ($item["profileId"])), array('publickey'));
+			$returnArray[$action] = $cursor["publickey"];
 		break;
 
 		case "sessionId_get":
@@ -178,7 +178,7 @@ foreach ($data["requests"] as $item)
 
 			// TODO: Do not return at pagination??
 			$col = \App\DB\Get::Collection();
-			$query = array("aesEnc", "people", "conversationId");
+			$query = array("aesEnc", "people", "conversationId", "revision");
 
 			// Set read=true
 
@@ -236,7 +236,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				->sort(array("time" => 1))
 				->skip($start)->limit($limit)
 				
-			, false), "count" => $count, "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
+			, false), "count" => $count, "revision" =>  $res["revision"], "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
 			
 
 		break;
@@ -618,6 +618,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
 				
 
+
+				// enc aes rsa exists -> make new conversation
 				if (isset($item["aesEnc"]))
 				{
 					$content = array(
@@ -626,6 +628,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					"aesEnc" => $item["aesEnc"],
 					"conversationId" => new MongoId($item["conversationId"]),
 					"receiver" => $receiver,
+					"revision" => $item["revision"],
 					"sendername" => $item["sendername"],
 					"messagePreview" => $item["messagePreview"],
 					"time" => new MongoDate(time()),
@@ -648,7 +651,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						$blockWrite = true;
 
 
-					$col->conversations->update(array("aesEnc" => $item["aesEnc"], "read" => false,  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
+					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false,  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
 					\App\Counter\CounterUpdate::inc( $receiver, "talks");
 
 					// Inc counter for people on my server in this conversation...
@@ -823,7 +826,7 @@ $data = array("requests" => $reqdata
 						"aesEnc" => $receiver["aesEnc"],
 						"messagePreview" => $item["messagePreview"],
 						"sender" => $_SESSION["charme_userid"],
-
+						"revision" => $receiver["revision"],
 						"sendername" => $sendername,
 						"conversationId" => $convId->__toString(),
 				
@@ -887,7 +890,7 @@ $data = array("requests" => $reqdata
 			
 
 			
-			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p2), array('userid', "rsa"));
+			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p2), array('userid', "rsa", "keyring"));
 
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
@@ -903,7 +906,7 @@ $data = array("requests" => $reqdata
 				$stat = "FAIL";
 
 
-			$returnArray[$action] =   (array("status" => $stat, "rsa" => $cursor["rsa"], "ret"=>$cursor));
+			$returnArray[$action] =   (array("status" => $stat, "ret"=>$cursor));
 
 		break;
 
@@ -1045,15 +1048,69 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] =  (\App\Counter\Notify::getNotifications($_SESSION["charme_userid"]));
 		break;
 
-		case "keys_get":
-			$returnArray[$action] = array();
-		break;
+	
 	
 	case "privateinfo_getall":
 			$returnArray[$action] = array();
 		break;
 
+		case "key_getFromDir":
+
+					$col = \App\DB\Get::Collection();
+			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key" => $item["key"]), array('value'));
+			
+			
+			$returnArray[$action] = array("value" => $cursor["value"]);
+
+
+
+
+		break;
+		
+
+		case "key_storeInDir":
+
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->keydirectory->update(
+
+array("owner" => $_SESSION["charme_userid"],
+					"key" => $item["key"])
+
+				, array(
+					"owner" => $_SESSION["charme_userid"],
+					"key" => $item["key"],
+					"value" => $item["value"]
+
+					), array("upsert" => true));
+			$returnArray[$action] = array("status" => "OK");
+
+
+		break;
+
+
+			case "key_getAll":
+
+			
+		
+					$col = \App\DB\Get::Collection();
+			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('value')), false);
+			
+		
+
+			$returnArray[$action] = array("items" => $cursor);
+
+
+
+
+			break;
+
+
+
+
 			case "key_get":
+
+			
+			
 				// Return public key and revision
 					$col = \App\DB\Get::Collection();
 			$cursor = $col->users->findOne(array("userid"=> ($item["profileId"])), array('publickey'));
@@ -1063,6 +1120,18 @@ $data = array("requests" => $reqdata
 
 			break;
 
+
+			case "key_getPrivateKeyring":
+
+				$col = \App\DB\Get::Collection();
+			$cursor = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array('userid', "keyring"));
+
+				$returnArray[$action] =   (array("keyring"=>$cursor["keyring"]));
+
+
+
+
+			break;
 		// Returns encrypted private key for correct password
 		case "key_update_phase1":
 	
