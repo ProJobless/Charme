@@ -3,7 +3,7 @@ self.onmessage = function(e) {
  importScripts("jsbn.js", "jsbn2.js", "prng.js", "rng.js", "rsa.js", "rsa2.js");
 
  var rsa = new RSAKey();
- rsa.generate(parseInt(1024),"10001");
+ rsa.generate(parseInt(2048),"10001");
 
 //console.log(rsa);
 

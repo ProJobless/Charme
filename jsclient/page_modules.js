@@ -1333,6 +1333,8 @@ control_postItem = Backbone.View.extend({
 		});
 
 	},
+	
+
 	render: function() {
 
 
@@ -1345,7 +1347,7 @@ control_postItem = Backbone.View.extend({
 		var uniId = uniIdCounter;
 
 
-
+				var that = this;
 		var repoststr = "";
 		var liksstr = "<div class='likes'><a class='counter' id='counter" + uniIdCounter + "'>0</a></div>";
 
@@ -1356,7 +1358,9 @@ control_postItem = Backbone.View.extend({
 
 		var str;
 		var imgcont = "";
-		var delitem = "<a class='delete'></a>";
+		var delitem = "<a id='del_post_"+uniIdCounter+"' class='delete'></a>";
+
+	
 
 		if (this.options.hasImage) {
 			//
@@ -1368,10 +1372,10 @@ control_postItem = Backbone.View.extend({
 			var postUser = new apl_user(this.options.userId);
 
 			// 
-			str = "<div class='collectionPost'>" +
+			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" +
 				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
 		} else
-			str = "<div class='collectionPost'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
+			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
 
 
 
@@ -1384,8 +1388,27 @@ control_postItem = Backbone.View.extend({
 		else
 			this.$el.append(str);
 
-		var that = this;
 
+
+		// REgister event handler AFTER HTML has been added
+		$("#del_post_"+uniIdCounter).click(function(){
+
+			// TODO: ARE YOU SURE?
+
+			// Send request for post deletion to server
+			apl_request({
+				"requests": [{
+					"id": "post_delete",
+					"postId": that.options.postId
+				}, ]
+			}, function(d) {
+
+				// Remove post from GUI
+				$("#post_"+that.options.postId).fadeOut(0);
+
+			});
+			
+		});
 
 
 		// append some comments
@@ -1393,7 +1416,6 @@ control_postItem = Backbone.View.extend({
 		if (this.options.comments != undefined && this.options.comments.length > 0) {
 
 			that.addComments(this.options.comments, uniIdCounter, false);
-
 			itemStartTime = this.options.comments[0].itemTime.sec;
 
 		}

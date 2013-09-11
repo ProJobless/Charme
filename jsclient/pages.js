@@ -1,5 +1,3 @@
-
-
 /***
 	Name:
 	page_authenticated
@@ -18,116 +16,103 @@
 */
 
 
-page_authenticated = Backbone.View.extend({   
+page_authenticated = Backbone.View.extend({
 
-el: '',
-sidebarLoad : false,
-currentView: null,
-events: {
-	"click  #button_notifications" : "showNotifications",
-},
-setCurrent : function(obj)
-{
-
+	el: '',
+	sidebarLoad: false,
+	currentView: null,
+	events: {
+		"click  #button_notifications": "showNotifications",
+	},
+	setCurrent: function(obj) {
 
 
-	if (this.currentView  != null)
-	{
-	console.log(this.currentView);
 
-	// Important, we have to "unregister" events from subViews
-	this.currentView.setSub(null);
+		if (this.currentView != null) {
+			console.log(this.currentView);
 
-	
+			// Important, we have to "unregister" events from subViews
+			this.currentView.setSub(null);
 
 
-	this.currentView.undelegateEvents();
-	//	this.currentView.remove();
-	//	this.currentView.unbind();
-		//this.delegateEvents();
-	//this.undelegateEvents();
-	
-		console.log("Cleared current view");
-	}
-	this.currentView = obj;
-	console.log("Set current view");
 
-	//this.hideNotificationsMenu();
-},
+			this.currentView.undelegateEvents();
+			//	this.currentView.remove();
+			//	this.currentView.unbind();
+			//this.delegateEvents();
+			//this.undelegateEvents();
 
-hideNotificationsMenu: function()
-{
-	 	$('.actionBar a').removeClass("active");
+			console.log("Cleared current view");
+		}
+		this.currentView = obj;
+		console.log("Set current view");
+
+		//this.hideNotificationsMenu();
+	},
+
+	hideNotificationsMenu: function() {
+		$('.actionBar a').removeClass("active");
 		$('.actionCont').hide();
 
-			var obj = $('#button_notifications');
-			var x = $(obj).data("bgpos");
+		var obj = $('#button_notifications');
+		var x = $(obj).data("bgpos");
 
-		$(obj).css("background-position",x+"px -0px");
-		
+		$(obj).css("background-position", x + "px -0px");
+
 		return;
-
-},
-posNotificationMenu:function()
-{
-$('.actionCont').css("left", $('#button_notifications').offset().left);
-},
-showNotifications : function()
-{
-	
+	},
+	posNotificationMenu: function() {
+		$('.actionCont').css("left", $('#button_notifications').offset().left);
+	},
+	showNotifications: function() {
 
 
-	var obj = $('#button_notifications');
-	var x = $(obj).data("bgpos");
-	var that = this;
-	
 
-	if ($(obj).hasClass("active"))
-	{
-		that.hideNotificationsMenu();
-		return;
-	}
-	
+		var obj = $('#button_notifications');
+		var x = $(obj).data("bgpos");
+		var that = this;
 
-	$.get("templates/notifications.html", function (d)
-	{
-		apl_request(
-	    {"requests" : [
-	    {"id" : "notifications_get"}
 
-	    ]
-		}, function(d2){
+		if ($(obj).hasClass("active")) {
+			that.hideNotificationsMenu();
+			return;
+		}
 
-		
-			var templateData = d2;
 
-			_.templateSettings.variable = "rc";
-			var template = _.template(d, templateData); 
-				
+		$.get("templates/notifications.html", function(d) {
+			apl_request({
+				"requests": [{
+						"id": "notifications_get"
+					}
 
-			
-			$("#button_notifications").text("0");
+				]
+			}, function(d2) {
 
-			obj.css("background-position",x+"px -62px");
 
-			//$('.actionCont').append("");
+				var templateData = d2;
+
+				_.templateSettings.variable = "rc";
+				var template = _.template(d, templateData);
+
+
+
+				$("#button_notifications").text("0");
+
+				obj.css("background-position", x + "px -62px");
+
+				//$('.actionCont').append("");
 				$('#notificationMain').html(template);
 
-			that.posNotificationMenu();
-			{
-				obj.addClass("active");
-				$('.actionCont').show().css("top", 31);;
-			}
+				that.posNotificationMenu(); {
+					obj.addClass("active");
+					$('.actionCont').show().css("top", 31);;
+				}
+			});
+
 		});
 
-	});
-		
-	
 
 
-	
-	
-	
 	},
 
 	/*shareClick: function(ev)
@@ -152,7 +137,7 @@ alert("share");
 	}
     ,*/
 
-/*	sidebarClickHandler: function(ev)
+	/*	sidebarClickHandler: function(ev)
     {
     
 		var d = $(ev.target).data("destination");
@@ -172,31 +157,30 @@ console.log("sidebar load=true");
 	}
     ,*/
 
-    initialize: function(){
+	initialize: function() {
 
-console.log("el"+ this.el);
-    },
-
-
-  	openPage: function(view, subview)
-  	{
-
-//this.$el.html("lalala");
-	
-  		// TODO: if not logged in -> show login field!
-  	
-  		//$(".sbAlpha ul li").removeClass("active");
-    //	$(".sbAlpha ul li a[data-topic='"+id+"']").parent().addClass("active");
+		console.log("el" + this.el);
+	},
 
 
+	openPage: function(view, subview) {
 
-    	//var par = this;
+		//this.$el.html("lalala");
+
+		// TODO: if not logged in -> show login field!
+
+		//$(".sbAlpha ul li").removeClass("active");
+		//	$(".sbAlpha ul li a[data-topic='"+id+"']").parent().addClass("active");
+
+
+
+		//var par = this;
 
 		// Template loader using underscore.js, TODO: preload templates!
-	
-			//$.post("templates/"+id+".html", function (d)
-			
-				/*{
+
+		//$.post("templates/"+id+".html", function (d)
+
+		/*{
 					Template.html contains:
 					- information about sub templates (default template, useSubTemplates)
 					  in meta div title=subTmpl=true/false and defaultSubTmpl
@@ -299,17 +283,17 @@ console.log("el"+ this.el);
 
 			}, "text");}
 				*/
-		
-  	},
 
-   
+	},
 
-     render: function(){
+
+
+	render: function() {
 
 
 		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
-		<div style="height:67px; background-color:#000;"><a  href="#user/'+(charmeUser.userIdURL)+'"><img src="http://'+charmeUser.server+'/charme/fs.php?s=150&u='+(charmeUser.userIdURL)+'"></a> \
+		<div style="height:67px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#c2c2c2; padding-top:0; margin-bottom: 0px;"> \
 		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
@@ -331,78 +315,73 @@ console.log("el"+ this.el);
 		';
 
 
-		if ($("#cnt_loggedIn").length < 1)
-		{
-			
+		if ($("#cnt_loggedIn").length < 1) {
 
 
 
 			$(this.el).html(str);
 
-		console.log("render main container");
+			console.log("render main container");
 			$(".sbAlpha ul").append("<li ><a id='item_stream' data-topic='stream' href='#stream'>Stream</a></li>");
-			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/"+(charmeUser.userIdURL)+"'>Profile</a></li>");
+			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/" + (charmeUser.userIdURL) + "'>Profile</a></li>");
 			$(".sbAlpha ul").append("<li><a  id='item_talks' data-topic='talks' href='#talks'>Talks</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='lists' href='#lists' >Lists</a></li>");
 			//$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='settings' href='#settings'>Settings</a></li>");
 		}
-	
-
-	// Set a color scheme (See lib/colors.js for function)
-	setColor("#1A3C87","#000614");
-
-	$("#searchField").keypress(function(e) {
-		
-
-		if(e.which == 13)
-			location.href='#find/'+encodeURIComponent($("#searchField").val());
 
 
-	});
-	    // Mouse Down effect for icons above main navigation
-    $(".actionBar a").mousedown(function(){
-    
-        var x = $(this).data("bgpos");
+		// Set a color scheme (See lib/colors.js for function)
+		setColor("#1A3C87", "#000614");
 
-        if (!$(this).hasClass("active"))
-        $(this).css("background-position",x+"px -31px");
-    }).mouseout(function(){
-        var x = $(this).data("bgpos");
-        if (!$(this).hasClass("active"))
-        $(this).css("background-position",x+"px -0px");
-        
-    });
-
-    var that = this;
-    // Hide notification menu when clicking anywhere
-    $(document).click(function(e) {
-    if ( $(e.target).closest('.actionCont').length === 0 
-    	&& 
-    	$(e.target).closest('#button_notifications').length === 0 
-
-    	) {
-        	that.hideNotificationsMenu();
-
-	    }
-	});
-
-	$(window).resize(function() {
-	that.posNotificationMenu();
+		$("#searchField").keypress(function(e) {
 
 
-	});
+			if (e.which == 13)
+				location.href = '#find/' + encodeURIComponent($("#searchField").val());
 
+
+		});
+		// Mouse Down effect for icons above main navigation
+		$(".actionBar a").mousedown(function() {
+
+			var x = $(this).data("bgpos");
+
+			if (!$(this).hasClass("active"))
+				$(this).css("background-position", x + "px -31px");
+		}).mouseout(function() {
+			var x = $(this).data("bgpos");
+			if (!$(this).hasClass("active"))
+				$(this).css("background-position", x + "px -0px");
+
+		});
+
+		var that = this;
+		// Hide notification menu when clicking anywhere
+		$(document).click(function(e) {
+			if ($(e.target).closest('.actionCont').length === 0 &&
+				$(e.target).closest('#button_notifications').length === 0
+
+			) {
+				that.hideNotificationsMenu();
+
+			}
+		});
+
+		$(window).resize(function() {
+			that.posNotificationMenu();
+
+
+		});
 
 
 
- 
 		apl_update_apply(this.tempCountData);
 
-     }
+	}
 
 
-     });
+});
 
 
 
@@ -414,22 +393,19 @@ console.log("el"+ this.el);
 	Container if user is NOT logged in.
 
 */
-page_login = Backbone.View.extend({   
+page_login = Backbone.View.extend({
 
 
-    initialize: function(){
-    console.log("guest container render");
-    },
+	initialize: function() {
+		console.log("guest container render");
+	},
 
 
-     render: function(){
+	render: function() {
 
-	$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
-
-
-     }
-
-    });
+		$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
 
 
+	}
 
+});

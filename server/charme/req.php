@@ -1120,7 +1120,7 @@ array("owner" => $_SESSION["charme_userid"],
 
 			break;
 
-
+			// Unused at the moment:
 			case "key_getPrivateKeyring":
 
 				$col = \App\DB\Get::Collection();
@@ -1869,6 +1869,26 @@ array("owner" => $_SESSION["charme_userid"],
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;
+
+		case "post_delete":
+			$col = \App\DB\Get::Collection();
+			
+
+			$col->posts->remove(array("_id" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]));
+			
+			$col->streamitems->remove(array("postId" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]));
+
+
+			// If i created the post, than also delete from collection
+
+
+		break;
+
+		case "comment_delete":
+
+		
+		break;
+
 
 
 		case "entity_delete" :

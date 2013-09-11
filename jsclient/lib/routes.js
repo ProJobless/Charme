@@ -48,8 +48,6 @@ var container_main;
 
 $(function() {
 
-
-
     if (isLoggedIn())
         charmeUser = new apl_user(localStorage.getItem("user"));
 
@@ -62,10 +60,7 @@ $(function() {
     // get apl data, like lists, friends etc. from server
     apl_setup(function() {
 
-
         apl_setup2();
-
-
 
         if (isLoggedIn()) {
             container_main.render();
@@ -179,9 +174,11 @@ $(function() {
                     "requests": [{
                             "id": "key_getAll"
                         },
+
+                        /* Unused, we get the keyring already at login 
                         {
                             "id" : "key_getPrivateKeyring"
-                        }
+                        }*/
 
 
                     ]
@@ -195,7 +192,6 @@ $(function() {
                     });
                     container_main.currentView.setSub(vsd);
                     container_main.currentView.render();
-
 
 
 
@@ -630,8 +626,6 @@ function login() {
 
 
 
-
-
             localStorage.setItem("user", u);
 
             charmeUser = new apl_user(u);
@@ -654,8 +648,6 @@ function login() {
                     // Store passphrase encoded with session Id.
                     localStorage.setItem("sessionPassphrase", (aes_encrypt(charmeUser.sessionId, passphrase)));
 
-                  
-
 
 
                     // The keyring contains a list of 
@@ -664,8 +656,8 @@ function login() {
 
                     // each item has format {revision, rsa}
                     var keyring = aes_decrypt(passphrase, keyringAES);
-                   
-                   
+
+
                     // Store encoded certificate
                     localStorage.setItem("keyring", keyring);
                     localStorage.setItem("userAutoComplete", u);
@@ -737,11 +729,11 @@ function logout() {
 
 function delTemp() {
 
-                    localStorage.removeItem("sessionPassphrase");
-                    localStorage.removeItem("certificate");
-                    localStorage.removeItem("passPassphrase");
-                    localStorage.removeItem("user");
-    alert("Deleted temporary data.");    
+    localStorage.removeItem("sessionPassphrase");
+    localStorage.removeItem("certificate");
+    localStorage.removeItem("passPassphrase");
+    localStorage.removeItem("user");
+    alert("Deleted temporary data.");
 }
 
 function resendPassword() {
