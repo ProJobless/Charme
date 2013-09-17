@@ -75,6 +75,7 @@ function apl_request(requests, callback, ses,srv)
 	// TIPP: http://stackoverflow.com/questions/15047279/how-can-i-retrieve-json-stringified-objects-in-php
 	var url1 = "http://"+srv+"/charme/req.php";
 
+	console.log("REQTO"+srv);
 
 	$.ajax({
 
@@ -108,7 +109,7 @@ function apl_request(requests, callback, ses,srv)
 		console.log(data);
 		if(callback != undefined && typeof callback == 'function') 
 		{
-			if (data.ERROR == 1)
+			if (data.ERROR == 1 && srv == charmeUser.server)
 			{
 			alert("Server Session expired. Perform logout.");
 			logout();

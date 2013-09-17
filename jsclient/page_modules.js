@@ -962,7 +962,7 @@ var view_profilepage = view_page.extend({
 
 
 
-			});
+			}, "", this.options.userId.split("@")[1]);
 
 		}
 
@@ -1991,6 +1991,11 @@ var view_profilepage_info = view_subpage.extend({
 
 		//#userinfo_container
 
+
+
+
+
+
 		apl_request({
 			"requests": [
 
@@ -1998,17 +2003,25 @@ var view_profilepage_info = view_subpage.extend({
 				{
 					"id": "profile_get",
 					"profileId": container_main.currentView.options.userId
-				},
-
-				// Send this to user server:
-				{
-					"id": "lists_getRegistred",
-					"userId": container_main.currentView.options.userId
 				}
 
 
 			]
 		}, function(d2) {
+
+
+
+
+				apl_request({
+			"requests": [
+				// Send this to user server:
+				{
+					"id": "lists_getRegistred",
+					"userId": container_main.currentView.options.userId
+				}
+	]
+		}, function(d9) {
+
 
 
 
@@ -2020,7 +2033,7 @@ var view_profilepage_info = view_subpage.extend({
 				var userlists = new Array();
 
 
-				jQuery.each(d2.lists_getRegistred, function() {
+				jQuery.each(d9.lists_getRegistred, function() {
 
 
 
@@ -2118,9 +2131,9 @@ var view_profilepage_info = view_subpage.extend({
 				});
 			});
 
-
-
 		});
+
+		},"",  container_main.currentView.options.userId.split("@")[1]);
 
 
 
