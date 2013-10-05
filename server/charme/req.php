@@ -131,7 +131,7 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -379,7 +379,8 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			$req21->send();
 		}
 
-		$returnArray[$action] = array("commentId" => $itemdata["_id"]);
+
+		$returnArray[$action] = array("commentId" => $itemdata["_id"]->__toString());
 
 
 		break;
@@ -423,7 +424,9 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 			$arr = $req21->send();
 
-			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["commentId"] );
+
+			clog2($arr);
+			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["post_comment_distribute"]["commentId"] );
 
 		break;
 		
@@ -1828,7 +1831,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$col = \App\DB\Get::Collection();
 		
 			$content = array(
-				"owner" => $_SESSION["charme_userid"],
+				"owner" => $item["userId"],
 				"collectionOwner" =>  $item["collectionOwner"],
 				"collectionId" => new MongoId($item["collectionId"]));
 

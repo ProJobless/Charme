@@ -1201,11 +1201,43 @@ control_postField = Backbone.View.extend({
 				var items = "";
 
 				jQuery.each(d.collection_getAll, function() {
+
+
+
+
 					items += "<option value='" + this._id.$id + "'>" + xssText(this.name) + "</option>";
 
 
 				});
+
+
+				if (d.collection_getAll == 0)
+					that.$el.append("Create <a href='#user/"+charmeUser.userIdURL+"/collections'>a collection</a> to start posting.");
+				else {
+					that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
+
+					$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
+
+					$('#inp_postImg').on("change", function(e) {
+						that.fileChanged(e);
+					});
+
+					$('#but_addImg').click(function() {
+
+						$("#inp_postImg").trigger('click');
+					});
+
+					$('#but_remImg').click(function() {
+
+						$('#inp_postImg').data("filecontent", null);
+						$("#but_remImg").hide();
+						$("#but_addImg").show();
+
+					});
+				}
+
 				$('#postOptions').append(" in <select style='width:100px;' id='collectionSelector'>" + items + "</select>");
+				
 
 
 
@@ -1214,26 +1246,7 @@ control_postField = Backbone.View.extend({
 
 		}
 
-		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
-
-		$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
-
-		$('#inp_postImg').on("change", function(e) {
-			that.fileChanged(e);
-		});
-
-		$('#but_addImg').click(function() {
-
-			$("#inp_postImg").trigger('click');
-		});
-
-		$('#but_remImg').click(function() {
-
-			$('#inp_postImg').data("filecontent", null);
-			$("#but_remImg").hide();
-			$("#but_addImg").show();
-
-		});
+		
 
 
 
@@ -1345,6 +1358,8 @@ control_postItem = Backbone.View.extend({
 
 		//Use uniId inside events like .click() etc., because uniIdCounter is global!!
 		var uniId = uniIdCounter;
+	
+
 
 
 				var that = this;
@@ -1373,13 +1388,13 @@ control_postItem = Backbone.View.extend({
 
 			// 
 			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" +
-				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
+				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
 		} else
-			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
+			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
 
 
 
-		str += "<div class='commentBox' id='commentBox" + uniIdCounter + "'><div class='postcomments' id='postComments" + uniIdCounter + "'></div><input id='inputComment" + uniIdCounter + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
+		str += "<div class='commentBox' id='commentBox" + uniId + "'><div class='postcomments' id='postComments" + uniId + "'></div><input id='inputComment" + uniId + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
 		str += "</div></div>";
 
 
@@ -1415,7 +1430,7 @@ control_postItem = Backbone.View.extend({
 		var itemStartTime;
 		if (this.options.comments != undefined && this.options.comments.length > 0) {
 
-			that.addComments(this.options.comments, uniIdCounter, false);
+			that.addComments(this.options.comments, uniId, false);
 			itemStartTime = this.options.comments[0].itemTime.sec;
 
 		}
@@ -1423,11 +1438,11 @@ control_postItem = Backbone.View.extend({
 
 
 		if (this.options.commentCount > 3)
-			$('#commentBox' + uniIdCounter).prepend("<a class='morecomments'>More</a>"); //data-start=TotalComments-6
+			$('#commentBox' + uniId).prepend("<a class='morecomments'>More</a>"); //data-start=TotalComments-6
 
 
 
-		$('#commentBox' + uniIdCounter + " .morecomments").click(function() {
+		$('#commentBox' + uniId + " .morecomments").click(function() {
 
 
 
@@ -1478,17 +1493,21 @@ control_postItem = Backbone.View.extend({
 
 				}
 
-			});
+			}, "", that.options.userId.split("@")[1]);
 
 		});
 
 
-		var zu = uniIdCounter;
+	
 
-		$("#inputComment" + uniIdCounter).keypress(function(e) {
+
+		$("#inputComment" + uniId).keypress(function(e) {
+
+
 			if (e.which == 13) {
 				// Write comment
 				// Get Text
+		
 
 				var content = $(this).val();
 				var that2 = this;
@@ -1506,6 +1525,7 @@ control_postItem = Backbone.View.extend({
 					]
 				}, function(d) {
 
+				
 					var item2 = new control_commentItem({
 						"content": content,
 						"username": d.post_comment.username,
@@ -1523,7 +1543,7 @@ control_postItem = Backbone.View.extend({
 
 
 
-		$("#doRepost" + uniIdCounter).click(function() {
+		$("#doRepost" + uniId).click(function() {
 
 			repostTemp = {
 				userId: that.options.userId,
@@ -1542,7 +1562,7 @@ control_postItem = Backbone.View.extend({
 		});
 
 
-		$("#counter" + uniIdCounter).click(function() {
+		$("#counter" + uniId).click(function() {
 
 
 
@@ -1579,9 +1599,9 @@ control_postItem = Backbone.View.extend({
 
 		this.setLikeText(uniIdCounter);
 
-		$("#doLove" + uniIdCounter).data("uniid", uniIdCounter);
+		$("#doLove" + uniId).data("uniid", uniId);
 
-		$("#doLove" + uniIdCounter).click(function() {
+		$("#doLove" + uniId).click(function() {
 
 			var that2 = this;
 
@@ -1770,7 +1790,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 			});
 
-		});
+		}, "", container_main.currentView.options.userId);
 
 
 		var that = this;
@@ -1863,7 +1883,7 @@ var view_profilepage_posts = view_subpage.extend({
 
 			});
 
-		});
+		},"",  container_main.currentView.options.userId.split("@")[1]);
 
 
 
@@ -1920,7 +1940,7 @@ var view_profilepage_collection = view_subpage.extend({
 
 			// TODO: Add collection control...
 
-		});
+		},"",  container_main.currentView.options.userId.split("@")[1]);
 
 
 

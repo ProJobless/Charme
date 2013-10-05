@@ -88,6 +88,9 @@ We plan to release a stable version by summer 2014.**
 * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
 * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
+## License
+Charme is distributed under the terms of the GNU General Public License,
+version 3. See the LICENSE.txt file for details.
 
 ## Developers
 * We use Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin to write code.
