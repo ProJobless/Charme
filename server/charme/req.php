@@ -1051,9 +1051,25 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] =  (\App\Counter\Notify::getNotifications($_SESSION["charme_userid"]));
 		break;
 
+		// Get a STORE request from client
+		case "privateinfo_store":
+			$col = \App\DB\Get::Collection();
+			$allowedFields = array("phone", "mail", "currentcity");
+			$content = $item["fields"];
+
+			foreach ($content as $key => $value)
+			{
+				if (in_array($key, $allowedFields))
+				{
+					// Insert into mongodb		
+					$col->pieces->insert();
+				}
+			
+			}
+
+		break;	
 	
-	
-	case "privateinfo_getall":
+		case "privateinfo_getall":
 			$returnArray[$action] = array();
 		break;
 

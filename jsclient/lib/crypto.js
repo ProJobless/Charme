@@ -43,6 +43,19 @@ function aes_decrypt(pass, encText)
 }
 
 
+function getCurrentRSAKey() {
+
+	var rsa = new RSAKey();
+
+	var key1 = getKeyByRevision(0);
+	var key = key1.rsa;
+
+	rsa.setPrivateEx(key.n, key.e, key.d,
+		key.p, key.q, key.dmp1,
+		key.dmq1, key.coeff);
+	return rsa;
+}
+
 /***
 	Name:
 	randomAesKey
@@ -50,7 +63,7 @@ function aes_decrypt(pass, encText)
 	Info:
 	Generates a random AES Key. 
 
-	TODO:LV1: Add Mouse movement as `Math.random()` is vulnerable to cryptoanalysis.
+	TODO:LV1: Add Mouse movement etc. as `Math.random()` is not a reliable RNG.
 
 	Params:
 	lenghtInByte:int:Key lenght in byte
@@ -61,6 +74,7 @@ function aes_decrypt(pass, encText)
 	Code:JS:
 	var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
 */
+
 
 
 function randomAesKey(lenghtInByte)

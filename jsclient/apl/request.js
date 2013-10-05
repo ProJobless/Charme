@@ -1,41 +1,43 @@
 
 // apl posttest: only for debug!
-function apl_posttest(requests)
-{
-	var ses ="";
-	var url1 = "http://server.local/charme/auto.php?debug=1&session="+ses+"";
+
+function apl_posttest(requests) {
+	var ses = "";
+	var url1 = "http://server.local/charme/auto.php?debug=1&session=" + ses + "";
 
 	$.ajax({
 
-	  url: url1,
+		url: url1,
 
-	type: "POST",
+		type: "POST",
 
-    data: {d:JSON.stringify(requests), test: "test"},
-    dataType: "html",//json
+		data: {
+			d: JSON.stringify(requests),
+			test: "test"
+		},
+		dataType: "html", //json
 
-    crossDomain : true,
- 	xhrFields: {
-    withCredentials: true
-  },
-        cache:false,
+		crossDomain: true,
+		xhrFields: {
+			withCredentials: true
+		},
+		cache: false,
+
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError);
+			console.log(xhr.responseText);
+
+			// console.log(ajaxOptions);
+			// console.log(xhr);
+		},
+		success: function(data) {
+
+			console.log("posttest returns: " + data);
+		}
+	});
 
 
-
-	  error: function (xhr, ajaxOptions, thrownError) {
-      console.log(thrownError);
-      console.log(xhr.responseText);
- 
-     // console.log(ajaxOptions);
-     // console.log(xhr);
-      },
-	  success: function(data) {
-
-	  	console.log("posttest returns: "+ data);
-	  }});
-
-
-} 
+}
 /***
   Name:
   apl_request
