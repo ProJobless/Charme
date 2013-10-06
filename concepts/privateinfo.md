@@ -59,6 +59,7 @@ User A can decrypt it and send it back, also encrypted with the random AES key u
 * piece_request_receive
 * piece_supply
 * piece_supply_receive
+* piece_store
 
 ## MongoDB Collections
 

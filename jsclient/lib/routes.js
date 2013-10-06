@@ -57,6 +57,8 @@ $(function() {
         });
 
 
+
+    
     // get apl data, like lists, friends etc. from server
     apl_setup(function() {
 
@@ -199,19 +201,44 @@ $(function() {
             } else if (id == "privateinfo") {
                 apl_request({
                     "requests": [{
-                            "id": "privateinfo_getall"
+                            "id": "piece_store_get"
                         },
 
 
                     ]
                 }, function(d2) {
 
+                    d2.prvInfo = {};
+
+                    // Default values
+                    d2.prvInfo.phone = "";
+                    d2.prvInfo.currentcity = "";
+                    d2.prvInfo.mail = "";
+
+            
+                    // Do decrypt
+                    $.each(d2.piece_store_get.items, function() {
+                        
+                      
+
+                        var key = getKeyByRevision(this.value.revision);
+                        var rsa = mkRSA(key.rsa);
+                        var aes = rsa.decrypt(this.value.aesEnc);
+
+                        var original = aes_decrypt(aes, this.value.value);
+                      
+                        d2.prvInfo[this.key] = original;
+
+                    });
+                    console.log(d2.prvInfo);
 
                     var vsd = new view_settings_privateinfo({
                         template: "settings_privateinfo",
                         navMatch: '#nav_' + id,
                         data: d2
                     });
+
+                 
                     container_main.currentView.setSub(vsd);
                     container_main.currentView.render();
 

@@ -42,18 +42,31 @@ function aes_decrypt(pass, encText)
 	return GibberishAES.dec(encText.replace(/(\r\n|\n|\r)/gm,"\n"), pass);
 }
 
-
-function getCurrentRSAKey() {
+function mkRSA(key)
+{
 
 	var rsa = new RSAKey();
-
-	var key1 = getKeyByRevision(0);
-	var key = key1.rsa;
 
 	rsa.setPrivateEx(key.n, key.e, key.d,
 		key.p, key.q, key.dmp1,
 		key.dmq1, key.coeff);
 	return rsa;
+
+}
+function getCurrentRSAKey() {
+
+	var rsa = new RSAKey();
+
+	var key1 = getKeyByRevision(0);
+
+	var key = key1.rsa;
+
+	rsa.setPrivateEx(key.n, key.e, key.d,
+		key.p, key.q, key.dmp1,
+		key.dmq1, key.coeff);
+
+
+	return {rsa: rsa, revision: key1.revision};
 }
 
 /***

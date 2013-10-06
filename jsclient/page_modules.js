@@ -439,6 +439,9 @@ view_page = Backbone.View.extend({
 
 				var templateData = that.getData();
 
+
+
+
 				_.templateSettings.variable = "rc";
 				var template = _.template(d, templateData);
 
@@ -509,6 +512,11 @@ view_subpage = Backbone.View.extend({
 
 			}
 			//console.log(templateData);
+
+
+							console.log(templateData);
+console.log(templateData);
+console.log(templateData);
 
 
 			var template = _.template(d, templateData);

@@ -134,6 +134,14 @@ version 3. See the LICENSE.txt file for details.
         <td>MIT</td>
         <td>embedded in ui.css / ui.js (http://jamesflorentino.github.com/nanoScrollerJS/ for more information)</td>
     </tr>
+
+       <tr>
+        <td>nProgressBar</td>
+        <td>MIT</td>
+        <td>{lib|css}/nprogress.; https://github.com/rstacruz/nprogress</td>
+    </tr>
+
+
      <tr>
         <td>Backbone.js</td>
         <td>MIT</td>

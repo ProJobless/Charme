@@ -1051,8 +1051,8 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] =  (\App\Counter\Notify::getNotifications($_SESSION["charme_userid"]));
 		break;
 
-		// Get a STORE request from client
-		case "privateinfo_store":
+		// store encrypted pieces in database
+		case "piece_store":
 			$col = \App\DB\Get::Collection();
 			$allowedFields = array("phone", "mail", "currentcity");
 			$content = $item["fields"];
@@ -1062,12 +1062,28 @@ $data = array("requests" => $reqdata
 				if (in_array($key, $allowedFields))
 				{
 					// Insert into mongodb		
-					$col->pieces->insert();
+					$col->pieces->update(
+						array("owner" => $_SESSION["charme_userid"], "key" => $key),
+						array("owner" => $_SESSION["charme_userid"],
+							"key" => $key,
+							"value" => $value),
+						array("upsert" => true));
 				}
 			
 			}
 
 		break;	
+
+		// returns encrypted piece storage data
+		case "piece_store_get":
+
+			$col = \App\DB\Get::Collection();
+			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $_SESSION["charme_userid"]), array('value', 'key')), false);
+			$returnArray[$action] = array("items" => $cursor);
+
+
+
+		break;
 	
 		case "privateinfo_getall":
 			$returnArray[$action] = array();
