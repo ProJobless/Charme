@@ -14,10 +14,9 @@ var view_settings_keymanager = view_subpage.extend({
 
 
 		
-		var sesPass = localStorage.getItem("sessionPassphrase");
-
-		var passphrase = (aes_decrypt(charmeUser.sessionId, sesPass));
-
+	
+		var fastkey = getFastKey(0, 1);
+	
 		var key = getKeyByRevision(0);
 		$("#mypub").text(key.rsa.n);
 		$("#myrev").text(key.revision);
@@ -36,7 +35,7 @@ var view_settings_keymanager = view_subpage.extend({
 		
 
 			// alert(passphrase);
-			var aesstr = aes_decrypt(passphrase, item.value);
+			var aesstr = aes_decrypt(fastkey.fastkey1, item.value);
 
 			var aesobj = $.parseJSON(aesstr);
 			
@@ -149,9 +148,15 @@ function makeNewKey(userId) {
 							// Add new RSA key, get json first
 							var rsa = jQuery.parseJSON($("#rsa").val());
 
+						var fastkey1 = randomAesKey(32);
+						var fastkey2 = randomAesKey(32);
+
 
 							keyring.push({
 								revision: maxrev,
+								fastkey1: fastkey1,
+								fastkey2: fastkey2,
+
 								rsa: rsa
 							});
 
@@ -300,12 +305,13 @@ console.log(templateData);
 
 				// Make request to my server to check revision and get encrypted public key
 
-				var sesPass = localStorage.getItem("sessionPassphrase");
+				var fastkey = getFastKey(0, 1);
+				
 
-				var passphrase = (aes_decrypt(charmeUser.sessionId, sesPass));
-
+			
+			
 				// Build key hash
-				var e_key = CryptoJS.SHA256(passphrase + userId).toString(CryptoJS.enc.Base64);
+				var e_key = CryptoJS.SHA256(fastkey.fastkey1 + userId).toString(CryptoJS.enc.Base64);
 
 
 
@@ -323,7 +329,7 @@ console.log(templateData);
 
 						console.log(d3.key_getFromDir.value);
 
-						var oldValue = $.parseJSON(aes_decrypt(passphrase, d3.key_getFromDir.value));
+						var oldValue = $.parseJSON(aes_decrypt(fastkey.fastkey1, d3.key_getFromDir.value));
 
 
 						if (oldValue.key.n != key.n)
@@ -344,7 +350,7 @@ console.log(templateData);
 
 
 						// Build value hash
-						var e_value = aes_encrypt(passphrase, JSON.stringify({
+						var e_value = aes_encrypt(fastkey.fastkey1, JSON.stringify({
 							key: key,
 							userId: userId
 						}));

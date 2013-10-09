@@ -77,9 +77,9 @@ We plan to release a stable version by summer 2014.**
 
 ## Crypto
 
-* We use a RSA/AES Cryptosystem to encrypt messages and privat data
+* We use a RSA/AES cryptosystem to encrypt messages and private data
 * The private key is stored on a server, encrypted with a 20 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password or private PGP key.
-* To validate public keys we will implement a Web-Of-Trust like key veryfication system, that checks if all friends of a user own the same public key of him in the Background. You can also manually check the public keys in the key manager.
+* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if all friends of a user own the same public key of him in the background. You can also manually check the public keys in the key manager.
 
 
 ## How to Contribute?

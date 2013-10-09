@@ -131,7 +131,10 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
+
+
+	// This array contains a list of request, that can be executed without a session Id
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -1084,7 +1087,86 @@ $data = array("requests" => $reqdata
 
 
 		break;
+		
+
+
+		case "piece_request_receive":
+
+			// Insert data into collection
+			$col = \App\DB\Get::Collection();
+
+			$col->pieceRequests->update
+			(
+				array("userId" => $item["userId"], 
+					"invader" =>  $item["invader"], 
+					"key" =>  $item["key"]
+					),
+				
+				array("userId" => $item["userId"], 
+					"invader" =>  $item["invader"], 
+					"key" =>  $item["key"]
+					),
+				array("upsert" => true)
+			);
+
+
+		break;
+
+		case "piece_request_list":
+			
+
+
+			$col = \App\DB\Get::Collection();
+			$cursor = iterator_to_array($col->pieceRequests->find(array("userId"=> $_SESSION["charme_userid"]), array('invader', 'key')), false);
+			$returnArray[$action] = array("items" => $cursor);
+
+
+
+
+		break;
+
+
+		case "piece_request":
+			
+			// Save request on own server
+
+			// Send request to external server
 	
+			$data = array("requests" => array(
+
+			"id" => "piece_request_receive",
+			"userId" => $item["userId"],
+			"invader" => $_SESSION["charme_userid"],
+			"key" => $item["key"],
+		
+
+			));
+
+			$req21 = new \App\Requests\JSON(
+			$item["userId"],
+			$_SESSION["charme_userid"],
+			$data);
+
+			$arr = $req21->send();
+
+
+
+
+		break;
+
+		// returns encrypted piece storage data
+		case "piece_getkeys":
+
+			$col = \App\DB\Get::Collection();
+			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $item["userId"]), array('key')), false);
+			$returnArray[$action] = array("items" => $cursor);
+
+
+
+		break;
+
+
+
 		case "privateinfo_getall":
 			$returnArray[$action] = array();
 		break;

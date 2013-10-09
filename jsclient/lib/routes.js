@@ -198,7 +198,38 @@ $(function() {
 
 
                 });
-            } else if (id == "privateinfo") {
+            } 
+
+             else if (id == "privateinfo_requests") {
+
+                   apl_request({
+                    "requests": [{
+                            "id": "piece_request_list"
+                        },
+
+
+                    ]
+                }, function(d2) {
+
+                      var vsd = new view_settings_privateinfo_requests({
+                        template: "settings_privateinfo_requests",
+                        navMatch: '#nav_' + id,
+                        data: d2
+                    });
+
+                 
+                    container_main.currentView.setSub(vsd);
+                    container_main.currentView.render();
+
+
+
+                });
+
+
+
+             }
+
+            else if (id == "privateinfo") {
                 apl_request({
                     "requests": [{
                             "id": "piece_store_get"
@@ -218,15 +249,21 @@ $(function() {
             
                     // Do decrypt
                     $.each(d2.piece_store_get.items, function() {
+                            
                         
-                      
 
-                        var key = getKeyByRevision(this.value.revision);
-                        var rsa = mkRSA(key.rsa);
-                        var aes = rsa.decrypt(this.value.aesEnc);
+                        var key = getFastKey(this.value.revision, 1);
+                        
+                        
+                     
+                        var original = "";
+                        try{
+                        var aes = aes_decrypt(key.fastkey1, this.value.aesEnc);
 
                         var original = aes_decrypt(aes, this.value.value);
-                      
+                        }catch(err){
+
+                        }
                         d2.prvInfo[this.key] = original;
 
                     });

@@ -855,10 +855,20 @@ var view_register = view_page.extend({
 
 			//alert(e.data.n.toString());
 
+
+			var fastkey1 = randomAesKey(32);
+			var fastkey2 = randomAesKey(32);
+
+
 			//n, e, d, p, q, dmp1, dmq1, coeff
 			var certificate = [{
 				revision: 1,
+				fastkey1: fastkey1,
+				fastkey2: fastkey2,
+
+
 				rsa: {
+
 					n: e.data.n.toString(),
 					e: e.data.e.toString(),
 					d: e.data.d.toString(),
@@ -890,12 +900,15 @@ var view_register = view_page.extend({
 			console.log(JSON.stringify(certificate));
 
 
+		
 			// Encrypt certificate with passpharse
 			var tt = aes_encrypt(passphrase, JSON.stringify(certificate));
 
 
 				var pub = {
 								revision: 1,
+						
+
 								publickey: {
 									n: e.data.n,
 									e: e.data.e
@@ -959,10 +972,14 @@ var view_profilepage = view_page.extend({
 
 
 			apl_request({
-				"requests": [{
+				"requests": [
+				{
 					"id": "profile_get_name",
 					"userId": container_main.currentView.options.userId
-				}, ]
+				}
+
+
+				]
 			}, function(d) {
 
 				container_main.currentView.username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
@@ -2033,6 +2050,12 @@ var view_profilepage_info = view_subpage.extend({
 					"profileId": container_main.currentView.options.userId
 				}
 
+				, 
+				{
+					"id": "piece_getkeys",
+					"userId": container_main.currentView.options.userId
+				} 
+				
 
 			]
 		}, function(d2) {
@@ -2116,6 +2139,53 @@ var view_profilepage_info = view_subpage.extend({
 
 
 				$("td:empty").parent().remove(); // Remove empty Info fields
+
+
+
+
+
+					$.each(d2.piece_getkeys.items, function() {
+
+						var that2 = this;
+						var rq = "";
+						rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
+
+						var text = "";
+
+						$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" + xssText(text) + rq + "</td></tr>");
+						
+
+						$("#req_" + xssText(that2.key)).click(function() {
+
+							var that3 = this;
+							
+
+							apl_request({
+								"requests": [{
+									"id": "piece_request",
+									"key": that2.key,
+									"userId" : container_main.currentView.options.userId
+								}, ]
+							}, function(d) {
+
+								$(that3).parent().append("Request sent.");
+								$(that3).remove();
+								NProgress.start();
+								NProgress.done();
+
+							});
+
+							//,"",  container_main.currentView.options.userId.split("@")[1]
+
+							//alert(that2.key);
+
+							// Send apl request to PROFILE OWNER server
+
+
+						});
+
+
+					});
 
 
 				// Get box templates now and append to infopage:

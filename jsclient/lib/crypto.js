@@ -42,6 +42,25 @@ function aes_decrypt(pass, encText)
 	return GibberishAES.dec(encText.replace(/(\r\n|\n|\r)/gm,"\n"), pass);
 }
 
+
+/***
+	Name:
+	mkRSA
+
+	Info:
+	Generate RSA Object which prodvides encrypt/decrypt functions 
+	of Key Object
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	var rsa = mkRSA(key);
+	rsa.encrypt(...);
+*/
+
+
 function mkRSA(key)
 {
 
@@ -53,6 +72,58 @@ function mkRSA(key)
 	return rsa;
 
 }
+
+/***
+	Name:
+	getFastKey
+
+	Info:
+	Get symmetric AES key for fast encryption/decryption
+	First Parameter is certificate Version, second is fastkey number
+	(which is 1 or 2)
+	Returns {fastkey1, revision}
+	
+	Location:
+	crypto.js
+
+	Code:JS:
+	var key1 = getFastKey(0, 1);
+*/
+
+
+
+function getFastKey(version, number)
+{
+	var key1 = getKeyByRevision(version);
+	if (number == 1)
+	return {fastkey1: key1.fastkey1, revision: key1.revision };
+	if (number == 2)
+	return {fastkey2: key1.fastkey2, revision: key1.revision };
+
+}
+
+function getCurrentFastKey(number)
+{
+	return getFastKey(0,number);
+}
+
+
+/***
+	Name:
+	getCurrentRSAKey
+
+	Info:
+	Returns current RSA Key in form {rsa, revision}
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	var rsa = function getCurrentRSAKey()
+*/
+
+
+
 function getCurrentRSAKey() {
 
 	var rsa = new RSAKey();
@@ -103,10 +174,3 @@ return key;
 
 }
 
-
-// TODO: RSA Decryption with Caching
-function rsaCacheDecrypt(lenghtInByte)
-{
-
-
-}

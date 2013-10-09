@@ -55,11 +55,13 @@ User A can decrypt it and send it back, also encrypted with the random AES key u
 
 ## Requests
 
-* piece_request (pieceId, userId)
-* piece_request_receive
-* piece_supply
-* piece_supply_receive
 * piece_store
+* piece_store_get
+* piece_getkeys
+* piece_request
+* piece_request_receive
+* piece_send
+* piece_send_receive
 
 ## MongoDB Collections
 

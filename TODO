@@ -6,11 +6,11 @@
 @Login:
 
 
-
+- remove passphrase from accessible code, use fastkey instead
 -Private Infoshare
 -Delete Post and Comments
 - love/repost on status detail not working
-
+- delete collections
 1) key_getPrivateKEyring
 2) update session passphrase with newest key_getPrivateKeyring (OK1)
 3) Create keyring at sign up

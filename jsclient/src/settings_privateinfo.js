@@ -1,3 +1,22 @@
+var view_settings_privateinfo_requests = view_subpage.extend({
+	postRender: function()
+	{
+
+		// Attach click events
+		$(".btnAccept").click(function() {
+			var key = ($(this).parent().data("key"));
+			var userid = ($(this).parent().data("userid"));
+
+
+		});
+	},
+	getData: function()
+	{
+		return this.options.data;
+	}
+});
+
+
 var view_settings_privateinfo = view_subpage.extend({
 
 
@@ -44,13 +63,13 @@ function encryptField(fieldvalue) {
 
 	var aes = randomAesKey(32);
 	var value = aes_encrypt(aes, fieldvalue);
-	var rsakey = getCurrentRSAKey();
+	var fkey = getCurrentFastKey(1);
 
-	var aesEnc = rsakey.rsa.encrypt(aes);
+	var aesEnc = aes_encrypt(fkey.fastkey1, aes);
 
 	return {
 		aesEnc: aesEnc,
 		value: value,
-		revision: rsakey.revision
+		revision: fkey.revision
 	};
 }
