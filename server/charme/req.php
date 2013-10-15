@@ -1125,6 +1125,31 @@ $data = array("requests" => $reqdata
 
 		break;
 
+		case "piece_request_accept":
+			
+			$col = \App\DB\Get::Collection();
+
+			$content = array("");
+			// Create bucket 
+			$res = $col->pieceBuckets->insert($content);
+
+			// TODO: Or find exisitng bucket
+
+			// Insert into bucketItems
+			$col->pieceBucketItems->
+			insert(array(
+			 "bucket" => $content["_id"],
+			 "key" => $item["key"],
+			 "owner" => $_SESSION["charme_userid"],
+
+
+			 ));
+
+
+			// insert public key encrypted data into
+			// pieceBucketRSA
+
+		break;
 
 		case "piece_request":
 			
