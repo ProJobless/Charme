@@ -18,7 +18,15 @@ var view_settings_keymanager = view_subpage.extend({
 		var fastkey = getFastKey(0, 1);
 	
 		var key = getKeyByRevision(0);
-		$("#mypub").text(key.rsa.n);
+		console.log(key);
+		console.log(key);
+		console.log(key);
+
+
+		var text = CryptoJS.SHA256(key.rsa.rsa.n).toString(CryptoJS.enc.Base64);
+
+
+		$("#mypub").text(text);
 		$("#myrev").text(key.revision);
 
 		
@@ -43,11 +51,12 @@ var view_settings_keymanager = view_subpage.extend({
 			console.log(aesobj);
 			//var obj = aes_decrypt(passphrase, item.value);
 
+			var text = CryptoJS.SHA256(aesobj.key.n).toString(CryptoJS.enc.Base64);
 
 
 			var username = "test";
 			var userId = aesobj.userId;
-			var key = " - REVISION X<br>" + aesobj.key.n;
+			var key = " - REVISION X<br>" + text;
 
 			$("#keys").append("<div id='key_" + elementId + "'><b>" + userId + "</b><span style='word-wrap: break-word;'>" + key + "</span></div><br>");
 
@@ -108,9 +117,13 @@ function makeNewKey(userId) {
 					if (d.key_update_phase1.error) {
 						alert("Wrong password.");
 					} else {
+						
+
 						// Decrypt old keyring with old passphrase
 						var keyring = [];
 						var error = false;
+
+						
 
 						if (d.key_update_phase1.keyring == null ||
 							d.key_update_phase1.keyring == "") {
@@ -284,9 +297,10 @@ function requestNewKey(userId) {
 
 		$.get("templates/box_requestkey.html", function(d2) {
 
+			var text = CryptoJS.SHA256(key.n).toString(CryptoJS.enc.Base64);
 
 			var templateData = {
-				key: key.n,
+				key: text,
 				userId: userId,
 				revision: d.key_get.revision
 			};
@@ -352,7 +366,7 @@ console.log(templateData);
 						// Build value hash
 						var e_value = aes_encrypt(fastkey.fastkey1, JSON.stringify({
 							key: key,
-							userId: userId
+							userId: userId // Important to ensure server returns right key!
 						}));
 
 

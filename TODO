@@ -26,8 +26,15 @@
 
 --------------
 
+SECURITY:
+
+- server could return the public key of another user
+   ---> solution include userid into encrypted aes
 
 
+
+
+--------------
 
 
 TODO:

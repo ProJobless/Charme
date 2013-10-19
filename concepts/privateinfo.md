@@ -2,55 +2,46 @@
 
 
 
-## Challenges
+## TODO
 
 * Make sure the information is really from the user we requested it from. -> sign it!
+* Revision for pubkey and piece
 
-## Draft
+
+
+## Introduction
 
 A user can have private information, other users can only access by request.
-
 
 We call such information a "piece". A piece can be your telephone number for example.
 
 
-When a new piece is created, we generate a random AES Key first.
-The information will be stored encrypted with this AES key on the users server. 
-The AES key itself will be encrypted with the users RSA key and stored on the user A's server too.
+## Allow someone access to private information
+
+We use the bucket system described in the following to avoid time inefficient
+RSA encryption for each user that can access the resource when updating a piece.
+
+Every bucket contains the piece encrypted with a random AES key. This key is encrypted with the public RSA Key of a certain number (=bucketsize; Currently 5) of people. 
+
+When we allow 
+
+## Revoke Access
+
+When we revoke access we have to generate a new bucket key and send it AES encrypted to each person without the person we do not want to allow access anymore.
 
 
+## Update private information
+
+Here we have to get the AES Key and encrypt the new information with this key. Afterwards we update the data field for each pieceBucket.
+
+## Query private information
+
+We get the public key encrypted private information form the server (pieceBucketItems Collection) and use our private key to obtain the AES key 1. This key will be used to decrypt the private information.
 
 
-	Save private information
-		|
-		|
-		|
-		v
-	Check if field exists on server
-	|			|
-	| Yes     	|  No
-	|			|
-	| 			V
-	|		Create new AES Key, encrypt AES with my private RSA Key
-	|		
-	|			|
-	|			|
-	V			V
-	Encrypt field with AES Key, send to server
+## Update Keyring
 
-
-
-
-Other users can request this information. In this case, the information owner will click on "Accept" and send the information, encrypted with the public key to the user B who requests it. The server of user B will store this encrypted information in the database. 
-
-When user B requests the profile of the first user, the information will be decrypted with the keyring and displayed.
-
-
-Now we have to ensure, that a user will only receive information of the real information owner. This means requests to user B's server can not be sent by anybody.
-
-To ensure this, we create a random value when user B requests the information and encrypt it with the public key of user A.
-
-User A can decrypt it and send it back, also encrypted with the random AES key used to encrypt the information.
+Here we have to update the field value in the pieces collection. The old value must be decrypted with the old fastkey1 and encrypted with the new fastkey1.
 
 
 ## Requests
@@ -68,26 +59,21 @@ User A can decrypt it and send it back, also encrypted with the random AES key u
 Users server
 
 * pieces
-	* contains passphrase encrypted private data. This colllection is requested by the owner of the data if he wants to change it
+	* contains fastkey1 encrypted private data. This colllection is requested by the owner of the data if he wants to change it
 	* Fields: key, value, owner 
+
 * pieceRequests
 	* if another user wants to request private information from you he or she will send you a pieceRequest. This request contains your userID and the key of the requested information.
 
+* pieceBucketItems
+	* Contains for each user in this bucket the RSA encrypted AES Key 1 to decrypt the desired information
+	* Fields: key, bucketkey, owner, userid, bucket
+* pieceBucket
+	* Contains the desired information encrypted with AES Key 1
+	* Fields: owner, bucketaes.
 
-Other users server
-
-* pieceStorage
 
 ## Files
 
-* src/settings_privateinfo.js - Global functions
-* (ROUTING) routes.js - Routing
-
-## Roadmap
-
-* Local Storage
-*
-*
-
-## Status
-
+* /jsclient/src/settings_privateinfo.js - Global functions
+* (ROUTING) /jsclient/lib/routes.js - Routing

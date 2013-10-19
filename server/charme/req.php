@@ -1062,18 +1062,53 @@ $data = array("requests" => $reqdata
 
 			foreach ($content as $key => $value)
 			{
+
 				if (in_array($key, $allowedFields))
 				{
 					// Insert into mongodb		
 					$col->pieces->update(
 						array("owner" => $_SESSION["charme_userid"], "key" => $key),
+					
+
 						array("owner" => $_SESSION["charme_userid"],
 							"key" => $key,
-							"value" => $value),
+							"value" => $value)
+
+
+
+						,
 						array("upsert" => true));
 				}
+
+					$returnArray[$action] = array("OK" =>$item, "test" => 1);
+
+
+				// Update buckets
+				if (isset($item["fielddata"][$key]))
+				{
+
+				
+
+
+				$col->pieceBuckets->update(array("key" => $key, "owner" => $_SESSION["charme_userid"]), 
+
+
+					array('$set' => array("piecedata" => $item["fielddata"][$key])
+						)
+
+					,
+					array("multiple" => false, "upsert" => true)
+					);
+			}
+		
+
+				//multiple=true!, upsert = true
 			
 			}
+
+
+
+			// Also update PieceBucket
 
 		break;	
 
@@ -1125,30 +1160,89 @@ $data = array("requests" => $reqdata
 
 		break;
 
-		case "piece_request_accept":
-			
-			$col = \App\DB\Get::Collection();
+		
 
-			$content = array("");
+		case "piece_request_accept":
+
+		// insert public key encrypted data into
+		// pieceBucketItems
+		$col = \App\DB\Get::Collection();
+		$col->pieceBucketItems->
+		insert(array(
+		 "key" => $item["key"], // Information Key, like "phone" or "hometown"
+		 "bucket" => $item["bucket"],
+		 "bucketkey" => $item["bucketkey"], // RSA encrypted key to decrypt private information
+		 "owner" => $_SESSION["charme_userid"], // The real information owner
+		 "userid" =>  $item["userid"] // The user the key is for
+		 ));
+
+
+		// Count keys in this buckets and update counter and pieceData
+
+				$cursor = $col->pieceBuckets->update(
+
+			array("owner" => $_SESSION["charme_userid"],
+					"_id" => new MongoId($item["bucket"]))
+
+				, array(
+
+					'$set' => array(
+					"piecedata" => $item["piecedata"]
+					)
+
+					), array("upsert" => true));
+			
+
+
+		//...TODO
+
+		break;
+
+		case "piece_getbuckets":
+
+			$col = \App\DB\Get::Collection();
+			 $all = $col->pieceBuckets->find(array("owner" => $_SESSION["charme_userid"]), array("piecedata", "bucketaes", "key"));
+
+			 $cursor = iterator_to_array($all, false);
+
+			$returnArray[$action] = array("items" => $cursor);
+
+		break;
+
+		case "piece_request_single" :
+
+			$col = \App\DB\Get::Collection();
+			 $cursor =  $col->pieces->findOne(array(
+				"owner" => $_SESSION["charme_userid"],
+				"key" => $item["key"]),array("value"));
+			$returnArray[$action] = array("value" => $cursor["value"]);
+
+
+		break;
+		case "piece_request_findbucket":
+			
+			// TODO: Add bucketcontent here!
+
+			$col = \App\DB\Get::Collection();
+			$content = array("owner" => $_SESSION["charme_userid"],
+				"key" => $item["key"],
+
+				"bucketaes" => $item["bucketaes"]);
 			// Create bucket 
 			$res = $col->pieceBuckets->insert($content);
 
 			// TODO: Or find exisitng bucket
 
-			// Insert into bucketItems
-			$col->pieceBucketItems->
-			insert(array(
-			 "bucket" => $content["_id"],
-			 "key" => $item["key"],
-			 "owner" => $_SESSION["charme_userid"],
+			// RETURN BUCKET ID and bucket AES
+			
+			$returnArray[$action] = 
+			array("bucketid" => $content["_id"]->__toString(),
+				"bucketaes" => $item["bucketaes"]
+
+				);
 
 
-			 ));
-
-
-			// insert public key encrypted data into
-			// pieceBucketRSA
-
+		
 		break;
 
 		case "piece_request":
@@ -1183,7 +1277,15 @@ $data = array("requests" => $reqdata
 		case "piece_getkeys":
 
 			$col = \App\DB\Get::Collection();
+			
+			/*
+				1. Look into pieceBucket to get enrypted piece 
+				2. Look into pieceBucketItems to get public key encrypted AES Key to decrypt piece
+			*/
+
+
 			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $item["userId"]), array('key')), false);
+
 			$returnArray[$action] = array("items" => $cursor);
 
 

@@ -43,6 +43,34 @@ function aes_decrypt(pass, encText)
 }
 
 
+
+/***
+	Name:
+	mkRSA
+
+	Info:
+	Generate a public RSA Object which prodvides encrypt functions
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	var rsa = mkRSAPublic(key);
+	rsa.encrypt(...);
+*/
+
+
+function mkRSAPublic(key)
+{
+	var rsa = new RSAKey();
+	rsa.setPublic(key.n, key.e);
+	return rsa;
+}
+
+
+
+
 /***
 	Name:
 	mkRSA
@@ -147,7 +175,7 @@ function getCurrentRSAKey() {
 	Info:
 	Generates a random AES Key. 
 
-	TODO:LV1: Add Mouse movement etc. as `Math.random()` is not a reliable RNG.
+	TODO:LV1: Add Mouse movement etc. as `Math.random()` is NOT a reliable RNG.
 
 	Params:
 	lenghtInByte:int:Key lenght in byte
@@ -157,6 +185,7 @@ function getCurrentRSAKey() {
 
 	Code:JS:
 	var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
+
 */
 
 
