@@ -17,11 +17,14 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 			var key = ($(this).parent().data("key"));
 			var userId = ($(this).parent().data("invader"));
 
-			// Generate Random AES, this key will be used if a new Bucket is created.
+			// Generate Random AES, this key will ONLY be used if a new Bucket is created.
 			var mykey  = randomAesKey(32);
 
 			// Encrypt AES Key with fastkey1
 			var fastkey = getFastKey(0, 1);
+
+
+
 			var aesEnc = aes_encrypt(fastkey.fastkey1, mykey);
 
 
@@ -73,7 +76,7 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 					var aesobjPK = $.parseJSON(aesstrPK);
 
 				
-
+console.log(aesobjPK);
 
 					if (aesobjPK.userId != userId)
 					{
@@ -86,16 +89,16 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 
 						// Make RSA Object
 
-						
 						var rsa = mkRSAPublic(aesobjPK.key);
 
 						
-						// Get bucket AES and decrypt with fastkey
+						// Get the real bucket AES and decrypt with fastkey. DO NOT USE aesENC as we do not know it it was accepted
 						var bucketaes= aes_decrypt(fastkey.fastkey1, d.piece_request_findbucket.bucketaes);
 
 
 						// Rsa encrypted key to decrypt private information for users
-						var rsabucketkey = rsa.encrypt(bucketaes);
+						var rsabucketkey = {data: rsa.encrypt(bucketaes), revision :aesobjPK.revision };
+
 
 						var piecedata = "";
 

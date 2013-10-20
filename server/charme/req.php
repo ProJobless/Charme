@@ -1167,8 +1167,7 @@ $data = array("requests" => $reqdata
 		// insert public key encrypted data into
 		// pieceBucketItems
 		$col = \App\DB\Get::Collection();
-		$col->pieceBucketItems->
-		insert(array(
+		$col->pieceBucketItems->insert(array(
 		 "key" => $item["key"], // Information Key, like "phone" or "hometown"
 		 "bucket" => $item["bucket"],
 		 "bucketkey" => $item["bucketkey"], // RSA encrypted key to decrypt private information
@@ -1274,7 +1273,9 @@ $data = array("requests" => $reqdata
 		break;
 
 		// returns encrypted piece storage data
-		case "piece_getkeys":
+		// This is triggered if you request some one elses
+		// profile information
+		case "piece_get4profile":
 
 			$col = \App\DB\Get::Collection();
 			
@@ -1282,11 +1283,86 @@ $data = array("requests" => $reqdata
 				1. Look into pieceBucket to get enrypted piece 
 				2. Look into pieceBucketItems to get public key encrypted AES Key to decrypt piece
 			*/
+			//
 
 
-			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $item["userId"]), array('key')), false);
 
-			$returnArray[$action] = array("items" => $cursor);
+			// 1. get bucketitems for this user
+
+			$bucketIDlist = array();
+			$rsaList = array();
+
+			$bucketids = $col->pieceBucketItems->find(array("owner" => $item["userId"], "userid" => $item["invader"]));
+
+			foreach ($bucketids as $citem)
+			{
+				$bucketIDlist[] = new MongoId($citem["bucket"]);
+				$rsaList[$citem["bucket"]] = $citem["bucketkey"];
+			}
+
+			$finallist = array();
+			$keylist = array();
+
+			// find the right buckets
+			$bucketCol = $col->pieceBuckets->find(array( '_id' => array('$in' => $bucketIDlist)));
+
+			foreach ($bucketCol as $citem)
+			{	
+				$keylist[] = $citem["key"];
+
+				$finallist[] = 
+				array(
+					"bucketrsa" => $rsaList[$citem["_id"]->__toString()],
+					"bucketaes" => $citem["bucketaes"] ,
+					"piecedata" => $citem["piecedata"] ,
+					"key" => $citem["key"]
+					);
+			}
+
+			
+
+			// Find requests
+			$cursor = ($col->pieceRequests->find(array("userId"=> $item["userId"], 
+				"invader" => $item["invader"]
+
+				), array('key')));
+
+			foreach ($cursor as $citem)
+			{
+				
+				if (!in_array($citem["key"], $keylist))
+				{
+					// Remeber key
+				$keylist[] = $citem["key"];
+
+
+					$finallist[] = array("key" => $citem["key"], "requested" => 1);
+				}
+			}
+
+
+
+
+			// Find all pieces
+			$cursor = ($col->pieces->find(array("owner"=> $item["userId"]), array('key')));
+
+			foreach ($cursor as $citem)
+			{
+				if (!in_array($citem["key"], $keylist))
+				{
+					$finallist[] = array("key" => $citem["key"]);
+				}
+			}
+
+
+
+
+
+			// Add if not in final list
+
+
+
+			$returnArray[$action] = array("items" => $finallist);
 
 
 
@@ -1300,6 +1376,7 @@ $data = array("requests" => $reqdata
 
 		case "key_getFromDir":
 
+			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
 					$col = \App\DB\Get::Collection();
 			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key" => $item["key"]), array('value'));
 			

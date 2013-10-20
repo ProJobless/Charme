@@ -2052,8 +2052,9 @@ var view_profilepage_info = view_subpage.extend({
 
 				, 
 				{
-					"id": "piece_getkeys",
-					"userId": container_main.currentView.options.userId
+					"id": "piece_get4profile",
+					"userId": container_main.currentView.options.userId,
+					"invader" : charmeUser.userId
 				} 
 				
 
@@ -2144,15 +2145,36 @@ var view_profilepage_info = view_subpage.extend({
 
 
 
-					$.each(d2.piece_getkeys.items, function() {
+					$.each(d2.piece_get4profile.items, function() {
 
 						var that2 = this;
 						var rq = "";
-						rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
+
+						if (this.bucketaes == undefined && this.requested == 1)
+						{
+							rq ="<i>Waiting for reply...</i>";
+
+						}
+						else if (this.bucketaes != undefined)
+						{	
+							// bucketaes, bucketrsa, piecedata
+							console.log((that2.bucketrsa));
+							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
+							
+						
+
+							// Decrypt the aes key!
+							var aes = key1.decrypt(that2.bucketrsa.data);
+							rq = xssText(aes_decrypt(aes, that2.piecedata));
+						}
+						else
+						{rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";}
+						
 
 						var text = "";
 
 						$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" + xssText(text) + rq + "</td></tr>");
+
 						
 
 						$("#req_" + xssText(that2.key)).click(function() {
@@ -2183,8 +2205,7 @@ var view_profilepage_info = view_subpage.extend({
 
 
 						});
-
-
+						
 					});
 
 

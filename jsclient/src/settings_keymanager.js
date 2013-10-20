@@ -18,9 +18,6 @@ var view_settings_keymanager = view_subpage.extend({
 		var fastkey = getFastKey(0, 1);
 	
 		var key = getKeyByRevision(0);
-		console.log(key);
-		console.log(key);
-		console.log(key);
 
 
 		var text = CryptoJS.SHA256(key.rsa.rsa.n).toString(CryptoJS.enc.Base64);
@@ -42,6 +39,8 @@ var view_settings_keymanager = view_subpage.extend({
 			// Descrypt key directory value here
 		
 
+
+
 			// alert(passphrase);
 			var aesstr = aes_decrypt(fastkey.fastkey1, item.value);
 
@@ -56,7 +55,7 @@ var view_settings_keymanager = view_subpage.extend({
 
 			var username = "test";
 			var userId = aesobj.userId;
-			var key = " - REVISION X<br>" + text;
+			var key = " - REVISION " + aesobj.revision+ "<br>" + text;
 
 			$("#keys").append("<div id='key_" + elementId + "'><b>" + userId + "</b><span style='word-wrap: break-word;'>" + key + "</span></div><br>");
 
@@ -300,7 +299,7 @@ function requestNewKey(userId) {
 			var text = CryptoJS.SHA256(key.n).toString(CryptoJS.enc.Base64);
 
 			var templateData = {
-				key: text,
+				key: text, // This is a SHA key!
 				userId: userId,
 				revision: d.key_get.revision
 			};
@@ -310,8 +309,7 @@ function requestNewKey(userId) {
 
 
 
-			console.log("key");
-console.log(templateData);
+
 			// more info click handler
 
 
@@ -366,9 +364,9 @@ console.log(templateData);
 						// Build value hash
 						var e_value = aes_encrypt(fastkey.fastkey1, JSON.stringify({
 							key: key,
+							revision: d.key_get.revision,
 							userId: userId // Important to ensure server returns right key!
 						}));
-
 
 						apl_request({
 							"requests": [{

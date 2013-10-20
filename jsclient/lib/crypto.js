@@ -50,12 +50,13 @@ function aes_decrypt(pass, encText)
 
 	Info:
 	Generate a public RSA Object which prodvides encrypt functions
-
+	
 
 	Location:
 	crypto.js
 
 	Code:JS:
+	var key = { n: 12345..., e: 100011} // Do not define n and e yourself!
 	var rsa = mkRSAPublic(key);
 	rsa.encrypt(...);
 */
