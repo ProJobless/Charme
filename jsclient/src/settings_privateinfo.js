@@ -4,9 +4,21 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 
 			$(".btnDecline").click(function() {
 				var that = this;
+				var key = ($(this).parent().data("key"));
+				var userId = ($(this).parent().data("invader"));
 
-				// TODO: server request
-					$(that).parent().parent().remove();
+				apl_request({
+						"requests": [{
+							"key" : key ,// Information Key, like "phone" or "hometown"
+							"id": "piece_request_deny",
+							"userid" : userId,
+					}, ]
+						}, function(d2) {
+							if (d2.piece_request_deny.OK == 1)
+							$(that).parent().parent().remove();
+						});
+
+			
 			});
 
 

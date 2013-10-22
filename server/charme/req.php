@@ -353,7 +353,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 		  }
 		  catch (MyException $e) {
-              clog($e->getMessage());
+             // clog($e->getMessage());
             }
 
 
@@ -428,7 +428,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			$arr = $req21->send();
 
 
-			clog2($arr);
+
 			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["post_comment_distribute"]["commentId"] );
 
 		break;
@@ -1160,7 +1160,14 @@ $data = array("requests" => $reqdata
 
 		break;
 
-		
+
+		case "piece_request_deny":
+
+			$col = \App\DB\Get::Collection();
+			$col->pieceRequests->remove(array("userId" => $_SESSION["charme_userid"], "invader" => $item["userid"], "key" =>  $item["key"]));
+			$returnArray[$action] = array("OK" => 1);
+
+		break;
 
 		case "piece_request_accept":
 
@@ -1176,6 +1183,8 @@ $data = array("requests" => $reqdata
 		 ));
 
 
+		// Delete request
+		$col->pieceRequests->remove(array("userId" => $_SESSION["charme_userid"], "invader" => $item["userid"], "key" =>  $item["key"]));
 		// Count keys in this buckets and update counter and pieceData
 
 				$cursor = $col->pieceBuckets->update(
@@ -1372,12 +1381,33 @@ $data = array("requests" => $reqdata
 
 		case "privateinfo_getall":
 			$returnArray[$action] = array();
+			break;
+
+		case "key_getMultipleFromDir":
+			// This query returns multiple keys from a keydirectory
+
+			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
+			$col = \App\DB\Get::Collection();
+			
+
+
+			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"], "key" => array('$in' => $item["hashes"])), array('key','value'));
+			
+
+			
+			$returnArray[$action] = array("value" => iterator_to_array($cursor, false));
+
+
+
+
 		break;
 
 		case "key_getFromDir":
 
 			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
 					$col = \App\DB\Get::Collection();
+			
+
 			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key" => $item["key"]), array('value'));
 			
 			

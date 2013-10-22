@@ -178,7 +178,9 @@ function sendMessage() {
 	var rsa = new RSAKey();
 
 	// Message to me
-	rsa.setPublic(getKeyByRevision(0).rsa.n, getKeyByRevision(0).rsa.e);
+
+
+	rsa.setPublic(getKeyByRevision(0).rsa.rsa.n, getKeyByRevision(0).rsa.rsa.e);
 	aesEnc = rsa.encrypt(aeskey);
 
 
@@ -189,6 +191,83 @@ function sendMessage() {
 		revision: getKeyByRevision(0).revision
 	});
 
+	// "all" is an array containing all receiver userids (Example: ["test@myserver.com", "ms@yourserver.com", ...])
+
+
+	// First we do an request to our key directory to get all public keys
+	// Therefore we build the hash keys to query thew key directory first
+	
+
+	var fastkey = getFastKey(0, 1); // Current fast key
+
+	var allhashes = [];
+	jQuery.each(all, function() {
+
+
+		// Build key hash
+		var e_key = CryptoJS.SHA256(fastkey.fastkey1 + this).toString(CryptoJS.enc.Base64);
+		allhashes.push(e_key);
+
+
+	});
+
+	apl_request({
+		"requests": [{
+				"id": "key_getMultipleFromDir",
+				"hashes": allhashes
+			}
+
+		]
+	}, function(d1) {
+
+		jQuery.each(d1.key_getMultipleFromDir.value, function() {
+
+			var aesstrPK = aes_decrypt(fastkey.fastkey1, this.value);
+			var pk = $.parseJSON(aesstrPK);
+
+			var rsa = new RSAKey();
+			rsa.setPublic(pk.key.n, pk.key.e);
+			// RSA encrypt aes key with pubKey:
+			var aesEnc = rsa.encrypt(aeskey);
+
+			// Add to receivers
+			receivers.push({
+				charmeId: pk.userId, // UID?
+				aesEnc: aesEnc,
+				revision: pk.revision
+			});
+
+
+
+		});
+
+		var encMessage = aes_encrypt(aeskey, message);
+		var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
+
+
+		// Send encrypted message to server
+		apl_request({
+			"requests": [{
+					"id": "message_distribute",
+					"receivers": receivers,
+					"encMessage": encMessage,
+					"messagePreview": messagePreview,
+					"sender": charmeUser.userId
+
+				}
+
+			]
+		}, function(d2) {
+
+			ui_closeBox();
+		});
+
+
+
+	});
+
+
+/*
 
 	jQuery.each(all, function() {
 		var str = this;
@@ -196,16 +275,18 @@ function sendMessage() {
 		// Get public key for each receiver, Warning: It's asynchronous!!!!!!
 		apl_request({
 			"requests": [{
-					"id": "profile_pubKey",
-					"profileId": this
+					"id": "key_getFromDir",
+					"key": this
 				}
 
 			]
 		}, function(d1) {
 
-			var pk = $.parseJSON(d1.profile_pubKey);
+			
+
+			/*var pk = $.parseJSON(d1.profile_pubKey);
 			count++;
-			console.log(pk);
+		
 			// Encrypt random key  with public key
 
 			var aesEnc = "";
@@ -226,7 +307,8 @@ function sendMessage() {
 
 			console.log("RECEIVERS");
 			console.log(receivers);
-
+			
+			
 			// Send if last public key is here.
 			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
 			{
@@ -251,8 +333,13 @@ function sendMessage() {
 				});
 
 			}
+
+
+
+
+
 		});
-	});
+	});*/
 
 }
 
@@ -2804,7 +2891,7 @@ var view_talks_subpage = view_subpage.extend({
 				var rsa = new RSAKey();
 
 				var key1 = getKeyByRevision(d2.messages_get_sub.revision);
-					var key = key1.rsa;
+					var key = key1.rsa.rsa;
 
 					rsa.setPrivateEx(key.n, key.e, key.d,
 						key.p, key.q, key.dmp1,
@@ -3109,7 +3196,10 @@ var view_talks = view_page.extend({
 					// TODO: Cache keys for performance reasons!
 
 					var key1 = getKeyByRevision(this.revision);
-					var key = key1.rsa;
+
+
+
+					var key = key1.rsa.rsa;
 
 					rsa.setPrivateEx(key.n, key.e, key.d,
 						key.p, key.q, key.dmp1,
