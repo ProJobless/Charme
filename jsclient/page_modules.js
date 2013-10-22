@@ -1116,8 +1116,18 @@ control_smilies = Backbone.View.extend({
 
 		var $textBox = that.options.area;
 
+				var save_selection;
+				saveSelection = function() {
+				var sel = window.getSelection(),
+					ranges = [];
+				if (sel.rangeCount) {
+					for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+						ranges.push(sel.getRangeAt(i));
+					}
+				}
 
-
+				return ranges;
+			};
 		replaceSelectedText = function(replacementText) {
 			var e = $(replacementText);
 
@@ -1143,6 +1153,7 @@ control_smilies = Backbone.View.extend({
 
 				}
 
+
 			} else if (document.selection && document.selection.createRange) {
 				range = document.selection.createRange();
 				range.insertNode(e[0]);
@@ -1152,7 +1163,8 @@ control_smilies = Backbone.View.extend({
 
 
 			}
-		
+			// Save cursorr position
+			save_selection = saveSelection();
 
 		}
 
@@ -1174,24 +1186,14 @@ control_smilies = Backbone.View.extend({
 
 
 
-		var save_selection;
+
 
 
 		$textBox.bind("mouseup keyup", function() {
 
 
 
-			saveSelection = function() {
-				var sel = window.getSelection(),
-					ranges = [];
-				if (sel.rangeCount) {
-					for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-						ranges.push(sel.getRangeAt(i));
-					}
-				}
-
-				return ranges;
-			};
+			
 
 
 
