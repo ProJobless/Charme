@@ -20,6 +20,90 @@ function aes_encrypt(pass, text)
 }
 
 
+
+/***
+	Name:
+	checkCache
+
+	Info:
+	Uses  local storage cache to get data encrypted with fastkey1.
+	Useful for RSA decrypted values for example. Returns false if Cache was empty
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	var x = checkCache("key");
+	if (x == null)
+	{
+	  x = 4+4;
+	  storeCache("key", x);
+	}
+
+	alert(x);
+
+*/
+
+function checkCache(key2)
+{
+
+	var txt = localStorage.getItem(charmeUser.userId+key2);
+
+	if (txt == null)
+	{
+		console.log("NULL"+charmeUser.userId+key2);
+		return null;
+	}
+
+	var data = txt.split(',');
+	var key = getFastKey(data[0], 1);
+	var txt = aes_decrypt(key.fastkey1, data[1]);
+
+ 	return txt;
+}
+
+
+
+/***
+	Name:
+	storeCache
+
+	Info:
+	Uses  local storage cache to store data encrypted with fastkey1.
+	Useful for RSA decrypted values for example. See also: checkCache
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	var x = checkCache("key");
+	if (x == false)
+	{
+	  x = 4+4;
+	  storeCache("key", x);
+	}
+
+	alert(x);
+
+*/
+
+function storeCache(key2, value)
+{
+
+	var key = getFastKey(0, 1);
+	var txt = key.revision + ","+aes_encrypt(key.fastkey1, value);
+
+
+ 	localStorage.setItem(charmeUser.userId+key2, txt);
+}
+
+
+
+
+
+
 /***
 	Name:
 	aes_decryypt

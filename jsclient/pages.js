@@ -295,7 +295,7 @@ console.log("sidebar load=true");
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:67px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
 		</div> \
-		 <div style="padding:1px;background-color:#c2c2c2; padding-top:0; margin-bottom: 0px;"> \
+		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
 		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a></div> \

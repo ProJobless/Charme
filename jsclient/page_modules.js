@@ -2265,9 +2265,23 @@ var view_profilepage_info = view_subpage.extend({
 							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
 							
 						
+								//Use this cache version, if piece revisions are completed:
+								
+								// Look for cached AES key to save expensive RSA decryption time
+								// Our unique key consits of revision, userid and piece key:
+								var key = "--,"+container_main.currentView.options.userId+","+that2.bucketrsa.revision+","+this.key;
+								var aes = checkCache(key);
+								if (aes == null) {
+									
+									key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
+									aes  = key1.decrypt(that2.bucketrsa.data); // get aes key to decrypt piecedata
+									storeCache(key, aes);
+								}
+						
 
 							// Decrypt the aes key!
-							var aes = key1.decrypt(that2.bucketrsa.data);
+							//var aes = key1.decrypt(that2.bucketrsa.data);
+
 							rq = xssText(aes_decrypt(aes, that2.piecedata));
 						}
 						else
@@ -3207,22 +3221,27 @@ var view_talks = view_page.extend({
 
 					// Decode AES Key with private RSA Key
 
-					var rsa = new RSAKey();
-
-					// TODO: Cache keys for performance reasons!
-
-					var key1 = getKeyByRevision(this.revision);
+					console.log(this._id.$id);
 
 
 
-					var key = key1.rsa.rsa;
+					// Look for cached AES key to save expensive RSA decryption time
+					var aeskey = checkCache("msg" + this._id.$id);
+					if (aeskey == null) {
+						var rsa = new RSAKey();
+						var key1 = getKeyByRevision(this.revision);
+						var key = key1.rsa.rsa;
+						rsa.setPrivateEx(key.n, key.e, key.d,
+							key.p, key.q, key.dmp1,
+							key.dmq1, key.coeff);
 
-					rsa.setPrivateEx(key.n, key.e, key.d,
-						key.p, key.q, key.dmp1,
-						key.dmq1, key.coeff);
+						aeskey = rsa.decrypt(this.aesEnc);
+						storeCache("msg" + this._id.$id, aeskey);
+					}
+					else
+						console.log("EXISTS");
 
 
-					var aeskey = rsa.decrypt(this.aesEnc); ///sjcl.decrypt(aeskey, this.encMessage);
 					if (this.pplCount < 2)
 						this.messageTitle = this.sendername;
 					else

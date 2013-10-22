@@ -2,14 +2,13 @@
 	
 	Comments (OK)
 	Make sure requests are delivered, repeat if failed to deliver
-	Repost and like verification
 	Multiserver support
-	Message Signing
+	Message Signing, Repost and like verification
 	Private Key Directory (OK)
 	Delete Collections and Comments
 
 ## TODO HIGH PRIORITY
-- smilie insert
+- rsa caching
 - Recrypt Public Key Directory when changing key
 - message send: get public key,
 	- autocomplete use $in to check if key available
@@ -27,6 +26,7 @@
 - notify people who are not in lists any more!
 - RSA decryption in web worker
 - repost images, cache image on own server then.
+- messages: real names instead of ids at top bar!
 
 
 ## Implemented but not fully tested:
