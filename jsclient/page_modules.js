@@ -662,8 +662,10 @@ console.log(templateData);
 
 
 function setSCHeight() {
+
 	$(".msgScrollContainer").css("height", ($(window).height() - 82) + "px");
 	$('.nano').nanoScroller();
+
 }
 
 $(window).resize(function() {
@@ -2269,7 +2271,7 @@ var view_profilepage_info = view_subpage.extend({
 								
 								// Look for cached AES key to save expensive RSA decryption time
 								// Our unique key consits of revision, userid and piece key:
-								var key = "--,"+container_main.currentView.options.userId+","+that2.bucketrsa.revision+","+this.key;
+								var key = "--,"+container_main.currentView.options.userId+","+that2.version+","+this.key;
 								var aes = checkCache(key);
 								if (aes == null) {
 									
@@ -3250,6 +3252,11 @@ var view_talks = view_page.extend({
 						this.messagePreview = aes_decrypt(aeskey, this.messagePreview);
 					else
 						this.messagePreview = "";
+
+
+							this.messagePreview = $.charmeMl(this.messagePreview, {tags: [ "smiliedelete"]});
+	
+
 					//.join(", ");
 
 				});
@@ -3303,6 +3310,7 @@ var view_talks = view_page.extend({
 
 				$(".msgItems li a:first").addClass("active");
 				setSCHeight();
+
 
 
 			});

@@ -1093,7 +1093,7 @@ $data = array("requests" => $reqdata
 				$col->pieceBuckets->update(array("key" => $key, "owner" => $_SESSION["charme_userid"]), 
 
 
-					array('$set' => array("piecedata" => $item["fielddata"][$key])
+					array('$set' => array("piecedata" => $item["fielddata"][$key]), '$inc' => array('version' => 1)
 						)
 
 					,
@@ -1324,6 +1324,7 @@ $data = array("requests" => $reqdata
 					"bucketrsa" => $rsaList[$citem["_id"]->__toString()],
 					"bucketaes" => $citem["bucketaes"] ,
 					"piecedata" => $citem["piecedata"] ,
+					"version"=> $citem["version"] ,
 					"key" => $citem["key"]
 					);
 			}

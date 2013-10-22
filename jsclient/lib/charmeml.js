@@ -18,6 +18,11 @@
 
 		// Smilieparser, do not allow [[[1.3,123123123]]] for example
 		new Array(/\[\[\[(\d{1,3}?)\,(\d{1,3}?)\]\]\]/g, "<span class='smilie' style='background-position:  calc(-32px*$1) calc(-32px*$2);'> </span>", "smilie"),
+		
+
+		// Smilieparser, do not allow [[[1.3,123123123]]] for example
+		new Array(/\[\[\[(\d{1,3}?)\,(\d{1,3}?)\]\]\]/g, " ♦ ", "smiliedelete"),
+
 
 		new Array(/(\b(http|https|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1'>$1</a>", "href")
 		);
