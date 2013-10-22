@@ -44,15 +44,6 @@ We get the public key encrypted private information form the server (pieceBucket
 Here we have to update the field value in the pieces collection. The old value must be decrypted with the old fastkey1 and encrypted with the new fastkey1.
 
 
-## Requests
-
-* piece_store
-* piece_store_get
-* piece_getkeys
-* piece_request
-* piece_request_receive
-* piece_send
-* piece_send_receive
 
 ## MongoDB Collections
 

@@ -9,7 +9,7 @@
 	Delete Collections and Comments
 
 ## TODO HIGH PRIORITY
-- delete accepted requests when accepted/declined
+- smilie insert
 - Recrypt Public Key Directory when changing key
 - message send: get public key,
 	- autocomplete use $in to check if key available

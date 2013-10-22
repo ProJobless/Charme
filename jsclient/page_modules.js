@@ -1121,25 +1121,39 @@ control_smilies = Backbone.View.extend({
 		replaceSelectedText = function(replacementText) {
 			var e = $(replacementText);
 
+			 var r = document.createRange();
+
+
+
 			var sel, range;
+			sel = window.getSelection();
 			if (window.getSelection) {
-				sel = window.getSelection();
+					
 				if (sel.rangeCount) {
 					range = sel.getRangeAt(0);
 					range.deleteContents();
 					range.insertNode(e[0]); // document.createTextNode(replacementText)
 					///range.setStartAfter (e);
 
+					// Move cursor
+					range.setStartAfter(e[0]);
+					range.setEndAfter(e[0]); 
+					sel.removeAllRanges();
+					sel.addRange(range);
 
 				}
 
 			} else if (document.selection && document.selection.createRange) {
 				range = document.selection.createRange();
 				range.insertNode(e[0]);
-				// range.setStartAfter (e);
+
+
+				//range.setStartAfter (e);
 
 
 			}
+		
+
 		}
 
 
