@@ -1317,8 +1317,43 @@ control_postField = Backbone.View.extend({
 	},
 
 	render: function() {
+
+
 		var that = this;
+
+		var addbox = function(that, items) {
+
+				that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
+
+					$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
+
+					$('#inp_postImg').on("change", function(e) {
+						that.fileChanged(e);
+					});
+
+					$('#but_addImg').click(function() {
+
+						$("#inp_postImg").trigger('click');
+					});
+
+					$('#but_remImg').click(function() {
+
+						$('#inp_postImg').data("filecontent", null);
+						$("#but_remImg").hide();
+						$("#but_addImg").show();
+
+					});
+
+					if (items != "")
+							$('#postOptions').append(" in <select style='width:100px;' id='collectionSelector'>" + items + "</select>");
+
+
+
+		};
+
+
 		if (this.options.collectionId == "") {
+
 
 			// Get collections json....
 			apl_request({
@@ -1344,29 +1379,10 @@ control_postField = Backbone.View.extend({
 				if (d.collection_getAll == 0)
 					that.$el.append("Create <a href='#user/"+charmeUser.userIdURL+"/collections'>a collection</a> to start posting.");
 				else {
-					that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
-
-					$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
-
-					$('#inp_postImg').on("change", function(e) {
-						that.fileChanged(e);
-					});
-
-					$('#but_addImg').click(function() {
-
-						$("#inp_postImg").trigger('click');
-					});
-
-					$('#but_remImg').click(function() {
-
-						$('#inp_postImg').data("filecontent", null);
-						$("#but_remImg").hide();
-						$("#but_addImg").show();
-
-					});
+					addbox(that, items);
 				}
 
-				$('#postOptions').append(" in <select style='width:100px;' id='collectionSelector'>" + items + "</select>");
+		
 				
 
 
@@ -1374,7 +1390,8 @@ control_postField = Backbone.View.extend({
 			});
 
 
-		}
+		}else
+		addbox(this, "");
 
 		
 
