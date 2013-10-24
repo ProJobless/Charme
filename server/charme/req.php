@@ -1251,7 +1251,6 @@ $data = array("requests" => $reqdata
 				"key" => $item["key"]),array("value"));
 			$returnArray[$action] = array("value" => $cursor["value"]);
 
-
 		break;
 		case "piece_request_findbucket":
 			

@@ -130,7 +130,7 @@ function aes_decrypt(pass, encText)
 
 /***
 	Name:
-	mkRSA
+	mkRSAPublic
 
 	Info:
 	Generate a public RSA Object which prodvides encrypt functions
@@ -196,6 +196,12 @@ function mkRSA(key)
 	(which is 1 or 2)
 	Returns {fastkey1, revision}
 	
+
+	Params:
+	version:int:fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.
+	number:int:1 or 2
+
+
 	Location:
 	crypto.js
 
@@ -205,15 +211,36 @@ function mkRSA(key)
 
 
 
-function getFastKey(version, number)
-{
+function getFastKey(version, number) {
 	var key1 = getKeyByRevision(version);
 	if (number == 1)
-	return {fastkey1: key1.fastkey1, revision: key1.revision };
+		return {
+			fastkey1: key1.fastkey1,
+			revision: key1.revision
+		};
 	if (number == 2)
-	return {fastkey2: key1.fastkey2, revision: key1.revision };
-
+		return {
+			fastkey2: key1.fastkey2,
+			revision: key1.revision
+		};
 }
+/***
+	Name:
+	getCurrentFastKey
+
+	Info:
+	Returns current fast key. This is the same as
+	
+	Params:
+	number:int:1 or 2
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	var fk = getFastKey(getCurrentFastKey);
+*/
+
 
 function getCurrentFastKey(number)
 {

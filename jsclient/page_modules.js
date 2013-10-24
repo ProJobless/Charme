@@ -131,7 +131,8 @@ function sendMessage() {
 	receivers.push({
 		charmeId: charmeUser.userId,
 		aesEnc: aesEnc,
-		revision: getKeyByRevision(0).revision
+		revision: getKeyByRevision(0).revision,
+		// username will be added on server
 	});
 
 	// "all" is an array containing all receiver userids (Example: ["test@myserver.com", "ms@yourserver.com", ...])
@@ -2965,7 +2966,7 @@ var view_talks_subpage = view_subpage.extend({
 						$.each(d4.message_get_sub_updates.messages, function() {
 
 
-							//if (start == -1) // Only after first load messages
+							//qif (start == -1) // Only after first load messages
 							that.options.lastid = this._id.$id;
 
 							// Decrypt messages

@@ -191,15 +191,30 @@ console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent 
 
 </code></pre><h2 id='el_4'>xssText
 
-</h2><h3>Info</h3><p>Make Text XSS save</p>
+</h2><h3>Info</h3><p>Make Text between tags XSS save. </p>
 
 <p>http://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript/2794327#2794327</p>
+
+<p>DO NOT USE FOR ATTRIBUTES LIKE ID AND CLASS, USE xssAttr instead!</p>
 
 <p>Location:
 apl/string.js</p>
 <h3>Example Code</h3><pre><code>text= xssText(&quot;&lt;script&gt;alert();&lt;/script&gt;&quot;);
 
-</code></pre><h2 id='el_5'>apl/updater.js
+</code></pre><h2 id='el_5'>xssAttr
+
+</h2><h3>Info</h3><p>Make Attrbiute XSS save.. </p>
+
+<p>Location:
+apl/string.js</p>
+<h3>Example Code</h3><pre><code>addtohtml(&quot;&lt;br id='&quot;+xssAttr(str)+&quot;'&gt;&quot;)
+
+</code></pre><h2 id='el_6'>smilieParse
+
+</h2><h3>Info</h3><p>Replace text tags with smilies </p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>str</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>String</td><td>input String</td></tr></table><h3>Example Code</h3><pre><code>smilieParse(&quot;...&quot;)
+
+</code></pre><h2 id='el_7'>apl/updater.js
 
 </h2><h3>Info</h3><p>Will be called in certain intervals and looking for new updates like messages etc.</p>
 
@@ -207,12 +222,12 @@ apl/string.js</p>
 
 <p>Location:
 jsclient/apl</p>
-<h2 id='el_6'>ui_showBox
+<h2 id='el_8'>ui_showBox
 
 </h2><h3>Info</h3><p>Shows a Message box with specified HTML content.</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>content</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>HTML Content</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function when box animation is complete, Register events here.</td></tr></table><h3>Example Code</h3><pre><code>ui_showBox(&quot;Hello World&quot;, function(){alert(&quot;Box is visible&quot;);});
 
-</code></pre><h2 id='el_7'>ui_closeBox
+</code></pre><h2 id='el_9'>ui_closeBox
 
 </h2><h3>Info</h3><p>Close a Message box opened with ui_showBox</p>
 
@@ -220,7 +235,7 @@ jsclient/apl</p>
 apl/prompt.js</p>
 <h3>Example Code</h3><pre><code>ui_closeBox();
 
-</code></pre><h2 id='el_8'>  apl_request
+</code></pre><h2 id='el_10'>  apl_request
 
 </h2><h3>Info</h3><p>Make a request to a charme Server</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  requestData</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>json</td><td>Data in json format </td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  SessionId</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Not used currently, Write &quot;null&quot; in here</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  Server</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Server to which the request is send to. If its null, we will use the host of the logged in user.</td></tr></table><h3>Example Code</h3><pre><code>  // Send a info_about request to myserver.com
@@ -230,7 +245,7 @@ apl/prompt.js</p>
     ]
   }, function(data){ console.log(data.info_about);}, null, &quot;myserver.com&quot;);
 
-</code></pre><h2 id='el_9'>$.fn.serializeObject
+</code></pre><h2 id='el_11'>$.fn.serializeObject
 
 </h2><h3>Info</h3><p>Serialize form to JSON object.</p>
 
@@ -238,7 +253,7 @@ apl/prompt.js</p>
 apl/request.js</p>
 <h3>Example Code</h3><pre><code>var json = $('#myform').serializeObject();
 
-</code></pre><h2 id='el_10'>aes_encryypt
+</code></pre><h2 id='el_12'>aes_encryypt
 
 </h2><h3>Info</h3><p>Encrypts String with AES Key</p>
 
@@ -246,7 +261,7 @@ apl/request.js</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>enctext= aes_encrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
 
-</code></pre><h2 id='el_11'>checkCache
+</code></pre><h2 id='el_13'>checkCache
 
 </h2><h3>Info</h3><p>Uses  local storage cache to get data encrypted with fastkey1.
 Useful for RSA decrypted values for example. Returns false if Cache was empty</p>
@@ -263,7 +278,7 @@ if (x == null)
 alert(x);
 
 
-</code></pre><h2 id='el_12'>storeCache
+</code></pre><h2 id='el_14'>storeCache
 
 </h2><h3>Info</h3><p>Uses  local storage cache to store data encrypted with fastkey1.
 Useful for RSA decrypted values for example. See also: checkCache</p>
@@ -280,7 +295,7 @@ if (x == false)
 alert(x);
 
 
-</code></pre><h2 id='el_13'>aes_decryypt
+</code></pre><h2 id='el_15'>aes_decryypt
 
 </h2><h3>Info</h3><p>Decrypts String with AES Key</p>
 
@@ -288,7 +303,7 @@ alert(x);
 crypto.js</p>
 <h3>Example Code</h3><pre><code>enctext= aes_decrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
 
-</code></pre><h2 id='el_14'>mkRSA
+</code></pre><h2 id='el_16'>mkRSAPublic
 
 </h2><h3>Info</h3><p>Generate a public RSA Object which prodvides encrypt functions</p>
 
@@ -298,7 +313,7 @@ crypto.js</p>
 var rsa = mkRSAPublic(key);
 rsa.encrypt(...);
 
-</code></pre><h2 id='el_15'>mkRSA
+</code></pre><h2 id='el_17'>mkRSA
 
 </h2><h3>Info</h3><p>Generate RSA Object which prodvides encrypt/decrypt functions 
 of Key Object</p>
@@ -308,18 +323,20 @@ crypto.js</p>
 <h3>Example Code</h3><pre><code>var rsa = mkRSA(key);
 rsa.encrypt(...);
 
-</code></pre><h2 id='el_16'>getFastKey
+</code></pre><h2 id='el_18'>getFastKey
 
 </h2><h3>Info</h3><p>Get symmetric AES key for fast encryption/decryption
 First Parameter is certificate Version, second is fastkey number
 (which is 1 or 2)
 Returns {fastkey1, revision}</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>version</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var key1 = getFastKey(0, 1);
 
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>var key1 = getFastKey(0, 1);
+</code></pre><h2 id='el_19'>getCurrentFastKey
 
-</code></pre><h2 id='el_17'>getCurrentRSAKey
+</h2><h3>Info</h3><p>Returns current fast key. This is the same as</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var fk = getFastKey(getCurrentFastKey);
+
+</code></pre><h2 id='el_20'>getCurrentRSAKey
 
 </h2><h3>Info</h3><p>Returns current RSA Key in form {rsa, revision}</p>
 
@@ -327,7 +344,7 @@ crypto.js</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>var rsa = function getCurrentRSAKey()
 
-</code></pre><h2 id='el_18'>randomAesKey
+</code></pre><h2 id='el_21'>randomAesKey
 
 </h2><h3>Info</h3><p>Generates a random AES Key. </p>
 
@@ -335,14 +352,14 @@ crypto.js</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Key lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
 
 
-</code></pre><h2 id='el_19'>    routes.js
+</code></pre><h2 id='el_22'>    routes.js
 
 </h2><h3>Info</h3><pre><code>Provides routing and contains document complete handler.
 
 Location:
 lib/routes.js
 </code></pre>
-<h2 id='el_20'>    isLoggedIn
+<h2 id='el_23'>    isLoggedIn
 
 </h2><h3>Info</h3><pre><code>Checks if the user id logged in.
 Returns true or false.
@@ -353,7 +370,7 @@ No passphrase =&gt; Logout
 Location:
 page_modules.js
 </code></pre>
-<h2 id='el_21'>rsa
+<h2 id='el_24'>rsa
 
 </h2><h3>Info</h3><p>See also the <a href="http://www-cs-students.stanford.edu/~tjw/jsbn/rsa2.html">RSA Library Documentation</a>.</p>
 
@@ -378,15 +395,15 @@ rsa.setPublic(n, e);
 rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
 var str = rsa.decrypt(&quot;SOME ENCRYPTED TEXT HERE&quot;);
 
-</code></pre><h2 id='el_22'>page_authenticated
+</code></pre><h2 id='el_25'>page_authenticated
 
 </h2><h3>Info</h3><p>Main container with navigation. Init at login() or $.ready when user is logged in.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>currentView</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>view_page</td><td>The current page. Do not set!</td></tr></table><h3>Example Code</h3><pre><code>container_main= new page_authenticated({el:'#layout'});
 
-</code></pre><h2 id='el_23'>page_login
+</code></pre><h2 id='el_26'>page_login
 
 </h2><h3>Info</h3><p>Container if user is NOT logged in.</p>
-<h2 id='el_24'>sendMessageForm
+<h2 id='el_27'>sendMessageForm
 
 </h2><h3>Info</h3><p>Generate a new message box with the specified receivers</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>receivers</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>JSON Object</td><td>Receiver list in format [{id</td></tr></table><h3>Example Code</h3><pre><code>// Send a message to Alice
@@ -395,7 +412,7 @@ sendMessage(Form(
 		{id: 'alice@myserver.com', name: 'Alice'}
 	]);)
 
-</code></pre><h2 id='el_25'>sendMessage
+</code></pre><h2 id='el_28'>sendMessage
 
 </h2><h3>Info</h3><p>Submit the form generated with <code>sendMessageForm()</code>. Warning: Should only be called after a message form
 has been generated with <code>sendMessageForm()</code>
@@ -411,7 +428,7 @@ the messages.</p>
 
 <p>Location:
 page_modules.js</p>
-<h2 id='el_26'>view_page
+<h2 id='el_29'>view_page
 
 </h2><h3>Info</h3><p>Default page class. Build new pages on this model. <code>postRender</code> is called after rendering is complete.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.template</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which template from templates folder do we us?</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.needLogin</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Only for registred users? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.useSidebar</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Sidebar enabled? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.navMatch</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which element of main navigation should be highlighted? </td></tr></table><h3>Example Code</h3><pre><code>
@@ -437,7 +454,7 @@ postRender: function()
 var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 
-</code></pre><h2 id='el_27'>Introduction to Charme Cryptography
+</code></pre><h2 id='el_30'>Introduction to Charme Cryptography
 
 </h2><h3>Info</h3><p><em>See Also</em></p>
 
@@ -445,57 +462,63 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 <li><code>randomAESKey</code></li>
 <li><code>rsa</code></li>
 </ul>
-<div class='index'><ul><li><a href='#el_20'>    isLoggedIn
+<div class='index'><ul><li><a href='#el_23'>    isLoggedIn
 
-</a></li><li><a href='#el_19'>    routes.js
+</a></li><li><a href='#el_22'>    routes.js
 
-</a></li><li><a href='#el_8'>  apl_request
+</a></li><li><a href='#el_10'>  apl_request
 
-</a></li><li><a href='#el_9'>$.fn.serializeObject
+</a></li><li><a href='#el_11'>$.fn.serializeObject
 
-</a></li><li><a href='#el_13'>aes_decryypt
+</a></li><li><a href='#el_15'>aes_decryypt
 
-</a></li><li><a href='#el_10'>aes_encryypt
+</a></li><li><a href='#el_12'>aes_encryypt
 
-</a></li><li><a href='#el_5'>apl/updater.js
+</a></li><li><a href='#el_7'>apl/updater.js
 
 </a></li><li><a href='#el_1'>apl_setup
 
 </a></li><li><a href='#el_3'>apl_user
 
-</a></li><li><a href='#el_11'>checkCache
+</a></li><li><a href='#el_13'>checkCache
 
-</a></li><li><a href='#el_17'>getCurrentRSAKey
+</a></li><li><a href='#el_19'>getCurrentFastKey
 
-</a></li><li><a href='#el_16'>getFastKey
+</a></li><li><a href='#el_20'>getCurrentRSAKey
+
+</a></li><li><a href='#el_18'>getFastKey
 
 </a></li><li><a href='#el_2'>getKeyByRevision
 
-</a></li><li><a href='#el_27'>Introduction to Charme Cryptography
+</a></li><li><a href='#el_30'>Introduction to Charme Cryptography
 
-</a></li><li><a href='#el_14'>mkRSA
+</a></li><li><a href='#el_17'>mkRSA
 
-</a></li><li><a href='#el_15'>mkRSA
+</a></li><li><a href='#el_16'>mkRSAPublic
 
-</a></li><li><a href='#el_22'>page_authenticated
+</a></li><li><a href='#el_25'>page_authenticated
 
-</a></li><li><a href='#el_23'>page_login
+</a></li><li><a href='#el_26'>page_login
 
-</a></li><li><a href='#el_18'>randomAesKey
+</a></li><li><a href='#el_21'>randomAesKey
 
-</a></li><li><a href='#el_21'>rsa
+</a></li><li><a href='#el_24'>rsa
 
-</a></li><li><a href='#el_25'>sendMessage
+</a></li><li><a href='#el_28'>sendMessage
 
-</a></li><li><a href='#el_24'>sendMessageForm
+</a></li><li><a href='#el_27'>sendMessageForm
 
-</a></li><li><a href='#el_12'>storeCache
+</a></li><li><a href='#el_6'>smilieParse
 
-</a></li><li><a href='#el_7'>ui_closeBox
+</a></li><li><a href='#el_14'>storeCache
 
-</a></li><li><a href='#el_6'>ui_showBox
+</a></li><li><a href='#el_9'>ui_closeBox
 
-</a></li><li><a href='#el_26'>view_page
+</a></li><li><a href='#el_8'>ui_showBox
+
+</a></li><li><a href='#el_29'>view_page
+
+</a></li><li><a href='#el_5'>xssAttr
 
 </a></li><li><a href='#el_4'>xssText
 
