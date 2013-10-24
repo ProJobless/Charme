@@ -173,8 +173,36 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		case "message_get_sub_updates" :
+
+			$col = \App\DB\Get::Collection();
+			$query = array("aesEnc", "people", "conversationId", "revision");
+
+
+			//$timestart = new MongoDate($item["timestart"]); // $item["timestart"]
+				//clog2($timestart);
+			// new MongoDate($item["itemStartTime"] ))
+			$sel = array("conversationId" =>  new MongoId($item["conversationId"]),  "_id" => array('$gt' => new MongoId($item["lastid"])));
+
+			// itemTime' => array('$lt' =>  new MongoDate($item["itemStartTime"] )
+
+			// array('$lt' =>  new MongoDate($item["itemStartTime"] ))
+
+
+			$returnArray[$action] = array("messages" => 
+			iterator_to_array(
+				$col->messages->find($sel)
+				->sort(array("time" => 1))
+		
+				
+			, false));
+			
+		
+		break;
+
 		case "messages_get_sub":
 			
+			// Important: apply changes also to message_get_sub_updates
 			$startSet = false;
 			if (isset($item["start"]) && $item["start"] != "-1")
 				$startSet = true;
@@ -185,15 +213,8 @@ foreach ($data["requests"] as $item)
 
 			// Set read=true
 
-
 			// Only need conversationId at the beginning
-			//if (!$startSet)
-			//	$query[] = ;
-
-$col->conversations->update(array("_id" =>  new MongoId($item["superId"])), array('$set' => array("read" => true))); 
-			
-
-
+			$col->conversations->update(array("_id" =>  new MongoId($item["superId"])), array('$set' => array("read" => true))); 
 			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), $query);
 
 			// Total message count, -1 if no result provided
@@ -1187,6 +1208,9 @@ $data = array("requests" => $reqdata
 		$col->pieceRequests->remove(array("userId" => $_SESSION["charme_userid"], "invader" => $item["userid"], "key" =>  $item["key"]));
 		// Count keys in this buckets and update counter and pieceData
 
+	
+		$count1 = $col->pieceBucketItems->count(array("bucket" => $item["bucket"]));
+
 				$cursor = $col->pieceBuckets->update(
 
 			array("owner" => $_SESSION["charme_userid"],
@@ -1195,11 +1219,13 @@ $data = array("requests" => $reqdata
 				, array(
 
 					'$set' => array(
-					"piecedata" => $item["piecedata"]
+					"piecedata" => $item["piecedata"],
+					"itemcount" => $count1
 					)
 
 					), array("upsert" => true));
 			
+		//	$count1 =  $col->pieceBucketItems->count(array(""));
 
 
 		//...TODO
@@ -1232,14 +1258,28 @@ $data = array("requests" => $reqdata
 			// TODO: Add bucketcontent here!
 
 			$col = \App\DB\Get::Collection();
-			$content = array("owner" => $_SESSION["charme_userid"],
-				"key" => $item["key"],
+			
 
-				"bucketaes" => $item["bucketaes"]);
+			$content = array();
+
+			// 
+			$content = $col->pieceBuckets->findOne(array("key" =>  $item["key"],  "itemcount" => array('$lt' => 10), "owner" => $_SESSION["charme_userid"]), array("_id"));
+
+			if ($content == null) // New bucket
+			{
+				$content = array("owner" => $_SESSION["charme_userid"],
+					"key" => $item["key"],
+					"itemcount" => 0,
+					"version" => 0,
+					"bucketaes" => $item["bucketaes"]);
 			// Create bucket 
-			$res = $col->pieceBuckets->insert($content);
+				$col->pieceBuckets->insert($content);	
+			}
+			
 
-			// TODO: Or find exisitng bucket
+			// TODO: Or find exisitng bucket with less then 10 entries
+			
+
 
 			// RETURN BUCKET ID and bucket AES
 			
@@ -1280,6 +1320,8 @@ $data = array("requests" => $reqdata
 
 
 		break;
+
+
 
 		// returns encrypted piece storage data
 		// This is triggered if you request some one elses
@@ -1802,7 +1844,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$sel = array("owner" => $_SESSION["charme_userid"]);
 
 			if ($item["listId"] != "")
-				$sel["list"] = new MongoId($item["listId"] );
+				$sel["list"] = new MongoId($item["listId"]);
 
 
 			

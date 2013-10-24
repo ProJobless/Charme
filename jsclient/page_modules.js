@@ -70,64 +70,7 @@ function addPeopleOk() {
 
 }
 
-function sendAnswer() {
 
-	var aeskey = ($('#msg_aeskey').data("val"));
-	var conversationId = ($('#msg_conversationId').data("val"));
-	var message = smilieParse($('#inp_newmsginstant').html());
-	var encMessage = aes_encrypt(aeskey, message);
-	var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
-
-	if (message == "") return;
-
-	apl_request({
-		"requests": [{
-				"id": "message_distribute_answer",
-				"conversationId": conversationId,
-				"encMessage": encMessage,
-				"messagePreview": messagePreview
-			}
-
-		]
-	}, function(d2) {
-
-
-
-		$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
-
-		$.get("templates/control_messageview.html", function(d) {
-			// RSA Decode, for each:
-			// d2.messages_get_sub
-
-
-
-			_.templateSettings.variable = "rc";
-			var tmpl = _.template(d, {
-				messages: [{
-					msg: message,
-					sender: charmeUser.userId,
-					time: {
-						sec: new Date().getTime() / 1000
-					},
-					sendername: d2.message_distribute_answer.sendername
-				}]
-			});
-
-			$(".talkmessages").append(tmpl);
-
-			$('#moremsg2').remove();
-
-			$("html, body").animate({
-				scrollTop: $(document).height()
-			}, "slow");
-
-			$('#inp_newmsginstant').html("").focus();
-
-		});
-
-	});
-
-}
 
 /***
 	Name:
@@ -585,7 +528,8 @@ view_subpage = Backbone.View.extend({
 
 		var that = this;
 
-
+		// Cancel message update timer
+		$.doTimeout( 'messageupdate', false );
 
 		$.get("templates/" + this.options.template + ".html", function(d) {
 
@@ -609,7 +553,7 @@ console.log(templateData);
 			var template = _.template(d, templateData);
 
 
-
+			
 			console.log(that.$el);
 
 			// Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
@@ -1428,7 +1372,7 @@ control_commentItem = Backbone.View.extend({
 
 
 
-		var str = "<div class='comment'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + this.options.content + "</div>";
+		var str = "<div class='comment'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + xssText(this.options.content) + "</div>";
 		if (this.options.prepend)
 			this.$el.prepend(str);
 		else
@@ -2637,6 +2581,9 @@ var view_talks_subpage = view_subpage.extend({
 	initialize: function() {
 		this.messagePaginationIndex = 0;
 
+		this.options.lastid = 0;
+
+
 		if (this.options.superId != "")
 			this.loadMessages(-1);
 		console.log("cert");
@@ -2946,22 +2893,39 @@ var view_talks_subpage = view_subpage.extend({
 						key.p, key.q, key.dmp1,
 						key.dmq1, key.coeff);
 
-
-
-				//rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
-				//	charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1,
-				//	charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
-
-
-				//alert(d2.messages_get_sub.aesEnc);
-
 				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
-
 				that.aes = aeskey;
+
+				// Add people list to output
+				if (start == -1) {
+				jQuery.each(d2.messages_get_sub.people, function(i) {
+
+					if (i != 0)
+						$("#inp_receiversinstant").append(", ");
+
+					if ($.isArray(this)) // just userid
+					{
+						$("#inp_receiversinstant").append("<a href='#user/" +
+							encodeURIComponent(this.userId) + "'>" + this.username + "</a>");
+					}
+					else // {userid, name}
+					{
+						$("#inp_receiversinstant").append("<a href='#user/" +
+							encodeURIComponent(this) + "'>" + this + "</a>");
+					}
+				});
+				}
+
+
 
 				d2.messages_get_sub.aesEnc = aeskey;
 
+				
 				jQuery.each(d2.messages_get_sub.messages, function() {
+
+
+					if (start == -1) // Only after first load messages
+						that.options.lastid = this._id.$id;
 
 					try {
 						if (this.encMessage == "" || this.encMessage == undefined)
@@ -2974,40 +2938,66 @@ var view_talks_subpage = view_subpage.extend({
 				});
 
 				// Decode AES Key with private RSA Key
-				/*
-
 				
-
-				 var aeskey = rsa.decrypt(this.aesEnc);*/ //sjcl.decrypt(aeskey, this.encMessage);
-
+		
 				_.templateSettings.variable = "rc";
 
 				var tmpl = _.template(d, d2.messages_get_sub);
 
-				if (start == -1) {
-					jQuery.each(d2.messages_get_sub.people, function(i) {
 
-						if (i != 0)
-							$("#inp_receiversinstant").append(", ");
-
-						if ($.isArray(this)) // just userid
-						{
-							$("#inp_receiversinstant").append("<a href='#user/" +
-								encodeURIComponent(this.userId) + "'>" + this.username + "</a>");
-						} else // {userid, name}
-						{
-							$("#inp_receiversinstant").append("<a href='#user/" +
-								encodeURIComponent(this) + "'>" + this + "</a>");
-						}
-
-
-					});
-
-
-				}
 
 				$(".talkmessages").prepend(tmpl);
 
+				// timout to check for new messages after `lastid`
+				if (that.options.lastid != 0)
+				{
+				$.doTimeout('messageupdate', 5000, function(state) {
+				
+					apl_request({
+						"requests": [{
+							"id": "message_get_sub_updates",
+							lastid: that.options.lastid,
+							conversationId: d2.messages_get_sub.conversationId.$id,
+
+						}]
+					}, function(d4) {
+
+						$.each(d4.message_get_sub_updates.messages, function() {
+
+
+							//if (start == -1) // Only after first load messages
+							that.options.lastid = this._id.$id;
+
+							// Decrypt messages
+							try {
+								if (this.encMessage == "" || this.encMessage == undefined)
+									this.encMessage = "";
+								else
+									this.msg = aes_decrypt(aeskey, this.encMessage);
+							} catch (err) {
+								this.msg = err;
+							}
+						});
+
+						var tmpl = _.template(d, d4.message_get_sub_updates);
+						// append html
+						$(".talkmessages").append(tmpl);
+						
+						// remove own messages that have been inserted directly, as these are returned by server also and should not appear twice
+						$(".tempmessage").remove();
+						if (d4.message_get_sub_updates.messages.length > 0)
+						$(window).scrollTop(999999);
+
+						// TODO: if message id still active!
+
+						// 	console.log("UPDATE!!!"+that.options.superId);
+					});
+					// 
+
+					return true;
+				});
+
+				}
 				that.decodeImages();
 				// Decode images 
 				/*
@@ -3099,82 +3089,140 @@ var view_talks_subpage = view_subpage.extend({
 
 				if (start == -1) {
 
-					$(window).scrollTop(999999);
+			$(window).scrollTop(999999);
 
 
 
-					$("#but_file").click(function() {
+			$("#but_file").click(function() {
 
-						that.uploadFile();
+				that.uploadFile();
 
-					});
-					$("#but_showMedia").click(function() {
+			});
+			$("#but_showMedia").click(function() {
 
-						that.showMedia(true);
+				that.showMedia(true);
 
-					});
-					$("#but_showMessages").click(function() {
+			});
+			$("#but_showMessages").click(function() {
 
-						that.showMedia(false);
+				that.showMedia(false);
 
-					});
-					$("#but_addPeople").click(function() {
+			});
+			$("#but_addPeople").click(function() {
 
-						that.addPeople();
-
-					});
-
-					$("#but_smilies").click(function() {
-						if ($("#msg_smiliecontainer").html() == "") {
-							var t = new control_smilies({
-								el: $("#msg_smiliecontainer"),
-								area: $('#inp_newmsginstant')
-							});
-							t.render();
-						} else {
-							$("#msg_smiliecontainer").html("");
-						}
-						$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
-
-					});
-
-
-					$("#but_leaveConversation").click(function() {
-
-						that.leaveConversation();
-
-					});
-
-
-					$('#but_instantsend').click(function() {
-						sendAnswer();
-					});
-
-				}
-
-
-				if (start == 0 || that.countAll < 10)
-					$('#moremsg2').remove();
-
-
-				if (newstart < 0)
-					newstart = 0;
-
-
-
-				$('#moremsg2').click(function() {
-
-					$('#moremsg2').remove();
-					that.loadMessages(newstart);
-
-
-
-				});
+				that.addPeople();
 
 			});
 
+			$("#but_smilies").click(function() {
+				if ($("#msg_smiliecontainer").html() == "") {
+					var t = new control_smilies({
+						el: $("#msg_smiliecontainer"),
+						area: $('#inp_newmsginstant')
+					});
+					t.render();
+				} else {
+					$("#msg_smiliecontainer").html("");
+				}
+				$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
+
+			});
+
+
+			$("#but_leaveConversation").click(function() {
+
+				that.leaveConversation();
+
+			});
+
+
+			// Direct Answer on message
+			$('#but_instantsend').click(function() {
+				
+
+				var aeskey = ($('#msg_aeskey').data("val"));
+				var conversationId = ($('#msg_conversationId').data("val"));
+				var message = smilieParse($('#inp_newmsginstant').html());
+				var encMessage = aes_encrypt(aeskey, message);
+				var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
+
+				if (message == "") return;
+
+				apl_request({
+					"requests": [{
+							"id": "message_distribute_answer",
+							"conversationId": conversationId,
+							"encMessage": encMessage,
+							"messagePreview": messagePreview
+						}
+
+					]
+				}, function(d2) {
+
+
+
+					$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
+
+					$.get("templates/control_messageview.html", function(d) {
+						// RSA Decode, for each:
+						// d2.messages_get_sub
+
+
+
+						_.templateSettings.variable = "rc";
+						var tmpl = _.template(d, {
+							messages: [{
+								tag: "tempmessage",
+								msg: message,
+								sender: charmeUser.userId,
+								time: {
+									sec: new Date().getTime() / 1000
+								},
+								sendername: d2.message_distribute_answer.sendername
+							}]
+						});
+
+
+						$(".talkmessages").append(tmpl);
+
+						$('#moremsg2').remove();
+
+						$("html, body").animate({
+							scrollTop: $(document).height()
+						}, "slow");
+
+						$('#inp_newmsginstant').html("").focus();
+
+					});
+
+				});
+			});
+
+		}
+
+
+		if (start == 0 || that.countAll < 10)
+			$('#moremsg2').remove();
+
+
+		if (newstart < 0)
+			newstart = 0;
+
+
+
+		$('#moremsg2').click(function() {
+
+			$('#moremsg2').remove();
+			that.loadMessages(newstart);
+
+
+
 		});
-	}
+
+	});
+
+});
+}
 });
 
 

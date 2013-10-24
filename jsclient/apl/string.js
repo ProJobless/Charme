@@ -1,11 +1,24 @@
+/***
+	Name:
+	xssText
+
+	Info:
+	Make Text XSS save
+
+	http://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript/2794327#2794327
+
+	Location:
+	apl/string.js
+
+	Code:JS:
+	text= xssText("<script>alert();</script>");
+*/
+
 function xssText(str)
 {
-
-	// Returns xss Save Text.
-
-
-	// Not completly secure yet, see answer on http://stackoverflow.com/questions/1147359/how-to-decode-html-entities-using-jquery
-	return $("<div/>").html(str).text();
+	// Returns xss Save Text ONLY for displaying inside tags, not as href, id etc. attribute.
+	return  $('<span></span>').text(str).html();
+	//old and false: return $("<div/>").html(str).text();
 
 }
 function formatDate(milliseconds)

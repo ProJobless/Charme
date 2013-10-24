@@ -8,7 +8,12 @@
 	Delete Collections and Comments
 
 ## TODO HIGH PRIORITY
-- rsa caching
+
+
+- badkey error , when new bucket, and request send. error disapears when saving private info again.
+- messages: send: only receivers with key!
+
+- messages: real names instead of ids at top bar!
 - Recrypt Public Key Directory when changing key
 - message send: get public key,
 	- autocomplete use $in to check if key available
@@ -16,17 +21,21 @@
 
 - Public key verification in background
 - avoid comments with false author
+- private collections: add people to collections.
+
+
+## XSS 
+- Check also ids for XSS attacks!
 
 ## TODO LOW PRIORITY
 
 - Delete Post and Comments
 - love/repost on status detail not working
-- TODO: RSA Cache: local chaching with fastkey!
 - revoke private info access
 - notify people who are not in lists any more!
 - RSA decryption in web worker
 - repost images, cache image on own server then.
-- messages: real names instead of ids at top bar!
+
 
 
 ## Implemented but not fully tested:

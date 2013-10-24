@@ -9,7 +9,7 @@
 
  <% _.each( rc.messages, function(item){ %>
 
-    <div class="message">
+    <div class="message <% if (item.tag) { %> <%- item.tag %>  <% } %>">
 <div class="top">
 	 <span class='time' style='float:right'><%- formatDate(item.time.sec*1000) %></span>
 	<a href='#user/<%- item.sender %>'><%- item.sendername %></a>
