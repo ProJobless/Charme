@@ -166,6 +166,7 @@ function sendMessage() {
 
 		jQuery.each(d1.key_getMultipleFromDir.value, function() {
 
+			
 			var aesstrPK = aes_decrypt(fastkey.fastkey1, this.value);
 			var pk = $.parseJSON(aesstrPK);
 
@@ -202,7 +203,7 @@ function sendMessage() {
 
 			]
 		}, function(d2) {
-
+			console.log(receivers);			console.log(receivers);			console.log(receivers);			console.log(receivers);			console.log(receivers);			console.log(receivers);
 			ui_closeBox();
 		});
 
@@ -2897,6 +2898,9 @@ var view_talks_subpage = view_subpage.extend({
 				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
 				that.aes = aeskey;
 
+
+				console.log(d2.messages_get_sub.peoplenames);
+				console.log(d2.messages_get_sub.peoplenames);
 				// Add people list to output
 				if (start == -1) {
 				jQuery.each(d2.messages_get_sub.people, function(i) {
@@ -2904,15 +2908,15 @@ var view_talks_subpage = view_subpage.extend({
 					if (i != 0)
 						$("#inp_receiversinstant").append(", ");
 
-					if ($.isArray(this)) // just userid
+					/*if ($.isArray(this)) // just userid
 					{
 						$("#inp_receiversinstant").append("<a href='#user/" +
 							encodeURIComponent(this.userId) + "'>" + this.username + "</a>");
-					}
-					else // {userid, name}
+					}*/
+				 // {userid, name}
 					{
 						$("#inp_receiversinstant").append("<a href='#user/" +
-							encodeURIComponent(this) + "'>" + this + "</a>");
+							encodeURIComponent(this) + "'>" + xssText(d2.messages_get_sub.peoplenames[i]) + "</a>");
 					}
 				});
 				}

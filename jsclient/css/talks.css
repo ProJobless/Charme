@@ -16,12 +16,14 @@ margin-left: 8px;
 {
 
 	border-bottom: 1px #efefef solid;
-	padding: 16px;
+	padding-bottom: 16px ;
+
+letter-spacing: 0.5px;
 	margin: 16px;
 }
 .receiversinstant a
 {
-	color:#000;
+	color:gray;
 	font-weight: normal;
 }
 .msgItems li.new a

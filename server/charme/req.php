@@ -209,7 +209,7 @@ foreach ($data["requests"] as $item)
 
 			// TODO: Do not return at pagination??
 			$col = \App\DB\Get::Collection();
-			$query = array("aesEnc", "people", "conversationId", "revision");
+			$query = array("aesEnc", "people", "peoplenames" ,"conversationId", "revision");
 
 			// Set read=true
 
@@ -260,7 +260,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				->sort(array("time" => 1))
 				->skip($start)->limit($limit)
 				
-			, false), "count" => $count, "revision" =>  $res["revision"], "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
+			, false), "count" => $count, "revision" =>  $res["revision"], "peoplenames" =>  $res["peoplenames"], "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
 			
 
 		break;
@@ -655,6 +655,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					"aesEnc" => $item["aesEnc"],
 					"conversationId" => new MongoId($item["conversationId"]),
 					"receiver" => $receiver,
+					"peoplenames" => $item["peoplenames"],
 					"revision" => $item["revision"],
 					"sendername" => $item["sendername"],
 					"messagePreview" => $item["messagePreview"],
@@ -819,6 +820,8 @@ $data = array("requests" => $reqdata
 			if (!isset($item["receivers2"]))
 				$item["receivers2"] = array();
 
+			$peoplenames = array();
+
 			foreach ($item["receivers"] as $key => $value)
 			{
 				// Remove AES keys for other people, TODO: Not for answers!
@@ -829,10 +832,29 @@ $data = array("requests" => $reqdata
 				else
 				$item["receivers2"][]  = $value["charmeId"];
 
+				// Find name, option 1: its me :)
+				if ($value["charmeId"] == $_SESSION["charme_userid"])
+				{
+					// Get sender name
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
+
+						$peoplenames[] = $sendername ;
+				}
+
+
+					else // option2: its someone else
+					{
+				$rr = $col->listitems->findOne(array("userId" => $value["charmeId"], "owner" => $_SESSION["charme_userid"]));
+
+				$peoplenames[] = $rr["username"];
+			}
 
 			}
 
 
+			// Get usernames!
 
 			
 
@@ -856,7 +878,7 @@ $data = array("requests" => $reqdata
 						"revision" => $receiver["revision"],
 						"sendername" => $sendername,
 						"conversationId" => $convId->__toString(),
-				
+						"peoplenames" => $peoplenames
 
 						));
 
