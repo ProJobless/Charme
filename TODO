@@ -24,6 +24,11 @@
 - avoid comments with false author
 - private collections: add people to collections.
 
+## keyupdate
+
+- notify message receiver that key is no longer valid
+- recrypt with new fastkey: 
+
 
 ## XSS 
 - Check also ids for XSS attacks!

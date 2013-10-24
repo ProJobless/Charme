@@ -1739,7 +1739,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
-			$content = array("username"=> $username, "time"=> new MongoDate(),  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
+			$content = array("username"=> $username, "time"=> new MongoDate(), "likecount" => 0, "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
 			
 			if (isset( $item["repost"]))
 				$content["repost"]  = $item["repost"];

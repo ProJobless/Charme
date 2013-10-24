@@ -1705,7 +1705,7 @@ control_postItem = Backbone.View.extend({
 					{
 						"id": "post_like",
 						"userId": that.options.userId,
-						status: !! !that.options.like,
+						status: !!!that.options.like,
 						postId: that.options.postId
 					},
 					// Get name of collection
