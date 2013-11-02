@@ -1705,7 +1705,7 @@ control_postItem = Backbone.View.extend({
 					{
 						"id": "post_like",
 						"userId": that.options.userId,
-						status: !!!that.options.like,
+						status: !! !that.options.like,
 						postId: that.options.postId
 					},
 					// Get name of collection
@@ -2244,18 +2244,28 @@ var view_profilepage_info = view_subpage.extend({
 								}
 						
 
-							// Decrypt the aes key!
-							//var aes = key1.decrypt(that2.bucketrsa.data);
-
-							rq = xssText(aes_decrypt(aes, that2.piecedata));
+								if (that2.piecedata == "")
+									{rq = ""}
+								else
+								{
+								var t = aes_decrypt(aes, that2.piecedata);
+								if (t != "")
+									rq = xssText(t);
+								else
+									rq ="";
+								}
 						}
 						else
-						{rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";}
+						{
+							
+							rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
+
+						}
 						
 
-						var text = "";
-
-						$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" + xssText(text) + rq + "</td></tr>");
+				
+						if (rq  != "")
+						$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" +  rq + "</td></tr>");
 
 						
 

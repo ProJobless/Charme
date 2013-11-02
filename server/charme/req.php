@@ -1298,9 +1298,7 @@ $data = array("requests" => $reqdata
 			}
 			
 
-			// TODO: Or find exisitng bucket with less then 10 entries
-			
-
+	
 
 			// RETURN BUCKET ID and bucket AES
 			
@@ -1349,6 +1347,7 @@ $data = array("requests" => $reqdata
 		// profile information
 		case "piece_get4profile":
 
+			// When decryption error apepars: was chace deleted?
 			$col = \App\DB\Get::Collection();
 			
 			/*
@@ -1417,12 +1416,16 @@ $data = array("requests" => $reqdata
 
 
 			// Find all pieces
-			$cursor = ($col->pieces->find(array("owner"=> $item["userId"]), array('key')));
+			$cursor = ($col->pieces->find(array("owner"=> $item["userId"]), array('key', 'value')));
 
 			foreach ($cursor as $citem)
 			{
 				if (!in_array($citem["key"], $keylist))
 				{
+					clog2($citem);
+					if ($citem["value"]["value"] == "")
+						$finallist[] = array("key" => $citem["key"], "empty" => true);
+					else
 					$finallist[] = array("key" => $citem["key"]);
 				}
 			}

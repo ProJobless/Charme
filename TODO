@@ -9,6 +9,8 @@
 
 ## TODO HIGH PRIORITY
 
+- key hash: do not use fastkey1 as hashvalue, use salt1 instead
+- do not display empty pieces
 - messages: send: only receivers with key!, warning if no key!
 
 - nan bug
@@ -29,6 +31,9 @@
 - notify message receiver that key is no longer valid
 - recrypt with new fastkey: 
 
+## Spam Protect
+ - likes only from people in my lists
+ - subscribers only from people in my lists?
 
 ## XSS 
 - Check also ids for XSS attacks!

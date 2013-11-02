@@ -200,16 +200,18 @@ var view_settings_privateinfo = view_subpage.extend({
 				// Then we have to recrypt the buckets
 				$.each( d2.piece_getbuckets.items, function(){
 
-				// Get aes key to encrypt information
-				var bucketaes = aes_decrypt(fastkey.fastkey1, this.bucketaes);
+					// Get aes key to encrypt information
+					var bucketaes = aes_decrypt(fastkey.fastkey1, this.bucketaes);
+					
 
-				var tz = aes_encrypt(bucketaes, $("input[name="+this.key+"]").val());
+					var tz = ""; // Empty value if empty field!
 
+					if ( $("input[name="+this.key+"]").val() != "")
+					tz =  aes_encrypt(bucketaes, $("input[name="+this.key+"]").val());
 
-				// Encrypt field for buckets here 
-
-				// Add to array
-				bucketaesdir[this.key] = tz;
+					// Encrypt field for buckets here 
+					// Add to array
+					bucketaesdir[this.key] = tz;
 				
 				});
 console.log("fields");
@@ -232,6 +234,11 @@ console.log("fields");
 	}
 });
 function decryptField(encfield) {
+
+	if (encfield.value == "")
+		return "";
+
+
 	var aesEnc =  aes_decrypt(getFastKey(encfield.revision, 1).fastkey1, encfield.aesEnc);
 	return aes_decrypt(aesEnc, encfield.value);
 }
@@ -240,7 +247,13 @@ function encryptField(fieldvalue) {
 
 
 	var aes = randomAesKey(32);
-	var value = aes_encrypt(aes, fieldvalue);
+
+
+	var value = "";
+
+	if (fieldvalue != "")
+	value = aes_encrypt(aes, fieldvalue);
+
 	var fkey = getCurrentFastKey(1);
 
 	var aesEnc = aes_encrypt(fkey.fastkey1, aes);
