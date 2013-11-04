@@ -282,6 +282,44 @@ function getCurrentRSAKey() {
 
 /***
 	Name:
+	randomSalt
+
+	Info:
+	Generates a random Salt for SHA256 Hashing 
+
+	TODO:LV1: Add Mouse movement etc. as `Math.random()` is NOT a reliable RNG.
+
+	Params:
+	lenghtInByte:int:Salt lenght in byte
+
+	Location:
+	apl/crypto.js
+
+	Code:JS:
+	var k = randomSalt(32);
+
+*/
+
+
+
+function randomSalt(lenghtInByte)
+{
+
+var key = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 20; i++ )
+        key += possible.charAt(Math.floor(Math.random() * possible.length));
+return key;
+
+
+}
+
+
+
+
+/***
+	Name:
 	randomAesKey
 
 	Info:

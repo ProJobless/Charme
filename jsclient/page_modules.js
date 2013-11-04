@@ -894,6 +894,8 @@ var view_register = view_page.extend({
 			var fastkey1 = randomAesKey(32);
 			var fastkey2 = randomAesKey(32);
 
+			var randomsalt1 = randomSalt(32);
+			var randomsalt2 = randomSalt(32);
 
 			//n, e, d, p, q, dmp1, dmq1, coeff
 			var certificate = [{
@@ -901,7 +903,10 @@ var view_register = view_page.extend({
 				fastkey1: fastkey1,
 				fastkey2: fastkey2,
 
+				randomsalt1: randomsalt1,
+				randomsalt2: randomsalt2,
 
+				
 				rsa: {
 
 					n: e.data.n.toString(),
