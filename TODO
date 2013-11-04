@@ -10,7 +10,6 @@
 ## TODO HIGH PRIORITY
 
 - key hash: do not use fastkey1 as hashvalue, use salt1 instead
-- do not display empty pieces
 - messages: send: only receivers with key!, warning if no key!
 
 - nan bug

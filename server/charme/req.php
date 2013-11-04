@@ -1422,7 +1422,9 @@ $data = array("requests" => $reqdata
 			{
 				if (!in_array($citem["key"], $keylist))
 				{
-					clog2($citem);
+					
+
+					// Return with empty=true if no value specified
 					if ($citem["value"]["value"] == "")
 						$finallist[] = array("key" => $citem["key"], "empty" => true);
 					else

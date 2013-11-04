@@ -2257,7 +2257,10 @@ var view_profilepage_info = view_subpage.extend({
 						}
 						else
 						{
-							
+							// Can not request if empty fields:
+							if (that2.empty == true)
+								rq = "";
+							else
 							rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
 
 						}
