@@ -15,7 +15,8 @@
 - nan bug
 - badkey error , when new bucket, and request send. error disapears when saving private info again.
 
-
+- revision counter
+- revision in key directory!
 - Recrypt Public Key Directory when changing key
 - message send: get public key,
 	- autocomplete use $in to check if key available
@@ -29,6 +30,9 @@
 
 - notify message receiver that key is no longer valid
 - recrypt with new fastkey: 
+	- key directory
+	- buckets
+	- messages (?)
 
 ## Spam Protect
  - likes only from people in my lists

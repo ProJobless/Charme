@@ -890,7 +890,6 @@ var view_register = view_page.extend({
 
 			//alert(e.data.n.toString());
 
-
 			var fastkey1 = randomAesKey(32);
 			var fastkey2 = randomAesKey(32);
 
@@ -906,7 +905,7 @@ var view_register = view_page.extend({
 				randomsalt1: randomsalt1,
 				randomsalt2: randomsalt2,
 
-				
+
 				rsa: {
 
 					n: e.data.n.toString(),
@@ -945,7 +944,7 @@ var view_register = view_page.extend({
 			var tt = aes_encrypt(passphrase, JSON.stringify(certificate));
 
 
-				var pub = {
+			var pub = {
 								revision: 1,
 						
 
@@ -955,9 +954,6 @@ var view_register = view_page.extend({
 								}
 							};
 
-
-
-			
 
 			$("#pubkey").val(JSON.stringify(pub));
 

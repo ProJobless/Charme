@@ -1452,6 +1452,19 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] = array();
 			break;
 
+		case "key_getAllFromDir":
+
+	$col = \App\DB\Get::Collection();
+			
+
+
+			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('_id','key','value', 'fkrevision'));
+			
+
+			
+			$returnArray[$action] = array("value" => iterator_to_array($cursor, false));
+		break;
+
 		case "key_getMultipleFromDir":
 			// This query returns multiple keys from a keydirectory
 
@@ -1498,6 +1511,7 @@ array("owner" => $_SESSION["charme_userid"],
 
 				, array(
 					"owner" => $_SESSION["charme_userid"],
+					"fkrevision" => $item["fkrevision"],
 					"key" => $item["key"],
 					"value" => $item["value"]
 
@@ -1573,6 +1587,11 @@ array("owner" => $_SESSION["charme_userid"],
 
 		break;
 
+		case "key_update_recrypt" : 
+
+			// Recrypt key directory here!
+			
+		break;
 		case "key_update_phase2":
 
 		$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$item["password"]);

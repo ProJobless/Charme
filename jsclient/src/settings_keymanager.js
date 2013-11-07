@@ -74,6 +74,57 @@ var view_settings_keymanager = view_subpage.extend({
 	}
 });
 
+function updateDataOK()
+{
+	alert("OK");
+}
+function updateData()
+{
+
+
+	$.get("templates/box_updatedata.html", function(d) {
+
+			var templateData = {};
+
+			_.templateSettings.variable = "rc";
+			var template = _.template(d, templateData);
+			apl_request({
+				"requests": [{
+						"id": "key_getAllFromDir"
+			
+					}
+
+				]
+			}, function(d1) {
+				console.log(d1);
+
+				ui_showBox(template, function() {
+
+					// Get fastkey1 of revision used here.
+
+					$.each(d1.key_getAllFromDir.value, function(index, item) 
+						{	
+
+
+							var fastkey = getFastKey(item.fkrevision, 1);
+							console.log("ITEM");
+							console.log(item);
+						
+						});
+					
+					
+					// Register OK click event
+
+				});
+			});
+		});
+
+
+	// box_updatedata.html
+}
+
+
+
 function makeNewKey(userId) {
 	$.get("templates/box_newkey.html", function(d) {
 
@@ -375,7 +426,7 @@ function requestNewKey(userId) {
 							"requests": [{
 								"id": "key_storeInDir",
 								"key": e_key,
-
+								"fkrevision" : fastkey.revision,
 								"value": e_value
 							}, ]
 						}, function(d4) {
