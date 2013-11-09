@@ -3,6 +3,8 @@
 
 Charme is a distributed and open source social network. In contrast to classic social networks you can save your user data on your own server or a server of your choice. The project is splitted into the following sub projects:
 
+
+
 <table>
     <tr>
         <td>Path</td>
@@ -54,6 +56,12 @@ Charme is a distributed and open source social network. In contrast to classic s
     </tr>
     
 </table>
+
+## Screenshot
+
+![Screenshot](https://raw.github.com/mschultheiss/charme/dev/demo/screen2.png "Screenshot")
+
+
 
 
 ## Installation
