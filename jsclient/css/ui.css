@@ -53,10 +53,12 @@ width:32px;
 {
 
 	display: block;
-	border:1px silver solid;
+	
 	padding:16px;
 	text-align: center;
-	border-radius: 2px;
+	box-shadow:   0 0 1px #ccc;
+	
+	color: #000;
 	-webkit-user-select: none;
     -moz-user-select: none; 
     -khtml-user-select: none; 
@@ -64,7 +66,7 @@ width:32px;
 }
 .more:active
 {
-
+box-shadow:   0 0 1px #aaa;
 	background-color: #efefef;
 }
 
@@ -419,7 +421,7 @@ Plugins
   visibility: visible;
 }
 .nano > .pane {
-  background : rgba(0,0,0,.25);
+  background : rgba(0,0,0,.1);
   position   : absolute;
   width      : 10px;
   right      : 0;
@@ -436,7 +438,7 @@ Plugins
 .nano > .pane > .slider {
   background: rgba(255,255,255,.99);
   position              : relative;
-  margin                : 0 1px;
+  margin                : 1px 1px;
  
 }
 .nano:hover > .pane, .pane.active, .pane.flashed {

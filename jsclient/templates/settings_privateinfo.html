@@ -1,0 +1,36 @@
+
+<div class='p32'>
+Private information can be requested by other users. 
+They can send you a request for your phone number for example and you can click on allow to share your number with a user.
+You private information can be only read by you and the people who you share it with.
+
+	<form id='form_privateSettings' style='margin-top:32px'>
+		<h1>Personal Information</h1>
+	<table cellspacing="0" cellpadding="0">
+
+		<tbody>
+
+		<tr><td class="tdinfo">Phone Number:</td><td>
+			<input class="box" type="text" name="phone" value="<%- rc.prvInfo.phone %>">
+		</td></tr>
+
+		<tr><td class="tdinfo">Current City:</td><td><input class="box" type="text" name="currentcity" value="<%- rc.prvInfo.currentcity %>"></td></tr>
+
+	
+		<tr><td class="tdinfo">Mail Address:</td><td><input class="box" type="text" name="mail" value="<%- rc.prvInfo.mail %>"></td></tr>
+
+
+		</td></tr>
+
+
+		
+
+	<tr><td class="tdinfo">&nbsp;</td><td><a style='margin-top:16px;' class='button' id='but_savePrivateProfile'>Save Profile</a></td></tr>
+
+
+	</tbody></table>
+
+
+
+	</form>
+</div>

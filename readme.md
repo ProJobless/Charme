@@ -3,6 +3,8 @@
 
 Charme is a distributed and open source social network. In contrast to classic social networks you can save your user data on your own server or a server of your choice. The project is splitted into the following sub projects:
 
+
+
 <table>
     <tr>
         <td>Path</td>
@@ -55,6 +57,12 @@ Charme is a distributed and open source social network. In contrast to classic s
     
 </table>
 
+## Screenshot
+
+![Screenshot](https://raw.github.com/mschultheiss/charme/dev/demo/screen2.png "Screenshot")
+
+
+
 
 ## Installation
 
@@ -77,9 +85,9 @@ We plan to release a stable version by summer 2014.**
 
 ## Crypto
 
-* We use a RSA/AES Cryptosystem to encrypt messages and privat data
+* We use a RSA/AES cryptosystem to encrypt messages and private data
 * The private key is stored on a server, encrypted with a 20 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password or private PGP key.
-* To validate public keys we will implement a Web-Of-Trust like key veryfication system, that checks if all friends of a user own the same public key of him in the Background. You can also manually check the public keys in the key manager.
+* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if all friends of a user own the same public key of him in the background. You can also manually check the public keys in the key manager.
 
 
 ## How to Contribute?
@@ -88,6 +96,9 @@ We plan to release a stable version by summer 2014.**
 * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
 * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
+## License
+Charme is distributed under the terms of the GNU General Public License,
+version 3. See the LICENSE.txt file for details.
 
 ## Developers
 * We use Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin to write code.
@@ -131,6 +142,14 @@ We plan to release a stable version by summer 2014.**
         <td>MIT</td>
         <td>embedded in ui.css / ui.js (http://jamesflorentino.github.com/nanoScrollerJS/ for more information)</td>
     </tr>
+
+       <tr>
+        <td>nProgressBar</td>
+        <td>MIT</td>
+        <td>{lib|css}/nprogress.; https://github.com/rstacruz/nprogress</td>
+    </tr>
+
+
      <tr>
         <td>Backbone.js</td>
         <td>MIT</td>

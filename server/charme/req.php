@@ -131,7 +131,10 @@ foreach ($data["requests"] as $item)
 
 
 	$action = $item["id"];
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "register_collection_follow", "user_register", "profile_get", "message_receive", "post_getLikes"))){
+
+
+	// This array contains a list of request, that can be executed without a session Id
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -170,27 +173,48 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		case "message_get_sub_updates" :
+
+			$col = \App\DB\Get::Collection();
+			$query = array("aesEnc", "people", "conversationId", "revision");
+
+
+			//$timestart = new MongoDate($item["timestart"]); // $item["timestart"]
+				//clog2($timestart);
+			// new MongoDate($item["itemStartTime"] ))
+			$sel = array("conversationId" =>  new MongoId($item["conversationId"]),  "_id" => array('$gt' => new MongoId($item["lastid"])));
+
+			// itemTime' => array('$lt' =>  new MongoDate($item["itemStartTime"] )
+
+			// array('$lt' =>  new MongoDate($item["itemStartTime"] ))
+
+
+			$returnArray[$action] = array("messages" => 
+			iterator_to_array(
+				$col->messages->find($sel)
+				->sort(array("time" => 1))
+		
+				
+			, false));
+			
+		
+		break;
+
 		case "messages_get_sub":
 			
+			// Important: apply changes also to message_get_sub_updates
 			$startSet = false;
 			if (isset($item["start"]) && $item["start"] != "-1")
 				$startSet = true;
 
 			// TODO: Do not return at pagination??
 			$col = \App\DB\Get::Collection();
-			$query = array("aesEnc", "people", "conversationId", "revision");
+			$query = array("aesEnc", "people", "peoplenames" ,"conversationId", "revision");
 
 			// Set read=true
 
-
 			// Only need conversationId at the beginning
-			//if (!$startSet)
-			//	$query[] = ;
-
-$col->conversations->update(array("_id" =>  new MongoId($item["superId"])), array('$set' => array("read" => true))); 
-			
-
-
+			$col->conversations->update(array("_id" =>  new MongoId($item["superId"])), array('$set' => array("read" => true))); 
 			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), $query);
 
 			// Total message count, -1 if no result provided
@@ -236,7 +260,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				->sort(array("time" => 1))
 				->skip($start)->limit($limit)
 				
-			, false), "count" => $count, "revision" =>  $res["revision"], "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
+			, false), "count" => $count, "revision" =>  $res["revision"], "peoplenames" =>  $res["peoplenames"], "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
 			
 
 		break;
@@ -350,7 +374,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 		  }
 		  catch (MyException $e) {
-              clog($e->getMessage());
+             // clog($e->getMessage());
             }
 
 
@@ -379,7 +403,8 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			$req21->send();
 		}
 
-		$returnArray[$action] = array("commentId" => $itemdata["_id"]);
+
+		$returnArray[$action] = array("commentId" => $itemdata["_id"]->__toString());
 
 
 		break;
@@ -423,7 +448,9 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 			$arr = $req21->send();
 
-			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["commentId"] );
+
+
+			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["post_comment_distribute"]["commentId"] );
 
 		break;
 		
@@ -628,6 +655,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					"aesEnc" => $item["aesEnc"],
 					"conversationId" => new MongoId($item["conversationId"]),
 					"receiver" => $receiver,
+					"peoplenames" => $item["peoplenames"],
 					"revision" => $item["revision"],
 					"sendername" => $item["sendername"],
 					"messagePreview" => $item["messagePreview"],
@@ -792,6 +820,8 @@ $data = array("requests" => $reqdata
 			if (!isset($item["receivers2"]))
 				$item["receivers2"] = array();
 
+			$peoplenames = array();
+
 			foreach ($item["receivers"] as $key => $value)
 			{
 				// Remove AES keys for other people, TODO: Not for answers!
@@ -802,10 +832,29 @@ $data = array("requests" => $reqdata
 				else
 				$item["receivers2"][]  = $value["charmeId"];
 
+				// Find name, option 1: its me :)
+				if ($value["charmeId"] == $_SESSION["charme_userid"])
+				{
+					// Get sender name
+			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+
+
+						$peoplenames[] = $sendername ;
+				}
+
+
+					else // option2: its someone else
+					{
+				$rr = $col->listitems->findOne(array("userId" => $value["charmeId"], "owner" => $_SESSION["charme_userid"]));
+
+				$peoplenames[] = $rr["username"];
+			}
 
 			}
 
 
+			// Get usernames!
 
 			
 
@@ -829,7 +878,7 @@ $data = array("requests" => $reqdata
 						"revision" => $receiver["revision"],
 						"sendername" => $sendername,
 						"conversationId" => $convId->__toString(),
-				
+						"peoplenames" => $peoplenames
 
 						));
 
@@ -1048,15 +1097,399 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] =  (\App\Counter\Notify::getNotifications($_SESSION["charme_userid"]));
 		break;
 
+		// store encrypted pieces in database
+		case "piece_store":
+			$col = \App\DB\Get::Collection();
+			$allowedFields = array("phone", "mail", "currentcity");
+			$content = $item["fields"];
+
+			foreach ($content as $key => $value)
+			{
+
+				if (in_array($key, $allowedFields))
+				{
+					// Insert into mongodb		
+					$col->pieces->update(
+						array("owner" => $_SESSION["charme_userid"], "key" => $key),
+					
+
+						array("owner" => $_SESSION["charme_userid"],
+							"key" => $key,
+							"value" => $value)
+
+
+
+						,
+						array("upsert" => true));
+				}
+
+					$returnArray[$action] = array("OK" =>$item, "test" => 1);
+
+
+				// Update buckets
+				if (isset($item["fielddata"][$key]))
+				{
+
+				
+
+
+				$col->pieceBuckets->update(array("key" => $key, "owner" => $_SESSION["charme_userid"]), 
+
+
+					array('$set' => array("piecedata" => $item["fielddata"][$key]), '$inc' => array('version' => 1)
+						)
+
+					,
+					array("multiple" => false, "upsert" => true)
+					);
+			}
+		
+
+				//multiple=true!, upsert = true
+			
+			}
+
+
+
+			// Also update PieceBucket
+
+		break;	
+
+		// returns encrypted piece storage data
+		case "piece_store_get":
+
+			$col = \App\DB\Get::Collection();
+			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $_SESSION["charme_userid"]), array('value', 'key')), false);
+			$returnArray[$action] = array("items" => $cursor);
+
+
+
+		break;
+		
+
+
+		case "piece_request_receive":
+
+			// Insert data into collection
+			$col = \App\DB\Get::Collection();
+
+			$col->pieceRequests->update
+			(
+				array("userId" => $item["userId"], 
+					"invader" =>  $item["invader"], 
+					"key" =>  $item["key"]
+					),
+				
+				array("userId" => $item["userId"], 
+					"invader" =>  $item["invader"], 
+					"key" =>  $item["key"]
+					),
+				array("upsert" => true)
+			);
+
+
+		break;
+
+		case "piece_request_list":
+			
+
+
+			$col = \App\DB\Get::Collection();
+			$cursor = iterator_to_array($col->pieceRequests->find(array("userId"=> $_SESSION["charme_userid"]), array('invader', 'key')), false);
+			$returnArray[$action] = array("items" => $cursor);
+
+
+
+
+		break;
+
+
+		case "piece_request_deny":
+
+			$col = \App\DB\Get::Collection();
+			$col->pieceRequests->remove(array("userId" => $_SESSION["charme_userid"], "invader" => $item["userid"], "key" =>  $item["key"]));
+			$returnArray[$action] = array("OK" => 1);
+
+		break;
+
+		case "piece_request_accept":
+
+		// insert public key encrypted data into
+		// pieceBucketItems
+		$col = \App\DB\Get::Collection();
+		$col->pieceBucketItems->insert(array(
+		 "key" => $item["key"], // Information Key, like "phone" or "hometown"
+		 "bucket" => $item["bucket"],
+		 "bucketkey" => $item["bucketkey"], // RSA encrypted key to decrypt private information
+		 "owner" => $_SESSION["charme_userid"], // The real information owner
+		 "userid" =>  $item["userid"] // The user the key is for
+		 ));
+
+
+		// Delete request
+		$col->pieceRequests->remove(array("userId" => $_SESSION["charme_userid"], "invader" => $item["userid"], "key" =>  $item["key"]));
+		// Count keys in this buckets and update counter and pieceData
+
 	
+		$count1 = $col->pieceBucketItems->count(array("bucket" => $item["bucket"]));
+
+				$cursor = $col->pieceBuckets->update(
+
+			array("owner" => $_SESSION["charme_userid"],
+					"_id" => new MongoId($item["bucket"]))
+
+				, array(
+
+					'$set' => array(
+					"piecedata" => $item["piecedata"],
+					"itemcount" => $count1
+					)
+
+					), array("upsert" => true));
+			
+		//	$count1 =  $col->pieceBucketItems->count(array(""));
+
+
+		//...TODO
+
+		break;
+
+		case "piece_getbuckets":
+
+			$col = \App\DB\Get::Collection();
+			 $all = $col->pieceBuckets->find(array("owner" => $_SESSION["charme_userid"]), array("piecedata", "bucketaes", "key"));
+
+			 $cursor = iterator_to_array($all, false);
+
+			$returnArray[$action] = array("items" => $cursor);
+
+		break;
+
+		case "piece_request_single" :
+
+			$col = \App\DB\Get::Collection();
+			 $cursor =  $col->pieces->findOne(array(
+				"owner" => $_SESSION["charme_userid"],
+				"key" => $item["key"]),array("value"));
+			$returnArray[$action] = array("value" => $cursor["value"]);
+
+		break;
+		case "piece_request_findbucket":
+			
+			// TODO: Add bucketcontent here!
+
+			$col = \App\DB\Get::Collection();
+			
+
+			$content = array();
+
+			// 
+			$content = $col->pieceBuckets->findOne(array("key" =>  $item["key"],  "itemcount" => array('$lt' => 10), "owner" => $_SESSION["charme_userid"]), array("_id"));
+
+			if ($content == null) // New bucket
+			{
+				$content = array("owner" => $_SESSION["charme_userid"],
+					"key" => $item["key"],
+					"itemcount" => 0,
+					"version" => 0,
+					"bucketaes" => $item["bucketaes"]);
+			// Create bucket 
+				$col->pieceBuckets->insert($content);	
+			}
+			
+
 	
-	case "privateinfo_getall":
+
+			// RETURN BUCKET ID and bucket AES
+			
+			$returnArray[$action] = 
+			array("bucketid" => $content["_id"]->__toString(),
+				"bucketaes" => $item["bucketaes"]
+
+				);
+
+
+		
+		break;
+
+		case "piece_request":
+			
+			// Save request on own server
+
+			// Send request to external server
+	
+			$data = array("requests" => array(
+
+			"id" => "piece_request_receive",
+			"userId" => $item["userId"],
+			"invader" => $_SESSION["charme_userid"],
+			"key" => $item["key"],
+		
+
+			));
+
+			$req21 = new \App\Requests\JSON(
+			$item["userId"],
+			$_SESSION["charme_userid"],
+			$data);
+
+			$arr = $req21->send();
+
+
+
+
+		break;
+
+
+
+		// returns encrypted piece storage data
+		// This is triggered if you request some one elses
+		// profile information
+		case "piece_get4profile":
+
+			// When decryption error apepars: was chace deleted?
+			$col = \App\DB\Get::Collection();
+			
+			/*
+				1. Look into pieceBucket to get enrypted piece 
+				2. Look into pieceBucketItems to get public key encrypted AES Key to decrypt piece
+			*/
+			//
+
+
+
+			// 1. get bucketitems for this user
+
+			$bucketIDlist = array();
+			$rsaList = array();
+
+			$bucketids = $col->pieceBucketItems->find(array("owner" => $item["userId"], "userid" => $item["invader"]));
+
+			foreach ($bucketids as $citem)
+			{
+				$bucketIDlist[] = new MongoId($citem["bucket"]);
+				$rsaList[$citem["bucket"]] = $citem["bucketkey"];
+			}
+
+			$finallist = array();
+			$keylist = array();
+
+			// find the right buckets
+			$bucketCol = $col->pieceBuckets->find(array( '_id' => array('$in' => $bucketIDlist)));
+
+			foreach ($bucketCol as $citem)
+			{	
+				$keylist[] = $citem["key"];
+
+				$finallist[] = 
+				array(
+					"bucketrsa" => $rsaList[$citem["_id"]->__toString()],
+					"bucketaes" => $citem["bucketaes"] ,
+					"piecedata" => $citem["piecedata"] ,
+					"version"=> $citem["version"] ,
+					"key" => $citem["key"]
+					);
+			}
+
+			
+
+			// Find requests
+			$cursor = ($col->pieceRequests->find(array("userId"=> $item["userId"], 
+				"invader" => $item["invader"]
+
+				), array('key')));
+
+			foreach ($cursor as $citem)
+			{
+				
+				if (!in_array($citem["key"], $keylist))
+				{
+					// Remeber key
+				$keylist[] = $citem["key"];
+
+
+					$finallist[] = array("key" => $citem["key"], "requested" => 1);
+				}
+			}
+
+
+
+
+			// Find all pieces
+			$cursor = ($col->pieces->find(array("owner"=> $item["userId"]), array('key', 'value')));
+
+			foreach ($cursor as $citem)
+			{
+				if (!in_array($citem["key"], $keylist))
+				{
+					
+
+					// Return with empty=true if no value specified
+					if ($citem["value"]["value"] == "")
+						$finallist[] = array("key" => $citem["key"], "empty" => true);
+					else
+					$finallist[] = array("key" => $citem["key"]);
+				}
+			}
+
+
+
+
+
+			// Add if not in final list
+
+
+
+			$returnArray[$action] = array("items" => $finallist);
+
+
+
+		break;
+
+
+
+		case "privateinfo_getall":
 			$returnArray[$action] = array();
+			break;
+
+		case "key_getAllFromDir":
+
+	$col = \App\DB\Get::Collection();
+			
+
+
+			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('_id','key','value', 'fkrevision'));
+			
+
+			
+			$returnArray[$action] = array("value" => iterator_to_array($cursor, false));
+		break;
+
+		case "key_getMultipleFromDir":
+			// This query returns multiple keys from a keydirectory
+
+			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
+			$col = \App\DB\Get::Collection();
+			
+
+
+			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"], "key" => array('$in' => $item["hashes"])), array('key','value'));
+			
+
+			
+			$returnArray[$action] = array("value" => iterator_to_array($cursor, false));
+
+
+
+
 		break;
 
 		case "key_getFromDir":
 
+			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
 					$col = \App\DB\Get::Collection();
+			
+
 			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key" => $item["key"]), array('value'));
 			
 			
@@ -1078,6 +1511,7 @@ array("owner" => $_SESSION["charme_userid"],
 
 				, array(
 					"owner" => $_SESSION["charme_userid"],
+					"fkrevision" => $item["fkrevision"],
 					"key" => $item["key"],
 					"value" => $item["value"]
 
@@ -1120,7 +1554,7 @@ array("owner" => $_SESSION["charme_userid"],
 
 			break;
 
-
+			// Unused at the moment:
 			case "key_getPrivateKeyring":
 
 				$col = \App\DB\Get::Collection();
@@ -1153,6 +1587,11 @@ array("owner" => $_SESSION["charme_userid"],
 
 		break;
 
+		case "key_update_recrypt" : 
+
+			// Recrypt key directory here!
+			
+		break;
 		case "key_update_phase2":
 
 		$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$item["password"]);
@@ -1324,7 +1763,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
-			$content = array("username"=> $username, "time"=> new MongoDate(),  "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
+			$content = array("username"=> $username, "time"=> new MongoDate(), "likecount" => 0, "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
 			
 			if (isset( $item["repost"]))
 				$content["repost"]  = $item["repost"];
@@ -1450,7 +1889,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$sel = array("owner" => $_SESSION["charme_userid"]);
 
 			if ($item["listId"] != "")
-				$sel["list"] = new MongoId($item["listId"] );
+				$sel["list"] = new MongoId($item["listId"]);
 
 
 			
@@ -1828,7 +2267,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$col = \App\DB\Get::Collection();
 		
 			$content = array(
-				"owner" => $_SESSION["charme_userid"],
+				"owner" => $item["userId"],
 				"collectionOwner" =>  $item["collectionOwner"],
 				"collectionId" => new MongoId($item["collectionId"]));
 
@@ -1869,6 +2308,26 @@ array("owner" => $_SESSION["charme_userid"],
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;
+
+		case "post_delete":
+			$col = \App\DB\Get::Collection();
+			
+
+			$col->posts->remove(array("_id" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]));
+			
+			$col->streamitems->remove(array("postId" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]));
+
+
+			// If i created the post, than also delete from collection
+
+
+		break;
+
+		case "comment_delete":
+
+		
+		break;
+
 
 
 		case "entity_delete" :

@@ -103,6 +103,8 @@ text-align: center;
 text-transform: uppercase;;
 letter-spacing: 1px;
 
+position:relative;
+    z-index: 100;
 
 }
 
@@ -125,6 +127,7 @@ width:100%;
 
 	width:260px;
 	float:left;
+	overflow: visible;
 }
 .aboutBox table td.info
 {

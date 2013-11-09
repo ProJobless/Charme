@@ -19,11 +19,11 @@ background-color: black;
 
 .sbAlpha ul a:active
 {
-	background-color: #c2c2c2;
+	background-color: #cdcdcd;
 }
 .sbAlpha ul li.active
 {
-	background-color: #c2c2c2;
+	background-color: #cdcdcd;
 }
 
 .likes
@@ -234,7 +234,7 @@ float: left;
 }
 .actionBar
 {
-	height:31px; background-color:#BA2323;
+	height:31px; background-color:#cdcdcd;
 	z-index:9000;
 	position: relative;
 	overflow:visible;
@@ -263,7 +263,7 @@ float: left;
 	margin:0px auto;
 	left:50%;
 	margin-left:-349px; /* 850/2-75 = */
-	background-color:#c2c2c2;
+	background-color:#cdcdcd;
 	position:fixed;
 	z-index:-9992;
 

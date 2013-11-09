@@ -48,8 +48,6 @@ var container_main;
 
 $(function() {
 
-
-
     if (isLoggedIn())
         charmeUser = new apl_user(localStorage.getItem("user"));
 
@@ -59,13 +57,12 @@ $(function() {
         });
 
 
+
+    
     // get apl data, like lists, friends etc. from server
     apl_setup(function() {
 
-
         apl_setup2();
-
-
 
         if (isLoggedIn()) {
             container_main.render();
@@ -179,9 +176,11 @@ $(function() {
                     "requests": [{
                             "id": "key_getAll"
                         },
+
+                        /* Unused, we get the keyring already at login 
                         {
                             "id" : "key_getPrivateKeyring"
-                        }
+                        }*/
 
 
                     ]
@@ -198,24 +197,85 @@ $(function() {
 
 
 
-
                 });
-            } else if (id == "privateinfo") {
-                apl_request({
+            } 
+
+             else if (id == "privateinfo_requests") {
+
+                   apl_request({
                     "requests": [{
-                            "id": "privateinfo_getall"
+                            "id": "piece_request_list"
                         },
 
 
                     ]
                 }, function(d2) {
 
+                      var vsd = new view_settings_privateinfo_requests({
+                        template: "settings_privateinfo_requests",
+                        navMatch: '#nav_' + id,
+                        data: d2
+                    });
+
+                 
+                    container_main.currentView.setSub(vsd);
+                    container_main.currentView.render();
+
+
+
+                });
+
+
+
+             }
+
+            else if (id == "privateinfo") {
+                apl_request({
+                    "requests": [{
+                            "id": "piece_store_get"
+                        },
+
+
+                    ]
+                }, function(d2) {
+
+                    d2.prvInfo = {};
+
+                    // Default values
+                    d2.prvInfo.phone = "";
+                    d2.prvInfo.currentcity = "";
+                    d2.prvInfo.mail = "";
+
+            
+                    // Do decrypt
+                    $.each(d2.piece_store_get.items, function() {
+                            
+                        
+
+                        var key = getFastKey(this.value.revision, 1);
+                        
+                        
+                     
+                        var original = "";
+                        try{
+                        var aes = aes_decrypt(key.fastkey1, this.value.aesEnc);
+
+                        var original = aes_decrypt(aes, this.value.value);
+                        }catch(err){
+
+                        }
+                        d2.prvInfo[this.key] = original;
+
+                    });
+                    console.log(d2.prvInfo);
 
                     var vsd = new view_settings_privateinfo({
                         template: "settings_privateinfo",
                         navMatch: '#nav_' + id,
                         data: d2
                     });
+
+                 
                     container_main.currentView.setSub(vsd);
                     container_main.currentView.render();
 
@@ -630,8 +690,6 @@ function login() {
 
 
 
-
-
             localStorage.setItem("user", u);
 
             charmeUser = new apl_user(u);
@@ -654,8 +712,6 @@ function login() {
                     // Store passphrase encoded with session Id.
                     localStorage.setItem("sessionPassphrase", (aes_encrypt(charmeUser.sessionId, passphrase)));
 
-                  
-
 
 
                     // The keyring contains a list of 
@@ -664,8 +720,8 @@ function login() {
 
                     // each item has format {revision, rsa}
                     var keyring = aes_decrypt(passphrase, keyringAES);
-                   
-                   
+
+
                     // Store encoded certificate
                     localStorage.setItem("keyring", keyring);
                     localStorage.setItem("userAutoComplete", u);
@@ -737,11 +793,11 @@ function logout() {
 
 function delTemp() {
 
-                    localStorage.removeItem("sessionPassphrase");
-                    localStorage.removeItem("certificate");
-                    localStorage.removeItem("passPassphrase");
-                    localStorage.removeItem("user");
-    alert("Deleted temporary data.");    
+    localStorage.removeItem("sessionPassphrase");
+    localStorage.removeItem("certificate");
+    localStorage.removeItem("passPassphrase");
+    localStorage.removeItem("user");
+    alert("Deleted temporary data.");
 }
 
 function resendPassword() {

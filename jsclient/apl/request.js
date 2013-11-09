@@ -1,41 +1,43 @@
 
 // apl posttest: only for debug!
-function apl_posttest(requests)
-{
-	var ses ="";
-	var url1 = "http://server.local/charme/auto.php?debug=1&session="+ses+"";
+
+function apl_posttest(requests) {
+	var ses = "";
+	var url1 = "http://server.local/charme/auto.php?debug=1&session=" + ses + "";
 
 	$.ajax({
 
-	  url: url1,
+		url: url1,
 
-	type: "POST",
+		type: "POST",
 
-    data: {d:JSON.stringify(requests), test: "test"},
-    dataType: "html",//json
+		data: {
+			d: JSON.stringify(requests),
+			test: "test"
+		},
+		dataType: "html", //json
 
-    crossDomain : true,
- 	xhrFields: {
-    withCredentials: true
-  },
-        cache:false,
+		crossDomain: true,
+		xhrFields: {
+			withCredentials: true
+		},
+		cache: false,
+
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError);
+			console.log(xhr.responseText);
+
+			// console.log(ajaxOptions);
+			// console.log(xhr);
+		},
+		success: function(data) {
+
+			console.log("posttest returns: " + data);
+		}
+	});
 
 
-
-	  error: function (xhr, ajaxOptions, thrownError) {
-      console.log(thrownError);
-      console.log(xhr.responseText);
- 
-     // console.log(ajaxOptions);
-     // console.log(xhr);
-      },
-	  success: function(data) {
-
-	  	console.log("posttest returns: "+ data);
-	  }});
-
-
-} 
+}
 /***
   Name:
   apl_request
@@ -75,6 +77,7 @@ function apl_request(requests, callback, ses,srv)
 	// TIPP: http://stackoverflow.com/questions/15047279/how-can-i-retrieve-json-stringified-objects-in-php
 	var url1 = "http://"+srv+"/charme/req.php";
 
+	console.log("REQTO"+srv);
 
 	$.ajax({
 
@@ -108,7 +111,7 @@ function apl_request(requests, callback, ses,srv)
 		console.log(data);
 		if(callback != undefined && typeof callback == 'function') 
 		{
-			if (data.ERROR == 1)
+			if (data.ERROR == 1 && srv == charmeUser.server)
 			{
 			alert("Server Session expired. Perform logout.");
 			logout();

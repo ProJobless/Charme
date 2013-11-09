@@ -70,64 +70,7 @@ function addPeopleOk() {
 
 }
 
-function sendAnswer() {
 
-	var aeskey = ($('#msg_aeskey').data("val"));
-	var conversationId = ($('#msg_conversationId').data("val"));
-	var message = smilieParse($('#inp_newmsginstant').html());
-	var encMessage = aes_encrypt(aeskey, message);
-	var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
-
-	if (message == "") return;
-
-	apl_request({
-		"requests": [{
-				"id": "message_distribute_answer",
-				"conversationId": conversationId,
-				"encMessage": encMessage,
-				"messagePreview": messagePreview
-			}
-
-		]
-	}, function(d2) {
-
-
-
-		$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
-
-		$.get("templates/control_messageview.html", function(d) {
-			// RSA Decode, for each:
-			// d2.messages_get_sub
-
-
-
-			_.templateSettings.variable = "rc";
-			var tmpl = _.template(d, {
-				messages: [{
-					msg: message,
-					sender: charmeUser.userId,
-					time: {
-						sec: new Date().getTime() / 1000
-					},
-					sendername: d2.message_distribute_answer.sendername
-				}]
-			});
-
-			$(".talkmessages").append(tmpl);
-
-			$('#moremsg2').remove();
-
-			$("html, body").animate({
-				scrollTop: $(document).height()
-			}, "slow");
-
-			$('#inp_newmsginstant').html("").focus();
-
-		});
-
-	});
-
-}
 
 /***
 	Name:
@@ -178,7 +121,9 @@ function sendMessage() {
 	var rsa = new RSAKey();
 
 	// Message to me
-	rsa.setPublic(getKeyByRevision(0).rsa.n, getKeyByRevision(0).rsa.e);
+
+
+	rsa.setPublic(getKeyByRevision(0).rsa.rsa.n, getKeyByRevision(0).rsa.rsa.e);
 	aesEnc = rsa.encrypt(aeskey);
 
 
@@ -186,9 +131,88 @@ function sendMessage() {
 	receivers.push({
 		charmeId: charmeUser.userId,
 		aesEnc: aesEnc,
-		revision: getKeyByRevision(0).revision
+		revision: getKeyByRevision(0).revision,
+		// username will be added on server
 	});
 
+	// "all" is an array containing all receiver userids (Example: ["test@myserver.com", "ms@yourserver.com", ...])
+
+
+	// First we do an request to our key directory to get all public keys
+	// Therefore we build the hash keys to query thew key directory first
+	
+
+	var fastkey = getFastKey(0, 1); // Current fast key
+
+	var allhashes = [];
+	jQuery.each(all, function() {
+
+
+		// Build key hash
+		var e_key = CryptoJS.SHA256(fastkey.fastkey1 + this).toString(CryptoJS.enc.Base64);
+		allhashes.push(e_key);
+
+
+	});
+
+	apl_request({
+		"requests": [{
+				"id": "key_getMultipleFromDir",
+				"hashes": allhashes
+			}
+
+		]
+	}, function(d1) {
+
+		jQuery.each(d1.key_getMultipleFromDir.value, function() {
+
+			
+			var aesstrPK = aes_decrypt(fastkey.fastkey1, this.value);
+			var pk = $.parseJSON(aesstrPK);
+
+			var rsa = new RSAKey();
+			rsa.setPublic(pk.key.n, pk.key.e);
+			// RSA encrypt aes key with pubKey:
+			var aesEnc = rsa.encrypt(aeskey);
+
+			// Add to receivers
+			receivers.push({
+				charmeId: pk.userId, // UID?
+				aesEnc: aesEnc,
+				revision: pk.revision
+			});
+
+
+
+		});
+
+		var encMessage = aes_encrypt(aeskey, message);
+		var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
+
+
+		// Send encrypted message to server
+		apl_request({
+			"requests": [{
+					"id": "message_distribute",
+					"receivers": receivers,
+					"encMessage": encMessage,
+					"messagePreview": messagePreview,
+					"sender": charmeUser.userId
+
+				}
+
+			]
+		}, function(d2) {
+			console.log(receivers);			console.log(receivers);			console.log(receivers);			console.log(receivers);			console.log(receivers);			console.log(receivers);
+			ui_closeBox();
+		});
+
+
+
+	});
+
+
+/*
 
 	jQuery.each(all, function() {
 		var str = this;
@@ -196,16 +220,18 @@ function sendMessage() {
 		// Get public key for each receiver, Warning: It's asynchronous!!!!!!
 		apl_request({
 			"requests": [{
-					"id": "profile_pubKey",
-					"profileId": this
+					"id": "key_getFromDir",
+					"key": this
 				}
 
 			]
 		}, function(d1) {
 
-			var pk = $.parseJSON(d1.profile_pubKey);
+			
+
+			/*var pk = $.parseJSON(d1.profile_pubKey);
 			count++;
-			console.log(pk);
+		
 			// Encrypt random key  with public key
 
 			var aesEnc = "";
@@ -226,7 +252,8 @@ function sendMessage() {
 
 			console.log("RECEIVERS");
 			console.log(receivers);
-
+			
+			
 			// Send if last public key is here.
 			if (count == all.length) // Encrypted all random keys -> send to my server for distribution
 			{
@@ -251,8 +278,13 @@ function sendMessage() {
 				});
 
 			}
+
+
+
+
+
 		});
-	});
+	});*/
 
 }
 
@@ -439,6 +471,9 @@ view_page = Backbone.View.extend({
 
 				var templateData = that.getData();
 
+
+
+
 				_.templateSettings.variable = "rc";
 				var template = _.template(d, templateData);
 
@@ -495,7 +530,8 @@ view_subpage = Backbone.View.extend({
 
 		var that = this;
 
-
+		// Cancel message update timer
+		$.doTimeout( 'messageupdate', false );
 
 		$.get("templates/" + this.options.template + ".html", function(d) {
 
@@ -511,10 +547,15 @@ view_subpage = Backbone.View.extend({
 			//console.log(templateData);
 
 
+							console.log(templateData);
+console.log(templateData);
+console.log(templateData);
+
+
 			var template = _.template(d, templateData);
 
 
-
+			
 			console.log(that.$el);
 
 			// Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
@@ -567,8 +608,10 @@ view_subpage = Backbone.View.extend({
 
 
 function setSCHeight() {
+
 	$(".msgScrollContainer").css("height", ($(window).height() - 82) + "px");
 	$('.nano').nanoScroller();
+
 }
 
 $(window).resize(function() {
@@ -847,10 +890,24 @@ var view_register = view_page.extend({
 
 			//alert(e.data.n.toString());
 
+			var fastkey1 = randomAesKey(32);
+			var fastkey2 = randomAesKey(32);
+
+			var randomsalt1 = randomSalt(32);
+			var randomsalt2 = randomSalt(32);
+
 			//n, e, d, p, q, dmp1, dmq1, coeff
 			var certificate = [{
 				revision: 1,
+				fastkey1: fastkey1,
+				fastkey2: fastkey2,
+
+				randomsalt1: randomsalt1,
+				randomsalt2: randomsalt2,
+
+
 				rsa: {
+
 					n: e.data.n.toString(),
 					e: e.data.e.toString(),
 					d: e.data.d.toString(),
@@ -882,21 +939,21 @@ var view_register = view_page.extend({
 			console.log(JSON.stringify(certificate));
 
 
+		
 			// Encrypt certificate with passpharse
 			var tt = aes_encrypt(passphrase, JSON.stringify(certificate));
 
 
-				var pub = {
+			var pub = {
 								revision: 1,
+						
+
 								publickey: {
 									n: e.data.n,
 									e: e.data.e
 								}
 							};
 
-
-
-			
 
 			$("#pubkey").val(JSON.stringify(pub));
 
@@ -951,10 +1008,14 @@ var view_profilepage = view_page.extend({
 
 
 			apl_request({
-				"requests": [{
+				"requests": [
+				{
 					"id": "profile_get_name",
 					"userId": container_main.currentView.options.userId
-				}, ]
+				}
+
+
+				]
 			}, function(d) {
 
 				container_main.currentView.username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
@@ -962,7 +1023,7 @@ var view_profilepage = view_page.extend({
 
 
 
-			});
+			}, "", this.options.userId.split("@")[1]);
 
 		}
 
@@ -1004,30 +1065,56 @@ control_smilies = Backbone.View.extend({
 
 		var $textBox = that.options.area;
 
+				var save_selection;
+				saveSelection = function() {
+				var sel = window.getSelection(),
+					ranges = [];
+				if (sel.rangeCount) {
+					for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+						ranges.push(sel.getRangeAt(i));
+					}
+				}
 
-
+				return ranges;
+			};
 		replaceSelectedText = function(replacementText) {
 			var e = $(replacementText);
 
+			 var r = document.createRange();
+
+
+
 			var sel, range;
+			sel = window.getSelection();
 			if (window.getSelection) {
-				sel = window.getSelection();
+					
 				if (sel.rangeCount) {
 					range = sel.getRangeAt(0);
 					range.deleteContents();
 					range.insertNode(e[0]); // document.createTextNode(replacementText)
 					///range.setStartAfter (e);
 
+					// Move cursor
+					range.setStartAfter(e[0]);
+					range.setEndAfter(e[0]); 
+					sel.removeAllRanges();
+					sel.addRange(range);
 
 				}
+
 
 			} else if (document.selection && document.selection.createRange) {
 				range = document.selection.createRange();
 				range.insertNode(e[0]);
-				// range.setStartAfter (e);
+
+
+				//range.setStartAfter (e);
 
 
 			}
+			// Save cursorr position
+			save_selection = saveSelection();
+
 		}
 
 
@@ -1048,24 +1135,14 @@ control_smilies = Backbone.View.extend({
 
 
 
-		var save_selection;
+
 
 
 		$textBox.bind("mouseup keyup", function() {
 
 
 
-			saveSelection = function() {
-				var sel = window.getSelection(),
-					ranges = [];
-				if (sel.rangeCount) {
-					for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-						ranges.push(sel.getRangeAt(i));
-					}
-				}
-
-				return ranges;
-			};
+			
 
 
 
@@ -1187,8 +1264,43 @@ control_postField = Backbone.View.extend({
 	},
 
 	render: function() {
+
+
 		var that = this;
+
+		var addbox = function(that, items) {
+
+				that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
+
+					$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
+
+					$('#inp_postImg').on("change", function(e) {
+						that.fileChanged(e);
+					});
+
+					$('#but_addImg').click(function() {
+
+						$("#inp_postImg").trigger('click');
+					});
+
+					$('#but_remImg').click(function() {
+
+						$('#inp_postImg').data("filecontent", null);
+						$("#but_remImg").hide();
+						$("#but_addImg").show();
+
+					});
+
+					if (items != "")
+							$('#postOptions').append(" in <select style='width:100px;' id='collectionSelector'>" + items + "</select>");
+
+
+
+		};
+
+
 		if (this.options.collectionId == "") {
+
 
 			// Get collections json....
 			apl_request({
@@ -1201,39 +1313,34 @@ control_postField = Backbone.View.extend({
 				var items = "";
 
 				jQuery.each(d.collection_getAll, function() {
+
+
+
+
 					items += "<option value='" + this._id.$id + "'>" + xssText(this.name) + "</option>";
 
 
 				});
-				$('#postOptions').append(" in <select style='width:100px;' id='collectionSelector'>" + items + "</select>");
+
+
+				if (d.collection_getAll == 0)
+					that.$el.append("Create <a href='#user/"+charmeUser.userIdURL+"/collections'>a collection</a> to start posting.");
+				else {
+					addbox(that, items);
+				}
+
+		
+				
 
 
 
 			});
 
 
-		}
+		}else
+		addbox(this, "");
 
-		this.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
-
-		$('#postOptions2').append(" - <input id='inp_postImg' type='file' style='display:none'><a id='but_addImg'>Add Image</a><a style='display:none' id='but_remImg'>Remove Image</a>");
-
-		$('#inp_postImg').on("change", function(e) {
-			that.fileChanged(e);
-		});
-
-		$('#but_addImg').click(function() {
-
-			$("#inp_postImg").trigger('click');
-		});
-
-		$('#but_remImg').click(function() {
-
-			$('#inp_postImg').data("filecontent", null);
-			$("#but_remImg").hide();
-			$("#but_addImg").show();
-
-		});
+		
 
 
 
@@ -1268,7 +1375,7 @@ control_commentItem = Backbone.View.extend({
 
 
 
-		var str = "<div class='comment'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + this.options.content + "</div>";
+		var str = "<div class='comment'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + xssText(this.options.content) + "</div>";
 		if (this.options.prepend)
 			this.$el.prepend(str);
 		else
@@ -1333,6 +1440,8 @@ control_postItem = Backbone.View.extend({
 		});
 
 	},
+	
+
 	render: function() {
 
 
@@ -1343,9 +1452,11 @@ control_postItem = Backbone.View.extend({
 
 		//Use uniId inside events like .click() etc., because uniIdCounter is global!!
 		var uniId = uniIdCounter;
+	
 
 
 
+				var that = this;
 		var repoststr = "";
 		var liksstr = "<div class='likes'><a class='counter' id='counter" + uniIdCounter + "'>0</a></div>";
 
@@ -1356,7 +1467,9 @@ control_postItem = Backbone.View.extend({
 
 		var str;
 		var imgcont = "";
-		var delitem = "<a class='delete'></a>";
+		var delitem = "<a id='del_post_"+uniIdCounter+"' class='delete'></a>";
+
+	
 
 		if (this.options.hasImage) {
 			//
@@ -1368,14 +1481,14 @@ control_postItem = Backbone.View.extend({
 			var postUser = new apl_user(this.options.userId);
 
 			// 
-			str = "<div class='collectionPost'>" +
-				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
+			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" +
+				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
 		} else
-			str = "<div class='collectionPost'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniIdCounter + "'>Love</a> - <a id='doRepost" + uniIdCounter + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
+			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
 
 
 
-		str += "<div class='commentBox' id='commentBox" + uniIdCounter + "'><div class='postcomments' id='postComments" + uniIdCounter + "'></div><input id='inputComment" + uniIdCounter + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
+		str += "<div class='commentBox' id='commentBox" + uniId + "'><div class='postcomments' id='postComments" + uniId + "'></div><input id='inputComment" + uniId + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
 		str += "</div></div>";
 
 
@@ -1384,16 +1497,34 @@ control_postItem = Backbone.View.extend({
 		else
 			this.$el.append(str);
 
-		var that = this;
 
+
+		// REgister event handler AFTER HTML has been added
+		$("#del_post_"+uniIdCounter).click(function(){
+
+			// TODO: ARE YOU SURE?
+
+			// Send request for post deletion to server
+			apl_request({
+				"requests": [{
+					"id": "post_delete",
+					"postId": that.options.postId
+				}, ]
+			}, function(d) {
+
+				// Remove post from GUI
+				$("#post_"+that.options.postId).fadeOut(0);
+
+			});
+			
+		});
 
 
 		// append some comments
 		var itemStartTime;
 		if (this.options.comments != undefined && this.options.comments.length > 0) {
 
-			that.addComments(this.options.comments, uniIdCounter, false);
-
+			that.addComments(this.options.comments, uniId, false);
 			itemStartTime = this.options.comments[0].itemTime.sec;
 
 		}
@@ -1401,11 +1532,11 @@ control_postItem = Backbone.View.extend({
 
 
 		if (this.options.commentCount > 3)
-			$('#commentBox' + uniIdCounter).prepend("<a class='morecomments'>More</a>"); //data-start=TotalComments-6
+			$('#commentBox' + uniId).prepend("<a class='morecomments'>More</a>"); //data-start=TotalComments-6
 
 
 
-		$('#commentBox' + uniIdCounter + " .morecomments").click(function() {
+		$('#commentBox' + uniId + " .morecomments").click(function() {
 
 
 
@@ -1456,17 +1587,21 @@ control_postItem = Backbone.View.extend({
 
 				}
 
-			});
+			}, "", that.options.userId.split("@")[1]);
 
 		});
 
 
-		var zu = uniIdCounter;
+	
 
-		$("#inputComment" + uniIdCounter).keypress(function(e) {
+
+		$("#inputComment" + uniId).keypress(function(e) {
+
+
 			if (e.which == 13) {
 				// Write comment
 				// Get Text
+		
 
 				var content = $(this).val();
 				var that2 = this;
@@ -1484,6 +1619,7 @@ control_postItem = Backbone.View.extend({
 					]
 				}, function(d) {
 
+				
 					var item2 = new control_commentItem({
 						"content": content,
 						"username": d.post_comment.username,
@@ -1501,7 +1637,7 @@ control_postItem = Backbone.View.extend({
 
 
 
-		$("#doRepost" + uniIdCounter).click(function() {
+		$("#doRepost" + uniId).click(function() {
 
 			repostTemp = {
 				userId: that.options.userId,
@@ -1520,7 +1656,7 @@ control_postItem = Backbone.View.extend({
 		});
 
 
-		$("#counter" + uniIdCounter).click(function() {
+		$("#counter" + uniId).click(function() {
 
 
 
@@ -1557,9 +1693,9 @@ control_postItem = Backbone.View.extend({
 
 		this.setLikeText(uniIdCounter);
 
-		$("#doLove" + uniIdCounter).data("uniid", uniIdCounter);
+		$("#doLove" + uniId).data("uniid", uniId);
 
-		$("#doLove" + uniIdCounter).click(function() {
+		$("#doLove" + uniId).click(function() {
 
 			var that2 = this;
 
@@ -1748,7 +1884,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 			});
 
-		});
+		}, "", container_main.currentView.options.userId);
 
 
 		var that = this;
@@ -1841,7 +1977,7 @@ var view_profilepage_posts = view_subpage.extend({
 
 			});
 
-		});
+		},"",  container_main.currentView.options.userId.split("@")[1]);
 
 
 
@@ -1898,7 +2034,7 @@ var view_profilepage_collection = view_subpage.extend({
 
 			// TODO: Add collection control...
 
-		});
+		},"",  container_main.currentView.options.userId.split("@")[1]);
 
 
 
@@ -1969,6 +2105,11 @@ var view_profilepage_info = view_subpage.extend({
 
 		//#userinfo_container
 
+
+
+
+
+
 		apl_request({
 			"requests": [
 
@@ -1976,17 +2117,32 @@ var view_profilepage_info = view_subpage.extend({
 				{
 					"id": "profile_get",
 					"profileId": container_main.currentView.options.userId
-				},
+				}
 
+				, 
+				{
+					"id": "piece_get4profile",
+					"userId": container_main.currentView.options.userId,
+					"invader" : charmeUser.userId
+				} 
+				
+
+			]
+		}, function(d2) {
+
+
+
+
+				apl_request({
+			"requests": [
 				// Send this to user server:
 				{
 					"id": "lists_getRegistred",
 					"userId": container_main.currentView.options.userId
 				}
+	]
+		}, function(d9) {
 
-
-			]
-		}, function(d2) {
 
 
 
@@ -1998,7 +2154,7 @@ var view_profilepage_info = view_subpage.extend({
 				var userlists = new Array();
 
 
-				jQuery.each(d2.lists_getRegistred, function() {
+				jQuery.each(d9.lists_getRegistred, function() {
 
 
 
@@ -2055,6 +2211,100 @@ var view_profilepage_info = view_subpage.extend({
 				$("td:empty").parent().remove(); // Remove empty Info fields
 
 
+
+
+
+					$.each(d2.piece_get4profile.items, function() {
+
+						var that2 = this;
+						var rq = "";
+
+						if (this.bucketaes == undefined && this.requested == 1)
+						{
+							rq ="<i>Waiting for reply...</i>";
+
+						}
+						else if (this.bucketaes != undefined)
+						{	
+							// bucketaes, bucketrsa, piecedata
+							console.log((that2.bucketrsa));
+							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
+							
+						
+								//Use this cache version, if piece revisions are completed:
+								
+								// Look for cached AES key to save expensive RSA decryption time
+								// Our unique key consits of revision, userid and piece key:
+								var key = "--,"+container_main.currentView.options.userId+","+that2.version+","+this.key;
+								var aes = checkCache(key);
+								if (aes == null) {
+									
+									key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
+									aes  = key1.decrypt(that2.bucketrsa.data); // get aes key to decrypt piecedata
+									storeCache(key, aes);
+								}
+						
+
+								if (that2.piecedata == "")
+									{rq = ""}
+								else
+								{
+								var t = aes_decrypt(aes, that2.piecedata);
+								if (t != "")
+									rq = xssText(t);
+								else
+									rq ="";
+								}
+						}
+						else
+						{
+							// Can not request if empty fields:
+							if (that2.empty == true)
+								rq = "";
+							else
+							rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
+
+						}
+						
+
+				
+						if (rq  != "")
+						$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" +  rq + "</td></tr>");
+
+						
+
+						$("#req_" + xssText(that2.key)).click(function() {
+
+							var that3 = this;
+							
+
+							apl_request({
+								"requests": [{
+									"id": "piece_request",
+									"key": that2.key,
+									"userId" : container_main.currentView.options.userId
+								}, ]
+							}, function(d) {
+
+								$(that3).parent().append("Request sent.");
+								$(that3).remove();
+								NProgress.start();
+								NProgress.done();
+
+							});
+
+							//,"",  container_main.currentView.options.userId.split("@")[1]
+
+							//alert(that2.key);
+
+							// Send apl request to PROFILE OWNER server
+
+
+						});
+						
+					});
+
+
 				// Get box templates now and append to infopage:
 
 				// Init list click events
@@ -2096,9 +2346,9 @@ var view_profilepage_info = view_subpage.extend({
 				});
 			});
 
-
-
 		});
+
+		},"",  container_main.currentView.options.userId.split("@")[1]);
 
 
 
@@ -2346,6 +2596,9 @@ var view_talks_subpage = view_subpage.extend({
 
 	initialize: function() {
 		this.messagePaginationIndex = 0;
+
+		this.options.lastid = 0;
+
 
 		if (this.options.superId != "")
 			this.loadMessages(-1);
@@ -2650,28 +2903,48 @@ var view_talks_subpage = view_subpage.extend({
 				var rsa = new RSAKey();
 
 				var key1 = getKeyByRevision(d2.messages_get_sub.revision);
-					var key = key1.rsa;
+					var key = key1.rsa.rsa;
 
 					rsa.setPrivateEx(key.n, key.e, key.d,
 						key.p, key.q, key.dmp1,
 						key.dmq1, key.coeff);
 
-
-
-				//rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
-				//	charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1,
-				//	charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
-
-
-				//alert(d2.messages_get_sub.aesEnc);
-
 				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
-
 				that.aes = aeskey;
+
+
+				console.log(d2.messages_get_sub.peoplenames);
+				console.log(d2.messages_get_sub.peoplenames);
+				// Add people list to output
+				if (start == -1) {
+				jQuery.each(d2.messages_get_sub.people, function(i) {
+
+					if (i != 0)
+						$("#inp_receiversinstant").append(", ");
+
+					/*if ($.isArray(this)) // just userid
+					{
+						$("#inp_receiversinstant").append("<a href='#user/" +
+							encodeURIComponent(this.userId) + "'>" + this.username + "</a>");
+					}*/
+				 // {userid, name}
+					{
+						$("#inp_receiversinstant").append("<a href='#user/" +
+							encodeURIComponent(this) + "'>" + xssText(d2.messages_get_sub.peoplenames[i]) + "</a>");
+					}
+				});
+				}
+
+
 
 				d2.messages_get_sub.aesEnc = aeskey;
 
+				
 				jQuery.each(d2.messages_get_sub.messages, function() {
+
+
+					if (start == -1) // Only after first load messages
+						that.options.lastid = this._id.$id;
 
 					try {
 						if (this.encMessage == "" || this.encMessage == undefined)
@@ -2684,40 +2957,66 @@ var view_talks_subpage = view_subpage.extend({
 				});
 
 				// Decode AES Key with private RSA Key
-				/*
-
 				
-
-				 var aeskey = rsa.decrypt(this.aesEnc);*/ //sjcl.decrypt(aeskey, this.encMessage);
-
+		
 				_.templateSettings.variable = "rc";
 
 				var tmpl = _.template(d, d2.messages_get_sub);
 
-				if (start == -1) {
-					jQuery.each(d2.messages_get_sub.people, function(i) {
 
-						if (i != 0)
-							$("#inp_receiversinstant").append(", ");
-
-						if ($.isArray(this)) // just userid
-						{
-							$("#inp_receiversinstant").append("<a href='#user/" +
-								encodeURIComponent(this.userId) + "'>" + this.username + "</a>");
-						} else // {userid, name}
-						{
-							$("#inp_receiversinstant").append("<a href='#user/" +
-								encodeURIComponent(this) + "'>" + this + "</a>");
-						}
-
-
-					});
-
-
-				}
 
 				$(".talkmessages").prepend(tmpl);
 
+				// timout to check for new messages after `lastid`
+				if (that.options.lastid != 0)
+				{
+				$.doTimeout('messageupdate', 5000, function(state) {
+				
+					apl_request({
+						"requests": [{
+							"id": "message_get_sub_updates",
+							lastid: that.options.lastid,
+							conversationId: d2.messages_get_sub.conversationId.$id,
+
+						}]
+					}, function(d4) {
+
+						$.each(d4.message_get_sub_updates.messages, function() {
+
+
+							//qif (start == -1) // Only after first load messages
+							that.options.lastid = this._id.$id;
+
+							// Decrypt messages
+							try {
+								if (this.encMessage == "" || this.encMessage == undefined)
+									this.encMessage = "";
+								else
+									this.msg = aes_decrypt(aeskey, this.encMessage);
+							} catch (err) {
+								this.msg = err;
+							}
+						});
+
+						var tmpl = _.template(d, d4.message_get_sub_updates);
+						// append html
+						$(".talkmessages").append(tmpl);
+						
+						// remove own messages that have been inserted directly, as these are returned by server also and should not appear twice
+						$(".tempmessage").remove();
+						if (d4.message_get_sub_updates.messages.length > 0)
+						$(window).scrollTop(999999);
+
+						// TODO: if message id still active!
+
+						// 	console.log("UPDATE!!!"+that.options.superId);
+					});
+					// 
+
+					return true;
+				});
+
+				}
 				that.decodeImages();
 				// Decode images 
 				/*
@@ -2809,82 +3108,140 @@ var view_talks_subpage = view_subpage.extend({
 
 				if (start == -1) {
 
-					$(window).scrollTop(999999);
+			$(window).scrollTop(999999);
 
 
 
-					$("#but_file").click(function() {
+			$("#but_file").click(function() {
 
-						that.uploadFile();
+				that.uploadFile();
 
-					});
-					$("#but_showMedia").click(function() {
+			});
+			$("#but_showMedia").click(function() {
 
-						that.showMedia(true);
+				that.showMedia(true);
 
-					});
-					$("#but_showMessages").click(function() {
+			});
+			$("#but_showMessages").click(function() {
 
-						that.showMedia(false);
+				that.showMedia(false);
 
-					});
-					$("#but_addPeople").click(function() {
+			});
+			$("#but_addPeople").click(function() {
 
-						that.addPeople();
-
-					});
-
-					$("#but_smilies").click(function() {
-						if ($("#msg_smiliecontainer").html() == "") {
-							var t = new control_smilies({
-								el: $("#msg_smiliecontainer"),
-								area: $('#inp_newmsginstant')
-							});
-							t.render();
-						} else {
-							$("#msg_smiliecontainer").html("");
-						}
-						$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
-
-					});
-
-
-					$("#but_leaveConversation").click(function() {
-
-						that.leaveConversation();
-
-					});
-
-
-					$('#but_instantsend').click(function() {
-						sendAnswer();
-					});
-
-				}
-
-
-				if (start == 0 || that.countAll < 10)
-					$('#moremsg2').remove();
-
-
-				if (newstart < 0)
-					newstart = 0;
-
-
-
-				$('#moremsg2').click(function() {
-
-					$('#moremsg2').remove();
-					that.loadMessages(newstart);
-
-
-
-				});
+				that.addPeople();
 
 			});
 
+			$("#but_smilies").click(function() {
+				if ($("#msg_smiliecontainer").html() == "") {
+					var t = new control_smilies({
+						el: $("#msg_smiliecontainer"),
+						area: $('#inp_newmsginstant')
+					});
+					t.render();
+				} else {
+					$("#msg_smiliecontainer").html("");
+				}
+				$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
+
+			});
+
+
+			$("#but_leaveConversation").click(function() {
+
+				that.leaveConversation();
+
+			});
+
+
+			// Direct Answer on message
+			$('#but_instantsend').click(function() {
+				
+
+				var aeskey = ($('#msg_aeskey').data("val"));
+				var conversationId = ($('#msg_conversationId').data("val"));
+				var message = smilieParse($('#inp_newmsginstant').html());
+				var encMessage = aes_encrypt(aeskey, message);
+				var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
+
+				if (message == "") return;
+
+				apl_request({
+					"requests": [{
+							"id": "message_distribute_answer",
+							"conversationId": conversationId,
+							"encMessage": encMessage,
+							"messagePreview": messagePreview
+						}
+
+					]
+				}, function(d2) {
+
+
+
+					$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
+
+					$.get("templates/control_messageview.html", function(d) {
+						// RSA Decode, for each:
+						// d2.messages_get_sub
+
+
+
+						_.templateSettings.variable = "rc";
+						var tmpl = _.template(d, {
+							messages: [{
+								tag: "tempmessage",
+								msg: message,
+								sender: charmeUser.userId,
+								time: {
+									sec: new Date().getTime() / 1000
+								},
+								sendername: d2.message_distribute_answer.sendername
+							}]
+						});
+
+
+						$(".talkmessages").append(tmpl);
+
+						$('#moremsg2').remove();
+
+						$("html, body").animate({
+							scrollTop: $(document).height()
+						}, "slow");
+
+						$('#inp_newmsginstant').html("").focus();
+
+					});
+
+				});
+			});
+
+		}
+
+
+		if (start == 0 || that.countAll < 10)
+			$('#moremsg2').remove();
+
+
+		if (newstart < 0)
+			newstart = 0;
+
+
+
+		$('#moremsg2').click(function() {
+
+			$('#moremsg2').remove();
+			that.loadMessages(newstart);
+
+
+
 		});
-	}
+
+	});
+
+});
+}
 });
 
 
@@ -2950,19 +3307,27 @@ var view_talks = view_page.extend({
 
 					// Decode AES Key with private RSA Key
 
-					var rsa = new RSAKey();
-
-					// TODO: Cache keys for performance reasons!
-
-					var key1 = getKeyByRevision(this.revision);
-					var key = key1.rsa;
-
-					rsa.setPrivateEx(key.n, key.e, key.d,
-						key.p, key.q, key.dmp1,
-						key.dmq1, key.coeff);
+					console.log(this._id.$id);
 
 
-					var aeskey = rsa.decrypt(this.aesEnc); ///sjcl.decrypt(aeskey, this.encMessage);
+
+					// Look for cached AES key to save expensive RSA decryption time
+					var aeskey = checkCache("msg" + this._id.$id);
+					if (aeskey == null) {
+						var rsa = new RSAKey();
+						var key1 = getKeyByRevision(this.revision);
+						var key = key1.rsa.rsa;
+						rsa.setPrivateEx(key.n, key.e, key.d,
+							key.p, key.q, key.dmp1,
+							key.dmq1, key.coeff);
+
+						aeskey = rsa.decrypt(this.aesEnc);
+						storeCache("msg" + this._id.$id, aeskey);
+					}
+					else
+						console.log("EXISTS");
+
+
 					if (this.pplCount < 2)
 						this.messageTitle = this.sendername;
 					else
@@ -2971,6 +3336,11 @@ var view_talks = view_page.extend({
 						this.messagePreview = aes_decrypt(aeskey, this.messagePreview);
 					else
 						this.messagePreview = "";
+
+
+							this.messagePreview = $.charmeMl(this.messagePreview, {tags: [ "smiliedelete"]});
+	
+
 					//.join(", ");
 
 				});
@@ -3024,6 +3394,7 @@ var view_talks = view_page.extend({
 
 				$(".msgItems li a:first").addClass("active");
 				setSCHeight();
+
 
 
 			});

@@ -1,13 +1,48 @@
+/***
+	Name:
+	xssText
+
+	Info:
+	Make Text between tags XSS save. 
+
+	http://stackoverflow.com/questions/2794137/sanitizing-user-input-before-adding-it-to-the-dom-in-javascript/2794327#2794327
+	
+	DO NOT USE FOR ATTRIBUTES LIKE ID AND CLASS, USE xssAttr instead!
+
+	Location:
+	apl/string.js
+
+	Code:JS:
+	text= xssText("<script>alert();</script>");
+*/
+
 function xssText(str)
 {
-
-	// Returns xss Save Text.
-
-
-	// Not completly secure yet, see answer on http://stackoverflow.com/questions/1147359/how-to-decode-html-entities-using-jquery
-	return $("<div/>").html(str).text();
+	// Returns xss Save Text ONLY for displaying inside tags, not as href, id etc. attribute.
+	return  $('<span></span>').text(str).html();
+	//old and false: return $("<div/>").html(str).text();
 
 }
+
+
+/***
+	Name:
+	xssAttr
+
+	Info:
+	Make Attrbiute XSS save.. 
+
+	Location:
+	apl/string.js
+
+	Code:JS:
+	addtohtml("<br id='"+xssAttr(str)+"'>")
+*/
+function xssAttr(str)
+{}
+
+
+
 function formatDate(milliseconds)
 {
 	var d = new Date(milliseconds);
@@ -17,6 +52,24 @@ function html2Text(str)
 {
 	return $("<div/>").html(str).text();
 }
+
+
+/***
+	Name:
+	smilieParse
+
+	Info:
+	Replace text tags with smilies 
+	
+	Params:
+	str:String:input String
+
+	Location:
+	apl/string.js
+
+	Code:JS:
+	smilieParse("...")
+*/
 function smilieParse(str)
 {
 		// Find smilies here with regex

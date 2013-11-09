@@ -1,0 +1,33 @@
+apl_request({
+	"requests": [{
+		"id": "my_id",
+		"data1": ""
+	}, ]
+}, function(d) {
+
+});
+
+
+
+
+On server:
+
+$data = array("requests" => array(
+
+"id" => "post_comment_distribute",
+"content" => $item["content"],
+"userId" => $receiver,
+"postId" => $item["postId"],
+"sender" => $_SESSION["charme_userid"],
+"sendername" => $sendername
+
+
+));
+
+$req21 = new \App\Requests\JSON(
+$receiver,
+$_SESSION["charme_userid"],
+$data);
+
+
+$arr = $req21->send();
