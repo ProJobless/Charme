@@ -102,16 +102,41 @@ function updateData()
 
 					// Get fastkey1 of revision used here.
 
+					// This is the object we will send to the server later on
+					var updData = {
+						keys: [],
+						buckets: [],
+						messages: []
+					};
+
+					// Iterate to all keys and recrypt them.
 					$.each(d1.key_getAllFromDir.value, function(index, item) 
 						{	
 
 
 							var fastkey = getFastKey(item.fkrevision, 1);
+							var fastkeynew = getFastKey(0, 1);
 							console.log("ITEM");
-							console.log(item);
-						
+
+							// ONLY FOR DEBUG <=, RELEASE MUST BE <
+							if (fastkey.revision <= fastkeynew.revision)
+							{
+								// Decrypt value witzh old key
+								var plain = aes_decrypt(fastkey.fastkey1, this.value);
+
+								// Encrypt value with new key
+								var newval = aes_encrypt(fastkeynew.fastkey1, plain);
+
+								console.log("NEWENC:"+newval);
+
+								updData["keys"].push({
+									oldId: item._id.$id,
+									newval: newval
+								});
+							}
 						});
 					
+					console.log(updData);
 					
 					// Register OK click event
 
