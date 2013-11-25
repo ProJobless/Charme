@@ -1,5 +1,7 @@
 ## MILESTONE 3
 	
+
+
 	Comments (OK)
 	Make sure requests are delivered, repeat if failed to deliver
 	Multiserver support
@@ -12,7 +14,6 @@
 - key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
 - messages: send: only receivers with key!, warning if no key!
 
-- nan bug
 - badkey error , when new bucket, and request send. error disapears when saving private info again.
 
 - revision counter

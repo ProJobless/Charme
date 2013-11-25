@@ -1,3 +1,17 @@
+function mkqrcode()
+{
+	var key = getKeyByRevision(0);
+			ui_showBox("<div class='p32' id='qrcode'>"+"</div>"+"<div class='p32' style='padding-top:0'>"+ui_closeBoxButton()+"</div>", function() {
+
+		
+
+
+			});
+				new QRCode(document.getElementById("qrcode"), "FINGERPRINT");
+
+}
+
+
 var view_settings_keymanager = view_subpage.extend({
 
 

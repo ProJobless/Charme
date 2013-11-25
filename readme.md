@@ -196,6 +196,11 @@ version 3. See the LICENSE.txt file for details.
         <td>jsclient/lib/plugins.js</td>
     </tr>
 
+ <tr>
+        <td>QRCode.js</td>
+        <td>MIT</td>
+        <td>jsclient/lib/qrcode.min.js</td>
+    </tr>
 
 
 
