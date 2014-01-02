@@ -1,5 +1,30 @@
 /***
 	Name:
+	asymkey_create
+
+	Info:
+	Creates an asymetic key pair
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	somekey = asymkey_create();
+*/
+
+
+function asymkey_create()
+{
+
+}
+
+
+
+
+
+/***
+	Name:
 	aes_encryypt
 
 	Info:
@@ -17,6 +42,8 @@ function aes_encrypt(pass, text)
 {
 	// .replace does a linebreak cleanup
 	return GibberishAES.enc(text, pass).replace(/(\r\n|\n|\r)/gm,"\n");
+
+	// TODO: better return a json array with aes encryption version to provide backwards compatibility later
 }
 
 
@@ -109,7 +136,7 @@ function storeCache(key2, value)
 	aes_decryypt
 
 	Info:
-	Decrypts String with AES Key
+	Decrypts String with AES Key, returns string
 
 
 	Location:
@@ -312,7 +339,7 @@ var key = "";
         key += possible.charAt(Math.floor(Math.random() * possible.length));
 return key;
 
-
+	
 }
 
 
@@ -339,6 +366,7 @@ return key;
 */
 
 
+// maye a more secure sjcl function is var randKey  = sjcl.random.randomWords(4, 0);
 
 function randomAesKey(lenghtInByte)
 {

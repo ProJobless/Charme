@@ -1,4 +1,17 @@
+// Fired on message ok button click
+function but_initConversationOk()
+{
+	alert($('#inp_receivers').val());
+	var message = $('#inp_newmsg').val();
+	var receivers =  $('#inp_receivers').val().split(",");
+	
+	apl_talks_initConversation("",receivers, undefined, undefined, function(){
+		// Open/Reload Conversations
 
+	});
+}
+
+// Backbone view for talk subpage (containing messages)
 var view_talks_subpage = view_subpage.extend({
 	options: {
 		template: 'talks_',
