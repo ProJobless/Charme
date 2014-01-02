@@ -1,5 +1,7 @@
 ﻿# Charme
 
+**Warning: This is for preview puposes only. This version is NOT stable and NOT secure yet. It will be released after it has been completed and peer reviewed. This will probably take some years.
+
 
 Charme is a distributed and open source social network. In contrast to classic social networks you can save your user data on your own server or a server of your choice. The project is splitted into the following sub projects:
 
@@ -77,11 +79,7 @@ Charme is a distributed and open source social network. In contrast to classic s
   * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
 
 
-## Version
 
-
-**Warning: This version is for preview puposes only. This version is NOT stable and misses essential functions like a public key manager.
-We plan to release a stable version by summer 2014.**
 
 ## Crypto
 

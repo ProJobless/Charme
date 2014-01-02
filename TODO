@@ -1,13 +1,22 @@
 ## MILESTONE 3
 	
 
-
 	Comments (OK)
 	Make sure requests are delivered, repeat if failed to deliver
 	Multiserver support
 	Message Signing, Repost and like verification
 	Private Key Directory (OK)
 	Delete Collections and Comments
+	revision counter!
+
+	background sender!
+
+
+	notify users on pub key update:
+		hash public key A , send to user B encrypted with pub key B 
+
+
+
 
 ## TODO HIGH PRIORITY
 
@@ -24,7 +33,7 @@
 
 - Public key verification in background
 - avoid comments with false author
-- private collections: add people to collections.
+
 
 ## keyupdate
 

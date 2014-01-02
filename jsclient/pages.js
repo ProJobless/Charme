@@ -298,7 +298,7 @@ console.log("sidebar load=true");
 		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
 		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
-		<a href="#about">About</a> - <a href="#help">Help</a></div> \
+		<a href="#about">About</a> - <a href="#help">Help</a><div style="color:gray; font-size:10px; padding-top:6px;">For testing purposes only. Charme is NOT secure yet!</div></div> \
 		    <div class="sbBetaCont"> \
 		        <div class="sidebar sbBeta"> \
 		           <div class="actionBar"> \
