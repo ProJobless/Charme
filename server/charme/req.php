@@ -1680,7 +1680,28 @@ array("owner" => $_SESSION["charme_userid"],
 
 				// Get people in list...
 
+	
+				$ar = iterator_to_array($col->listitems->find(array("list" => new MongoId($list))), true);
 
+				
+				$finalList = array();
+  	 
+
+			  	 foreach ($ar  as $item)
+			  	 {
+			  	 	if ($item["userId"] != "" && 
+			  	 		isset($item["userId"]))
+			  	 	$finalList[] = $item["userId"];
+			  	 }
+			  	// clog2($finalList);
+		
+			
+
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->limit(15)->sort(array('post.time.sec' => -1))->limit(15); // ->slice(-15)
+				
+				$stra=  iterator_to_array($iter , false);
+
+			
 			}
 			// Append last 3 comments for each item.
 			foreach ($stra  as $key => $item2)

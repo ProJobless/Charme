@@ -1,5 +1,12 @@
+## next:
+
+	Filter Stream by list!
+	token input
+	
+
 ## MILESTONE 3
 	
+
 
 	Comments (OK)
 	Make sure requests are delivered, repeat if failed to deliver
@@ -15,7 +22,8 @@
 	notify users on pub key update:
 		hash public key A , send to user B encrypted with pub key B 
 
-
+## small bugs
+- small image  appended to post is scaled to big for thumbnail
 
 
 ## TODO HIGH PRIORITY

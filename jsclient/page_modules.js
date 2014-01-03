@@ -1201,12 +1201,15 @@ var view_stream_display = view_subpage.extend({
 
 	postRender: function() {
 
-
+		if (this.options.streamId == ""){
 		var t = new control_postField({
 			el: $("#postFieldContainer"),
 			collectionId: ""
 		});
 		t.render();
+	}
+	else
+		$("#postFieldContainer").hide();
 
 
 

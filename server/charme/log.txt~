@@ -1,288 +1,699 @@
-MongoDate Object
+Array
 (
-    [sec] => 1382624441
-    [usec] => 0
+    [0] => test2@charme.local
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624443
-    [usec] => 0
+    [0] => test@charme.local
+    [1] => test2@charme.local
 )
 
-MongoDate Object
+MongoCursor Object
 (
-    [sec] => 1382624446
-    [usec] => 0
 )
 
-MongoDate Object
+MongoCursor Object
 (
-    [sec] => 1382624449
-    [usec] => 0
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624451
-    [usec] => 0
+    [0] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52c5e8dbd8cc9a92658b4568
+                )
+
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1388701915
+                            [usec] => 763000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => test
+                    [owner] => test5@charme.local
+                    [hasImage] => 1
+                    [_id] => Array
+                        (
+                            [$id] => 52c5e8dbd8cc9a29668b4568
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 52c5e8dbd8cc9a29668b4568
+                )
+
+            [owner] => test5@charme.local
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [username] => test test
+        )
+
+    [1] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52c5db55d8cc9a20478b4567
+                )
+
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1388698453
+                            [usec] => 395000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => 
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                    [_id] => Array
+                        (
+                            [$id] => 52c5db55d8cc9aa0458b4567
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 52c5db55d8cc9aa0458b4567
+                )
+
+            [owner] => test5@charme.local
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [username] => test test
+        )
+
+    [2] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 527cd610d8cc9a03478b4567
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [like] => 1
+            [likecount] => 1
+            [owner] => test5@charme.local
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1383912976
+                            [usec] => 179000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => Another post
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                    [_id] => Array
+                        (
+                            [$id] => 527cd610d8cc9a64468b456a
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 527cd610d8cc9a64468b456a
+                )
+
+            [username] => test test
+        )
+
+    [3] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 527cd60bd8cc9aff468b4567
+                )
+
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1383912971
+                            [usec] => 905000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => Some post
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                    [_id] => Array
+                        (
+                            [$id] => 527cd60bd8cc9a64468b4569
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 527cd60bd8cc9a64468b4569
+                )
+
+            [owner] => test5@charme.local
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [username] => test test
+        )
+
+    [4] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 527bf5a0d8cc9a71028b456e
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 
+            [postId] => MongoId Object
+                (
+                    [$id] => 527bf59fd8cc9a71028b456d
+                )
+
+            [post] => Array
+                (
+                    [_id] => 527bf59fd8cc9a71028b456d
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1383855519
+                            [usec] => 56000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 527bf59cd8cc9a71028b456c
+                    [content] => adasdasdas
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 527bf59cd8cc9a71028b456c
+                )
+
+        )
+
+    [5] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52737a94d8cc9a021b8b4569
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 1
+            [postId] => MongoId Object
+                (
+                    [$id] => 526977a4d8cc9a6b458b4568
+                )
+
+            [post] => Array
+                (
+                    [_id] => 526977a4d8cc9a6b458b4568
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1382643620
+                            [usec] => 209000
+                        )
+
+                    [likecount] => 1
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => hgchgcjhgcjhg
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+        )
+
+    [6] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52737a94d8cc9a021b8b456a
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 1
+            [postId] => MongoId Object
+                (
+                    [$id] => 52697717d8cc9a21448b456b
+                )
+
+            [post] => Array
+                (
+                    [_id] => 52697717d8cc9a21448b456b
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1382643479
+                            [usec] => 562000
+                        )
+
+                    [likecount] => 1
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => sada
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+        )
+
+    [7] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52737a94d8cc9a021b8b456b
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 1
+            [postId] => MongoId Object
+                (
+                    [$id] => 526975ecd8cc9a5a458b4567
+                )
+
+            [post] => Array
+                (
+                    [_id] => 526975ecd8cc9a5a458b4567
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => 2
+                    [hasImage] => 
+                    [likecount] => 1
+                    [owner] => test5@charme.local
+                    [time] => Array
+                        (
+                            [sec] => 1382643180
+                            [usec] => 586000
+                        )
+
+                    [username] => test test
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+        )
+
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624455
-    [usec] => 0
+    [0] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52c5e8dbd8cc9a92658b4568
+                )
+
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1388701915
+                            [usec] => 763000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => test
+                    [owner] => test5@charme.local
+                    [hasImage] => 1
+                    [_id] => Array
+                        (
+                            [$id] => 52c5e8dbd8cc9a29668b4568
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 52c5e8dbd8cc9a29668b4568
+                )
+
+            [owner] => test5@charme.local
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [username] => test test
+        )
+
+    [1] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52c5db55d8cc9a20478b4567
+                )
+
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1388698453
+                            [usec] => 395000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => 
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                    [_id] => Array
+                        (
+                            [$id] => 52c5db55d8cc9aa0458b4567
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 52c5db55d8cc9aa0458b4567
+                )
+
+            [owner] => test5@charme.local
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [username] => test test
+        )
+
+    [2] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 527cd610d8cc9a03478b4567
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [like] => 1
+            [likecount] => 1
+            [owner] => test5@charme.local
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1383912976
+                            [usec] => 179000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => Another post
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                    [_id] => Array
+                        (
+                            [$id] => 527cd610d8cc9a64468b456a
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 527cd610d8cc9a64468b456a
+                )
+
+            [username] => test test
+        )
+
+    [3] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 527cd60bd8cc9aff468b4567
+                )
+
+            [post] => Array
+                (
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1383912971
+                            [usec] => 905000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => Some post
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                    [_id] => Array
+                        (
+                            [$id] => 527cd60bd8cc9a64468b4569
+                        )
+
+                )
+
+            [postId] => MongoId Object
+                (
+                    [$id] => 527cd60bd8cc9a64468b4569
+                )
+
+            [owner] => test5@charme.local
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+            [username] => test test
+        )
+
+    [4] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 527bf5a0d8cc9a71028b456e
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 
+            [postId] => MongoId Object
+                (
+                    [$id] => 527bf59fd8cc9a71028b456d
+                )
+
+            [post] => Array
+                (
+                    [_id] => 527bf59fd8cc9a71028b456d
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1383855519
+                            [usec] => 56000
+                        )
+
+                    [likecount] => 0
+                    [collectionId] => 527bf59cd8cc9a71028b456c
+                    [content] => adasdasdas
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 527bf59cd8cc9a71028b456c
+                )
+
+        )
+
+    [5] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52737a94d8cc9a021b8b4569
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 1
+            [postId] => MongoId Object
+                (
+                    [$id] => 526977a4d8cc9a6b458b4568
+                )
+
+            [post] => Array
+                (
+                    [_id] => 526977a4d8cc9a6b458b4568
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1382643620
+                            [usec] => 209000
+                        )
+
+                    [likecount] => 1
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => hgchgcjhgcjhg
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+        )
+
+    [6] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52737a94d8cc9a021b8b456a
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 1
+            [postId] => MongoId Object
+                (
+                    [$id] => 52697717d8cc9a21448b456b
+                )
+
+            [post] => Array
+                (
+                    [_id] => 52697717d8cc9a21448b456b
+                    [username] => test test
+                    [time] => Array
+                        (
+                            [sec] => 1382643479
+                            [usec] => 562000
+                        )
+
+                    [likecount] => 1
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => sada
+                    [owner] => test5@charme.local
+                    [hasImage] => 
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+        )
+
+    [7] => Array
+        (
+            [_id] => MongoId Object
+                (
+                    [$id] => 52737a94d8cc9a021b8b456b
+                )
+
+            [owner] => test5@charme.local
+            [username] => test test
+            [like] => 1
+            [postId] => MongoId Object
+                (
+                    [$id] => 526975ecd8cc9a5a458b4567
+                )
+
+            [post] => Array
+                (
+                    [_id] => 526975ecd8cc9a5a458b4567
+                    [collectionId] => 524f149fd8cc9a091d8b4567
+                    [content] => 2
+                    [hasImage] => 
+                    [likecount] => 1
+                    [owner] => test5@charme.local
+                    [time] => Array
+                        (
+                            [sec] => 1382643180
+                            [usec] => 586000
+                        )
+
+                    [username] => test test
+                )
+
+            [collectionId] => MongoId Object
+                (
+                    [$id] => 524f149fd8cc9a091d8b4567
+                )
+
+        )
+
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624456
-    [usec] => 0
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624461
-    [usec] => 0
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624462
-    [usec] => 0
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624467
-    [usec] => 0
 )
 
-MongoDate Object
+Array
 (
-    [sec] => 1382624468
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624473
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624474
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624479
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624480
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624485
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624486
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624491
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624492
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624497
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624498
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624503
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624504
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624509
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624510
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382623700
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
-)
-
-MongoDate Object
-(
-    [sec] => 1382624340
-    [usec] => 0
 )
 
