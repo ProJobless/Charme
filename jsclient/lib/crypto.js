@@ -1,5 +1,79 @@
 /***
 	Name:
+	crypto_buildHashKeyDir
+
+	Info:
+	Build the hash keys for querying the key directory. Returns a list in form [{userid, keyhash}, {userid, keyhash}, ...]
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	hashkeys = buildHashKeyDir(["test@test.de"]);
+
+*/
+function crypto_buildHashKeyDir(inputItems)
+{
+	// TODO!!!!!
+	var fastkey = getFastKey(0, 1);
+	var output = [];
+
+	
+
+
+	$.each(inputItems, function(index, item) {
+
+		var e_key = CryptoJS.SHA256(fastkey.fastkey1 + item).toString(CryptoJS.enc.Base64);
+		output.push(e_key);
+	});
+	return output;
+}
+
+function decryptKeyDirValue(keyvalue)
+{
+	var fastkey = getFastKey(0, 1);
+	return $.parseJSON(aes_decrypt(fastkey.fastkey1,keyvalue));
+
+}
+function compareRevisions()
+{
+
+}
+
+/***
+	Name:
+	crypto_checkKeyUpdate
+
+	Info:
+	Check if public keys are up to date.
+	Returns an array with outdated keys.
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	upToDate = crypto_checkKeyUpdate(["test@test.de", "test2@test3.de"]);
+*/
+
+function crypto_checkKeyUpdate(inputItems)
+{
+	var fastkey = getFastKey(0, 1);
+	var key = getKeyByRevision(0);
+	var text = CryptoJS.SHA256(key.rsa.rsa.n).toString(CryptoJS.enc.Base64);
+
+	var output = [];
+
+	$.each(inputItems, function(index, item) {
+			output.push();
+	});
+}
+
+
+
+/***
+	Name:
 	asymkey_create
 
 	Info:

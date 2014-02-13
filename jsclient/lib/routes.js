@@ -48,6 +48,13 @@ var container_main;
 
 $(function() {
 
+    try{
+    Object.defineProperty(console, '_commandLineAPI',
+   { get : function() { throw '!!!WARNING!!! The developer console is for developers ONLY. If someone gave you some code to insert here DO NOT DO IT. The encryption of you Charme account may be seriously affected otherwise!' } })
+}catch(e){}
+
+
+
     if (isLoggedIn())
         charmeUser = new apl_user(localStorage.getItem("user"));
 

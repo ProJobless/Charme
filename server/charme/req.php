@@ -134,7 +134,7 @@ foreach ($data["requests"] as $item)
 
 
 	// This array contains a list of request, that can be executed without a session Id
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -1452,6 +1452,9 @@ $data = array("requests" => $reqdata
 			$returnArray[$action] = array();
 			break;
 
+
+
+
 		case "key_getAllFromDir":
 
 	$col = \App\DB\Get::Collection();
@@ -1540,7 +1543,7 @@ array("owner" => $_SESSION["charme_userid"],
 
 
 
-
+			// CORS is enabled here
 			case "key_get":
 
 			

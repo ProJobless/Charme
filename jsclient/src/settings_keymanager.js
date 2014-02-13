@@ -339,7 +339,7 @@ function requestNewKey(userId) {
 
 
 
-						console.log(d3.key_getFromDir.value);
+						//console.log(d3.key_getFromDir.value);
 
 						var oldValue = $.parseJSON(aes_decrypt(fastkey.fastkey1, d3.key_getFromDir.value));
 

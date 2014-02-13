@@ -51,6 +51,9 @@ function ui_showImgBox(src, callback)
 
 function ui_showBox(content, callback)
 {
+	//TODO: Remove box if already exists:!
+	
+
 	ui_block();
 	if (!$("body .fixedBox").length)
 	$("body").prepend("<div class='fixedBox'></div>");

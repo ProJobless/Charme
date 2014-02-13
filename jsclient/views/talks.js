@@ -1,14 +1,147 @@
 // Fired on message ok button click
 function but_initConversationOk()
 {
-	alert($('#inp_receivers').val());
-	var message = $('#inp_newmsg').val();
-	var receivers =  $('#inp_receivers').val().split(",");
-	
-	apl_talks_initConversation("",receivers, undefined, undefined, function(){
-		// Open/Reload Conversations
+	// This could be a message which is currently empty
+	var message = "";
 
+	// Get receivers from UI element
+	var receivers = ($("#inp_receivers").tokenInput("get"));
+
+	// Get plain receiver userIds in a list
+	var output = [];
+	console.log(receivers);
+	$.each(receivers, function(index, item) {
+		output.push(item.id); // add userid
 	});
+
+	// (1) Build key directory hash query keys
+	var hashes = crypto_buildHashKeyDir(output);
+	console.log(hashes);
+
+
+
+	var keyAlert = function(problems) {
+	   
+		// Some keys are invalid, display them!
+		$.get("templates/addkeys.html", function(d) {
+
+		var templateData = {
+			problems: problems
+		};
+
+		_.templateSettings.variable = "rc";
+		var template = _.template(d, templateData);
+		ui_showBox(template);
+		});
+	};
+	 
+
+
+
+	// Send apl_request with hash query keys to server to get public keys
+	apl_request({
+		"requests": [{
+			"id": "key_getMultipleFromDir",
+			"hashes": hashes
+		}, ]
+	}, function(d) {
+
+
+		var length = d.key_getMultipleFromDir.value.length;
+		var counter = 0;
+		var problems =  [];
+
+
+		
+		// Add receivers that are not in the key dir with revision -1
+		var output2 = [];
+		
+		$.each(d.key_getMultipleFromDir.value, function(index, item) {
+			var key = decryptKeyDirValue(item.value);
+			output2.push(key.userId);
+		});
+
+		$.each(output,function(index,item){
+
+			if ($.inArray(item, output2) == -1)
+			{
+
+				// Add receivers that are not in the key dir to problems[]
+				problems.push(item);
+
+			}
+		});
+		console.log("LENGHT"+problems.length+","+length);
+		// Show alert if no keys are in the Key Directory
+		if (length == 0 && problems.length>0)
+		{
+			keyAlert(problems);
+		}
+
+
+		$.each(d.key_getMultipleFromDir.value, function(index, item) {
+			
+
+			var key = decryptKeyDirValue(item.value);
+			console.log(key);
+			// returns key.key.e|n, key.revision, key.userid
+			// (2) Now check if key.revision matches with the users server. TODO: This should also check his friends servers to prevent evil servers.
+			apl_request({
+				"requests": [{
+					"id": "key_get",
+					"profileId": key.userId
+				}, ] // TODO: handle errors
+			}, function(d2) {
+				
+
+
+				console.log("KEYGET:");
+				console.log(d2.key_get);
+				counter++;
+
+				if (key.revision < d2.key_get.revision)
+				{
+					problems.push(key.userId);
+				}
+
+
+				if (counter == length) // Queries Completed!
+				{
+
+					// (3) Does server revision match with key directory.
+					// If yes-> initConversation,
+					// If not -> Show message: This keys are not up to date anymore.
+
+
+					if (problems.length > 0)
+					{	
+						keyAlert(problems);
+
+					}
+					else
+					{
+						alert("ok...");
+						// Everything fine, lets start the conversation!
+						
+						/*apl_talks_initConversation("",receivers, undefined, undefined, function(){
+							// TODO:
+							// Open/Reload Conversations
+						});*/	
+					}
+					
+
+
+
+
+				}
+			});
+		});
+	});
+
+	
+
+
+
 }
 
 // Backbone view for talk subpage (containing messages)
