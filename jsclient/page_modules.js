@@ -66,11 +66,6 @@ function sendMessageForm(receivers) {
 	});
 }
 
-function addPeopleOk() {
-	// DO NOT USE AES HERE, as no message has to be encrypted.
-
-}
-
 
 /***
 	Name:

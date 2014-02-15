@@ -6,6 +6,10 @@
 
 	javascript image zip downloader http://stuk.github.io/jszip/
 
+	add/remove people -> new aes key! (is this necessary? )
+
+	problem: add my self to some strangers messages
+	solution: make hash of people list and encode hash with aes key
 
 ## MILESTONE 3
 	

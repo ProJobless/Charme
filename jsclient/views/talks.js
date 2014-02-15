@@ -1,5 +1,5 @@
-// Fired on message ok button click
-function but_initConversationOk()
+// Fired on message ok button click, leave arguments empty if new conversation, fill in arguments if adding people to conversation
+function but_initConversationOk(currentAESKey, currentConversationId)
 {
 	// This could be a message which is currently empty
 	var message = "";
@@ -71,7 +71,7 @@ function but_initConversationOk()
 
 			}
 		});
-		console.log("LENGHT"+problems.length+","+length);
+
 		// Show alert if no keys are in the Key Directory
 		if (length == 0 && problems.length>0)
 		{
@@ -120,13 +120,41 @@ function but_initConversationOk()
 					}
 					else
 					{
-						alert("ok...");
-						// Everything fine, lets start the conversation!
-						
-						/*apl_talks_initConversation("",receivers, undefined, undefined, function(){
-							// TODO:
-							// Open/Reload Conversations
-						});*/	
+					
+
+						// Start a new conversation		
+
+						if (currentConversationId == undefined) {
+							apl_talks_initConversation("", receivers, d.key_getMultipleFromDir.value, undefined, undefined, function() {
+								ui_closeBox();
+							});
+						} else {
+							// Or append people to existing conversation
+							alert("append people..");
+							// Encrypt the aes key with their public key first
+							var encKeys = apl_talks_encryptAESKey(d.key_getMultipleFromDir.value, currentAESKey);
+
+							//currentAESKey
+
+							// Compare this to apl_talks_initConversation, which uses also
+							// message_distribute, but with different parameters
+							apl_request({
+								"requests": [{
+										"id": "message_distribute",
+										"receivers": encKeys,
+										"status": "addPeople", // New param
+										"conversationId": currentConversationId, // New param
+										"encMessage": "",
+										"messagePreview": "",
+										"sender": charmeUser.userId
+
+									}
+
+								]
+							}, function(d2) {
+									location.reload();
+							});
+						}
 					}
 					
 
@@ -143,6 +171,11 @@ function but_initConversationOk()
 
 
 }
+
+
+
+
+
 
 // Backbone view for talk subpage (containing messages)
 var view_talks_subpage = view_subpage.extend({
@@ -264,6 +297,7 @@ var view_talks_subpage = view_subpage.extend({
 	},
 	addPeople: function() {
 
+		var that = this;
 		$.get("templates/box_addPeople.html", function(d) {
 			var template = _.template(d, {});
 
@@ -273,8 +307,19 @@ var view_talks_subpage = view_subpage.extend({
 					crossDomain: true
 				});
 
+				$("#but_addPeopleOk").click(function(){
+			
+					// DO NOT USE AES HERE, as no message has to be encrypted.
+					var conversationId = $('#msg_conversationId').data("val");
 
+					but_initConversationOk(that.aes, conversationId);
+
+				});
+		
 			});
+
+
+		
 		});
 	},
 	leaveConversation: function() {

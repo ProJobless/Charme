@@ -631,6 +631,9 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			//$item["localreceivers"][] = $item["sender"];
 			asort($item["localreceivers"]);
 
+			clog("INCOMING MESSAGE");
+			clog2($item);
+		
 			// Warning! One message per server only!
 
 			$blockWrite = false;
@@ -644,11 +647,15 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
 				
-
-
+				
 				// enc aes rsa exists -> make new conversation
-				if (isset($item["aesEnc"]))
+				if (isset($item["aesEnc"]) && $item["aesEnc"] != "")
 				{
+					// Add new people
+				
+
+				
+
 					$content = array(
 					"people" => $item["people"], // is this important?
 					//
@@ -688,9 +695,59 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				}
 				else
 				{
+					// TODO: only update people names if status=addPeople
 				
+				
+
+
+					
+					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
+
+
+
+					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false, "time" => new MongoDate()
+						);
+
+					
+				
+
+					if ($item["status"] == "addPeople")
+					{
+
+						$i = 0;
+						foreach ($item["people"] as $item2) 
+						{
+							
+							clog("CHECK $item2 in ");
+							clog2($ppl["people"]);
+							
+
+							if (!in_array($item2, $ppl["people"]))
+							{	
+								clog("ADD $item2  ");
+								$item["people"][] = $item2;
+								$item["peoplenames"][] = $ppl["peoplenames"][$i];
+
+
+								
+
+
+							}
+							$i++;
+								
+
+						}
+						$setarray["people"] = $item["people"];
+
+
+
+
+					}
+
+
+
 					if (isset($item["messagePreview"]))
-					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => array("messagePreview" => $item["messagePreview"],"read" => false, "time" => new MongoDate())),array('multiple' => true)); 
+					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray),array('multiple' => true)); 
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
 					
 					// Increment receivers Counters
@@ -703,16 +760,24 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				}
 				
+							
+
+
+				// Insert the actual message here
 				if (!$blockWrite)
 				{
 				
 				$ins = array("sendername" => $item["sendername"],
 
 				 "time" => new MongoDate(), "fileId"=> $item["fileId"], "conversationId" =>   new MongoId($item["conversationId"]),
-				 "encMessage" => $item["encMessage"], "sender" => $item["sender"]);
+				 "encMessage" => $item["encMessage"], "sender" => $item["sender"], "status" => $item["status"]);
 
 				if ($ins["fileId"] == 0)
 				unset($ins["fileId"]);
+				if ($item["status"] == "addPeople")
+				{
+					// TODO: also append the people who were added to message
+				}
 
 				$col->messages->insert($ins);
 				}
@@ -724,6 +789,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 		// Get message from client
 		case "message_distribute_answer":
+
+
 
 			$col = \App\DB\Get::Collection();
 		
@@ -751,6 +818,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				$col = \App\DB\Get::Collection();
 		
 				$grid = $col->getGridFS();
+
 
 				$fileId = (string)$grid->storeBytes($item["encFile"], array('type'=>"encMsg",'owner' => $_SESSION["charme_userid"]));
 				$ret2 = $grid->storeBytes($item["encFileThumb"], array('type'=>"encMsgThumb",'owner' => $_SESSION["charme_userid"], "orgId" => $fileId));
@@ -806,6 +874,9 @@ $data = array("requests" => $reqdata
 
 		break;
 
+		case "message_addPeople":
+
+		break;
 
 		case "message_distribute":
 			$col = \App\DB\Get::Collection();
@@ -815,12 +886,18 @@ $data = array("requests" => $reqdata
 
 			
 			// As this is a new message we generate a unique converation Id
+			if (!isset($item["conversationId"]))
 			$convId = new MongoId();
+			else // This is used if we add people to a conversation and the id is already known
+			$convId = new MongoId($item["conversationId"]);	
 
 			if (!isset($item["receivers2"]))
 				$item["receivers2"] = array();
 
 			$peoplenames = array();
+
+
+
 
 			foreach ($item["receivers"] as $key => $value)
 			{
@@ -845,18 +922,35 @@ $data = array("requests" => $reqdata
 
 
 					else // option2: its someone else
-					{
+				{
 				$rr = $col->listitems->findOne(array("userId" => $value["charmeId"], "owner" => $_SESSION["charme_userid"]));
 
 				$peoplenames[] = $rr["username"];
+				}
 			}
 
+
+			// Notify people in existing conversation about new people
+			if (isset($item["status"]) && $item["status"] == "addPeople")
+			{
+				// Add people who are already in the conversation to receivers!
+
+				$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
+				
+				foreach ($ppl["people"] as $p)
+				{
+					$item["receivers2"][] = $p;
+
+
+					$item["receivers"][] = array("charmeId" => $p);
+				}
+				foreach ($ppl["peoplenames"] as $p)
+				{
+					$peoplenames[] = $p;
+
+				}
+				//$item["receivers2"]
 			}
-
-
-			// Get usernames!
-
-			
 
 
 
@@ -866,22 +960,39 @@ $data = array("requests" => $reqdata
 				// Send MEssage to receiver.
 
 				// if its a new message
-				$data = array("requests" => array(
+
+
+
+
+				$content = array(
 
 						"id" => "message_receive",
 						"localreceivers" => array($receiver["charmeId"]),
+						
 						"people" => $item["receivers2"],
 						"encMessage" => $item["encMessage"],
-						"aesEnc" => $receiver["aesEnc"],
+						
 						"messagePreview" => $item["messagePreview"],
 						"sender" => $_SESSION["charme_userid"],
-						"revision" => $receiver["revision"],
+						
 						"sendername" => $sendername,
 						"conversationId" => $convId->__toString(),
 						"peoplenames" => $peoplenames
 
-						));
+						);
 
+				if (isset( $receiver["aesEnc"]))
+				{
+					$content ["aesEnc"] = $receiver["aesEnc"];
+					$content ["revision"] = $receiver["revision"];
+				}
+
+
+				if (isset($item["status"]))
+					$content["status"] = $item["status"];
+
+				$data = array("requests" => $content);
+				
 
 				$req21 = new \App\Requests\JSON(
 					$receiver["charmeId"],
@@ -895,33 +1006,16 @@ $data = array("requests" => $reqdata
 
 			}
 
-				/*
-			$col->testmsg->insert(array(
-				"receivers" => $item["receivers"],
-				"encMessage" => $item["encMessage"],
-				"sender" => $_SESSION["charme_userid"]
-				));*/
-
-			// Send replica to all receiver servers.
-
-
-			// TODO : Clustering servers!
-
-			// $item["receivers"] {charmeId, aesEnc}
-
-
-			/*$cursor = $col->messages->insert(
-				array("receivers"=> ($item["receivers"]),
-					"sender"=> ($item["sender"]),
-					"encMessage"=> ($item["encMessage"])
-
-					));*/
+		
 
 
 
 			$returnArray[$action] = array("STATUS" => "OK");
 		break;
 
+		case "message_notify_newpeople":
+
+		break;
 
 		case "user_login":
 

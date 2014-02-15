@@ -9,11 +9,23 @@
 
  <% _.each( rc.messages, function(item){ %>
 
+
+ <% if (item.status == "addPeople")  { %>
+
+<div class="message" style='background-color:#fff; border-top:1px silver dotted;border-bottom:1px silver dotted;'>
+<a href='#user/<%- item.sender %>'><%- item.sendername %></a> added new people.
+</div>
+ <% } else { %>
+
+
     <div class="message <% if (item.tag) { %> <%- item.tag %>  <% } %>">
 <div class="top">
 	 <span class='time' style='float:right'><%- formatDate(item.time.sec*1000) %></span>
 	<a href='#user/<%- item.sender %>'><%- item.sendername %></a>
 </div>
+
+
+
 
 
 
@@ -30,5 +42,5 @@
 
 </div>
 
-
+ <% } %>
   <% }); %>
