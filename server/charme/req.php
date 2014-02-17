@@ -629,13 +629,12 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			// If receiver-sender relation is already there -> append message!
 
 			//$item["localreceivers"][] = $item["sender"];
-			asort($item["localreceivers"]);
-
-			clog("INCOMING MESSAGE");
-			clog2($item);
+			
 		
 			// Warning! One message per server only!
 
+			clog("RECEIVE MESSAGE:");
+			clog2($item);
 			$blockWrite = false;
 		//	clog(print_r($item["localreceivers"], true));
 
@@ -647,9 +646,12 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
 				
+				// Check if conversation already exists for this receiver
+				$numConvUser = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"]), "receiver" => $receiver));
+
+
 				
-				// enc aes rsa exists -> make new conversation
-				if (isset($item["aesEnc"]) && $item["aesEnc"] != "")
+				if ($numConvUser < 1)
 				{
 					// Add new people
 				
@@ -670,16 +672,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					"pplCount" =>  Count($item["people"])
 					);
 
-					// because time changes
-
-					// aesEnc is not attached in direct replys.
-
-					// Direct Replies are clustered!
-
-					// For every user...
-
-					// If its the first conversation, insert messages
-				
+			
 
 					$c = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"])));
 					if ($c > 0)
@@ -687,60 +680,59 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 
 					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false,  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
-					\App\Counter\CounterUpdate::inc( $receiver, "talks");
+					\App\Counter\CounterUpdate::inc( $receiver, "talks"); // Increment notification counter (Showed right of talks in the navigation)
 
-					// Inc counter for people on my server in this conversation...
-					// Get conversation:
-						
+				
 				}
 				else
 				{
-					// TODO: only update people names if status=addPeople
-				
-				
 
 
 					
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
-
-
-
 					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false, "time" => new MongoDate()
 						);
-
-					
-				
 
 					if ($item["status"] == "addPeople")
 					{
 
 						$i = 0;
-						foreach ($item["people"] as $item2) 
+
+						$newpeople = array();
+						$newpeoplenames = array();
+
+						// Add existing receivers
+						foreach ($ppl["people"] as $item2) 
 						{
-							
-							clog("CHECK $item2 in ");
-							clog2($ppl["people"]);
-							
 
-							if (!in_array($item2, $ppl["people"]))
+							if (!in_array($item2, $newpeople))
 							{	
-								clog("ADD $item2  ");
-								$item["people"][] = $item2;
-								$item["peoplenames"][] = $ppl["peoplenames"][$i];
-
-
 								
-
-
+								$newpeople[] = $item2;
+								$newpeoplenames[] = $ppl["peoplenames"][$i];
 							}
-							$i++;
-								
+							$i++;	
 
 						}
-						$setarray["people"] = $item["people"];
 
+						$i = 0; // Reset index counter
+						
+						// Add new receivers
+						foreach ($item["people"] as $item2) 
+						{
 
+							if (!in_array($item2, $newpeople))
+							{	
+								
+								$newpeople[] = $item2;
+								$newpeoplenames[] = $item["peoplenames"][$i];
+							}
+							$i++;	
 
+						}
+
+						$setarray["people"] = $newpeople;
+						$setarray["peoplenames"] = $newpeoplenames;
 
 					}
 
@@ -764,7 +756,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 
 				// Insert the actual message here
-				if (!$blockWrite)
+				if (!$blockWrite) // Messages are only inserted once per server.
 				{
 				
 				$ins = array("sendername" => $item["sendername"],
@@ -891,121 +883,133 @@ $data = array("requests" => $reqdata
 			else // This is used if we add people to a conversation and the id is already known
 			$convId = new MongoId($item["conversationId"]);	
 
-			if (!isset($item["receivers2"]))
+			if (!isset($item["receivers2"])) // Does not exist usually
 				$item["receivers2"] = array();
 
 			$peoplenames = array();
 
 
 
+			/*
+				STEP 1: If we add people, add people who are alredy part of the conversation to the conversation FIRST.
+			*/
 
-			foreach ($item["receivers"] as $key => $value)
-			{
-				// Remove AES keys for other people, TODO: Not for answers!
-
-				// Filter out double receivers
-				if (in_array( $value["charmeId"], $item["receivers2"]))
-					unset($item["receivers"][$key]);
-				else
-				$item["receivers2"][]  = $value["charmeId"];
-
-				// Find name, option 1: its me :)
-				if ($value["charmeId"] == $_SESSION["charme_userid"])
-				{
-					// Get sender name
-			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
-			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
-
-
-						$peoplenames[] = $sendername ;
-				}
-
-
-					else // option2: its someone else
-				{
-				$rr = $col->listitems->findOne(array("userId" => $value["charmeId"], "owner" => $_SESSION["charme_userid"]));
-
-				$peoplenames[] = $rr["username"];
-				}
-			}
-
-
-			// Notify people in existing conversation about new people
 			if (isset($item["status"]) && $item["status"] == "addPeople")
 			{
-				// Add people who are already in the conversation to receivers!
-
-				$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
 				
-				foreach ($ppl["people"] as $p)
-				{
-					$item["receivers2"][] = $p;
+					// Add people who are already in the conversation to receivers!
+					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
+					$ind = 0;
 
-
-					$item["receivers"][] = array("charmeId" => $p);
-				}
-				foreach ($ppl["peoplenames"] as $p)
-				{
-					$peoplenames[] = $p;
-
-				}
-				//$item["receivers2"]
+					foreach ($ppl["people"] as $p)
+					{
+						if (!in_array( $p, $item["receivers2"])) 
+						{
+							$item["receivers2"][] = $p;
+							$item["receivers"][] = array("charmeId" => $p);
+							$peoplenames[] = $ppl["peoplenames"][$ind];
+						}
+						$ind++;
+					}
 			}
 
+			/*
+				STEP 2: Add new people to receivers
+			*/
+			// Add first time receivers, or newly added people here.
+			// Make sure, if it is not a new conversation, that people are only added once.
+
+			$countnew = 0; // How many people are added to the existing conversation?
 
 
-			// Do not cluster here, because of AES Key!
-			foreach ($item["receivers"] as $receiver)
+
+			$ind = 0;
+			foreach ($item["receivers"] as $key => $value)
 			{
-				// Send MEssage to receiver.
-
-				// if its a new message
-
-
-
-
-				$content = array(
-
-						"id" => "message_receive",
-						"localreceivers" => array($receiver["charmeId"]),
-						
-						"people" => $item["receivers2"],
-						"encMessage" => $item["encMessage"],
-						
-						"messagePreview" => $item["messagePreview"],
-						"sender" => $_SESSION["charme_userid"],
-						
-						"sendername" => $sendername,
-						"conversationId" => $convId->__toString(),
-						"peoplenames" => $peoplenames
-
-						);
-
-				if (isset( $receiver["aesEnc"]))
+				if (!in_array($value["charmeId"], $item["receivers2"])) // Do not add someone twice
 				{
-					$content ["aesEnc"] = $receiver["aesEnc"];
-					$content ["revision"] = $receiver["revision"];
+					clog("NOT IN ARRAY".$value["charmeId"]);
+					$countnew++;
+					$item["receivers2"][]  = $value["charmeId"];
+
+					// Find name, option 1: its me :)
+					if ($value["charmeId"] == $_SESSION["charme_userid"])
+					{
+						// Get sender name
+						$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
+						$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
+						$peoplenames[] = $sendername ;
+					}
+					else // option2: its someone else
+					{
+						$rr = $col->listitems->findOne(array("userId" => $value["charmeId"], "owner" => $_SESSION["charme_userid"]));
+						$peoplenames[] = $rr["username"];
+					}
 				}
-
-
-				if (isset($item["status"]))
-					$content["status"] = $item["status"];
-
-				$data = array("requests" => $content);
-				
-
-				$req21 = new \App\Requests\JSON(
-					$receiver["charmeId"],
-					$_SESSION["charme_userid"],
-					$data
+				else{
 					
-					);
-
-			
-				$req21->send();
+					//unset($item["receivers"][$ind]);
+					//clog(" IN ARRAY".$value["charmeId"]);
+				}
+				$ind++;
 
 			}
 
+
+
+			$alreadySent = array(); // Make sure we do not send a request to anybody twice
+
+
+			// Only send add people notifications if we actually add people to a conversation
+			if ($countnew>0 || (isset($item["status"]) && $item["status"] != "addPeople"))
+			{
+				// Do not cluster here, because of AES Key!
+				foreach ($item["receivers"] as $receiver)
+				{
+					if (!in_array($receiver["charmeId"], $alreadySent ))
+
+					{
+						$content = array(
+					
+										"id" => "message_receive",
+										"localreceivers" => array($receiver["charmeId"]),
+										
+										"people" => $item["receivers2"],
+										"encMessage" => $item["encMessage"],
+										
+										"messagePreview" => $item["messagePreview"],
+										"sender" => $_SESSION["charme_userid"],
+										
+										"sendername" => $sendername,
+										"conversationId" => $convId->__toString(),
+										"peoplenames" => $peoplenames
+			
+								);
+			
+						if (isset( $receiver["aesEnc"]))
+						{
+							$content ["aesEnc"] = $receiver["aesEnc"];
+							$content ["revision"] = $receiver["revision"];
+						}
+	
+						if (isset($item["status"]))
+							$content["status"] = $item["status"];
+	
+						$data = array("requests" => $content);
+	
+						$req21 = new \App\Requests\JSON(
+							$receiver["charmeId"],
+							$_SESSION["charme_userid"],
+							$data
+							
+							);
+	
+						$req21->send();
+						$alreadySent[] = $receiver["charmeId"];
+					}
+
+				}
+			}
 		
 
 

@@ -1,6 +1,8 @@
 ## next:
 
 
+	update people counter
+	do not allow to add someone 2 times!
 	
 	conversation start: get key if not exists
 
@@ -8,8 +10,10 @@
 
 	add/remove people -> new aes key! (is this necessary? )
 
+
 	problem: add my self to some strangers messages
 	solution: make hash of people list and encode hash with aes key
+
 
 ## MILESTONE 3
 	
