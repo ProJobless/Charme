@@ -26,9 +26,8 @@ public class ActivityLogin extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				Intent intent = new Intent(getBaseContext(), Talks.class);
-		    	startActivity(intent);
-				//tryLogin("","","");
+				
+				tryLogin("","","");
 			}
 		});
     	
@@ -43,8 +42,8 @@ public class ActivityLogin extends Activity {
 			JSONArray list = new JSONArray();
 
 			JSONObject r1 = new JSONObject();
-			r1.put("u", "ms@charme.local");
-			r1.put("p", "lalala");
+			r1.put("u", "mobile@192.168.43.31");
+			r1.put("p", "test"); // TODO: Challenge respond
 			r1.put("id", "user_login");
 
 			list.put(r1);
@@ -55,7 +54,8 @@ public class ActivityLogin extends Activity {
 
 				@Override
 				protected void onPostExecute(String result) {
-
+					
+				
 					if (result == "")
 						Toast.makeText(
 								getApplicationContext(),
@@ -67,17 +67,50 @@ public class ActivityLogin extends Activity {
 
 						try {
 							JSONObject jo = new JSONObject(result);
-							if (jo.getString("status") == "PASS") {
+							
+							System.out.println("STATUS IS"+jo.getJSONObject("user_login").getString("status"));
+							if (jo.getJSONObject("user_login").getString("status").equals("PASS")) {
 								// Now the Session exists!, lets go!
 								
-								String rsaStr = jo.getJSONObject("user_login")
-										.getString("rsa");
 								
-								System.out.println("rsa22" + rsaStr);
+								System.out.println("CHARME33: RSA STR NOW");
 
+								
+								
+								String rsaStr = jo.getJSONObject("user_login").getJSONObject("ret").getString("keyring");
+								
+								
+								GibberishAESCrypto gib = new GibberishAESCrypto();
+								
+								System.out.println("CHARME33: RSA STR IS " + rsaStr);
+
+								String passphrase = "FutyUJD0qGOtW3QSQIHK"; //FutyUJD0qGOtW3QS
+								// Only use 16 bytes of passphrase
+								try{
+								System.out.println("CHARME33:" + gib.decrypt(rsaStr,  passphrase.toCharArray()));
+								}
+								catch(Exception ee){}
+								
+								//jo.getJSONObject("user_login").getObject("status")
+								
+								
 								// Start new activity
-
+								
+								
+								// Decode RSA
+								Intent intent = new Intent(getBaseContext(), Talks.class);
+						    	startActivity(intent);
 							}
+							else if (jo.getJSONObject("user_login").getString("status").equals("FAIL")) {
+								
+								System.out.println("CHARME1: LOGIN FAILED BECAUSE OF CREDENTIALS");
+								Toast.makeText(
+										getApplicationContext(),
+										"Wrong username, password or passphrase.",
+										Toast.LENGTH_SHORT).show();
+								
+							}
+								
 
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

@@ -25,7 +25,7 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 
 		URL url;
 		try {
-			url = new URL("http://charme.local/charme/req.php");
+			url = new URL("http://192.168.43.31/charme/req.php");
 			// user_login, u, p
 
 			// POST DATA: data.data
@@ -73,7 +73,7 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 			result = sb.toString();
 
 		} catch (Exception e) {
-			Log.d("CHARME", "exception in http request");
+			Log.d("CHARME", "exception in http request"+e.toString());
 		}
 		return result;
 
