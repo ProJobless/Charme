@@ -1,10 +1,9 @@
 ## ROADMAP
 
 HIGH PRIORITY
-- get public key button on profile
 - Multiserver support
+- password sign in: get challenge from server!
 - demo video
-- message signing with d instead of e epxonent
 - Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
@@ -23,6 +22,7 @@ HIGH PRIORITY
 
 
 MEDIUM PRIORITY
+- images zip download: ignore failed request attempts
 - testing library
 - Make sure requests are delivered, repeat if failed to deliver
 - notify users on pub key update: hash public key A , send to user B encrypted with pub key B 
