@@ -380,6 +380,11 @@ function requestNewKey(userId) {
 
 							// Sucess is here.,
 							ui_closeBox();
+
+							// Allow sending messages on profile
+							$("#but_sendMsg").show();
+							$("#but_verifyKey").hide();
+							$("#but_verifyKey2").show();
 						});
 
 

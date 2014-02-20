@@ -552,7 +552,7 @@ var view_profilepage_info = view_subpage.extend({
 		//#userinfo_container
 
 
-
+		var hashes = crypto_buildHashKeyDir([container_main.currentView.options.userId]);
 
 
 
@@ -570,7 +570,13 @@ var view_profilepage_info = view_subpage.extend({
 					"id": "piece_get4profile",
 					"userId": container_main.currentView.options.userId,
 					"invader" : charmeUser.userId
-				} 
+				} ,
+
+				{
+					"id": "key_getMultipleFromDir",
+					"hashes": hashes
+				}
+
 				
 
 			]
@@ -594,8 +600,29 @@ var view_profilepage_info = view_subpage.extend({
 
 			$.get("templates/user__.html", function(d) {
 
-				// Mark lists which contain the user
+				console.log("KEYS:");
+				console.log(d2.key_getMultipleFromDir);
 
+				if (d2.key_getMultipleFromDir.value.length < 1)
+				{
+					// Hide init conversation button
+					$("#but_sendMsg").hide();
+					$("#but_verifyKey").show();
+					$("#but_verifyKey2").hide();
+				}
+				else
+				{
+						$("#but_sendMsg").show();
+					$("#but_verifyKey").hide();
+					$("#but_verifyKey2").show();
+				}
+				
+				$("#but_verifyKey2, #but_verifyKey").click(function(){
+					requestNewKey(container_main.currentView.options.userId);
+				});
+
+
+				// Mark lists which contain the user
 				var userlistsRegistred = new Array();
 				var userlists = new Array();
 

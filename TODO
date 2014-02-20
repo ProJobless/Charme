@@ -1,16 +1,16 @@
 ## ROADMAP
 
 HIGH PRIORITY
+- get public key button on profile
 - Multiserver support
 - demo video
-- functions: crypto_sign(message, privateKey), crypto_checksign(message, hash, PublicKey);
-- testing library
 - message signing with d instead of e epxonent
 - Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
 	- add person to mesasge / leave message
 
+- SECURE LOGIN: send challenge to client, hash pw with challenge, send back.
 ------
 - key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
 - messages: send: autocomplete only receivers with key
@@ -23,6 +23,7 @@ HIGH PRIORITY
 
 
 MEDIUM PRIORITY
+- testing library
 - Make sure requests are delivered, repeat if failed to deliver
 - notify users on pub key update: hash public key A , send to user B encrypted with pub key B 
 - key directory cache

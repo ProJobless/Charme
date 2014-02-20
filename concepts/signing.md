@@ -57,6 +57,10 @@ Alternative/additional Client Side Verification:
 
 
 
-Signature extension to RSA Lib from Tom Wu.
+Things to sign
 --------------------------------
+messages
+posts
+people in my list (sign hash hash all names)
+
 

@@ -347,6 +347,160 @@ var view_talks_subpage = view_subpage.extend({
 				that.decodeImages();
 
 
+				$("#but_downloadimgs").click(function(){
+
+					$.get("templates/box_zipdown.html", function(d123) {
+					_.templateSettings.variable = "rc";
+
+					var template = _.template(d123, {});
+					ui_showBox(template);
+
+					// Download Images Now
+
+					$('#but_downloadimages').click(function(){
+
+
+						apl_request({
+							"requests": [{
+								"id": "messages_get_sub",
+								limit: -1,
+								start: start,
+								"superId": that.options.superId,
+								onlyFiles: true
+							}]
+						}, function(d3){
+							console.log(d3.messages_get_sub);
+							var fileidlist = [];
+							$.each(d3.messages_get_sub.messages, function(d341) {
+
+								// Sender name is needed for server
+								fileidlist.push({fileId: this.fileId, sender: this.sender});
+							});
+
+							console.log(fileidlist);
+
+							
+							var allimagescount = fileidlist.length;
+							console.log("COUNT IS"+allimagescount);
+							var imgnow = 0;
+
+							// Now start download of files. But only only download and decrypt one file after another.
+
+							// todo: Terminate current worker on cancel.
+							$("#but_downloadimages, #download_cancel").hide();
+
+							var zip = new JSZip();
+
+							$("#status").text("Starting Image Download...");
+							var imgDownloader = function() {
+
+								$("#status").text("Download Image "+ (imgnow+1) + " of " + allimagescount);
+								// 1. Download file
+								var loc = "http://"+ fileidlist[imgnow].sender.split("@")[1] +"/charme/fs.php?cache=true&enc=1&id="+ fileidlist[imgnow].fileId;
+								$.get(loc + "&type=original", function(d2) {
+
+
+									console.log("DOWNLOADED "+imgnow);
+									// 2. Decrypt File
+									var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+									worker.onmessage = function(e) {
+										// Image is decrypted -> add to archiv. Start Next download!
+										
+										$("#status").text("Decrypt Image "+ (imgnow+1) + " of " + allimagescount);
+
+										console.log("DECRYPTED "+imgnow);
+										zip.file("Image"+imgnow+".jpg", e.data.substr(e.data.indexOf(',')+1), {base64: true});
+
+										imgnow++; 
+										if (imgnow < allimagescount)
+											imgDownloader(); // Recursivly call function
+										else
+										{
+											$("#status").text("Done.");
+											content = zip.generate(); // base64
+
+											
+
+											  var pom = document.createElement('a');
+											    pom.setAttribute('href', "data:application/zip;base64,"+content);
+											    pom.setAttribute('download', "CharmeImages.zip");
+											    pom.click();
+											    ui_closeBox();
+
+
+										}
+										// Increment Index Counter
+									}
+
+								
+									worker.postMessage({
+										key: that.aes,
+										encData: d2
+									});
+
+
+								});
+							};
+
+							imgDownloader();
+
+							
+							
+
+
+						});
+
+
+
+					});
+
+					// Step 1: Get a List of all images
+
+					/*
+					var loc = data location...
+						$.get(loc + "&type=original", function(d2) {
+							$(".imgLoading").remove();
+
+
+
+							var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+
+
+							worker.onmessage = function(e) {
+								// Image is decrypted -> add to archiv.
+								ui_showImgBox(e.data);
+							}
+
+							// Add cancel decryption button
+							$(par).append(
+								$('<a class="cancelDec">Cancel Decryption</a>').click(function() {
+
+									$(this).remove();
+									worker.terminate();
+								}));
+
+							worker.postMessage({
+								key: that2.aes,
+								encData: d2
+							});
+
+
+
+						});*/
+
+
+
+
+					});
+
+
+
+				
+				});
+
+
 			});
 			/*	var rsa = new RSAKey();
 				rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,

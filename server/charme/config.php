@@ -24,7 +24,7 @@ $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] ="http://10.149.35.85";
 
 
 //Will be updated automatically to block evil servers or users
-//you should leave this empty if your not part of the CHARME network
-$CHARME_SETTINGS["blacklist"] ="http://www.charmeproject.com/blacklist.php";
+//you should leave this empty if your not using  a  network id starting with CHARME
+$CHARME_SETTINGS["blacklist"] ="http://www.charmeproject.com/blacklist.txt";
 
 ?>
