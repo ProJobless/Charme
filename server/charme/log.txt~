@@ -1,0 +1,31 @@
+NOT IN ARRAYtest5@charme.local
+RECEIVE MESSAGE:
+Array
+(
+    [id] => message_receive
+    [localreceivers] => Array
+        (
+            [0] => test5@charme.local
+        )
+
+    [people] => Array
+        (
+            [0] => test5@charme.local
+        )
+
+    [encMessage] => U2FsdGVkX19u1fAcDRxitskTi0kw3/lk9un5UMJF6TQ=
+
+    [messagePreview] => U2FsdGVkX19D+kZxtvWl9Jr4iDYpR+/B/Ymr8gNaJjo=
+
+    [sender] => test5@charme.local
+    [sendername] => test test
+    [conversationId] => 53027bb4d8cc9a35708b456d
+    [peoplenames] => Array
+        (
+            [0] => test test
+        )
+
+    [aesEnc] => 28cc5e3e639259261ecfb0d592b0b019cbf701a2eec8e85d895bcde2118b65be277d17d3f1e31041c3668b73185c1ca3cea3c9771871514b5af90e02861c4d0f02be02d23f07d58498d4ff1b49776256140aa4001cbe56262135178db72f41f3f50969f1e960dbaa4804f316c0bc6765c85247a05b6b356e387d01c0a007e2d14f56116ccfdc6128b4cc09413a5e58092b48ca3c6bd80d0e06de57112dd946ed4abf952de0752605881db519b701c0f9f3657c7e798837be31ae9f6a13f4de8f18e12c0b89044f914c0527cde78dfa8b3e111d7727e0b882af4e6247fe75c28f314fa60e87254d481806a2e88293c8e5ecb50e9899d60cc5d1e6b9c847aef69d
+    [revision] => 3
+)
+
