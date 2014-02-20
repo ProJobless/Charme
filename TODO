@@ -1,89 +1,54 @@
-## next:
+## ROADMAP
 
-
-	update people counter
-	do not allow to add someone 2 times!
-	
-	conversation start: get key if not exists
-
-	javascript image zip downloader http://stuk.github.io/jszip/
-
-	add/remove people -> new aes key! (is this necessary? )
-
-
-	problem: add my self to some strangers messages
-	solution: make hash of people list and encode hash with aes key
-
-
-## MILESTONE 3
-	
-
-
-	Comments (OK)
-	Make sure requests are delivered, repeat if failed to deliver
-	Multiserver support
-	Message Signing, Repost and like verification
-	Private Key Directory (OK)
-	Delete Collections and Comments
-	revision counter!
-
-	background sender!
-
-
-	notify users on pub key update:
-		hash public key A , send to user B encrypted with pub key B 
-
-## small bugs
-- small image  appended to post is scaled to big for thumbnail
-
-
-## TODO HIGH PRIORITY
-
-- key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
-- messages: send: only receivers with key!, warning if no key!
-
-- badkey error , when new bucket, and request send. error disapears when saving private info again.
-
-- revision counter
-- Recrypt Public Key Directory when changing key
+HIGH PRIORITY
+- Multiserver support
+- demo video
+- functions: crypto_sign(message, privateKey), crypto_checksign(message, hash, PublicKey);
+- testing library
+- message signing with d instead of e epxonent
+- Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
 	- add person to mesasge / leave message
 
+------
+- key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
+- messages: send: autocomplete only receivers with key
+- badkey error , when new bucket, and request send. error disapears when saving private info again.
+- revision counter
+- Recrypt Public Key Directory when changing key
 - Public key verification in background
 - avoid comments with false author
 
 
-## keyupdate
 
-- notify message receiver that key is no longer valid
-- recrypt with new fastkey: 
-	- key directory
-	- buckets
-	- messages (?)
+MEDIUM PRIORITY
+- Make sure requests are delivered, repeat if failed to deliver
+- notify users on pub key update: hash public key A , send to user B encrypted with pub key B 
+- key directory cache
+-keyupdate:
+	- notify message receiver that key is no longer valid
+	- recrypt with new fastkey: 
+		- key directory
+		- buckets
+		- messages (?)
 
-## Spam Protect
- - likes only from people in my lists
- - subscribers only from people in my lists?
-
-## XSS 
-- Check also ids for XSS attacks!
-
-## TODO LOW PRIORITY
-
+LOW PRIORITY
+- javascript image zip downloader http://stuk.github.io/jszip/
 - Delete Post and Comments
 - love/repost on status detail not working
 - revoke private info access
 - notify people who are not in lists any more!
 - RSA decryption in web worker
 - repost images, cache image on own server then.
+- small image  appended to post is scaled to big for thumbnail
 
 
 
-## Implemented but not fully tested:
-- update session passphrase with newest key_getPrivateKeyring (OK1)
-- remove passphrase from accessible code, use fastkey instead (OK1)
-
+## Spam Protect&Security
+ - likes only from people in my lists
+ - subscribers only from people in my lists?
+- Check also ids for XSS attacks!
 
 ------------------------------------------------------------------
 Chrome Extension:
