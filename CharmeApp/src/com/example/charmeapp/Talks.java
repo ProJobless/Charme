@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,20 +28,73 @@ public class Talks extends Activity {
 		
 		  final ListView listview = (ListView) findViewById(R.id.listView1);
 		  
-		  final ArrayList<TalkItem> list = new ArrayList<TalkItem>();
-		  
-		  
-		  for (int i = 0; i<10;i++)
-		  {
-			  list.add(new TalkItem("lala", "Mein Talk 1", "lalalala"));
-			  list.add(new TalkItem("lala", "Mein Talk 1", "lalalala"));
-			  list.add(new TalkItem("lala", "Mein Talk 1", "lalalala"));
-		  }
+		
+			final ArrayList<TalkItem> list2 = new ArrayList<TalkItem>();
+			
+			try {
+
+				JSONObject object = new JSONObject();
+
+				JSONArray list = new JSONArray();
+
+				JSONObject r1 = new JSONObject();
+				r1.put("countReturn", true);
+				r1.put("start", 0); // TODO: Challenge respond
+				r1.put("id", "messages_get");
+				
+				list.put(r1);
+
+				object.put("requests", list);
+			
+				  
+				new AsyncHTTP(){
+					@Override
+					protected void onPostExecute(String result) {
+						
+						// Problem: not logged in!
+						System.out.println("CH1: RESULT IS "+result.toString());
+						try{
+						JSONObject jo = new JSONObject(result);
+						GibberishAESCrypto gib = new GibberishAESCrypto();
+						JSONArray arr = jo.getJSONObject("messages_get").getJSONArray("messages");
+						System.out.println("CH1: arr"+arr.toString());
+						for (int i = 0; i < arr.length(); i++) {
+							  JSONObject oo = arr.getJSONObject(i);
+							  
+							  RSAObj rsa = new RSAObj();
+							  JSONObject oo5 = ActivityLogin.findKey(oo.getInt("revision")).getJSONObject("rsa").getJSONObject("rsa");
+							  
+							 rsa.n = oo5.getString("n");
+							 rsa.d = oo5.getString("d");
+							 rsa.e = oo5.getString("e");
+							  
+							  
+							  
+							 String aes =  rsa.decryptText(oo.getString("aesEnc"));
+							  String prev = gib.decrypt(oo.getString("messagePreview"), aes.toCharArray());
+							  
+							  		System.out.println("CH1:"+prev);
+								 list2.add(new TalkItem("lala", prev, oo.getString("pplCount")+" People"));
+							}
+						
+						
+				
+				
+				
+						}
+					catch(Exception ee){System.out.println("CHARME ERROR"+ee.toString());}
+					}
+				}.execute(new AsyncHTTPParams(object.toString()));
+			}
+			catch(Exception ex){
+			System.out.println("CHARME ERROR"+ex.toString());
+			}
+		 
 		  
 		  
 		  
 		  final StableArrayAdapter adapter = new StableArrayAdapter(this,
-			      R.layout.activity_talks_listitem, list);
+			      R.layout.activity_talks_listitem, list2);
 			    listview.setAdapter(adapter);
 			    
 			    

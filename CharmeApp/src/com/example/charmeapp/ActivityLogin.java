@@ -32,6 +32,49 @@ public class ActivityLogin extends Activity {
 		});
     	
     }
+    public static RSAObj global_rsakey;
+    public static JSONArray global_keyring;
+    
+    public static JSONObject findKey(int revision)
+    {	
+    	JSONObject oo2 = new JSONObject();
+    	try{
+    	// Revision 0 -> newest
+    	
+    	if (revision == 0)
+    	{
+
+			System.out.println("CH1: revision 0");
+    		int newestrev= 0;
+    		
+			for (int i = 0; i < global_keyring.length(); i++) {
+			JSONObject oo = global_keyring.getJSONObject(i);
+			if (oo.getInt("revision") > newestrev)
+				newestrev = oo.getInt("revision");
+			
+				System.out.println("NEWEST REV IS "+newestrev);
+				oo2 = oo;
+				
+			}
+			return oo2;
+			
+			
+			
+    	}
+    	else
+    	{
+    
+    
+			for (int i = 0; i < global_keyring.length(); i++) {
+			JSONObject oo = global_keyring.getJSONObject(i);
+			if (revision == oo.getInt("revision"))
+				return oo;
+				
+			}
+    	}}
+    	catch(Exception ee){ }
+    	return oo2;
+    }
     public void tryLogin(String username, String password, String passphrase)
     {
     	
@@ -80,16 +123,34 @@ public class ActivityLogin extends Activity {
 								String rsaStr = jo.getJSONObject("user_login").getJSONObject("ret").getString("keyring");
 								
 								
-								GibberishAESCrypto gib = new GibberishAESCrypto();
+							
 								
 								System.out.println("CHARME33: RSA STR IS " + rsaStr);
 
-								String passphrase = "FutyUJD0qGOtW3QSQIHK"; //FutyUJD0qGOtW3QS
+								String passphrase = "FutyUJD0qGOtW3QSQIHK"; // This is  the passphrase
 								// Only use 16 bytes of passphrase
 								try{
-								System.out.println("CHARME33:" + gib.decrypt(rsaStr,  passphrase.toCharArray()));
+									GibberishAESCrypto gib = new GibberishAESCrypto();
+								String aesdec = gib.decrypt(rsaStr,  passphrase.toCharArray());
+								
+								global_keyring = new JSONArray(aesdec); 
+								// object contains fastkey1, fastkey2, revision, rsa.n, rsa.e, rsa.d, rsa.p, rsa.q
+								global_rsakey = new RSAObj();
+								
+								
+								global_rsakey.n = findKey(0).getJSONObject("rsa").getJSONObject("rsa").getString("n");
+								global_rsakey.e = findKey(0).getJSONObject("rsa").getJSONObject("rsa").getString("e");
+								global_rsakey.d = findKey(0).getJSONObject("rsa").getJSONObject("rsa").getString("d");
+								
+								
 								}
-								catch(Exception ee){}
+								catch(Exception ee){
+									System.out.println("error10:"+ee.toString());
+									Toast.makeText(
+											getApplicationContext(),
+											"Wrong passphrase",
+											Toast.LENGTH_SHORT).show();
+								}
 								
 								//jo.getJSONObject("user_login").getObject("status")
 								
@@ -106,7 +167,7 @@ public class ActivityLogin extends Activity {
 								System.out.println("CHARME1: LOGIN FAILED BECAUSE OF CREDENTIALS");
 								Toast.makeText(
 										getApplicationContext(),
-										"Wrong username, password or passphrase.",
+										"Wrong user id or password. Make sure you enter full user id (e.g. you@yourserver.com).",
 										Toast.LENGTH_SHORT).show();
 								
 							}
