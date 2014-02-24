@@ -7,5 +7,6 @@
     <string name="title_activity_user_list">UserList</string>
     <string name="title_activity_conversation">Conversation</string>
     <string name="title_activity_talks">Talks</string>
+    <string name="title_activity_talks_messages">TalksMessages</string>
 
 </resources>

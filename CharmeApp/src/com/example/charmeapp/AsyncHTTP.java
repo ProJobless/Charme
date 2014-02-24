@@ -18,7 +18,7 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 	
 
 
-	
+	public static CookieManager cookieManager = new CookieManager();
 	 protected String doInBackground(AsyncHTTPParams... data2) {
 
 		String result = "";
@@ -37,7 +37,7 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 			urlConnection.setDoInput(true);
 			urlConnection.setDoOutput(true);
 			// Set cookie manager for maintaining sessions.
-			CookieManager cookieManager = new CookieManager();
+			
 			CookieHandler.setDefault(cookieManager);
 
 			// WARNING:

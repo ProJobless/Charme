@@ -3,7 +3,7 @@
 HIGH PRIORITY
 - Multiserver support
 - password sign in: get challenge from server!
-- demo video
+
 - Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
@@ -11,13 +11,14 @@ HIGH PRIORITY
 
 - SECURE LOGIN: send challenge to client, hash pw with challenge, send back.
 ------
+- demo video
 - key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
 - messages: send: autocomplete only receivers with key
 - badkey error , when new bucket, and request send. error disapears when saving private info again.
 - revision counter
 - Recrypt Public Key Directory when changing key
-- Public key verification in background
-- avoid comments with false author
+
+
 
 
 
@@ -33,9 +34,9 @@ MEDIUM PRIORITY
 		- key directory
 		- buckets
 		- messages (?)
+- Public key verification in background
 
 LOW PRIORITY
-- javascript image zip downloader http://stuk.github.io/jszip/
 - Delete Post and Comments
 - love/repost on status detail not working
 - revoke private info access

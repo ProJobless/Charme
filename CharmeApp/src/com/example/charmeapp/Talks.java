@@ -9,11 +9,14 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,7 +30,7 @@ public class Talks extends Activity {
 		setContentView(R.layout.activity_talks);
 		
 		  final ListView listview = (ListView) findViewById(R.id.listView1);
-		  
+		  final Talks that = this;
 		
 			final ArrayList<TalkItem> list2 = new ArrayList<TalkItem>();
 			
@@ -71,13 +74,17 @@ public class Talks extends Activity {
 							  
 							  
 							 String aes =  rsa.decryptText(oo.getString("aesEnc"));
+						 		
+							 System.out.println("CH1:aes "+aes);
 							  String prev = gib.decrypt(oo.getString("messagePreview"), aes.toCharArray());
 							  
-							  		System.out.println("CH1:"+prev);
-								 list2.add(new TalkItem("lala", prev, oo.getString("pplCount")+" People"));
+							  		System.out.println("CH1:ab "+prev);
+								 list2.add(new TalkItem(oo.getJSONObject("_id").getString("$id"), prev, oo.getString("pplCount")+" People", aes));
 							}
 						
-						
+						Talks.StableArrayAdapter adapter = new Talks.StableArrayAdapter(that,
+								      R.layout.activity_talks_listitem, list2);
+								    listview.setAdapter(adapter);
 				
 				
 				
@@ -91,11 +98,20 @@ public class Talks extends Activity {
 			}
 		 
 		  
+			listview.setOnItemClickListener(new OnItemClickListener() {
+	            @Override
+	            public void onItemClick(AdapterView<?> parent, View view, int position,
+	                    long id) {
+	         	   	final TalkItem t = ((Talks.StableArrayAdapter)listview.getAdapter()).mIdMap.get(position);
+	         
+	            	Intent intent = new Intent(getBaseContext(), TalksMessages.class);
+		        	intent.putExtra("superId", t.ID);
+		        	intent.putExtra("aes", t.AES);
+			    	startActivity(intent);
+	            }
+        });
 		  
-		  
-		  final StableArrayAdapter adapter = new StableArrayAdapter(this,
-			      R.layout.activity_talks_listitem, list2);
-			    listview.setAdapter(adapter);
+	
 			    
 			    
 	}
@@ -107,9 +123,9 @@ public class Talks extends Activity {
 		return true;
 	}
 
-	private class StableArrayAdapter extends ArrayAdapter<TalkItem> {
+	public class StableArrayAdapter extends ArrayAdapter<TalkItem> {
 
-		HashMap<Integer, TalkItem> mIdMap = new HashMap<Integer, TalkItem>();
+		public HashMap<Integer, TalkItem> mIdMap = new HashMap<Integer, TalkItem>();
 		Context mContext;
 
 		public StableArrayAdapter(Context context, int textViewResourceId,
@@ -123,29 +139,47 @@ public class Talks extends Activity {
 				mIdMap.put(i, objects.get(i));
 			}
 		}
-
+		
+		
+		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			   //--init if not re-cycled--
+		    if (convertView == null) {
+		        convertView = LayoutInflater.from(getContext()).inflate(R.layout.activity_talks_listitem, parent, false);
+		        convertView.setTag(new ViewHolder(
+		               (TextView) convertView.findViewById(R.id.label),
+		               (ImageView) convertView.findViewById(R.id.icon),
+		               (TextView) convertView.findViewById(R.id.submessage)
+		               
+		        ));
+		    }
+		   final TalkItem t = mIdMap.get(position);
+	
 
-			TalkItem t = mIdMap.get(position);
-
-			LayoutInflater inflater = (LayoutInflater) mContext
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.activity_talks_listitem,
-					parent, false);
-			ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-			TextView textView = (TextView) rowView.findViewById(R.id.label);
-			textView.setText(t.Title);
-
-			return rowView;
+		    ViewHolder holder = (ViewHolder) convertView.getTag();
+		    holder.atext.setText(t.Title);
+		    holder.atext2.setText(t.People);
+		    return convertView;
 
 		}
-
 		@Override
 		public boolean hasStableIds() {
 			return true;
 		}
+	}
+	private static class ViewHolder{
+	    public final TextView atext;
+	    public final TextView atext2;
+	    public final ImageView aimg;
 
+	    private ViewHolder(TextView text, ImageView img, TextView text2) {
+	        this.aimg = img;
+	        this.atext = text;
+	        this.atext2 = text2;
+	        
+	    }
 	}
 
 }
+
