@@ -38,7 +38,12 @@
         </activity>
         <activity
             android:name="com.example.charmeapp.TalksMessages"
-            android:label="@string/title_activity_talks_messages" >
+            android:label="@string/title_activity_talks_messages"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.example.charmeapp.ImageViewer"
+            android:label="@string/title_activity_image_viewer" >
         </activity>
     </application>
 

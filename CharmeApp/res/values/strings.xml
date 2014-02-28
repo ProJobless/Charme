@@ -8,5 +8,6 @@
     <string name="title_activity_conversation">Conversation</string>
     <string name="title_activity_talks">Talks</string>
     <string name="title_activity_talks_messages">TalksMessages</string>
+    <string name="title_activity_image_viewer">ImageViewer</string>
 
 </resources>

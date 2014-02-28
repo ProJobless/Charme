@@ -25,7 +25,11 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 
 		URL url;
 		try {
+			
+			if (data2[0].Url == "")
 			url = new URL("http://192.168.43.31/charme/req.php");
+			else
+			url = new URL(data2[0].Url);
 			// user_login, u, p
 
 			// POST DATA: data.data
@@ -69,7 +73,7 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 				sb.append(line + '\n');
 			}
 
-			System.out.println("CTCB: " + sb.toString());
+		
 			result = sb.toString();
 
 		} catch (Exception e) {

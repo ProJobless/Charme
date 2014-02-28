@@ -399,7 +399,6 @@ var view_talks_subpage = view_subpage.extend({
 								var loc = "http://"+ fileidlist[imgnow].sender.split("@")[1] +"/charme/fs.php?cache=true&enc=1&id="+ fileidlist[imgnow].fileId;
 								$.get(loc + "&type=original", function(d2) {
 
-
 									console.log("DOWNLOADED "+imgnow);
 									// 2. Decrypt File
 									var worker = new Worker("lib/crypto/thread_decrypt.js");
@@ -412,6 +411,7 @@ var view_talks_subpage = view_subpage.extend({
 										console.log("DECRYPTED "+imgnow);
 										zip.file("Image"+imgnow+".jpg", e.data.substr(e.data.indexOf(',')+1), {base64: true});
 
+										
 										imgnow++; 
 										if (imgnow < allimagescount)
 											imgDownloader(); // Recursivly call function
@@ -552,6 +552,7 @@ var view_talks_subpage = view_subpage.extend({
 		$(".imageid").each(function(index) {
 			var that = this;
 			var loc = $(this).data("location");
+			
 			var par = $(that).parent();
 
 			$.get(loc, function(d) {
