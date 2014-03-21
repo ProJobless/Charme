@@ -8,7 +8,125 @@ function mkqrcode() {
 
 
 function updateDataOK() {
-	alert("OK");
+
+	apl_request({
+	"requests": [{
+		"id": "key_update_recrypt_getData"
+		}]
+	}, function(d) {
+		
+		console.log("RETURNED DATA:");
+		console.log(d);
+		$("#upddatalog").html("Update Data...");
+
+		console.log("KEYSET");
+		var rsaKeyNewest = getKeyByRevision(0);
+		console.log(rsaKeyNewest);
+		var currentFastKey1 =  rsaKeyNewest.fastkey1;
+		var currentFastKey2 =  rsaKeyNewest.fastkey2;
+
+
+		var recryptedData = {
+			"conversations" : [],
+			"keydirectory" : [],
+			"pieces" : [],
+			"piecebuckets" : []
+		};
+
+		// d.key_update_recrypt_getData.data.conversations
+		$.each(d.key_update_recrypt_getData.data.conversations, function(index, item) {
+
+			if (this.revision < rsaKeyNewest.revision)
+			{
+				var rsakey = getKeyByRevision(this.revision).rsa.rsa;
+
+				var newAesTemp = crypto_rsaDecrypt(this.aesEnc, rsakey);
+				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+			
+				recryptedData["conversations"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
+			}
+		});
+
+		$.each(d.key_update_recrypt_getData.data.pieces, function(index, item) {
+
+			//if (this.value.revision < rsaKeyNewest.revision)
+			{
+				var fastkey = getFastKey(this.value.revision, 1);
+
+
+
+				
+				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value.aesEnc);
+	
+
+
+				var newAesEnc = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
+				recryptedData["pieces"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
+			}
+		});
+
+
+		$.each(d.key_update_recrypt_getData.data.keydirectory, function(index, item) {
+
+			//if (this.fkrevision < rsaKeyNewest.revision)
+			{	
+				var fastkey = getFastKey(this.fkrevision, 1);
+
+				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
+				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
+
+				console.log(newAesTemp);
+				//var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+				recryptedData["keydirectory"].push({id: this._id.$id, value: newValue, revision: rsaKeyNewest.revision });
+			}
+		});
+
+		$.each(d.key_update_recrypt_getData.data.pieceBucketItems, function(index, item) {
+
+			//if (this.fkrevision < rsaKeyNewest.revision)
+			{	
+				/*
+
+					bucketkey: Object
+					data: "720cfafabced36" (rsa encrypted)
+					revision: 2
+				*/
+
+				var rsakey = getKeyByRevision(this.bucketkey.revision).rsa.rsa;
+				var newAesTemp = crypto_rsaDecrypt(this.bucketkey.data, rsakey);
+				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+				recryptedData["pieces"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
+
+			}
+		});
+
+		console.log("RECRYPTED DATA IS");
+		console.log(recryptedData);
+
+		NProgress.start();
+		apl_request({
+			"requests": [{
+				"id": "key_update_recrypt_setData",
+				"recryptedData": recryptedData
+			}, ]
+		}, function(d) {
+
+			NProgress.done();
+			ui_closeBox();
+		});
+
+
+
+
+		// missing: keydirectory
+
+
+
+	});
+
+
+
+	
 }
 
 function updateData() {
@@ -110,109 +228,122 @@ function makeNewKey(userId) {
 
 				}
 
+
 				apl_request({
 					"requests": [{
-						"id": "key_update_phase1",
-						"password": password
-					}, ]
-				}, function(d) {
+							"id": "reg_salt_get",
+							"userid": charmeUser.userId
+						}
+
+					]
+				}, function(d2) {
+
+					var hashpass = CryptoJS.SHA256(password+d2.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
+
+					apl_request({
+						"requests": [{
+							"id": "key_update_phase1",
+							"password": hashpass
+						}, ]
+					}, function(d) {
 
 
 
-					if (d.key_update_phase1.error) {
-						alert("Wrong password.");
-					} else {
-
-
-						// Decrypt old keyring with old passphrase
-						var keyring = [];
-						var error = false;
-
-
-
-						if (d.key_update_phase1.keyring == null ||
-							d.key_update_phase1.keyring == "") {
-
+						if (d.key_update_phase1.error) {
+							alert("Wrong password.");
 						} else {
-							try {
 
-								var dec = aes_decrypt(passphrase, d.key_update_phase1.keyring);
 
-								alert(dec);
+							// Decrypt old keyring with old passphrase
+							var keyring = [];
+							var error = false;
 
-								keyring = jQuery.parseJSON(dec);
-							} catch (err) {
-								console.log("ERROR:");
-								console.log(err);
-								error = true;
-								alert("Wrong passphrase given.");
+
+
+							if (d.key_update_phase1.keyring == null ||
+								d.key_update_phase1.keyring == "") {
+
+							} else {
+								try {
+
+									var dec = aes_decrypt(passphrase, d.key_update_phase1.keyring);
+
+									alert(dec);
+
+									keyring = jQuery.parseJSON(dec);
+								} catch (err) {
+									console.log("ERROR:");
+									console.log(err);
+									error = true;
+									alert("Wrong passphrase given.");
+								}
+
+
 							}
 
+							if (!error) {
+								var maxrev = 0;
 
+								// Get revision
+								jQuery.each(keyring, function(index, item) {
+									if (item.revision > maxrev) maxrev = item.revision;
+								});
+								// Increment revision
+								maxrev = maxrev + 1;
+
+
+
+								// Add new RSA key, get json first
+								var rsa = jQuery.parseJSON($("#rsa").val());
+
+								var fastkey1 = randomAesKey(32);
+								var fastkey2 = randomAesKey(32);
+
+								var randomsalt1 = randomSalt(32);
+								var randomsalt2 = randomSalt(32);
+
+								keyring.push({
+									revision: maxrev,
+									fastkey1: fastkey1,
+									fastkey2: fastkey2,
+									randomsalt1: randomsalt1,
+									randomsalt2: randomsalt2,
+									rsa: rsa
+								});
+
+								console.log("KEYRING");
+								console.log(rsa);
+
+								// Convert JSON to string
+								keyring = JSON.stringify(keyring);
+
+								// Encrypt keyring with new passphrase
+								var key = $("#template_certkey").text();
+								var newkeyring = aes_encrypt(key, keyring);
+
+
+								var newpublickey = {
+									revision: maxrev,
+									publickey: {
+										n: rsa.rsa.n,
+										e: rsa.rsa.e
+									}
+								};
+
+								// Now start phase 2
+								apl_request({
+									"requests": [{
+										"id": "key_update_phase2",
+										"password": hashpass,
+										"newkeyring": newkeyring,
+										"publickey": newpublickey
+									}, ]
+								}, function(d) {
+									alert("Update sucessful, will now logout. Next you should recrypt your data from this page on.");
+								});
+							}
 						}
-
-						if (!error) {
-							var maxrev = 0;
-
-							// Get revision
-							jQuery.each(keyring, function(index, item) {
-								if (item.revision > maxrev) maxrev = item.revision;
-							});
-							// Increment revision
-							maxrev = maxrev + 1;
-
-
-
-							// Add new RSA key, get json first
-							var rsa = jQuery.parseJSON($("#rsa").val());
-
-							var fastkey1 = randomAesKey(32);
-							var fastkey2 = randomAesKey(32);
-
-							var randomsalt1 = randomSalt(32);
-							var randomsalt2 = randomSalt(32);
-
-							keyring.push({
-								revision: maxrev,
-								fastkey1: fastkey1,
-								fastkey2: fastkey2,
-								randomsalt1: randomsalt1,
-								randomsalt2: randomsalt2,
-								rsa: rsa
-							});
-
-							console.log("KEYRING");
-							console.log(rsa);
-
-							// Convert JSON to string
-							keyring = JSON.stringify(keyring);
-
-							// Encrypt keyring with new passphrase
-							var key = $("#template_certkey").text();
-							var newkeyring = aes_encrypt(key, keyring);
-
-
-							var newpublickey = {
-								revision: maxrev,
-								publickey: {
-									n: rsa.rsa.n,
-									e: rsa.rsa.e
-								}
-							};
-
-							// Now start phase 2
-							apl_request({
-								"requests": [{
-									"id": "key_update_phase2",
-									"password": password,
-									"newkeyring": newkeyring,
-									"publickey": newpublickey
-								}, ]
-							}, function(d) {
-								alert("Update sucessful, will now logout");
-							});
-						}
-					}
+					});
 				});
 			});
 

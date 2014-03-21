@@ -1,6 +1,6 @@
 // Fired on message ok button click, leave arguments empty if new conversation, fill in arguments if adding people to conversation
-function but_initConversationOk(currentAESKey, currentConversationId)
-{
+
+function but_initConversationOk(currentAESKey, currentConversationId) {
 	// This could be a message which is currently empty
 	var message = "";
 
@@ -21,20 +21,19 @@ function but_initConversationOk(currentAESKey, currentConversationId)
 
 
 	var keyAlert = function(problems) {
-	   
+
 		// Some keys are invalid, display them!
 		$.get("templates/addkeys.html", function(d) {
 
-		var templateData = {
-			problems: problems
-		};
+			var templateData = {
+				problems: problems
+			};
 
-		_.templateSettings.variable = "rc";
-		var template = _.template(d, templateData);
-		ui_showBox(template);
+			_.templateSettings.variable = "rc";
+			var template = _.template(d, templateData);
+			ui_showBox(template);
 		});
 	};
-	 
 
 
 
@@ -49,22 +48,21 @@ function but_initConversationOk(currentAESKey, currentConversationId)
 
 		var length = d.key_getMultipleFromDir.value.length;
 		var counter = 0;
-		var problems =  [];
+		var problems = [];
 
 
-		
+
 		// Add receivers that are not in the key dir with revision -1
 		var output2 = [];
-		
+
 		$.each(d.key_getMultipleFromDir.value, function(index, item) {
 			var key = decryptKeyDirValue(item.value);
 			output2.push(key.userId);
 		});
 
-		$.each(output,function(index,item){
+		$.each(output, function(index, item) {
 
-			if ($.inArray(item, output2) == -1)
-			{
+			if ($.inArray(item, output2) == -1) {
 
 				// Add receivers that are not in the key dir to problems[]
 				problems.push(item);
@@ -73,14 +71,13 @@ function but_initConversationOk(currentAESKey, currentConversationId)
 		});
 
 		// Show alert if no keys are in the Key Directory
-		if (length == 0 && problems.length>0)
-		{
+		if (length == 0 && problems.length > 0) {
 			keyAlert(problems);
 		}
 
 
 		$.each(d.key_getMultipleFromDir.value, function(index, item) {
-			
+
 
 			var key = decryptKeyDirValue(item.value);
 			console.log(key);
@@ -92,15 +89,14 @@ function but_initConversationOk(currentAESKey, currentConversationId)
 					"profileId": key.userId
 				}, ] // TODO: handle errors
 			}, function(d2) {
-				
+
 
 
 				console.log("KEYGET:");
 				console.log(d2.key_get);
 				counter++;
 
-				if (key.revision < d2.key_get.revision)
-				{
+				if (key.revision < d2.key_get.revision) {
 					problems.push(key.userId);
 				}
 
@@ -113,14 +109,11 @@ function but_initConversationOk(currentAESKey, currentConversationId)
 					// If not -> Show message: This keys are not up to date anymore.
 
 
-					if (problems.length > 0)
-					{	
+					if (problems.length > 0) {
 						keyAlert(problems);
 
-					}
-					else
-					{
-					
+					} else {
+
 
 						// Start a new conversation		
 
@@ -152,28 +145,21 @@ function but_initConversationOk(currentAESKey, currentConversationId)
 
 								]
 							}, function(d2) {
-									location.reload();
+								location.reload();
 							});
 						}
 					}
-					
-
 
 
 
 				}
-			});
+			}, "", key.userId.split("@")[1])
 		});
 	});
-
-	
 
 
 
 }
-
-
-
 
 
 
@@ -307,19 +293,19 @@ var view_talks_subpage = view_subpage.extend({
 					crossDomain: true
 				});
 
-				$("#but_addPeopleOk").click(function(){
-			
+				$("#but_addPeopleOk").click(function() {
+
 					// DO NOT USE AES HERE, as no message has to be encrypted.
 					var conversationId = $('#msg_conversationId').data("val");
 
 					but_initConversationOk(that.aes, conversationId);
 
 				});
-		
+
 			});
 
 
-		
+
 		});
 	},
 	leaveConversation: function() {
@@ -347,117 +333,119 @@ var view_talks_subpage = view_subpage.extend({
 				that.decodeImages();
 
 
-				$("#but_downloadimgs").click(function(){
+				$("#but_downloadimgs").click(function() {
 
 					$.get("templates/box_zipdown.html", function(d123) {
-					_.templateSettings.variable = "rc";
+						_.templateSettings.variable = "rc";
 
-					var template = _.template(d123, {});
-					ui_showBox(template);
+						var template = _.template(d123, {});
+						ui_showBox(template);
 
-					// Download Images Now
+						// Download Images Now
 
-					$('#but_downloadimages').click(function(){
+						$('#but_downloadimages').click(function() {
 
 
-						apl_request({
-							"requests": [{
-								"id": "messages_get_sub",
-								limit: -1,
-								start: start,
-								"superId": that.options.superId,
-								onlyFiles: true
-							}]
-						}, function(d3){
-							console.log(d3.messages_get_sub);
-							var fileidlist = [];
-							$.each(d3.messages_get_sub.messages, function(d341) {
+							apl_request({
+								"requests": [{
+									"id": "messages_get_sub",
+									limit: -1,
+									start: start,
+									"superId": that.options.superId,
+									onlyFiles: true
+								}]
+							}, function(d3) {
+								console.log(d3.messages_get_sub);
+								var fileidlist = [];
+								$.each(d3.messages_get_sub.messages, function(d341) {
 
-								// Sender name is needed for server
-								fileidlist.push({fileId: this.fileId, sender: this.sender});
+									// Sender name is needed for server
+									fileidlist.push({
+										fileId: this.fileId,
+										sender: this.sender
+									});
+								});
+
+								console.log(fileidlist);
+
+
+								var allimagescount = fileidlist.length;
+								console.log("COUNT IS" + allimagescount);
+								var imgnow = 0;
+
+								// Now start download of files. But only only download and decrypt one file after another.
+
+								// todo: Terminate current worker on cancel.
+								$("#but_downloadimages, #download_cancel").hide();
+
+								var zip = new JSZip();
+
+								$("#status").text("Starting Image Download...");
+								var imgDownloader = function() {
+
+									$("#status").text("Download Image " + (imgnow + 1) + " of " + allimagescount);
+									// 1. Download file
+									var loc = "http://" + fileidlist[imgnow].sender.split("@")[1] + "/charme/fs.php?cache=true&enc=1&id=" + fileidlist[imgnow].fileId;
+									$.get(loc + "&type=original", function(d2) {
+
+										console.log("DOWNLOADED " + imgnow);
+										// 2. Decrypt File
+										var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+										worker.onmessage = function(e) {
+											// Image is decrypted -> add to archiv. Start Next download!
+
+											$("#status").text("Decrypt Image " + (imgnow + 1) + " of " + allimagescount);
+
+											console.log("DECRYPTED " + imgnow);
+											zip.file("Image" + imgnow + ".jpg", e.data.substr(e.data.indexOf(',') + 1), {
+												base64: true
+											});
+
+
+											imgnow++;
+											if (imgnow < allimagescount)
+												imgDownloader(); // Recursivly call function
+											else {
+												$("#status").text("Done.");
+												content = zip.generate(); // base64
+
+
+
+												var pom = document.createElement('a');
+												pom.setAttribute('href', "data:application/zip;base64," + content);
+												pom.setAttribute('download', "CharmeImages.zip");
+												pom.click();
+												ui_closeBox();
+
+
+											}
+											// Increment Index Counter
+										}
+
+
+										worker.postMessage({
+											key: that.aes,
+											encData: d2
+										});
+
+
+									});
+								};
+
+								imgDownloader();
+
+
+
 							});
 
-							console.log(fileidlist);
-
-							
-							var allimagescount = fileidlist.length;
-							console.log("COUNT IS"+allimagescount);
-							var imgnow = 0;
-
-							// Now start download of files. But only only download and decrypt one file after another.
-
-							// todo: Terminate current worker on cancel.
-							$("#but_downloadimages, #download_cancel").hide();
-
-							var zip = new JSZip();
-
-							$("#status").text("Starting Image Download...");
-							var imgDownloader = function() {
-
-								$("#status").text("Download Image "+ (imgnow+1) + " of " + allimagescount);
-								// 1. Download file
-								var loc = "http://"+ fileidlist[imgnow].sender.split("@")[1] +"/charme/fs.php?cache=true&enc=1&id="+ fileidlist[imgnow].fileId;
-								$.get(loc + "&type=original", function(d2) {
-
-									console.log("DOWNLOADED "+imgnow);
-									// 2. Decrypt File
-									var worker = new Worker("lib/crypto/thread_decrypt.js");
-
-									worker.onmessage = function(e) {
-										// Image is decrypted -> add to archiv. Start Next download!
-										
-										$("#status").text("Decrypt Image "+ (imgnow+1) + " of " + allimagescount);
-
-										console.log("DECRYPTED "+imgnow);
-										zip.file("Image"+imgnow+".jpg", e.data.substr(e.data.indexOf(',')+1), {base64: true});
-
-										
-										imgnow++; 
-										if (imgnow < allimagescount)
-											imgDownloader(); // Recursivly call function
-										else
-										{
-											$("#status").text("Done.");
-											content = zip.generate(); // base64
-
-											
-
-											  var pom = document.createElement('a');
-											    pom.setAttribute('href', "data:application/zip;base64,"+content);
-											    pom.setAttribute('download', "CharmeImages.zip");
-											    pom.click();
-											    ui_closeBox();
-
-
-										}
-										// Increment Index Counter
-									}
-
-								
-									worker.postMessage({
-										key: that.aes,
-										encData: d2
-									});
-
-
-								});
-							};
-
-							imgDownloader();
-
-							
-							
 
 
 						});
 
+						// Step 1: Get a List of all images
 
-
-					});
-
-					// Step 1: Get a List of all images
-
-					/*
+						/*
 					var loc = data location...
 						$.get(loc + "&type=original", function(d2) {
 							$(".imgLoading").remove();
@@ -492,12 +480,10 @@ var view_talks_subpage = view_subpage.extend({
 
 
 
-
 					});
 
 
 
-				
 				});
 
 
@@ -550,82 +536,86 @@ var view_talks_subpage = view_subpage.extend({
 	decodeImages: function() {
 		var that2 = this;
 		$(".imageid").each(function(index) {
-			var that = this;
-			var loc = $(this).data("location");
-			
-			var par = $(that).parent();
-
-			$.get(loc, function(d) {
-				var i = new Image();
-				i.src = aes_decrypt(that2.aes, d);
 
 
+			try {
+				var that = this;
+				var loc = $(this).data("location");
 
-				//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
+				var par = $(that).parent();
 
-				//</a>
-
-				$(par).append(
-					$('<a class="imgThumb"></a>').click(function() {
-
-						$(par).append(
-							'<span class="imgLoading">Loading...</span>');
-
-
-						$.get(loc + "&type=original", function(d2) {
-							$(".imgLoading").remove();
+				$.get(loc, function(d) {
+					var i = new Image();
+					i.src = aes_decrypt(that2.aes, d);
 
 
 
-							var worker = new Worker("lib/crypto/thread_decrypt.js");
+					//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
 
+					//</a>
 
+					$(par).append(
+						$('<a class="imgThumb"></a>').click(function() {
 
-							worker.onmessage = function(e) {
-
-								// Hide cancel descryption button
-								$(".cancelDec").hide();
-								ui_showImgBox(e.data);
-
-							}
-
-							// Add cancel decryption button
 							$(par).append(
-								$('<a class="cancelDec">Cancel Decryption</a>').click(function() {
+								'<span class="imgLoading">Loading...</span>');
 
-									$(this).remove();
-									worker.terminate();
-								}));
 
-							worker.postMessage({
-								key: that2.aes,
-								encData: d2
+							$.get(loc + "&type=original", function(d2) {
+								$(".imgLoading").remove();
+
+
+
+								var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+
+
+								worker.onmessage = function(e) {
+
+									// Hide cancel descryption button
+									$(".cancelDec").hide();
+									ui_showImgBox(e.data);
+
+								}
+
+								// Add cancel decryption button
+								$(par).append(
+									$('<a class="cancelDec">Cancel Decryption</a>').click(function() {
+
+										$(this).remove();
+										worker.terminate();
+									}));
+
+								worker.postMessage({
+									key: that2.aes,
+									encData: d2
+								});
+
+
+
 							});
 
 
+						}).html($(i))
 
-						});
-
-
-					}).html($(i))
-
-				);
-				//remove class imageid
-				$(that).remove();
+					);
+					//remove class imageid
+					$(that).remove();
 
 
 
-			});
+				});
 
-			// TODO: in own thread!
+				// TODO: in own thread!
 
-			// Open filestream
+				// Open filestream
 
-			// Decode
+				// Decode
 
-
+			} catch (e) {}
 
 		});
+
 	},
 	loadMessages: function(start) {
 
@@ -661,11 +651,11 @@ var view_talks_subpage = view_subpage.extend({
 				var rsa = new RSAKey();
 
 				var key1 = getKeyByRevision(d2.messages_get_sub.revision);
-					var key = key1.rsa.rsa;
+				var key = key1.rsa.rsa;
 
-					rsa.setPrivateEx(key.n, key.e, key.d,
-						key.p, key.q, key.dmp1,
-						key.dmq1, key.coeff);
+				rsa.setPrivateEx(key.n, key.e, key.d,
+					key.p, key.q, key.dmp1,
+					key.dmq1, key.coeff);
 
 				var aeskey = rsa.decrypt(d2.messages_get_sub.aesEnc);
 				that.aes = aeskey;
@@ -675,29 +665,29 @@ var view_talks_subpage = view_subpage.extend({
 				console.log(d2.messages_get_sub.peoplenames);
 				// Add people list to output
 				if (start == -1) {
-				jQuery.each(d2.messages_get_sub.people, function(i) {
+					jQuery.each(d2.messages_get_sub.people, function(i) {
 
-					if (i != 0)
-						$("#inp_receiversinstant").append(", ");
+						if (i != 0)
+							$("#inp_receiversinstant").append(", ");
 
-					/*if ($.isArray(this)) // just userid
+						/*if ($.isArray(this)) // just userid
 					{
 						$("#inp_receiversinstant").append("<a href='#user/" +
 							encodeURIComponent(this.userId) + "'>" + this.username + "</a>");
 					}*/
-				 // {userid, name}
-					{
-						$("#inp_receiversinstant").append("<a href='#user/" +
-							encodeURIComponent(this) + "'>" + xssText(d2.messages_get_sub.peoplenames[i]) + "</a>");
-					}
-				});
+						// {userid, name}
+						{
+							$("#inp_receiversinstant").append("<a href='#user/" +
+								encodeURIComponent(this) + "'>" + xssText(d2.messages_get_sub.peoplenames[i]) + "</a>");
+						}
+					});
 				}
 
 
 
 				d2.messages_get_sub.aesEnc = aeskey;
 
-				
+
 				jQuery.each(d2.messages_get_sub.messages, function() {
 
 
@@ -715,8 +705,8 @@ var view_talks_subpage = view_subpage.extend({
 				});
 
 				// Decode AES Key with private RSA Key
-				
-		
+
+
 				_.templateSettings.variable = "rc";
 
 				var tmpl = _.template(d, d2.messages_get_sub);
@@ -726,53 +716,52 @@ var view_talks_subpage = view_subpage.extend({
 				$(".talkmessages").prepend(tmpl);
 
 				// timout to check for new messages after `lastid`
-				if (that.options.lastid != 0)
-				{
-				$.doTimeout('messageupdate', 5000, function(state) {
-				
-					apl_request({
-						"requests": [{
-							"id": "message_get_sub_updates",
-							lastid: that.options.lastid,
-							conversationId: d2.messages_get_sub.conversationId.$id,
+				if (that.options.lastid != 0) {
+					$.doTimeout('messageupdate', 5000, function(state) {
 
-						}]
-					}, function(d4) {
+						apl_request({
+							"requests": [{
+								"id": "message_get_sub_updates",
+								lastid: that.options.lastid,
+								conversationId: d2.messages_get_sub.conversationId.$id,
 
-						$.each(d4.message_get_sub_updates.messages, function() {
+							}]
+						}, function(d4) {
+
+							$.each(d4.message_get_sub_updates.messages, function() {
 
 
-							//qif (start == -1) // Only after first load messages
-							that.options.lastid = this._id.$id;
+								//qif (start == -1) // Only after first load messages
+								that.options.lastid = this._id.$id;
 
-							// Decrypt messages
-							try {
-								if (this.encMessage == "" || this.encMessage == undefined)
-									this.encMessage = "";
-								else
-									this.msg = aes_decrypt(aeskey, this.encMessage);
-							} catch (err) {
-								this.msg = err;
-							}
+								// Decrypt messages
+								try {
+									if (this.encMessage == "" || this.encMessage == undefined)
+										this.encMessage = "";
+									else
+										this.msg = aes_decrypt(aeskey, this.encMessage);
+								} catch (err) {
+									this.msg = err;
+								}
+							});
+
+							var tmpl = _.template(d, d4.message_get_sub_updates);
+							// append html
+							$(".talkmessages").append(tmpl);
+
+							// remove own messages that have been inserted directly, as these are returned by server also and should not appear twice
+							$(".tempmessage").remove();
+							if (d4.message_get_sub_updates.messages.length > 0)
+								$(window).scrollTop(999999);
+
+							// TODO: if message id still active!
+
+							// 	console.log("UPDATE!!!"+that.options.superId);
 						});
+						// 
 
-						var tmpl = _.template(d, d4.message_get_sub_updates);
-						// append html
-						$(".talkmessages").append(tmpl);
-						
-						// remove own messages that have been inserted directly, as these are returned by server also and should not appear twice
-						$(".tempmessage").remove();
-						if (d4.message_get_sub_updates.messages.length > 0)
-						$(window).scrollTop(999999);
-
-						// TODO: if message id still active!
-
-						// 	console.log("UPDATE!!!"+that.options.superId);
+						return true;
 					});
-					// 
-
-					return true;
-				});
 
 				}
 				that.decodeImages();
@@ -866,140 +855,142 @@ var view_talks_subpage = view_subpage.extend({
 
 				if (start == -1) {
 
-			$(window).scrollTop(999999);
+					$(window).scrollTop(999999);
 
 
 
-			$("#but_file").click(function() {
+					$("#but_file").click(function() {
 
-				that.uploadFile();
+						that.uploadFile();
 
-			});
-			$("#but_showMedia").click(function() {
-
-				that.showMedia(true);
-
-			});
-			$("#but_showMessages").click(function() {
-
-				that.showMedia(false);
-
-			});
-			$("#but_addPeople").click(function() {
-
-				that.addPeople();
-
-			});
-
-			$("#but_smilies").click(function() {
-				if ($("#msg_smiliecontainer").html() == "") {
-					var t = new control_smilies({
-						el: $("#msg_smiliecontainer"),
-						area: $('#inp_newmsginstant')
 					});
-					t.render();
-				} else {
-					$("#msg_smiliecontainer").html("");
-				}
-				$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
+					$("#but_showMedia").click(function() {
 
-			});
+						that.showMedia(true);
 
+					});
+					$("#but_showMessages").click(function() {
 
-			$("#but_leaveConversation").click(function() {
+						that.showMedia(false);
 
-				that.leaveConversation();
+					});
+					$("#but_addPeople").click(function() {
 
-			});
+						that.addPeople();
 
+					});
 
-			// Direct Answer on message
-			$('#but_instantsend').click(function() {
-				
-
-				var aeskey = ($('#msg_aeskey').data("val"));
-				var conversationId = ($('#msg_conversationId').data("val"));
-				var message = smilieParse($('#inp_newmsginstant').html());
-				var encMessage = aes_encrypt(aeskey, message);
-				var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
-
-				if (message == "") return;
-
-				apl_request({
-					"requests": [{
-							"id": "message_distribute_answer",
-							"conversationId": conversationId,
-							"encMessage": encMessage,
-							"messagePreview": messagePreview
+					$("#but_smilies").click(function() {
+						if ($("#msg_smiliecontainer").html() == "") {
+							var t = new control_smilies({
+								el: $("#msg_smiliecontainer"),
+								area: $('#inp_newmsginstant')
+							});
+							t.render();
+						} else {
+							$("#msg_smiliecontainer").html("");
 						}
-
-					]
-				}, function(d2) {
-
-
-
-					$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
-
-					$.get("templates/control_messageview.html", function(d) {
-						// RSA Decode, for each:
-						// d2.messages_get_sub
-
-
-
-						_.templateSettings.variable = "rc";
-						var tmpl = _.template(d, {
-							messages: [{
-								tag: "tempmessage",
-								msg: message,
-								sender: charmeUser.userId,
-								time: {
-									sec: new Date().getTime() / 1000
-								},
-								sendername: d2.message_distribute_answer.sendername
-							}]
-						});
-
-
-						$(".talkmessages").append(tmpl);
-
-						$('#moremsg2').remove();
-
-						$("html, body").animate({
-							scrollTop: $(document).height()
-						}, "slow");
-
-						$('#inp_newmsginstant').html("").focus();
+						$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
 
 					});
+
+
+					$("#but_leaveConversation").click(function() {
+
+						that.leaveConversation();
+
+					});
+
+
+					// Direct Answer on message
+					$('#but_instantsend').click(function() {
+
+
+						var aeskey = ($('#msg_aeskey').data("val"));
+						var conversationId = ($('#msg_conversationId').data("val"));
+						var message = smilieParse($('#inp_newmsginstant').html());
+						var encMessage = aes_encrypt(aeskey, message);
+						var messagePreview = aes_encrypt(aeskey, message.substring(0, 127));
+
+						if (message == "") return;
+
+						NProgress.start();
+						apl_request({
+							"requests": [{
+									"id": "message_distribute_answer",
+									"conversationId": conversationId,
+									"encMessage": encMessage,
+									"messagePreview": messagePreview
+								}
+
+							]
+						}, function(d2) {
+
+							NProgress.done();
+
+
+							$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
+
+							$.get("templates/control_messageview.html", function(d) {
+								// RSA Decode, for each:
+								// d2.messages_get_sub
+
+
+
+								_.templateSettings.variable = "rc";
+								var tmpl = _.template(d, {
+									messages: [{
+										tag: "tempmessage",
+										msg: message,
+										sender: charmeUser.userId,
+										time: {
+											sec: new Date().getTime() / 1000
+										},
+										sendername: d2.message_distribute_answer.sendername
+									}]
+								});
+
+
+								$(".talkmessages").append(tmpl);
+
+								$('#moremsg2').remove();
+
+								$("html, body").animate({
+									scrollTop: $(document).height()
+								}, "slow");
+
+								$('#inp_newmsginstant').html("").focus();
+
+							});
+
+						});
+					});
+
+				}
+
+
+				if (start == 0 || that.countAll < 10)
+					$('#moremsg2').remove();
+
+
+				if (newstart < 0)
+					newstart = 0;
+
+
+
+				$('#moremsg2').click(function() {
+
+					$('#moremsg2').remove();
+					that.loadMessages(newstart);
+
+
 
 				});
+
 			});
 
-		}
-
-
-		if (start == 0 || that.countAll < 10)
-			$('#moremsg2').remove();
-
-
-		if (newstart < 0)
-			newstart = 0;
-
-
-
-		$('#moremsg2').click(function() {
-
-			$('#moremsg2').remove();
-			that.loadMessages(newstart);
-
-
-
 		});
-
-	});
-
-});
-}
+	}
 });
 
 
@@ -1052,7 +1043,7 @@ var view_talks = view_page.extend({
 			}]
 		}, function(d2) {
 
-		
+
 
 			$.get("templates/control_messagelist.html", function(d) {
 
@@ -1081,8 +1072,7 @@ var view_talks = view_page.extend({
 
 						aeskey = rsa.decrypt(this.aesEnc);
 						storeCache("msg" + this._id.$id, aeskey);
-					}
-					else
+					} else
 						console.log("EXISTS");
 
 
@@ -1096,8 +1086,10 @@ var view_talks = view_page.extend({
 						this.messagePreview = "";
 
 
-							this.messagePreview = $.charmeMl(this.messagePreview, {tags: [ "smiliedelete"]});
-	
+					this.messagePreview = $.charmeMl(this.messagePreview, {
+						tags: ["smiliedelete"]
+					});
+
 
 					//.join(", ");
 
@@ -1167,4 +1159,3 @@ var view_talks = view_page.extend({
 
 
 });
-

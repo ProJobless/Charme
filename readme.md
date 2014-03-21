@@ -98,8 +98,8 @@ Charme is a distributed and open source social network. In contrast to classic s
 Charme is distributed under the terms of the GNU General Public License,
 version 3. See the LICENSE.txt file for details.
 
-## Developers
-* We use Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin to write code.
+## Recommended IDE
+Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin.
 
 
 ## Libraries

@@ -134,7 +134,7 @@ foreach ($data["requests"] as $item)
 
 
 	// This array contains a list of request, that can be executed without a session Id
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive",  "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 				break; // echo error
 	}
@@ -151,6 +151,41 @@ foreach ($data["requests"] as $item)
 		case "sessionId_get":
 			$returnArray[$action] = array("sessionId" => session_id());
 		break;
+
+		case "reg_salt_set":
+			$col = \App\DB\Get::Collection();
+		//	$salt = $CHARME_SETTINGS["passwordSalt"];
+		//	$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
+			// Only allow if user not exists!
+			$numUsers = $col->users->count(array("userid" => $item["userid"]));
+
+			if ($numUsers == 0)
+			{
+				 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			    $randomString = '';
+			    for ($i = 0; $i < 32; $i++) {
+			        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+			    }
+			    $cont = array("userid" => $item["userid"], "salt" => $randomString);
+			   $col->saltvalues->update($cont, $cont, array("upsert" => true));
+			   	$returnArray[$action] = array("salt" => $randomString);
+			}
+			// Save 
+		
+		break;
+
+		case "reg_salt_get":
+			$col = \App\DB\Get::Collection();
+		//	$salt = $CHARME_SETTINGS["passwordSalt"];
+		//	$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
+			// Only allow if user not exists!
+			$res = $col->saltvalues->findOne(array("userid" => $item["userid"]));
+			$returnArray[$action] = array("salt" => $res["salt"]);
+			
+		
+		break;
+
+
 
 		case "lists_getRegistred" : 
 		// 
@@ -214,8 +249,18 @@ foreach ($data["requests"] as $item)
 			// Set read=true
 
 			// Only need conversationId at the beginning
-			$col->conversations->update(array("_id" =>  new MongoId($item["superId"])), array('$set' => array("read" => true))); 
-			 $res = $col->conversations->findOne(array("_id" => new MongoId($item["superId"])), $query);
+
+			
+
+			if (isset($item["conversationId"]))
+				$selector = array("conversationId" =>  new MongoId($item["conversationId"]), "receiver" => $_SESSION["charme_userid"]);
+			else
+				$selector = array("_id" =>  new MongoId($item["superId"]));
+			
+			$col->conversations->update($selector, array('$set' => array("read" => true, "counter" => 0))); 
+			 $res = $col->conversations->findOne($selector, $query);
+
+
 
 			// Total message count, -1 if no result provided
 			$count = -1; // (= undefined!)
@@ -254,6 +299,13 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			else
 				$limit = $msgCount;
 
+
+			clog("SENT DATA:----------------------------");
+			clog2($item);
+
+			clog2($res);
+
+
 			$returnArray[$action] = array("messages" => 
 			iterator_to_array(
 				$col->messages->find($sel)
@@ -261,6 +313,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				->skip($start)->limit($limit)
 				
 			, false), "count" => $count, "revision" =>  $res["revision"], "peoplenames" =>  $res["peoplenames"], "aesEnc" =>  $res["aesEnc"], "people" => ($res["people"]), "conversationId" => new MongoId($res["conversationId"]));
+			
 			
 
 		break;
@@ -632,26 +685,30 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			
 		
 			// Warning! One message per server only!
+		
 
-			clog("RECEIVE MESSAGE:");
-			clog2($item);
 			$blockWrite = false;
 		//	clog(print_r($item["localreceivers"], true));
 
 			foreach ($item["localreceivers"]as $receiver)
 			{
+
 				// Find conversation $item["aesEnc"] = aesEnc
 				// if not exists => create conversation
+
+
+				// Database Connection
 				$col = \App\DB\Get::Collection();
 
 				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
 				
-				// Check if conversation already exists for this receiver
+				// Check if CONVERATION (not message) already exists for THIS receiver (may exist on this server for another user!)
 				$numConvUser = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"]), "receiver" => $receiver));
 
 
-				
-				if ($numConvUser < 1)
+			
+
+				if ($numConvUser < 1) // Conversation does not Exist for THIS User
 				{
 					// Add new people
 				
@@ -676,10 +733,20 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 					$c = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"])));
 					if ($c > 0)
-						$blockWrite = true;
+					{
+						clog("SET BLOCKWRITE TO TRUE");
+						/*
+						Set blockwrite to True,
+						It is true if the conversation already exists for some other user,
+						So we do not need to insert new messages!
+						 */
+
+						$blockWrite = true; 
+					}
 
 
-					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false,  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
+
+					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false, '$inc' => array('counter' => 1),  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
 					\App\Counter\CounterUpdate::inc( $receiver, "talks"); // Increment notification counter (Showed right of talks in the navigation)
 
 				
@@ -690,7 +757,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 					
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
-					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false, "time" => new MongoDate()
+					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false,  '$inc' => array('counter' => 1), "time" => new MongoDate()
 						);
 
 					if ($item["status"] == "addPeople")
@@ -742,6 +809,9 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray),array('multiple' => true)); 
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
 					
+					
+			
+
 					// Increment receivers Counters
 					foreach ($ppl["people"] as $val) {
 
@@ -771,10 +841,41 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					// TODO: also append the people who were added to message
 				}
 
+
+
+		
 				$col->messages->insert($ins);
+
+				/* Notify Android Devices via Google Cloud Messaging (GCM) */
+				clog2($item);
+
+				
+				// TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
+				$gcmpeople = $item["localreceivers"];
+				$bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
+				$deviceIds = array();
+				foreach ($bucketCol as $citem)
+				{	
+					$deviceIds[] = $citem["regId"];
+				}
+				clog("GCM START");
+				clog2($deviceIds);
+
+				$gcmcontent = array("messageEnc" => "", "conversationId" => $item["conversationId"], "sendername" => $item["sendername"]);
+
+				clog(\App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent)));
+
+				
+
+
+
+
 				}
 
-		}
+			} // End foreach of receivers
+
+		
+
 
 		break;
 
@@ -845,7 +946,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 
 
-$data = array("requests" => $reqdata
+					$data = array("requests" => $reqdata
 
 					);
 
@@ -860,6 +961,9 @@ $data = array("requests" => $reqdata
 
 				$req21->send();
 			}
+
+			
+
 
 			$returnArray[$action] = array("sendername" => $sendername);
 
@@ -1025,6 +1129,7 @@ $data = array("requests" => $reqdata
 
 			// Get certificate
 
+			global $CHARME_SETTINGS;
 
 			$col = \App\DB\Get::Collection();
 
@@ -1033,11 +1138,11 @@ $data = array("requests" => $reqdata
 			if (!isset($CHARME_SETTINGS["passwordSalt"]))
 				die("CHARME_SETTINGS NOT INCLUDED");
 
-			$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
+			//$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
 			
 
 			
-			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p2), array('userid', "rsa", "keyring"));
+			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p1), array('userid', "rsa", "keyring"));
 
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
@@ -1053,7 +1158,7 @@ $data = array("requests" => $reqdata
 				$stat = "FAIL";
 
 
-			$returnArray[$action] =   (array("status" => $stat, "ret"=>$cursor));
+			$returnArray[$action] =   (array("status" => $stat, "ret"=>$cursor, "gcmprojectid" => $CHARME_SETTINGS["GCM_PROJECTID"]));
 
 		break;
 
@@ -1670,7 +1775,7 @@ array("owner" => $_SESSION["charme_userid"],
 		// Returns encrypted private key for correct password
 		case "key_update_phase1":
 	
-			$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$item["password"]);
+			$p2 =$item["password"];
 
 
 			$col = \App\DB\Get::Collection();
@@ -1688,14 +1793,92 @@ array("owner" => $_SESSION["charme_userid"],
 
 		break;
 
-		case "key_update_recrypt" : 
+		case "key_update_recrypt_setData" :
+			$col = \App\DB\Get::Collection();
+
+			foreach ($item["recryptedData"] as $key => $value) {
+				
+				if ($key == "conversations")
+				{
+					foreach ($value as $key2 => $value2) {
+
+						// Update here....
+					}
+				}
+				else if ($key == "keydirectory")
+				{
+					foreach ($value as $key2 => $value2) {
+
+						// id,revision,value
+
+						$col->keydirectory->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("value" => $value2["value"], "fkrevision" => $value2["revision"])));
+
+					}
+				}
+				else if ($key == "pieces")
+				{
+					foreach ($value as $key2 => $value2) {
+
+						// Update here....
+						$col->pieces->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("value.aesEnc" => $value2["aesEnc"], "value.revision" => $value2["revision"])));
+
+
+					}
+				}
+				else if ($key == "piecebuckets")
+				{
+					foreach ($value as $key2 => $value2) {
+
+						// Update here....
+					}
+				}	
+
+			}
+			$returnArray[$action] =  array("SUCCESS" => true);
+
+		break;
+
+
+		case "key_update_recrypt_getData" : 
+
+		$col = \App\DB\Get::Collection();
+			$data = array();
+
+			// Return collection,  id, data for each encrypted information item
+
+			// See concepts/NewKeypair.md for details!
+
+			// recrypt piecebuckets.bucketaes, piecebuckets.version -> OTHERE PEOPLES DATA ENCRYPTED FOR ME
+			$all = $col->pieceBucketItems->find(array("owner" => $_SESSION["charme_userid"]), array("bucketkey", "_id"));
+			$cursor = iterator_to_array($all, false);
+			$data["pieceBucketItems"] = $cursor;
+
+
+			// pieces.value.aesEnc, pieces.value.revision   -> MY DATA
+		
+			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $_SESSION["charme_userid"]), array('value', 'key', "_id")), false);
+			$data["pieces"] = $cursor;
+
+			$cursor = iterator_to_array($col->conversations->find(array("receiver"=> $_SESSION["charme_userid"]), array('aesEnc', "revision", "_id")), false);
+			$data["conversations"] = $cursor;
+
+			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('value',  "_id", "fkrevision")), false);
+			$data["keydirectory"] = $cursor;
+
+
+			// keydirectory, conversations!
+
 
 			// Recrypt key directory here!
+
+			$returnArray[$action] =  array("SUCCESS" => true, "data" => $data);
 			
 		break;
+
+
 		case "key_update_phase2":
 
-		$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$item["password"]);
+		$p2 = $item["password"];
 
 
 			$col = \App\DB\Get::Collection();
@@ -1716,6 +1899,9 @@ array("owner" => $_SESSION["charme_userid"],
 		case "updates_get":
 			$returnArray[$action] = \App\Counter\CounterUpdate::get( $_SESSION["charme_userid"], array("talks", "stream", "notify"));
 		break;
+
+
+		
 
 		case "comments_get" : 
 			
@@ -2419,6 +2605,18 @@ array("owner" => $_SESSION["charme_userid"],
 		case "list_add_item":
 
 		break;
+
+
+		// Register an Android device for Google Cloud Messaging (PUSH NOTIFICATIONS)
+		case "gcm_register" :
+			$col = \App\DB\Get::Collection();
+			$content = array("regId" => $item["regId"], "owner" => $_SESSION["charme_userid"], "timestamp" =>  new MongoDate(time()));
+			
+			// 1st argument in Update is date to be selected (=SELECT), second argeumnt is new data (=SET), upsert says to replace old data.
+			$col->gcmclients->update(array("regId" => $item["regId"], "owner" => $_SESSION["charme_userid"]),$content, array("upsert" => true));
+			$returnArray[$action] = array("SUCCESS" => true);
+		break;
+
 
 		case "lists_add" :
 			$col = \App\DB\Get::Collection();

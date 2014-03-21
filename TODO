@@ -1,9 +1,19 @@
 ## ROADMAP
 
 HIGH PRIORITY
+- GCM: do not notify myself if message is from me
+- make sure sendernames/ids can not be changed in messages!
 - Multiserver support
 - password sign in: get challenge from server!
+	1. get salt from server. make random value in collection "salts" if user not exists
+	2. use salt to hash pw and send hashed pw back to server. 
+	
+	login: get salt from server by uid, hash it and send back to server
+ - FINISH RECRYPT in key_update_recrypt_setData	
+- server public key directory
 
+  - change password, login, change passphrase!
+  -
 - Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
@@ -17,7 +27,7 @@ HIGH PRIORITY
 - badkey error , when new bucket, and request send. error disapears when saving private info again.
 - revision counter
 - Recrypt Public Key Directory when changing key
-
+  -> note down all public key encrypted data!
 
 
 

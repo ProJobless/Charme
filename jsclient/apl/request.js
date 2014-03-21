@@ -27,8 +27,6 @@ function apl_posttest(requests) {
 			console.log(thrownError);
 			console.log(xhr.responseText);
 
-			// console.log(ajaxOptions);
-			// console.log(xhr);
 		},
 		success: function(data) {
 

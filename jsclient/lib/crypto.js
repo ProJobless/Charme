@@ -1,3 +1,24 @@
+function crypto_rsaDecrypt(eText, key)
+{
+	var rsa = new RSAKey();
+
+	rsa.setPrivateEx(key.n, key.e, key.d,
+			key.p, key.q, key.dmp1,
+			key.dmq1, key.coeff);
+
+	return rsa.decrypt(eText);
+}
+
+function crypto_rsaEncrypt(text, key)
+{
+	var rsa = new RSAKey();
+
+	rsa.setPrivateEx(key.n, key.e, key.d,
+			key.p, key.q, key.dmp1,
+			key.dmq1, key.coeff);
+
+	return rsa.encrypt(text);
+}
 
 
 /***
@@ -419,7 +440,7 @@ function getFastKey(version, number) {
 	getCurrentFastKey
 
 	Info:
-	Returns current fast key. This is the same as
+	Returns current fast key.
 	
 	Params:
 	number:int:1 or 2

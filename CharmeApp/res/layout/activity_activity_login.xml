@@ -23,7 +23,8 @@
             android:id="@+id/editTextUserid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" >
+            android:inputType="textEmailAddress"
+            android:text="test@192.168.43.31" >
 
             <requestFocus />
         </EditText>
@@ -38,7 +39,8 @@
             android:id="@+id/editTextPassphrase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:text="oKuPCeiB9STehwBguYyF" />
 
         <TextView
             android:id="@+id/TextView01"
@@ -51,7 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:text="test" />
 
         <Button
             android:id="@+id/button1"

@@ -680,13 +680,24 @@ function login() {
           data: "",
           success: function(data) {*/
 
+      apl_request({
+        "requests": [{
+                "id": "reg_salt_get",
+                "userid": u,
+               
+            }
 
+        ]
+    }, function (data1)
+    {
+    var hashpass = CryptoJS.SHA256(p+data1.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
 
+  
     apl_request({
         "requests": [{
                 "id": "user_login",
                 "u": u,
-                "p": p
+                "p": hashpass
             }
 
         ]
@@ -772,7 +783,7 @@ function login() {
 
         // decrpyt certificate with passphrase
     }, "", serverurl);
-
+    }, "", serverurl);
 
 }
 

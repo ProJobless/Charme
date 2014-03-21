@@ -4,6 +4,17 @@
 
 */
 
+function checkVerified() {
+	if (container_main.currentView.verified) {
+		$("#but_sendMsg").show();
+		$("#but_verifyKey").hide();
+		$("#but_verifyKey2").show();
+	} else {
+		$("#but_sendMsg").hide();
+		$("#but_verifyKey").show();
+		$("#but_verifyKey2").hide();
+	}
+}
 
 var view_profilepage = view_page.extend({
 
@@ -24,28 +35,55 @@ var view_profilepage = view_page.extend({
 
 		if (typeof this.username === 'undefined') {
 
+			var hashes = crypto_buildHashKeyDir([container_main.currentView.options.userId]);
+		
+
+		apl_request({
+				"requests": [
+					{
+						"id": "key_getMultipleFromDir", // To my server
+						"hashes": hashes
+					}
+
+				]
+			}, function(d3) {
 
 
 			apl_request({
 				"requests": [{
-						"id": "profile_get_name",
+						"id": "profile_get_name", // To profile owner server
 						"userId": container_main.currentView.options.userId
 					}
-
 
 				]
 			}, function(d) {
 
+				console.log("LALA:");
+				console.log(d);console.log(d);console.log(d);console.log(d);console.log(d);
+
+				if (d3.key_getMultipleFromDir.value.length < 1) {
+					container_main.currentView.verified = false;
+					// Hide init conversation button
+
+				} else {
+					container_main.currentView.verified = true;
+
+				}
+				checkVerified();
+
+
+
 				container_main.currentView.username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
 				$(".profile_name").text(container_main.currentView.username);
 
+			}, "", that.options.userId.split("@")[1]);  // End  profile_get_name
+
+			}); // End key_getMultipleFromDir
 
 
-			}, "", this.options.userId.split("@")[1]);
-
+			
 		}
-
-
+		
 	},
 	sendMsg: function() {
 		sendMessageForm([{
@@ -204,7 +242,7 @@ view_profilepage_collection_show = view_subpage.extend({
 	postRender: function() {
 
 		$(".profile_name").text(container_main.currentView.username);
-
+		checkVerified();
 
 		var that = this;
 		$("#but_editCollection").click(function() {
@@ -385,6 +423,7 @@ var view_profilepage_posts = view_subpage.extend({
 		var that = this;
 
 		$(".profile_name").text(container_main.currentView.username);
+		checkVerified();
 
 		apl_request({
 			"requests": [
@@ -423,7 +462,7 @@ var view_profilepage_posts = view_subpage.extend({
 
 			});
 
-		},"",  container_main.currentView.options.userId.split("@")[1]);
+		}, "", container_main.currentView.options.userId.split("@")[1]);
 
 
 
@@ -441,6 +480,7 @@ var view_profilepage_listitems = view_subpage.extend({
 	postRender: function() {
 
 		$(".profile_name").text(container_main.currentView.username);
+		checkVerified();
 	},
 	getData: function() {
 
@@ -460,6 +500,7 @@ var view_profilepage_collection = view_subpage.extend({
 
 		$(".profile_name").text(container_main.currentView.username);
 
+		checkVerified();
 
 		apl_request({
 			"requests": [{
@@ -480,7 +521,7 @@ var view_profilepage_collection = view_subpage.extend({
 
 			// TODO: Add collection control...
 
-		},"",  container_main.currentView.options.userId.split("@")[1]);
+		}, "", container_main.currentView.options.userId.split("@")[1]);
 
 
 
@@ -550,9 +591,7 @@ var view_profilepage_info = view_subpage.extend({
 		var that = this;
 
 		//#userinfo_container
-
-
-		var hashes = crypto_buildHashKeyDir([container_main.currentView.options.userId]);
+		checkVerified();
 
 
 
@@ -565,125 +604,103 @@ var view_profilepage_info = view_subpage.extend({
 					"profileId": container_main.currentView.options.userId
 				}
 
-				, 
-				{
+				, {
 					"id": "piece_get4profile",
 					"userId": container_main.currentView.options.userId,
-					"invader" : charmeUser.userId
-				} ,
-
-				{
-					"id": "key_getMultipleFromDir",
-					"hashes": hashes
+					"invader": charmeUser.userId
 				}
 
-				
+
 
 			]
 		}, function(d2) {
 
 
+			console.log("PROFILE:");
+			console.log(d2);
 
 
-				apl_request({
-			"requests": [
-				// Send this to user server:
-				{
-					"id": "lists_getRegistred",
-					"userId": container_main.currentView.options.userId
-				}
-	]
-		}, function(d9) {
-
-
-
-
-			$.get("templates/user__.html", function(d) {
-
-				console.log("KEYS:");
-				console.log(d2.key_getMultipleFromDir);
-
-				if (d2.key_getMultipleFromDir.value.length < 1)
-				{
-					// Hide init conversation button
-					$("#but_sendMsg").hide();
-					$("#but_verifyKey").show();
-					$("#but_verifyKey2").hide();
-				}
-				else
-				{
-						$("#but_sendMsg").show();
-					$("#but_verifyKey").hide();
-					$("#but_verifyKey2").show();
-				}
-				
-				$("#but_verifyKey2, #but_verifyKey").click(function(){
-					requestNewKey(container_main.currentView.options.userId);
-				});
-
-
-				// Mark lists which contain the user
-				var userlistsRegistred = new Array();
-				var userlists = new Array();
-
-
-				jQuery.each(d9.lists_getRegistred, function() {
+			apl_request({
+				"requests": [
+					// Send this to user server:
+					{
+						"id": "lists_getRegistred",
+						"userId": container_main.currentView.options.userId
+					}
+				]
+			}, function(d9) {
 
 
 
-					userlistsRegistred[this.list.$id] = true;
+				$.get("templates/user__.html", function(d) {
 
 
 
-				});
-
-				//console.log(userlistsRegistred);
-
-				jQuery.each(apl_postloader_getLists().items, function() {
+					$("#but_verifyKey2, #but_verifyKey").click(function() {
+						requestNewKey(container_main.currentView.options.userId);
+					});
 
 
+					// Mark lists which contain the user
+					var userlistsRegistred = new Array();
+					var userlists = new Array();
 
-					if (userlistsRegistred[this._id.$id] != undefined)
-						userlists.push({
-							name: this.name,
-							id: this._id.$id,
-							isActive: true
-						});
+
+					jQuery.each(d9.lists_getRegistred, function() {
+
+
+
+						userlistsRegistred[this.list.$id] = true;
+
+
+
+					});
+
+					//console.log(userlistsRegistred);
+
+					jQuery.each(apl_postloader_getLists().items, function() {
+
+
+
+						if (userlistsRegistred[this._id.$id] != undefined)
+							userlists.push({
+								name: this.name,
+								id: this._id.$id,
+								isActive: true
+							});
+						else
+							userlists.push({
+								name: this.name,
+								id: this._id.$id,
+								isActive: false
+							});
+
+					});
+
+
+					// Convert it to list (needed for underscore.js)
+
+
+
+					_.templateSettings.variable = "rc";
+
+					d2.userlists = userlists;
+					d2.test = "userlists";
+
+					var tmpl = _.template(d, d2);
+
+					console.log(d2.lists);
+					$("#userinfo_container").html(tmpl);
+
+
+
+					if (container_main.currentView.options.userId == charmeUser.userId)
+						$("#profileListBox").hide();
 					else
-						userlists.push({
-							name: this.name,
-							id: this._id.$id,
-							isActive: false
-						});
-
-				});
+						$("#editButton").hide();
 
 
-				// Convert it to list (needed for underscore.js)
-
-
-
-				_.templateSettings.variable = "rc";
-
-				d2.userlists = userlists;
-				d2.test = "userlists";
-
-				var tmpl = _.template(d, d2);
-
-				console.log(d2.lists);
-				$("#userinfo_container").html(tmpl);
-
-
-
-				if (container_main.currentView.options.userId == charmeUser.userId)
-					$("#profileListBox").hide();
-				else
-					$("#editButton").hide();
-
-
-				$("td:empty").parent().remove(); // Remove empty Info fields
-
-
+					$("td:empty").parent().remove(); // Remove empty Info fields
 
 
 
@@ -692,70 +709,64 @@ var view_profilepage_info = view_subpage.extend({
 						var that2 = this;
 						var rq = "";
 
-						if (this.bucketaes == undefined && this.requested == 1)
-						{
-							rq ="<i>Waiting for reply...</i>";
+						if (this.bucketaes == undefined && this.requested == 1) {
+							rq = "<i>Waiting for reply...</i>";
 
-						}
-						else if (this.bucketaes != undefined)
-						{	
+						} else if (this.bucketaes != undefined) {
 							// bucketaes, bucketrsa, piecedata
 							console.log((that2.bucketrsa));
 							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
-							
-						
-								//Use this cache version, if piece revisions are completed:
-								
-								// Look for cached AES key to save expensive RSA decryption time
-								// Our unique key consits of revision, userid and piece key:
-								var key = "--,"+container_main.currentView.options.userId+","+that2.version+","+this.key;
-								var aes = checkCache(key);
-								if (aes == null) {
-									
-									key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
-									aes  = key1.decrypt(that2.bucketrsa.data); // get aes key to decrypt piecedata
-									storeCache(key, aes);
-								}
-						
 
-								if (that2.piecedata == "")
-									{rq = ""}
-								else
-								{
+
+							//Use this cache version, if piece revisions are completed:
+
+							// Look for cached AES key to save expensive RSA decryption time
+							// Our unique key consits of revision, userid and piece key:
+							var key = "--," + container_main.currentView.options.userId + "," + that2.version + "," + this.key;
+							var aes = checkCache(key);
+							if (aes == null) {
+
+								key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
+								aes = key1.decrypt(that2.bucketrsa.data); // get aes key to decrypt piecedata
+								storeCache(key, aes);
+							}
+
+
+							if (that2.piecedata == "") {
+								rq = ""
+							} else {
 								var t = aes_decrypt(aes, that2.piecedata);
 								if (t != "")
 									rq = xssText(t);
 								else
-									rq ="";
-								}
-						}
-						else
-						{
+									rq = "";
+							}
+						} else {
 							// Can not request if empty fields:
 							if (that2.empty == true)
 								rq = "";
 							else
-							rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
+								rq = "<a id='req_" + xssText(that2.key) + "'>" + lng_global.request + "</a>";
 
 						}
-						
 
-				
-						if (rq  != "")
-						$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" +  rq + "</td></tr>");
 
-						
+
+						if (rq != "")
+							$("#table_prvInfo").append("<tr><td class='info'>" + xssText(lng_global.privateInfo[this.key]) + ":</td><td>" + rq + "</td></tr>");
+
+
 
 						$("#req_" + xssText(that2.key)).click(function() {
 
 							var that3 = this;
-							
+
 
 							apl_request({
 								"requests": [{
 									"id": "piece_request",
 									"key": that2.key,
-									"userId" : container_main.currentView.options.userId
+									"userId": container_main.currentView.options.userId
 								}, ]
 							}, function(d) {
 
@@ -774,54 +785,54 @@ var view_profilepage_info = view_subpage.extend({
 
 
 						});
-						
+
 					});
 
 
-				// Get box templates now and append to infopage:
+					// Get box templates now and append to infopage:
 
-				// Init list click events
-				$('#select_lists a').click(function() {
+					// Init list click events
+					$('#select_lists a').click(function() {
 
-					$(this).toggleClass("active");
+						$(this).toggleClass("active");
 
-					// declare variables here, so that they are avaiable if page has changed after timeout was called
-					var uid = container_main.currentView.options.userId;
-					var ar = $('#select_lists a.active').map(function(i, n) {
-						return $(n).data("listid");
-					}).get();
-
-
-					$.doTimeout('listsave', 1000, function(state) {
-						// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
-
-						// Send a request to the user server
-						apl_request({
-							"requests": [{
-									"id": "lists_update",
-									"listIds": ar,
-									"userId": uid,
-									"username": container_main.currentView.username
-								}
-
-							]
-						}, function(d) {
-
-							// OK...
-
-						});
-
-						// TODO: Notify profile owner server
+						// declare variables here, so that they are avaiable if page has changed after timeout was called
+						var uid = container_main.currentView.options.userId;
+						var ar = $('#select_lists a.active').map(function(i, n) {
+							return $(n).data("listid");
+						}).get();
 
 
-					}, true);
+						$.doTimeout('listsave', 1000, function(state) {
+							// Get ids of selected lists. Form: ["5162c2b6d8cc9a4014000001", "5162c3c5d8cc9a4014000005"]
 
+							// Send a request to the user server
+							apl_request({
+								"requests": [{
+										"id": "lists_update",
+										"listIds": ar,
+										"userId": uid,
+										"username": container_main.currentView.username
+									}
+
+								]
+							}, function(d) {
+
+								// OK...
+
+							});
+
+							// TODO: Notify profile owner server
+
+
+						}, true);
+
+					});
 				});
-			});
 
-		});
+			});  // End of lists_getRegistred
 
-		},"",  container_main.currentView.options.userId.split("@")[1]);
+		}, "", container_main.currentView.options.userId.split("@")[1]); // End of profile_get, get4profile
 
 
 
@@ -830,4 +841,3 @@ var view_profilepage_info = view_subpage.extend({
 	}
 
 });
-

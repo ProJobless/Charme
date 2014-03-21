@@ -427,7 +427,13 @@ var view_register = view_page.extend({
 	},
 	initialize: function() {;
 	},
-
+	showError: function(code)
+	{
+			$("#box_errors div").hide();
+		$("#box_errors").hide();
+				$("#box_errors").show();
+				$("#error" + code).show();
+	},
 
 	postRender: function() {
 
@@ -437,9 +443,56 @@ var view_register = view_page.extend({
 	},
 	signup: function() {
 
-		var s = $("#form_signup").serializeObject();
-
+		var that = this;
 		var serverurl = $('#inp_server').val();
+
+		var userid = $("#inp_username").val()+"@"+serverurl;
+		
+		var pass = $('#inp_pass').val();
+		/*
+		TODO: check errors!
+			if ($data["password"] != $data["password2"])
+			$arr["error"] = 12;
+		else if (strlen($data["password"]) < 4 || strlen($data["password"]) >30)
+			$arr["error"] = 4;
+		else
+		*/
+
+		if ($('#inp_pass2').val() != $('#inp_pass').val())
+		{	this.showError(12); return;
+			
+		}
+		else if ($('#inp_pass').val().length < 4 || $('#inp_pass').val().length > 32)
+		{	
+		
+			this.showError(4); return;	
+					}
+
+
+		$('#inp_pass2').val("");
+		$('#inp_pass').val(""); // DO NOT SERIALIZE PASSWORDS!!
+
+
+
+//reg_salt_set
+
+apl_request({
+			"requests": [{
+					"id": "reg_salt_set",
+					"userid": userid
+				}
+
+			]
+		}, function(d2) {
+console.log("salt is");
+console.log(d2);
+
+	var hashpass = CryptoJS.SHA256(pass+d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64);
+		alert(hashpass);
+
+		var s = $("#form_signup").serializeObject();
+		s.hashpass = hashpass;
+
 
 		apl_request({
 			"requests": [{
@@ -453,10 +506,9 @@ var view_register = view_page.extend({
 
 
 			if (data.error != null) {
-				$("#box_errors").hide();
-				$("#box_errors").show();
-				$("#error" + data.error).show();
-				// TODO: Scroll to bottom to make show errors are shown
+
+				that.showError( data.error);
+				// TODO: Scroll to bottom to make sure errors are shown
 				$(window).scrollTop(999999);
 			} else if (data.success == 1) {
 
@@ -467,6 +519,7 @@ var view_register = view_page.extend({
 			}
 
 		}, "", serverurl);
+	}, "", serverurl);
 
 		/*
 		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?action=newUser.register&'+s+'&callback=?';
@@ -521,17 +574,19 @@ var view_register = view_page.extend({
 
 
 				rsa: {
+					rsa: {
 
-					n: e.data.n.toString(),
-					e: e.data.e.toString(),
-					d: e.data.d.toString(),
-					p: e.data.p.toString(),
-					q: e.data.q.toString(),
-					dmp1: e.data.dmp1.toString(),
-					dmq1: e.data.dmq1.toString(),
-					coeff: e.data.coeff.toString(),
+						n: e.data.n.toString(),
+						e: e.data.e.toString(),
+						d: e.data.d.toString(),
+						p: e.data.p.toString(),
+						q: e.data.q.toString(),
+						dmp1: e.data.dmp1.toString(),
+						dmq1: e.data.dmq1.toString(),
+						coeff: e.data.coeff.toString(),
 
 
+					}
 				}
 			}];
 			console.log("keyring is");
