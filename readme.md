@@ -84,7 +84,7 @@ The project is splitted into the following sub projects:
 
 * We use a RSA/AES cryptosystem to encrypt messages and private data
 * The private key is stored on a server, encrypted with a 20 digit passphrase.
-* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if some/all friends of a user own the same public key of him in the background. You currently have to the public keys in the key manager in the client over the menu point Settings/Key Manager.
+* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if some/all friends of a user own the same public key of him in the background. You currently have to validate the public keys in the key manager in the client via Settings/Key Manager.
 
 ## How to Contribute?
 
