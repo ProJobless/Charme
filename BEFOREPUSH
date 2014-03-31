@@ -1,0 +1,1 @@
+delete GCM Ids in config.php and lib/App/GCM/Send.php
