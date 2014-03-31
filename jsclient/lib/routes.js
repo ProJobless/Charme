@@ -48,6 +48,14 @@ var container_main;
 
 $(function() {
 
+   
+   /* try{
+    Object.defineProperty(console, '_commandLineAPI',
+   { get : function() { throw '!!!WARNING!!! The developer console is for developers ONLY. If someone gave you some code to insert here DO NOT DO IT. The encryption of you Charme account may be seriously affected otherwise!' } })
+}catch(e){}
+*/
+
+
     if (isLoggedIn())
         charmeUser = new apl_user(localStorage.getItem("user"));
 
@@ -672,13 +680,24 @@ function login() {
           data: "",
           success: function(data) {*/
 
+      apl_request({
+        "requests": [{
+                "id": "reg_salt_get",
+                "userid": u,
+               
+            }
 
+        ]
+    }, function (data1)
+    {
+    var hashpass = CryptoJS.SHA256(p+data1.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
 
+  
     apl_request({
         "requests": [{
                 "id": "user_login",
                 "u": u,
-                "p": p
+                "p": hashpass
             }
 
         ]
@@ -764,7 +783,7 @@ function login() {
 
         // decrpyt certificate with passphrase
     }, "", serverurl);
-
+    }, "", serverurl);
 
 }
 

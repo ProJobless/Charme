@@ -55,11 +55,7 @@ class UserRegistration implements \App\Models\Action
 		* Validation part:
 		*/
 
-		if ($data["password"] != $data["password2"])
-			$arr["error"] = 12;
-		else if (strlen($data["password"]) < 4 || strlen($data["password"]) >30)
-			$arr["error"] = 4;
-		else if (strlen($data["username"]) < 2 || strlen($data["username"]) >30)
+		 if (strlen($data["username"]) < 2 || strlen($data["username"]) >30)
 			$arr["error"] = 3;
 		else if ($data["rsa"] == "" || !isset($data["rsa"] ))
 			$arr["error"] = 6;
@@ -72,7 +68,7 @@ class UserRegistration implements \App\Models\Action
 	
 			$obj = array(
 			"username" => $data["username"],
-			"password"=>hash('sha256',$CHARME_SETTINGS["passwordSalt"].$data["password"]),
+			"password"=>$data["hashpass"],
 			"userid" => $data["username"]."@".$data["server"],
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],

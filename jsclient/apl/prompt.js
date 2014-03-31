@@ -51,6 +51,9 @@ function ui_showImgBox(src, callback)
 
 function ui_showBox(content, callback)
 {
+	//TODO: Remove box if already exists:!
+	
+
 	ui_block();
 	if (!$("body .fixedBox").length)
 	$("body").prepend("<div class='fixedBox'></div>");
@@ -83,7 +86,7 @@ function ui_showBox(content, callback)
 }
 function ui_closeBoxButton()
 {
-	return "<a href='javascript:ui_closeBox();'>Close</a>";	
+	return "<a class='button' href='javascript:ui_closeBox();'>Close</a>";	
 }
 function ui_Button(name, func)
 {

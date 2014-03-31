@@ -235,7 +235,24 @@ jsclient/apl</p>
 apl/prompt.js</p>
 <h3>Example Code</h3><pre><code>ui_closeBox();
 
-</code></pre><h2 id='el_10'>  apl_request
+</code></pre><h2 id='el_10'>sendMessage
+
+</h2><h3>Info</h3><p>Submit the form generated with <code>sendMessageForm()</code>.
+exists. First parameter is the message, Second parameter is the receiver array in form ["a@server.com", "b@server.com"]</p>
+
+<p>The function itself uses a hybrid cryptosystem to encode the message.
+First a random AES key is generated with <code>randomAESKey()</code> and 
+the  message itself is encoded with this key.</p>
+
+<p>Then the AES Key is encoded with the public RSA key of each receiver.
+Then the encoded AES keys are send to the users server which distributes
+the messages.</p>
+
+<p>TODO callback if key not found in directory, callback if error</p>
+
+<p>Location:
+apl/talks.js</p>
+<h2 id='el_11'>  apl_request
 
 </h2><h3>Info</h3><p>Make a request to a charme Server</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  requestData</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>json</td><td>Data in json format </td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  callback</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>function</td><td>Callback function</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  SessionId</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Not used currently, Write &quot;null&quot; in here</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>  Server</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Server to which the request is send to. If its null, we will use the host of the logged in user.</td></tr></table><h3>Example Code</h3><pre><code>  // Send a info_about request to myserver.com
@@ -245,7 +262,7 @@ apl/prompt.js</p>
     ]
   }, function(data){ console.log(data.info_about);}, null, &quot;myserver.com&quot;);
 
-</code></pre><h2 id='el_11'>$.fn.serializeObject
+</code></pre><h2 id='el_12'>$.fn.serializeObject
 
 </h2><h3>Info</h3><p>Serialize form to JSON object.</p>
 
@@ -253,7 +270,45 @@ apl/prompt.js</p>
 apl/request.js</p>
 <h3>Example Code</h3><pre><code>var json = $('#myform').serializeObject();
 
-</code></pre><h2 id='el_12'>aes_encryypt
+</code></pre><h2 id='el_13'>crypto_sign
+
+</h2><h3>Info</h3><p>Generate a signature with the users private key.</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to sign</td></tr></table><h3>Example Code</h3><pre><code>var signature = crypto_sign(&quot;hallo welt&quot;, );
+
+
+</code></pre><h2 id='el_14'>crypto_checksign
+
+</h2><h3>Info</h3><p>Verify a signature. Returns TRUE or FALSE</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>signature</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The signature to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>publicKey</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>object</td><td>The publicKey (usually from key directory)</td></tr></table><h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
+
+
+</code></pre><h2 id='el_15'>crypto_buildHashKeyDir
+
+</h2><h3>Info</h3><p>Build the hash keys for querying the key directory. Returns a list in form [{userid, keyhash}, {userid, keyhash}, ...]</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
+
+
+</code></pre><h2 id='el_16'>crypto_checkKeyUpdate
+
+</h2><h3>Info</h3><p>Check if public keys are up to date.
+Returns an array with outdated keys.</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>upToDate = crypto_checkKeyUpdate([&quot;test@test.de&quot;, &quot;test2@test3.de&quot;]);
+
+</code></pre><h2 id='el_17'>asymkey_create
+
+</h2><h3>Info</h3><p>Creates an asymetic key pair</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>somekey = asymkey_create();
+
+</code></pre><h2 id='el_18'>aes_encryypt
 
 </h2><h3>Info</h3><p>Encrypts String with AES Key</p>
 
@@ -261,7 +316,7 @@ apl/request.js</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>enctext= aes_encrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
 
-</code></pre><h2 id='el_13'>checkCache
+</code></pre><h2 id='el_19'>checkCache
 
 </h2><h3>Info</h3><p>Uses  local storage cache to get data encrypted with fastkey1.
 Useful for RSA decrypted values for example. Returns false if Cache was empty</p>
@@ -278,7 +333,7 @@ if (x == null)
 alert(x);
 
 
-</code></pre><h2 id='el_14'>storeCache
+</code></pre><h2 id='el_20'>storeCache
 
 </h2><h3>Info</h3><p>Uses  local storage cache to store data encrypted with fastkey1.
 Useful for RSA decrypted values for example. See also: checkCache</p>
@@ -295,15 +350,15 @@ if (x == false)
 alert(x);
 
 
-</code></pre><h2 id='el_15'>aes_decryypt
+</code></pre><h2 id='el_21'>aes_decryypt
 
-</h2><h3>Info</h3><p>Decrypts String with AES Key</p>
+</h2><h3>Info</h3><p>Decrypts String with AES Key, returns string</p>
 
 <p>Location:
 crypto.js</p>
 <h3>Example Code</h3><pre><code>enctext= aes_decrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
 
-</code></pre><h2 id='el_16'>mkRSAPublic
+</code></pre><h2 id='el_22'>mkRSAPublic
 
 </h2><h3>Info</h3><p>Generate a public RSA Object which prodvides encrypt functions</p>
 
@@ -313,7 +368,7 @@ crypto.js</p>
 var rsa = mkRSAPublic(key);
 rsa.encrypt(...);
 
-</code></pre><h2 id='el_17'>mkRSA
+</code></pre><h2 id='el_23'>mkRSA
 
 </h2><h3>Info</h3><p>Generate RSA Object which prodvides encrypt/decrypt functions 
 of Key Object</p>
@@ -323,7 +378,7 @@ crypto.js</p>
 <h3>Example Code</h3><pre><code>var rsa = mkRSA(key);
 rsa.encrypt(...);
 
-</code></pre><h2 id='el_18'>getFastKey
+</code></pre><h2 id='el_24'>getFastKey
 
 </h2><h3>Info</h3><p>Get symmetric AES key for fast encryption/decryption
 First Parameter is certificate Version, second is fastkey number
@@ -331,12 +386,12 @@ First Parameter is certificate Version, second is fastkey number
 Returns {fastkey1, revision}</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>version</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var key1 = getFastKey(0, 1);
 
-</code></pre><h2 id='el_19'>getCurrentFastKey
+</code></pre><h2 id='el_25'>getCurrentFastKey
 
 </h2><h3>Info</h3><p>Returns current fast key. This is the same as</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var fk = getFastKey(getCurrentFastKey);
 
-</code></pre><h2 id='el_20'>getCurrentRSAKey
+</code></pre><h2 id='el_26'>getCurrentRSAKey
 
 </h2><h3>Info</h3><p>Returns current RSA Key in form {rsa, revision}</p>
 
@@ -344,7 +399,15 @@ Returns {fastkey1, revision}</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>var rsa = function getCurrentRSAKey()
 
-</code></pre><h2 id='el_21'>randomAesKey
+</code></pre><h2 id='el_27'>randomSalt
+
+</h2><h3>Info</h3><p>Generates a random Salt for SHA256 Hashing </p>
+
+<p>TODO:LV1: Add Mouse movement etc. as <code>Math.random()</code> is NOT a reliable RNG.</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Salt lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomSalt(32);
+
+
+</code></pre><h2 id='el_28'>randomAesKey
 
 </h2><h3>Info</h3><p>Generates a random AES Key. </p>
 
@@ -352,14 +415,14 @@ crypto.js</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Key lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
 
 
-</code></pre><h2 id='el_22'>    routes.js
+</code></pre><h2 id='el_29'>    routes.js
 
 </h2><h3>Info</h3><pre><code>Provides routing and contains document complete handler.
 
 Location:
 lib/routes.js
 </code></pre>
-<h2 id='el_23'>    isLoggedIn
+<h2 id='el_30'>    isLoggedIn
 
 </h2><h3>Info</h3><pre><code>Checks if the user id logged in.
 Returns true or false.
@@ -370,7 +433,152 @@ No passphrase =&gt; Logout
 Location:
 page_modules.js
 </code></pre>
-<h2 id='el_24'>rsa
+<h2 id='el_31'>crypto_sign
+
+</h2><h3>Info</h3><p>Generate a signature with the users private key.</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to sign</td></tr></table><h3>Example Code</h3><pre><code>var signature = crypto_sign(&quot;hallo welt&quot;, );
+
+
+</code></pre><h2 id='el_32'>crypto_checksign
+
+</h2><h3>Info</h3><p>Verify a signature. Returns TRUE or FALSE</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>signature</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The signature to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>publicKey</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>object</td><td>The publicKey (usually from key directory)</td></tr></table><h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
+
+
+</code></pre><h2 id='el_33'>crypto_buildHashKeyDir
+
+</h2><h3>Info</h3><p>Build the hash keys for querying the key directory. Returns a list in form [{userid, keyhash}, {userid, keyhash}, ...]</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
+
+
+</code></pre><h2 id='el_34'>crypto_checkKeyUpdate
+
+</h2><h3>Info</h3><p>Check if public keys are up to date.
+Returns an array with outdated keys.</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>upToDate = crypto_checkKeyUpdate([&quot;test@test.de&quot;, &quot;test2@test3.de&quot;]);
+
+</code></pre><h2 id='el_35'>asymkey_create
+
+</h2><h3>Info</h3><p>Creates an asymetic key pair</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>somekey = asymkey_create();
+
+</code></pre><h2 id='el_36'>aes_encryypt
+
+</h2><h3>Info</h3><p>Encrypts String with AES Key</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>enctext= aes_encrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
+
+</code></pre><h2 id='el_37'>checkCache
+
+</h2><h3>Info</h3><p>Uses  local storage cache to get data encrypted with fastkey1.
+Useful for RSA decrypted values for example. Returns false if Cache was empty</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>var x = checkCache(&quot;key&quot;);
+if (x == null)
+{
+  x = 4+4;
+  storeCache(&quot;key&quot;, x);
+}
+
+alert(x);
+
+
+</code></pre><h2 id='el_38'>storeCache
+
+</h2><h3>Info</h3><p>Uses  local storage cache to store data encrypted with fastkey1.
+Useful for RSA decrypted values for example. See also: checkCache</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>var x = checkCache(&quot;key&quot;);
+if (x == false)
+{
+  x = 4+4;
+  storeCache(&quot;key&quot;, x);
+}
+
+alert(x);
+
+
+</code></pre><h2 id='el_39'>aes_decryypt
+
+</h2><h3>Info</h3><p>Decrypts String with AES Key, returns string</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>enctext= aes_decrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
+
+</code></pre><h2 id='el_40'>mkRSAPublic
+
+</h2><h3>Info</h3><p>Generate a public RSA Object which prodvides encrypt functions</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>var key = { n: 12345..., e: 100011} // Do not define n and e yourself!
+var rsa = mkRSAPublic(key);
+rsa.encrypt(...);
+
+</code></pre><h2 id='el_41'>mkRSA
+
+</h2><h3>Info</h3><p>Generate RSA Object which prodvides encrypt/decrypt functions 
+of Key Object</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>var rsa = mkRSA(key);
+rsa.encrypt(...);
+
+</code></pre><h2 id='el_42'>getFastKey
+
+</h2><h3>Info</h3><p>Get symmetric AES key for fast encryption/decryption
+First Parameter is certificate Version, second is fastkey number
+(which is 1 or 2)
+Returns {fastkey1, revision}</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>version</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var key1 = getFastKey(0, 1);
+
+</code></pre><h2 id='el_43'>getCurrentFastKey
+
+</h2><h3>Info</h3><p>Returns current fast key. This is the same as</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var fk = getFastKey(getCurrentFastKey);
+
+</code></pre><h2 id='el_44'>getCurrentRSAKey
+
+</h2><h3>Info</h3><p>Returns current RSA Key in form {rsa, revision}</p>
+
+<p>Location:
+crypto.js</p>
+<h3>Example Code</h3><pre><code>var rsa = function getCurrentRSAKey()
+
+</code></pre><h2 id='el_45'>randomSalt
+
+</h2><h3>Info</h3><p>Generates a random Salt for SHA256 Hashing </p>
+
+<p>TODO:LV1: Add Mouse movement etc. as <code>Math.random()</code> is NOT a reliable RNG.</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Salt lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomSalt(32);
+
+
+</code></pre><h2 id='el_46'>randomAesKey
+
+</h2><h3>Info</h3><p>Generates a random AES Key. </p>
+
+<p>TODO:LV1: Add Mouse movement etc. as <code>Math.random()</code> is NOT a reliable RNG.</p>
+<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Key lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
+
+
+</code></pre><h2 id='el_47'>rsa
 
 </h2><h3>Info</h3><p>See also the <a href="http://www-cs-students.stanford.edu/~tjw/jsbn/rsa2.html">RSA Library Documentation</a>.</p>
 
@@ -395,15 +603,15 @@ rsa.setPublic(n, e);
 rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
 var str = rsa.decrypt(&quot;SOME ENCRYPTED TEXT HERE&quot;);
 
-</code></pre><h2 id='el_25'>page_authenticated
+</code></pre><h2 id='el_48'>page_authenticated
 
 </h2><h3>Info</h3><p>Main container with navigation. Init at login() or $.ready when user is logged in.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>currentView</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>view_page</td><td>The current page. Do not set!</td></tr></table><h3>Example Code</h3><pre><code>container_main= new page_authenticated({el:'#layout'});
 
-</code></pre><h2 id='el_26'>page_login
+</code></pre><h2 id='el_49'>page_login
 
 </h2><h3>Info</h3><p>Container if user is NOT logged in.</p>
-<h2 id='el_27'>sendMessageForm
+<h2 id='el_50'>sendMessageForm
 
 </h2><h3>Info</h3><p>Generate a new message box with the specified receivers</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>receivers</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>JSON Object</td><td>Receiver list in format [{id</td></tr></table><h3>Example Code</h3><pre><code>// Send a message to Alice
@@ -412,23 +620,7 @@ sendMessage(Form(
 		{id: 'alice@myserver.com', name: 'Alice'}
 	]);)
 
-</code></pre><h2 id='el_28'>sendMessage
-
-</h2><h3>Info</h3><p>Submit the form generated with <code>sendMessageForm()</code>. Warning: Should only be called after a message form
-has been generated with <code>sendMessageForm()</code>
-exists.</p>
-
-<p>The function itself uses a hybrid cryptosystem to encode the message.
-First a random AES key is generated with <code>randomAESKey()</code> and 
-the  message itself is encoded with this key.</p>
-
-<p>Then the AES Key is encoded with the public RSA key of each receiver.
-Then the encoded AES keys are send to the users server which distributes
-the messages.</p>
-
-<p>Location:
-page_modules.js</p>
-<h2 id='el_29'>view_page
+</code></pre><h2 id='el_51'>view_page
 
 </h2><h3>Info</h3><p>Default page class. Build new pages on this model. <code>postRender</code> is called after rendering is complete.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.template</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which template from templates folder do we us?</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.needLogin</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Only for registred users? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.useSidebar</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Sidebar enabled? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.navMatch</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which element of main navigation should be highlighted? </td></tr></table><h3>Example Code</h3><pre><code>
@@ -454,25 +646,21 @@ postRender: function()
 var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 
-</code></pre><h2 id='el_30'>Introduction to Charme Cryptography
+</code></pre><div class='index'><ul><li><a href='#el_30'>    isLoggedIn
 
-</h2><h3>Info</h3><p><em>See Also</em></p>
+</a></li><li><a href='#el_29'>    routes.js
 
-<ul>
-<li><code>randomAESKey</code></li>
-<li><code>rsa</code></li>
-</ul>
-<div class='index'><ul><li><a href='#el_23'>    isLoggedIn
+</a></li><li><a href='#el_11'>  apl_request
 
-</a></li><li><a href='#el_22'>    routes.js
+</a></li><li><a href='#el_12'>$.fn.serializeObject
 
-</a></li><li><a href='#el_10'>  apl_request
+</a></li><li><a href='#el_21'>aes_decryypt
 
-</a></li><li><a href='#el_11'>$.fn.serializeObject
+</a></li><li><a href='#el_39'>aes_decryypt
 
-</a></li><li><a href='#el_15'>aes_decryypt
+</a></li><li><a href='#el_36'>aes_encryypt
 
-</a></li><li><a href='#el_12'>aes_encryypt
+</a></li><li><a href='#el_18'>aes_encryypt
 
 </a></li><li><a href='#el_7'>apl/updater.js
 
@@ -480,43 +668,81 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 </a></li><li><a href='#el_3'>apl_user
 
-</a></li><li><a href='#el_13'>checkCache
+</a></li><li><a href='#el_17'>asymkey_create
 
-</a></li><li><a href='#el_19'>getCurrentFastKey
+</a></li><li><a href='#el_35'>asymkey_create
 
-</a></li><li><a href='#el_20'>getCurrentRSAKey
+</a></li><li><a href='#el_19'>checkCache
 
-</a></li><li><a href='#el_18'>getFastKey
+</a></li><li><a href='#el_37'>checkCache
+
+</a></li><li><a href='#el_33'>crypto_buildHashKeyDir
+
+</a></li><li><a href='#el_15'>crypto_buildHashKeyDir
+
+</a></li><li><a href='#el_16'>crypto_checkKeyUpdate
+
+</a></li><li><a href='#el_34'>crypto_checkKeyUpdate
+
+</a></li><li><a href='#el_32'>crypto_checksign
+
+</a></li><li><a href='#el_14'>crypto_checksign
+
+</a></li><li><a href='#el_31'>crypto_sign
+
+</a></li><li><a href='#el_13'>crypto_sign
+
+</a></li><li><a href='#el_43'>getCurrentFastKey
+
+</a></li><li><a href='#el_25'>getCurrentFastKey
+
+</a></li><li><a href='#el_44'>getCurrentRSAKey
+
+</a></li><li><a href='#el_26'>getCurrentRSAKey
+
+</a></li><li><a href='#el_42'>getFastKey
+
+</a></li><li><a href='#el_24'>getFastKey
 
 </a></li><li><a href='#el_2'>getKeyByRevision
 
-</a></li><li><a href='#el_30'>Introduction to Charme Cryptography
+</a></li><li><a href='#el_23'>mkRSA
 
-</a></li><li><a href='#el_17'>mkRSA
+</a></li><li><a href='#el_41'>mkRSA
 
-</a></li><li><a href='#el_16'>mkRSAPublic
+</a></li><li><a href='#el_22'>mkRSAPublic
 
-</a></li><li><a href='#el_25'>page_authenticated
+</a></li><li><a href='#el_40'>mkRSAPublic
 
-</a></li><li><a href='#el_26'>page_login
+</a></li><li><a href='#el_48'>page_authenticated
 
-</a></li><li><a href='#el_21'>randomAesKey
+</a></li><li><a href='#el_49'>page_login
 
-</a></li><li><a href='#el_24'>rsa
+</a></li><li><a href='#el_46'>randomAesKey
 
-</a></li><li><a href='#el_28'>sendMessage
+</a></li><li><a href='#el_28'>randomAesKey
 
-</a></li><li><a href='#el_27'>sendMessageForm
+</a></li><li><a href='#el_27'>randomSalt
+
+</a></li><li><a href='#el_45'>randomSalt
+
+</a></li><li><a href='#el_47'>rsa
+
+</a></li><li><a href='#el_10'>sendMessage
+
+</a></li><li><a href='#el_50'>sendMessageForm
 
 </a></li><li><a href='#el_6'>smilieParse
 
-</a></li><li><a href='#el_14'>storeCache
+</a></li><li><a href='#el_38'>storeCache
+
+</a></li><li><a href='#el_20'>storeCache
 
 </a></li><li><a href='#el_9'>ui_closeBox
 
 </a></li><li><a href='#el_8'>ui_showBox
 
-</a></li><li><a href='#el_29'>view_page
+</a></li><li><a href='#el_51'>view_page
 
 </a></li><li><a href='#el_5'>xssAttr
 

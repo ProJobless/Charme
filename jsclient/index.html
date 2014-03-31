@@ -4,8 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Charme</title>
 
-
-
 <script src='lib/jq.js'></script>
 <script src='lib/jqui.js'></script>
 <script src='lib/underscore.js'></script>
@@ -15,9 +13,12 @@
 <script src='lib/charmeml.js'></script>
 <script src='lib/imageManipulate.js'></script>
 <script src='lib/nprogress.js'></script>
+
 <!-- user.js should be loaded first because of global variable charmeUser-->
 <script src='apl/user.js'></script>
 <script src='apl/request.js'></script>
+<script src='apl/talks.js'></script>
+
 <script src='lib/moment.js'></script>
 
 
@@ -44,19 +45,33 @@
 <script src='lib/crypto/rng.js'></script>
 <script src='lib/crypto/rsa.js'></script>
 <script src='lib/crypto/rsa2.js'></script>
-
-
-
+<script src='lib/qrcode.min.js'></script>
 <script src='page_modules.js'></script>
 
+
+<script src='lib/crypto/sha1.js'></script>
+<script src='lib/crypto/sha256b.js'></script>
+<script src='lib/crypto/rsa-sign.js'></script>
+<script src='lib/crypto/asn1hex.js'></script>
+<script src='lib/crypto/rsa-pem.js'></script>
+<script src='lib/crypto/x509.js'></script>
+
+
+<script src='lib/jszip.min.js'></script>
 
 <script src='src/settings_keymanager.js'></script>
 <script src='src/settings_privateinfo.js'></script>
 
-
-
 <script src='apl/updater.js'></script>
 <script src='lib/plugins.js'></script>
+<script src='views/stream.js'></script>
+<script src='views/profile.js'></script>
+<script src='views/settings.js'></script>
+<script src='views/talks.js'></script>
+<script src='views/lists.js'></script>
+
+
+
 
 
 <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -69,19 +84,10 @@
 
 <script type="text/javascript">
 
-
-
-
 </script>
-
-
 </head>
 
 <body>
-<div id="layout">
-
-
-  </div>
-
+	<div id="layout"></div>
 </body>
 </html>

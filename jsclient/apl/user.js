@@ -10,7 +10,7 @@ var charmeUser;
 	getKeyByRevision
 
 	Info:
-	Returns a key from the keyring
+	Returns a key from the keyring. If revision=0 then return newest key.
 
 	Params:
 	revision: the revision

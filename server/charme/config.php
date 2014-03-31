@@ -5,10 +5,6 @@
 
 $CHARME_SETTINGS = array();
 
-//Users can upload files. WARNING: This requires a lot of diskspace
-$CHARME_SETTINGS["allowFileAttachments"] =true;
-$CHARME_SETTINGS["maxFileSizeInByte"] =1024*500;//500KB
-
 //Do not change this after users have registred
 $CHARME_SETTINGS["passwordSalt"] ="q3fsknjdakfbk1";
 $CHARME_SETTINGS["serverURL"] ="localhost";
@@ -17,14 +13,25 @@ $CHARME_SETTINGS["serverURL"] ="localhost";
 //To join the CHARME network you have to agree our terms and conditions.
 //See license_charme.txt for more information
 //If you want to create a private network leave this empty
-$CHARME_SETTINGS["NETWORK_ID"] ="";
+$CHARME_SETTINGS["NETWORK_ID"] ="CHARME_BETA_1";
 
 $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] ="http://10.149.35.85";
 // http://client.local
+$CHARME_SETTINGS["DEBUG"] =true;
+
+// Google Cload MEssaging ID. Used to notify Android devices about new messages.
+// Get one on https://cloud.google.com/console
+
+// Tutorial on: http://developer.android.com/google/gcm/gs.html
+$CHARME_SETTINGS["GCM_PROJECTID"] ="987346853523";
+
+
+
+$CHARME_SETTINGS["GCM_APIKEY"] ="AIzaSyCZDo3HMOUE4z-Ns3l4LPm3hICcF1v6XjE";
 
 
 //Will be updated automatically to block evil servers or users
-//you should leave this empty if your not part of the CHARME network
-$CHARME_SETTINGS["blacklist"] ="http://www.charmeproject.com/blacklist.php";
+//you should leave this empty if your not using  a  network id starting with CHARME
+$CHARME_SETTINGS["blacklist"] ="http://www.charmeproject.com/blacklist.txt";
 
 ?>

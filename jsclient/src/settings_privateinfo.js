@@ -174,7 +174,7 @@ var view_settings_privateinfo = view_subpage.extend({
 		$("#but_savePrivateProfile").click(function() {
 
 			NProgress.start();
-			var fastkey = getFastKey(0, 1);
+	
 
 
 			var fields =
@@ -200,6 +200,9 @@ var view_settings_privateinfo = view_subpage.extend({
 				// Then we have to recrypt the buckets
 				$.each( d2.piece_getbuckets.items, function(){
 
+					var fastkey = getFastKey(0, 1);
+
+							
 					// Get aes key to encrypt information
 					var bucketaes = aes_decrypt(fastkey.fastkey1, this.bucketaes);
 					

@@ -1,60 +1,66 @@
-## MILESTONE 3
+## ROADMAP
+
+HIGH PRIORITY
+- GCM: do not notify myself if message is from me
+- make sure sendernames/ids can not be changed in messages!
+- Multiserver support
+- password sign in: get challenge from server!
+	1. get salt from server. make random value in collection "salts" if user not exists
+	2. use salt to hash pw and send hashed pw back to server. 
 	
-	Comments (OK)
-	Make sure requests are delivered, repeat if failed to deliver
-	Multiserver support
-	Message Signing, Repost and like verification
-	Private Key Directory (OK)
-	Delete Collections and Comments
+	login: get salt from server by uid, hash it and send back to server
+ - FINISH RECRYPT in key_update_recrypt_setData	
+- server public key directory
 
-## TODO HIGH PRIORITY
-
-- key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
-- messages: send: only receivers with key!, warning if no key!
-
-- nan bug
-- badkey error , when new bucket, and request send. error disapears when saving private info again.
-
-- revision counter
-- Recrypt Public Key Directory when changing key
+  - change password, login, change passphrase!
+  -
+- Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
 	- add person to mesasge / leave message
 
+- SECURE LOGIN: send challenge to client, hash pw with challenge, send back.
+------
+- demo video
+- key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
+- messages: send: autocomplete only receivers with key
+- badkey error , when new bucket, and request send. error disapears when saving private info again.
+- revision counter
+- Recrypt Public Key Directory when changing key
+  -> note down all public key encrypted data!
+
+
+
+
+MEDIUM PRIORITY
+- images zip download: ignore failed request attempts
+- testing library
+- Make sure requests are delivered, repeat if failed to deliver
+- notify users on pub key update: hash public key A , send to user B encrypted with pub key B 
+- key directory cache
+-keyupdate:
+	- notify message receiver that key is no longer valid
+	- recrypt with new fastkey: 
+		- key directory
+		- buckets
+		- messages (?)
 - Public key verification in background
-- avoid comments with false author
-- private collections: add people to collections.
 
-## keyupdate
-
-- notify message receiver that key is no longer valid
-- recrypt with new fastkey: 
-	- key directory
-	- buckets
-	- messages (?)
-
-## Spam Protect
- - likes only from people in my lists
- - subscribers only from people in my lists?
-
-## XSS 
-- Check also ids for XSS attacks!
-
-## TODO LOW PRIORITY
-
+LOW PRIORITY
 - Delete Post and Comments
 - love/repost on status detail not working
 - revoke private info access
 - notify people who are not in lists any more!
 - RSA decryption in web worker
 - repost images, cache image on own server then.
+- small image  appended to post is scaled to big for thumbnail
 
 
 
-## Implemented but not fully tested:
-- update session passphrase with newest key_getPrivateKeyring (OK1)
-- remove passphrase from accessible code, use fastkey instead (OK1)
-
+## Spam Protect&Security
+ - likes only from people in my lists
+ - subscribers only from people in my lists?
+- Check also ids for XSS attacks!
 
 ------------------------------------------------------------------
 Chrome Extension:

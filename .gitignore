@@ -6,6 +6,7 @@
 /web/doxygen/doxyindexer.exe
 /robodoc.exe
 /server/mongodb.php
+/server/charme/config.php
 /server/charme/log.txt
 /temp/*
 /old/*

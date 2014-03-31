@@ -298,7 +298,7 @@ console.log("sidebar load=true");
 		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
 		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
-		<a href="#about">About</a> - <a href="#help">Help</a></div> \
+		<a href="#about">About</a> - <a href="#help">Help</a><div style="color:gray; font-size:10px; padding-top:6px;">For testing purposes only. Charme is NOT secure yet!</div></div> \
 		    <div class="sbBetaCont"> \
 		        <div class="sidebar sbBeta"> \
 		           <div class="actionBar"> \
@@ -324,7 +324,7 @@ console.log("sidebar load=true");
 			console.log("render main container");
 			$(".sbAlpha ul").append("<li ><a id='item_stream' data-topic='stream' href='#stream'>Stream</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/" + (charmeUser.userIdURL) + "'>Profile</a></li>");
-			$(".sbAlpha ul").append("<li><a  id='item_talks' data-topic='talks' href='#talks'>Talks</a></li>");
+			$(".sbAlpha ul").append("<li><a  style='float:right; width: 17px; text-align:center; border-left: 1px #efefef solid;  color:#666;' href='javascript:sendMessageForm()'>+</a><a style='width:101px'  id='item_talks' data-topic='talks' href='#talks'>Talks</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='lists' href='#lists' >Lists</a></li>");
 			//$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='settings' href='#settings'>Settings</a></li>");

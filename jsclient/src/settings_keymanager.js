@@ -1,148 +1,196 @@
-var view_settings_keymanager = view_subpage.extend({
+function mkqrcode() {
+	var key = getKeyByRevision(0);
+	ui_showBox("<div class='p32' id='qrcode'>" + "</div>" + "<div class='p32' style='padding-top:0'>" + ui_closeBoxButton() + "</div>", function() {});
+	new QRCode(document.getElementById("qrcode"), "FINGERPRINT");
+
+}
 
 
-	events: {
 
+function updateDataOK() {
 
-	},
-	postRender: function() {
-
-		/*<a style='float:right;' href="javascript:requestNewKey('ms@charme.local')">Check for new key</a>Manuel S. (ms@charme.local)
-	<br>
-	Public Key: <b>12109jd01d9j1d9dn1kjbk1jbkdjb</b> Revision: <b>1</b>
-*/
-
-
+	apl_request({
+	"requests": [{
+		"id": "key_update_recrypt_getData"
+		}]
+	}, function(d) {
 		
-	
-		var fastkey = getFastKey(0, 1);
-	
-		var key = getKeyByRevision(0);
+		console.log("RETURNED DATA:");
+		console.log(d);
+		$("#upddatalog").html("Update Data...");
+
+		console.log("KEYSET");
+		var rsaKeyNewest = getKeyByRevision(0);
+		console.log(rsaKeyNewest);
+		var currentFastKey1 =  rsaKeyNewest.fastkey1;
+		var currentFastKey2 =  rsaKeyNewest.fastkey2;
 
 
-		var text = CryptoJS.SHA256(key.rsa.rsa.n).toString(CryptoJS.enc.Base64);
+		var recryptedData = {
+			"conversations" : [],
+			"keydirectory" : [],
+			"pieces" : [],
+			"piecebuckets" : []
+		};
 
+		// d.key_update_recrypt_getData.data.conversations
+		$.each(d.key_update_recrypt_getData.data.conversations, function(index, item) {
 
-		$("#mypub").text(text);
-		$("#myrev").text(key.revision);
+			if (this.revision < rsaKeyNewest.revision)
+			{
+				var rsakey = getKeyByRevision(this.revision).rsa.rsa;
 
-		
-
-		var elementId = 0;
-
-
-
-
-		jQuery.each(this.options.data.key_getAll.items, function(index, item) {
-			elementId++;
-
-			// Descrypt key directory value here
-		
-
-
-
-			// alert(passphrase);
-			var aesstr = aes_decrypt(fastkey.fastkey1, item.value);
-
-			var aesobj = $.parseJSON(aesstr);
+				var newAesTemp = crypto_rsaDecrypt(this.aesEnc, rsakey);
+				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
 			
-			console.log("ELEMETNT");
-			console.log(aesobj);
-			//var obj = aes_decrypt(passphrase, item.value);
+				recryptedData["conversations"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
+			}
+		});
 
-			var text = CryptoJS.SHA256(aesobj.key.n).toString(CryptoJS.enc.Base64);
+		$.each(d.key_update_recrypt_getData.data.pieces, function(index, item) {
 
-
-			var username = "test";
-			var userId = aesobj.userId;
-			var key = " - REVISION " + aesobj.revision+ "<br>" + text;
-
-			$("#keys").append("<div id='key_" + elementId + "'><b>" + userId + "</b><span style='word-wrap: break-word;'>" + key + "</span></div><br>");
-
-			$("#key_" + elementId).prepend($('<a style="float:right;">Get new key</a>').click(function() {
-					requestNewKey(userId);
-
-				})
-
-			);
+			//if (this.value.revision < rsaKeyNewest.revision)
+			{
+				var fastkey = getFastKey(this.value.revision, 1);
 
 
+
+				
+				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value.aesEnc);
+	
+
+
+				var newAesEnc = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
+				recryptedData["pieces"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
+			}
+		});
+
+
+		$.each(d.key_update_recrypt_getData.data.keydirectory, function(index, item) {
+
+			//if (this.fkrevision < rsaKeyNewest.revision)
+			{	
+				var fastkey = getFastKey(this.fkrevision, 1);
+
+				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
+				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
+
+				console.log(newAesTemp);
+				//var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+				recryptedData["keydirectory"].push({id: this._id.$id, value: newValue, revision: rsaKeyNewest.revision });
+			}
+		});
+
+		$.each(d.key_update_recrypt_getData.data.pieceBucketItems, function(index, item) {
+
+			//if (this.fkrevision < rsaKeyNewest.revision)
+			{	
+				/*
+
+					bucketkey: Object
+					data: "720cfafabced36" (rsa encrypted)
+					revision: 2
+				*/
+
+				var rsakey = getKeyByRevision(this.bucketkey.revision).rsa.rsa;
+				var newAesTemp = crypto_rsaDecrypt(this.bucketkey.data, rsakey);
+				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+				recryptedData["pieces"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
+
+			}
+		});
+
+		console.log("RECRYPTED DATA IS");
+		console.log(recryptedData);
+
+		NProgress.start();
+		apl_request({
+			"requests": [{
+				"id": "key_update_recrypt_setData",
+				"recryptedData": recryptedData
+			}, ]
+		}, function(d) {
+
+			NProgress.done();
+			ui_closeBox();
 		});
 
 
 
-	}
-});
 
-function updateDataOK()
-{
-	alert("OK");
+		// missing: keydirectory
+
+
+
+	});
+
+
+
+	
 }
-function updateData()
-{
+
+function updateData() {
 
 
 	$.get("templates/box_updatedata.html", function(d) {
 
-			var templateData = {};
+		var templateData = {};
 
-			_.templateSettings.variable = "rc";
-			var template = _.template(d, templateData);
-			apl_request({
-				"requests": [{
-						"id": "key_getAllFromDir"
-			
-					}
+		_.templateSettings.variable = "rc";
+		var template = _.template(d, templateData);
+		apl_request({
+			"requests": [{
+					"id": "key_getAllFromDir"
 
-				]
-			}, function(d1) {
-				console.log(d1);
+				}
 
-				ui_showBox(template, function() {
+			]
+		}, function(d1) {
+			console.log(d1);
 
-					// Get fastkey1 of revision used here.
+			ui_showBox(template, function() {
 
-					// This is the object we will send to the server later on
-					var updData = {
-						keys: [],
-						buckets: [],
-						messages: []
-					};
+				// Get fastkey1 of revision used here.
 
-					// Iterate to all keys and recrypt them.
-					$.each(d1.key_getAllFromDir.value, function(index, item) 
-						{	
+				// This is the object we will send to the server later on
+				var updData = {
+					keys: [],
+					buckets: [],
+					messages: []
+				};
+
+				// Iterate to all keys and recrypt them.
+				$.each(d1.key_getAllFromDir.value, function(index, item) {
 
 
-							var fastkey = getFastKey(item.fkrevision, 1);
-							var fastkeynew = getFastKey(0, 1);
-							console.log("ITEM");
+					var fastkey = getFastKey(item.fkrevision, 1);
+					var fastkeynew = getFastKey(0, 1);
+					console.log("ITEM");
 
-							// ONLY FOR DEBUG <=, RELEASE MUST BE <
-							if (fastkey.revision <= fastkeynew.revision)
-							{
-								// Decrypt value witzh old key
-								var plain = aes_decrypt(fastkey.fastkey1, this.value);
+					// ONLY FOR DEBUG <=, RELEASE MUST BE <
+					if (fastkey.revision <= fastkeynew.revision) {
+						// Decrypt value witzh old key
+						var plain = aes_decrypt(fastkey.fastkey1, this.value);
 
-								// Encrypt value with new key
-								var newval = aes_encrypt(fastkeynew.fastkey1, plain);
+						// Encrypt value with new key
+						var newval = aes_encrypt(fastkeynew.fastkey1, plain);
 
-								console.log("NEWENC:"+newval);
+						console.log("NEWENC:" + newval);
 
-								updData["keys"].push({
-									oldId: item._id.$id,
-									newval: newval
-								});
-							}
+						updData["keys"].push({
+							oldId: item._id.$id,
+							newval: newval
 						});
-					
-					console.log(updData);
-					
-					// Register OK click event
-
+					}
 				});
+
+				console.log(updData);
+
+				// Register OK click event
+
 			});
 		});
+	});
 
 
 	// box_updatedata.html
@@ -180,109 +228,122 @@ function makeNewKey(userId) {
 
 				}
 
+
 				apl_request({
 					"requests": [{
-						"id": "key_update_phase1",
-						"password": password
-					}, ]
-				}, function(d) {
+							"id": "reg_salt_get",
+							"userid": charmeUser.userId
+						}
+
+					]
+				}, function(d2) {
+
+					var hashpass = CryptoJS.SHA256(password+d2.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
+
+					apl_request({
+						"requests": [{
+							"id": "key_update_phase1",
+							"password": hashpass
+						}, ]
+					}, function(d) {
 
 
 
-					if (d.key_update_phase1.error) {
-						alert("Wrong password.");
-					} else {
-						
-
-						// Decrypt old keyring with old passphrase
-						var keyring = [];
-						var error = false;
-
-						
-
-						if (d.key_update_phase1.keyring == null ||
-							d.key_update_phase1.keyring == "") {
-
+						if (d.key_update_phase1.error) {
+							alert("Wrong password.");
 						} else {
-							try {
 
-								var dec = aes_decrypt(passphrase, d.key_update_phase1.keyring);
 
-								alert(dec);
+							// Decrypt old keyring with old passphrase
+							var keyring = [];
+							var error = false;
 
-								keyring = jQuery.parseJSON(dec);
-							} catch (err) {
-								console.log("ERROR:");
-								console.log(err);
-								error = true;
-								alert("Wrong passphrase given.");
+
+
+							if (d.key_update_phase1.keyring == null ||
+								d.key_update_phase1.keyring == "") {
+
+							} else {
+								try {
+
+									var dec = aes_decrypt(passphrase, d.key_update_phase1.keyring);
+
+									alert(dec);
+
+									keyring = jQuery.parseJSON(dec);
+								} catch (err) {
+									console.log("ERROR:");
+									console.log(err);
+									error = true;
+									alert("Wrong passphrase given.");
+								}
+
+
 							}
 
+							if (!error) {
+								var maxrev = 0;
 
+								// Get revision
+								jQuery.each(keyring, function(index, item) {
+									if (item.revision > maxrev) maxrev = item.revision;
+								});
+								// Increment revision
+								maxrev = maxrev + 1;
+
+
+
+								// Add new RSA key, get json first
+								var rsa = jQuery.parseJSON($("#rsa").val());
+
+								var fastkey1 = randomAesKey(32);
+								var fastkey2 = randomAesKey(32);
+
+								var randomsalt1 = randomSalt(32);
+								var randomsalt2 = randomSalt(32);
+
+								keyring.push({
+									revision: maxrev,
+									fastkey1: fastkey1,
+									fastkey2: fastkey2,
+									randomsalt1: randomsalt1,
+									randomsalt2: randomsalt2,
+									rsa: rsa
+								});
+
+								console.log("KEYRING");
+								console.log(rsa);
+
+								// Convert JSON to string
+								keyring = JSON.stringify(keyring);
+
+								// Encrypt keyring with new passphrase
+								var key = $("#template_certkey").text();
+								var newkeyring = aes_encrypt(key, keyring);
+
+
+								var newpublickey = {
+									revision: maxrev,
+									publickey: {
+										n: rsa.rsa.n,
+										e: rsa.rsa.e
+									}
+								};
+
+								// Now start phase 2
+								apl_request({
+									"requests": [{
+										"id": "key_update_phase2",
+										"password": hashpass,
+										"newkeyring": newkeyring,
+										"publickey": newpublickey
+									}, ]
+								}, function(d) {
+									alert("Update sucessful, will now logout. Next you should recrypt your data from this page on.");
+								});
+							}
 						}
-
-						if (!error) {
-							var maxrev = 0;
-
-							// Get revision
-							jQuery.each(keyring, function(index, item) {
-								if (item.revision > maxrev) maxrev = item.revision;
-							});
-							// Increment revision
-							maxrev = maxrev + 1;
-
-
-
-							// Add new RSA key, get json first
-							var rsa = jQuery.parseJSON($("#rsa").val());
-
-						var fastkey1 = randomAesKey(32);
-						var fastkey2 = randomAesKey(32);
-
-						var randomsalt1 = randomSalt(32);
-						var randomsalt2 = randomSalt(32);
-
-							keyring.push({
-								revision: maxrev,
-								fastkey1: fastkey1,
-								fastkey2: fastkey2,
-								randomsalt1: randomsalt1,
-								randomsalt2: randomsalt2,
-								rsa: rsa
-							});
-
-							console.log("KEYRING");
-							console.log(rsa);
-
-							// Convert JSON to string
-							keyring = JSON.stringify(keyring);
-
-							// Encrypt keyring with new passphrase
-							var key = $("#template_certkey").text();
-							var newkeyring = aes_encrypt(key, keyring);
-
-
-							var newpublickey = {
-								revision: maxrev,
-								publickey: {
-									n: rsa.rsa.n,
-									e: rsa.rsa.e
-								}
-							};
-
-							// Now start phase 2
-							apl_request({
-								"requests": [{
-									"id": "key_update_phase2",
-									"password": password,
-									"newkeyring": newkeyring,
-									"publickey": newpublickey
-								}, ]
-							}, function(d) {
-								alert("Update sucessful, will now logout");
-							});
-						}
-					}
+					});
 				});
 			});
 
@@ -386,25 +447,16 @@ function requestNewKey(userId) {
 			_.templateSettings.variable = "rc";
 			var template = _.template(d2, templateData);
 
-
-
-
 			// more info click handler
-
 
 			ui_showBox(template, function() {
 
 				// Make request to my server to check revision and get encrypted public key
 
 				var fastkey = getFastKey(0, 1);
-				
 
-			
-			
 				// Build key hash
 				var e_key = CryptoJS.SHA256(fastkey.fastkey1 + userId).toString(CryptoJS.enc.Base64);
-
-
 
 				apl_request({
 					"requests": [{
@@ -418,7 +470,7 @@ function requestNewKey(userId) {
 
 
 
-						console.log(d3.key_getFromDir.value);
+						//console.log(d3.key_getFromDir.value);
 
 						var oldValue = $.parseJSON(aes_decrypt(fastkey.fastkey1, d3.key_getFromDir.value));
 
@@ -451,7 +503,7 @@ function requestNewKey(userId) {
 							"requests": [{
 								"id": "key_storeInDir",
 								"key": e_key,
-								"fkrevision" : fastkey.revision,
+								"fkrevision": fastkey.revision,
 								"value": e_value
 							}, ]
 						}, function(d4) {
@@ -459,6 +511,11 @@ function requestNewKey(userId) {
 
 							// Sucess is here.,
 							ui_closeBox();
+
+							// Allow sending messages on profile
+							$("#but_sendMsg").show();
+							$("#but_verifyKey").hide();
+							$("#but_verifyKey2").show();
 						});
 
 

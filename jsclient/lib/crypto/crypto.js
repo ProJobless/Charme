@@ -1,24 +1,3 @@
-function crypto_rsaDecrypt(eText, key)
-{
-	var rsa = new RSAKey();
-
-	rsa.setPrivateEx(key.n, key.e, key.d,
-			key.p, key.q, key.dmp1,
-			key.dmq1, key.coeff);
-
-	return rsa.decrypt(eText);
-}
-
-function crypto_rsaEncrypt(text, key)
-{
-	var rsa = new RSAKey();
-
-	rsa.setPrivateEx(key.n, key.e, key.d,
-			key.p, key.q, key.dmp1,
-			key.dmq1, key.coeff);
-
-	return rsa.encrypt(text);
-}
 
 
 /***
@@ -46,17 +25,20 @@ function crypto_sign(message)
 
 
 
+	console.log(key1);
+
+	// This is actually the private key
+	rsa.setPrivate(key1.rsa.rsa.n,  key1.rsa.rsa.d);
 
 
-	rsa.setPrivateEx(key1.rsa.rsa.n, key1.rsa.rsa.e, key1.rsa.rsa.d,
-						key1.rsa.rsa.p, key1.rsa.rsa.q, key1.rsa.rsa.dmp1,
-						key1.rsa.rsa.dmq1, key1.rsa.rsa.coeff);
+	// Hash Message
+	var hashmessage=CryptoJS.SHA256(message);
+	console.log("HASH IS "+hashmessage);
 
-	var hSig = rsa.signString(message, "sha1");
+	// Encrypt Hash, can be decrypted with public key.
+	var res = rsa.encrypt(hashmessage);
 
-
-
-	return hSig;
+	return res;
 }
 
 function cryptotest()
@@ -64,8 +46,7 @@ function cryptotest()
 	var msg = "ein test";
 	var sign = crypto_sign(msg);
 
-	console.log(crypto_checksign(sign, msg, ""));
-		console.log(crypto_checksign(sign, "false signature", ""));
+	//console.log(crypto_checksign(sign, msg, ""));
 	//console.log(crypto_checksign(sign, "boese nachricht", ""));
 }
 /***
@@ -88,17 +69,19 @@ function cryptotest()
 
 */
 function crypto_checksign(signature, message, publicKey)
-{	
+{
+	var rsa = new RSAKey();
 	var key1 = getKeyByRevision(0);
 
+	console.log("OK1");
+	// This is actually the private key
+	rsa.setPublic(key1.rsa.rsa.n, key1.rsa.rsa.e);
+	console.log("OK2");
+	// Hash Message
+	var hashmessage=CryptoJS.SHA256(message);
 
-	var x509 = new X509();
-	x509.readCertNE(key1.rsa.rsa.n, key1.rsa.rsa.e);
-	console.log("MESSAGE:"+message+"SIGN"+signature);
-	var result = x509.subjectPublicKeyRSA.verifyString(message, signature);
 
-
-	if (result)
+	if (hashmessage == rsa.decrypt(signature))
 	{
 
 		return true;
@@ -440,7 +423,7 @@ function getFastKey(version, number) {
 	getCurrentFastKey
 
 	Info:
-	Returns current fast key.
+	Returns current fast key. This is the same as
 	
 	Params:
 	number:int:1 or 2
