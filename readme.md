@@ -1,9 +1,10 @@
 ﻿# Charme
 
-**Warning: This is for preview puposes only. This version is NOT stable and NOT secure yet. It will be released after it has been completed and peer reviewed. This will probably take some years.
+Charme is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages and private information requests are end-to-end encrypted. Client and server are two seperate projects to avoid the server from having access to decrypted information. Client-Server and server-server communication happens via JSON.
 
+**Warning: This is for preview puposes only. This version is NOT stable and NOT secure yet. It will be released after it has been completed and peer reviewed. This will probably take some years.**
 
-Charme is a distributed and open source social network. In contrast to classic social networks you can save your user data on your own server or a server of your choice. The project is splitted into the following sub projects:
+The project is splitted into the following sub projects:
 
 
 
@@ -63,30 +64,27 @@ Charme is a distributed and open source social network. In contrast to classic s
 
 ![Screenshot](https://raw.github.com/mschultheiss/charme/dev/demo/screen2.png "Screenshot")
 
-
-
-
-## Installation
+## Setup a server
 
   * Install PHP
   * Make sure short_open_tag is set to true in php.ini, otherwise 
     PHP will not parse php files. 
-  *  Make sure curl is enabled in php.ini (apt-get install php5-curl on debian apache2)
-  * install gd extenstion for wide image: apt-get install php5-gd
+  * Make sure curl is enabled in php.ini (apt-get install php5-curl)
+  * install gd extenstion for wide image library: apt-get install php5-gd
   * Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
   *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
   * Protect /admin with a .htaccess file
   * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
 
-
-
+## Install a client
+     * copy the files in the /client directory onto a (local) webserver and access via index.html
+     * Please note that Firefox currently has some problems with the textbox for writing messages. Everything shoudl work fine in Chromium/Chrome however.
 
 ## Crypto
 
 * We use a RSA/AES cryptosystem to encrypt messages and private data
-* The private key is stored on a server, encrypted with a 20 digit passphrase. You may criticise now, that an attacker can decrypt all your messages, when he finds out your passphrase, but this also happens when he finds out your facebook password or private PGP key.
-* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if all friends of a user own the same public key of him in the background. You can also manually check the public keys in the key manager.
-
+* The private key is stored on a server, encrypted with a 20 digit passphrase.
+* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if some/all friends of a user own the same public key of him in the background. You currently have to the public keys in the key manager in the client over the menu point Settings/Key Manager.
 
 ## How to Contribute?
 
@@ -101,11 +99,7 @@ version 3. See the LICENSE.txt file for details.
 ## Recommended IDE
 Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin.
 
-
 ## Libraries
-
-
-
 
 <table>
     <tr>
