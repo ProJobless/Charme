@@ -5,6 +5,11 @@ function mkqrcode() {
 
 }
 
+/// Increase Key Revision Validator
+function keymanager_increaseKRC(value)
+{
+
+}
 
 
 function updateDataOK() {

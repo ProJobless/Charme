@@ -4,10 +4,7 @@ HIGH PRIORITY
 - GCM: do not notify myself if message is from me
 - make sure sendernames/ids can not be changed in messages!
 - Multiserver support
-- password sign in: get challenge from server!
-	1. get salt from server. make random value in collection "salts" if user not exists
-	2. use salt to hash pw and send hashed pw back to server. 
-	
+
 	login: get salt from server by uid, hash it and send back to server
  - FINISH RECRYPT in key_update_recrypt_setData	
 - server public key directory
@@ -19,7 +16,7 @@ HIGH PRIORITY
 	- autocomplete use $in to check if key available
 	- add person to mesasge / leave message
 
-- SECURE LOGIN: send challenge to client, hash pw with challenge, send back.
+
 ------
 - demo video
 - key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
