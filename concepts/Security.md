@@ -49,11 +49,44 @@ The sum of the revisions ("revision sum") is now (4+9+...). If an evil server tr
 However, there are some things to take care of:
 1. An evil Server could decrease a revision from a user a key and decrease a revision from user b key. Therefore we need to encrypt the revision numbers with fastkey1. As a result the evil server can not increase a revision anymore.
 2. A Server also should not be able to return duplicates of keys to sum up. Therefore we need to make sure that every user id is only counted once.
+3. Make sure server does not return encrypted revision from someone else -> also encrypt user id -> encrypted object contains: {userid, revision}
+#### Needed Functions
 
-Questions to ask:
-What if another client adds a new key, how is the first client notified?
+**Client Side:**
 
-Todo: Recrypt Fastkeys!
+EVENT: no revision found at login. display warning/import popup, if clicked ocntinue, use get !
+
+EVENT:OnKeyUpdate: increase revision counter by 1 and invalidate
+
+EVENT: OnKeyGet/Send Message:
+Call getAKey
+
+FUNCTION: getCache: (if checkInvalidated) get all values and store them locally. Then sum revision and compare them with revision number
+
+FUNCTION: getAllFromCache: get keys from cache.
+
+FUNCTION: getAKey: verifyRevision(key k) -> if(!checkInvalidated) call getAllFromCache if cache exists or get keys from server via getKeysFromServer
+
+FUNCTION: getKeysFromServer, get keys from server and store in cache.
+
+FUNCTION: checkInvalidated: ask server if any client application has invalidated the key directory
+
+**Server Side:**
+
+keyrc_storeValue(owner, userid, encryptedData (revision+userid)), ??Combine with key store function???
+
+keyrc_getAllValues(get server revision)
+
+**Cache**
+Contains local copy of keydirectory, can be invalidated and will be fetched from server in this case.
+
+
+### Questions
+* What if another client adds a new key, how is the first client notified?
+* Is key version verified when encrypting private infromation / pieces?
+
+### Todo
+Recrypt Fastkeys!
 
 
 ## TODOs

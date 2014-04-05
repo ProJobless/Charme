@@ -10,6 +10,31 @@ function keymanager_increaseKRC(value)
 {
 
 }
+function keymanager_checkRevCounter(callback)
+{
+
+	$.get("templates/box_askrc.html", function(d) {
+
+		var templateData = {};
+
+		_.templateSettings.variable = "rc";
+		var template = _.template(d, templateData);
+		ui_showBox(template, function() {
+			 
+			 $("#box_info_ok").click(function()
+			 	{
+			 		ui_closeBox();
+			 		 if(callback != undefined && typeof callback == 'function') callback();
+			 	});
+
+
+		});
+
+
+	});
+
+
+}
 
 
 function updateDataOK() {
