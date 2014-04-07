@@ -58,12 +58,21 @@ class JSON
 		curl_setopt($ch,CURLOPT_URL, $url);
 		curl_setopt($ch,CURLOPT_POST, count($fields));
 		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 2); // 2 seconds timeout, servers have to respond fast! 
 
 		// Return result and not status code for curl_exec. This is very important
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE );
 
 				
 		$result = curl_exec($ch);
+
+		if(curl_errno($ch))
+		{
+		    clog( 'Curl error: ' . curl_error($ch));
+		    // 28 is timeout! TODO: Save request and try to send again later on.
+		}
+
+
 		curl_close($ch);
 
 		if ($debug) // Use $plain=true for debugging
