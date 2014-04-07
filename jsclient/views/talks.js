@@ -214,6 +214,7 @@ var view_talks_subpage = view_subpage.extend({
 
 				var conversationId = ($('#msg_conversationId').data("val"));
 
+				NProgress.start();
 				apl_request({
 					"requests": [{
 							"id": "message_distribute_answer",
@@ -225,6 +226,7 @@ var view_talks_subpage = view_subpage.extend({
 					]
 				}, function(d2) {
 					location.reload();
+					NProgress.done();
 				});
 
 				// Append thumb...
@@ -545,17 +547,22 @@ var view_talks_subpage = view_subpage.extend({
 				var par = $(that).parent();
 
 				$.get(loc, function(d) {
-					var i = new Image();
-					i.src = aes_decrypt(that2.aes, d);
+					
 
 
+						var worker2 = new Worker("lib/crypto/thread_decrypt.js");
 
-					//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
 
-					//</a>
+						var el = $('<a class="imgThumb"></a>');
+						$(par).append(el);
+						worker2.onmessage = function(e) {
 
-					$(par).append(
-						$('<a class="imgThumb"></a>').click(function() {
+								var i = new Image();
+								i.src = e.data;
+
+
+							(
+							el.click(function() {
 
 							$(par).append(
 								'<span class="imgLoading">Loading...</span>');
@@ -599,6 +606,36 @@ var view_talks_subpage = view_subpage.extend({
 						}).html($(i))
 
 					);
+
+
+
+							
+
+							
+
+
+
+
+
+						}
+
+					
+						worker2.postMessage({
+							key: that2.aes,
+							encData: d
+						});
+
+
+
+
+
+
+
+					//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
+
+					//</a>
+
+					
 					//remove class imageid
 					$(that).remove();
 

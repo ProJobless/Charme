@@ -1,7 +1,8 @@
 ## current todo:
 - keymanager_checkRevCounter call
-
-
+- timeout for non responding server at message send
+- image decrypt thumbnails in extra thread.
+- decryption errors in own (?) profile
 ## ROADMAP
 
 HIGH PRIORITY

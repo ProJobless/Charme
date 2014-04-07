@@ -685,7 +685,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			
 		
 			// Warning! One message per server only!
-		
+			global $CHARME_SETTINGS;
 
 			$blockWrite = false;
 		//	clog(print_r($item["localreceivers"], true));
@@ -836,7 +836,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				if ($ins["fileId"] == 0)
 				unset($ins["fileId"]);
-				if ($item["status"] == "addPeople")
+				if (isset($item["status"] ) && $item["status"] == "addPeople")
 				{
 					// TODO: also append the people who were added to message
 				}
@@ -847,7 +847,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				$col->messages->insert($ins);
 
 				/* Notify Android Devices via Google Cloud Messaging (GCM) */
-				clog2($item);
+				//clog2($item);
 
 				
 				// TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
@@ -858,18 +858,11 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				{	
 					$deviceIds[] = $citem["regId"];
 				}
-				clog("GCM START");
-				clog2($deviceIds);
-
+			
 				$gcmcontent = array("messageEnc" => "", "conversationId" => $item["conversationId"], "sendername" => $item["sendername"]);
 
-				clog(\App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent)));
-
-				
-
-
-
-
+				if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
+				(\App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent)));
 				}
 
 			} // End foreach of receivers

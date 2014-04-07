@@ -735,11 +735,22 @@ var view_profilepage_info = view_subpage.extend({
 							if (that2.piecedata == "") {
 								rq = ""
 							} else {
+
+								try{
 								var t = aes_decrypt(aes, that2.piecedata);
+
 								if (t != "")
 									rq = xssText(t);
 								else
 									rq = "";
+							}
+							catch(e){
+
+							console.log("error at decrypting pieceinfo...");
+							rq = "<span style='color:red'>Error at decryption.</span>";
+							
+							}
+								
 							}
 						} else {
 							// Can not request if empty fields:

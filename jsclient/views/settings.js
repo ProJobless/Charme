@@ -135,7 +135,7 @@ var view_settings_sub = view_subpage.extend({
 		var s = $("#settingsform").serializeObject();
 
 		var that = this;
-
+		NProgress.start();
 		apl_request({
 			"requests": [{
 					"id": "profile_save",
@@ -146,7 +146,7 @@ var view_settings_sub = view_subpage.extend({
 		}, function(d) {
 
 
-			alert("OK");
+			NProgress.done();
 			console.log("FORM SAVED AND RETURNED:");
 			console.log(d);
 
