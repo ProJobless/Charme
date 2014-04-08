@@ -45,13 +45,12 @@ function updateDataOK() {
 		}]
 	}, function(d) {
 		
-		console.log("RETURNED DATA:");
-		console.log(d);
+		
 		$("#upddatalog").html("Update Data...");
 
-		console.log("KEYSET");
+	
 		var rsaKeyNewest = getKeyByRevision(0);
-		console.log(rsaKeyNewest);
+
 		var currentFastKey1 =  rsaKeyNewest.fastkey1;
 		var currentFastKey2 =  rsaKeyNewest.fastkey2;
 
@@ -66,10 +65,11 @@ function updateDataOK() {
 		// d.key_update_recrypt_getData.data.conversations
 		$.each(d.key_update_recrypt_getData.data.conversations, function(index, item) {
 
-			if (this.revision < rsaKeyNewest.revision)
+			//if (this.revision < rsaKeyNewest.revision)
 			{
 				var rsakey = getKeyByRevision(this.revision).rsa.rsa;
 
+				console.log("REV 1 is"+this.revision);
 				var newAesTemp = crypto_rsaDecrypt(this.aesEnc, rsakey);
 				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
 			
@@ -83,7 +83,7 @@ function updateDataOK() {
 			{
 				var fastkey = getFastKey(this.value.revision, 1);
 
-
+			console.log("REV 2 is"+this.value.revision);
 
 				
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value.aesEnc);
@@ -100,12 +100,13 @@ function updateDataOK() {
 
 			//if (this.fkrevision < rsaKeyNewest.revision)
 			{	
+							console.log("REV 3 is"+this.fkrevision);
 				var fastkey = getFastKey(this.fkrevision, 1);
 
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
 				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
 
-				console.log(newAesTemp);
+				//console.log(newAesTemp);
 				//var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
 				recryptedData["keydirectory"].push({id: this._id.$id, value: newValue, revision: rsaKeyNewest.revision });
 			}
@@ -121,11 +122,23 @@ function updateDataOK() {
 					data: "720cfafabced36" (rsa encrypted)
 					revision: 2
 				*/
+				
+
+				try
+				{
+								console.log("REV 4 is"+this.bucketkey.revision);
 
 				var rsakey = getKeyByRevision(this.bucketkey.revision).rsa.rsa;
-				var newAesTemp = crypto_rsaDecrypt(this.bucketkey.data, rsakey);
+				var newAesTemp = crypto_rsaDecrypt(this.bucketkey.data, rsakey); // Is null if
+						console.log(rsakey);
+
 				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
-				recryptedData["pieces"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
+
+				recryptedData["piecebuckets"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
+				}
+				catch(exeption){
+					console.log("CRITICAL WARNING: ID "+this._id.$id+ "could not be recrypted: "+exeption);
+				}
 
 			}
 		});
@@ -134,6 +147,7 @@ function updateDataOK() {
 		console.log(recryptedData);
 
 		NProgress.start();
+		
 		apl_request({
 			"requests": [{
 				"id": "key_update_recrypt_setData",
@@ -144,6 +158,7 @@ function updateDataOK() {
 			NProgress.done();
 			ui_closeBox();
 		});
+
 
 
 

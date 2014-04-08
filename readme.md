@@ -77,8 +77,8 @@ The project is splitted into the following sub projects:
   * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
 
 ## Install a client
-     * copy the files in the /client directory onto a (local) webserver and access via index.html
-     * Please note that Firefox currently has some problems with the textbox for writing messages. Everything shoudl work fine in Chromium/Chrome however.
+ * copy the files in the /client directory onto a (local) webserver and access via index.html
+ * Please note that Firefox currently has some problems with the textbox for writing messages. Everything shoudl work fine in Chromium/Chrome however.
 
 ## Crypto
 

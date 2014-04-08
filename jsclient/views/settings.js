@@ -20,6 +20,8 @@ var view_settings_keymanager = view_subpage.extend({
 		$("#mypub").text(text);
 		$("#myrev").text(key.revision);
 
+		// Here we may get a problem if fastkey is too old.
+
 
 		var elementId = 0;
 

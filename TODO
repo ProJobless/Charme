@@ -10,11 +10,13 @@
 ## ROADMAP
 
 HIGH PRIORITY
+- Perfect Forward Secrecy: Delete old private Keys from Encrypted Data Storage.
+	-> Problem: How to decrypt old messages?: Solution: Recrypt!
+- Save all public key revisions of other users to validate signatures
 - GCM: do not notify myself if message is from me
 - make sure sendernames/ids can not be changed in messages!
 - Multiserver support
 
-	login: get salt from server by uid, hash it and send back to server
  - FINISH RECRYPT in key_update_recrypt_setData	
 - server public key directory
 
@@ -63,10 +65,32 @@ LOW PRIORITY
 
 
 
+## Development Areas
+- Server
+   - Core
+   - Performance
+   - GCM
+- UI
+- Documentation
+- Crypto
+   - Encrypted Data Storage
+   - Messages
+   - Private Information
+   - WoT
+   - AES/RSA
+- Graphics
+- Mobile
+   - Android
+   - iOS
+
+
+
 ## Spam Protect&Security
  - likes only from people in my lists
  - subscribers only from people in my lists?
 - Check also ids for XSS attacks!
+
+
 
 ------------------------------------------------------------------
 Chrome Extension:

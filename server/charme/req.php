@@ -1795,7 +1795,10 @@ array("owner" => $_SESSION["charme_userid"],
 				{
 					foreach ($value as $key2 => $value2) {
 
-						// Update here....
+					
+						// got from JSON: id, aesEnc, revision
+						$col->conversations->update(array("receiver" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("aesEnc" => $value2["aesEnc"], "revision" => $value2["revision"])));
+
 					}
 				}
 				else if ($key == "keydirectory")
@@ -1822,7 +1825,9 @@ array("owner" => $_SESSION["charme_userid"],
 				{
 					foreach ($value as $key2 => $value2) {
 
-						// Update here....
+						// got from json: bucketkeyData,id,revision
+						$col->pieceBucketItems->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("bucketkey" => array("data" => $value2["bucketkeyData"], "revision" => $value2["revision"]))));
+
 					}
 				}	
 
@@ -1841,7 +1846,7 @@ array("owner" => $_SESSION["charme_userid"],
 
 			// See concepts/NewKeypair.md for details!
 
-			// recrypt piecebuckets.bucketaes, piecebuckets.version -> OTHERE PEOPLES DATA ENCRYPTED FOR ME
+			// recrypt piecebuckets.bucketaes, piecebuckets.version -> Collection contains OTHER PEOPLES DATA ENCRYPTED FOR ME
 			$all = $col->pieceBucketItems->find(array("owner" => $_SESSION["charme_userid"]), array("bucketkey", "_id"));
 			$cursor = iterator_to_array($all, false);
 			$data["pieceBucketItems"] = $cursor;
