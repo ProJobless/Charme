@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:text="test@192.168.43.31" >
+            android:text="android@192.168.43.31" >
 
             <requestFocus />
         </EditText>
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:text="oKuPCeiB9STehwBguYyF" />
+            android:text="O9mGHu1OpsaK784wpPCM" />
 
         <TextView
             android:id="@+id/TextView01"

@@ -278,7 +278,7 @@ view_profilepage_collection_show = view_subpage.extend({
 								}, ]
 							}, function(d) {
 
-
+								
 								$("#colName").text($("#inp_box_name").val());
 								ui_closeBox();
 								// TODO: Add collection control...
@@ -724,11 +724,13 @@ var view_profilepage_info = view_subpage.extend({
 							// Our unique key consits of revision, userid and piece key:
 							var key = "--," + container_main.currentView.options.userId + "," + that2.version + "," + this.key;
 							var aes = checkCache(key);
+							
 							if (aes == null) {
 
 								key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
 								aes = key1.decrypt(that2.bucketrsa.data); // get aes key to decrypt piecedata
-								storeCache(key, aes);
+						
+							
 							}
 
 
@@ -747,7 +749,9 @@ var view_profilepage_info = view_subpage.extend({
 							catch(e){
 
 							console.log("error at decrypting pieceinfo...");
-							rq = "<span style='color:red'>Error at decryption.</span>";
+				
+
+							rq = "<span style='color:red'>Error at decryption. Try to clean your cache.</span>"; // This may be caused by cached keys if pieces collection has been deleted on server!
 							
 							}
 								

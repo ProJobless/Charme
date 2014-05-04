@@ -1,28 +1,24 @@
 ## current todo:
 - keymanager_checkRevCounter call
-- timeout for non responding server at message send
-- image decrypt thumbnails in extra thread.
-- decryption errors in own (?) profile
-
+- update keyhash on key directory recrypt
+- timeout for non responding server at message send: store in db to send later
 - remember timeout requests! try to send them again in cron job
+- change password
+- delete comments/posts
 
-
+## signatures for posts and messages
+- Save all public key revisions of other users to validate signatures
+- Repost and like verification by signing and storing hash on server
 ## ROADMAP
 
 HIGH PRIORITY
 - Perfect Forward Secrecy: Delete old private Keys from Encrypted Data Storage.
 	-> Problem: How to decrypt old messages?: Solution: Recrypt!
-- Save all public key revisions of other users to validate signatures
+
 - GCM: do not notify myself if message is from me
 - make sure sendernames/ids can not be changed in messages!
 - Multiserver support
 
- - FINISH RECRYPT in key_update_recrypt_setData	
-- server public key directory
-
-  - change password, login, change passphrase!
-  -
-- Repost and like verification by signing and storing hash on server
 - message send: get public key,
 	- autocomplete use $in to check if key available
 	- add person to mesasge / leave message

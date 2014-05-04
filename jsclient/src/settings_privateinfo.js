@@ -194,7 +194,8 @@ var view_settings_privateinfo = view_subpage.extend({
 				}, ]
 			}, function(d2) {
 
-
+				console.log("PIECEBUCKETS");
+				console.log(d2);
 				var bucketaesdir = {};
 
 				// Then we have to recrypt the buckets
@@ -212,11 +213,14 @@ var view_settings_privateinfo = view_subpage.extend({
 					if ( $("input[name="+this.key+"]").val() != "")
 					tz =  aes_encrypt(bucketaes, $("input[name="+this.key+"]").val());
 
+					console.log("BUCKETAES IS "+bucketaes);
 					// Encrypt field for buckets here 
 					// Add to array
 					bucketaesdir[this.key] = tz;
 				
 				});
+
+
 console.log("fields");
 				console.log(bucketaesdir);
 

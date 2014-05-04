@@ -1,27 +1,15 @@
 Functions:
-crypto_sign
-crypto_checksign
+sign = new CharmeModels.Signature(message)
+sign.getJSON
 
+CharmeModels.Signature.Verifiy()
 
-Important: revisions, make it work with older revisions!
-
-
-crypto_sign
-- generate signature
-
-
-
-
-
-
-check_sign
-
-
-
-Server Side Verification:
-
+TODO: Server Side Verification:
 Server only adds if signature is correct
 
+1. if incoming post check if revision&key exist in server public key directory
+2. if not then send request to server with revision&userid
+3. only add if key has been verified
 
 Alternative/additional Client Side Verification:
   +-----------------+      +-------------------+
@@ -54,6 +42,11 @@ Alternative/additional Client Side Verification:
                              +-----------------+
 
 
+Key Directory:
+-------------------------------
+Extend with older public key revisions
+vs.
+save public keys only on owner server, check when clicking on username
 
 
 
@@ -64,3 +57,12 @@ posts
 people in my list (sign hash hash all names)
 
 
+Diffuse Key Check
+---------------------------------
+- Check 3 random friend servers for public key
+
+
+Important Server side functions
+----------------------------------
+key_getByRevision  Get key by revision
+key_update_phase2  Add new public keys to local keyDirectory here

@@ -2,9 +2,9 @@
 	Layout definitions of pages like Profile, Stream etc.
 */
 
-// Derive following pages of this template:
 
 
+CharmeModels = {} // CoffeScript Namespace
 
 // Extend close function to remove events!
 Backbone.View.prototype.close = function() {
@@ -674,9 +674,15 @@ control_postField = Backbone.View.extend({
 
 
 		var x = $('#inp_postImg').data("filecontent");
-		if (x != undefined)
+		if ( x !=undefined)
 			x = x.result;
+		else
+			x= "";
 
+		var signature = new CharmeModels.Signature(txt+x);
+		
+
+		console.log(signature.toJSON());
 		//if (x == undefined || x == "")
 
 		apl_request({
@@ -685,7 +691,8 @@ control_postField = Backbone.View.extend({
 				"content": txt,
 				"collectionId": collectionId,
 				"repost": repostdata,
-				"imgdata": x
+				"imgdata": x,
+				"signature": signature.toJSON()
 			}, {
 				"id": "profile_get_name",
 				userId: charmeUser.userId
@@ -948,7 +955,7 @@ control_postItem = Backbone.View.extend({
 
 			// 
 			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" +
-				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
+				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> - <a id='checkSignature_"+uniId+"'>Check Signature</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
 		} else
 			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
 
@@ -965,6 +972,9 @@ control_postItem = Backbone.View.extend({
 
 
 
+		$("#checkSignature_"+uniIdCounter).click(function(){
+			CharmeModels.Signature.showDialog();
+		});
 		// REgister event handler AFTER HTML has been added
 		$("#del_post_"+uniIdCounter).click(function(){
 

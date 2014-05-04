@@ -21,43 +21,6 @@ function crypto_rsaEncrypt(text, key)
 }
 
 
-/***
-	Name:
-	crypto_sign
-
-	Info:
-	Generate a signature with the users private key.
-	
-	Params:
-	message:string:The message you want to sign
-
-	Location:
-	crypto.js
-
-	Code:JS:
-	var signature = crypto_sign("hallo welt", );
-
-*/
-function crypto_sign(message)
-{
-
-	var rsa = new RSAKey();
-	var key1 = getKeyByRevision(0);
-
-
-
-
-
-	rsa.setPrivateEx(key1.rsa.rsa.n, key1.rsa.rsa.e, key1.rsa.rsa.d,
-						key1.rsa.rsa.p, key1.rsa.rsa.q, key1.rsa.rsa.dmp1,
-						key1.rsa.rsa.dmq1, key1.rsa.rsa.coeff);
-
-	var hSig = rsa.signString(message, "sha1");
-
-
-
-	return hSig;
-}
 
 function cryptotest()
 {
@@ -68,44 +31,8 @@ function cryptotest()
 		console.log(crypto_checksign(sign, "false signature", ""));
 	//console.log(crypto_checksign(sign, "boese nachricht", ""));
 }
-/***
-	Name:
-	crypto_checksign
-
-	Info:
-	Verify a signature. Returns TRUE or FALSE
-
-	Params:
-	signature:string:The signature to check
-	message:string:The message you want to check
-	publicKey:object:The publicKey (usually from key directory)
-
-	Location:
-	crypto.js
-
-	Code:JS:
-	hashkeys = buildHashKeyDir(["test@test.de"]);
-
-*/
-function crypto_checksign(signature, message, publicKey)
-{	
-	var key1 = getKeyByRevision(0);
 
 
-	var x509 = new X509();
-	x509.readCertNE(key1.rsa.rsa.n, key1.rsa.rsa.e);
-	console.log("MESSAGE:"+message+"SIGN"+signature);
-	var result = x509.subjectPublicKeyRSA.verifyString(message, signature);
-
-
-	if (result)
-	{
-
-		return true;
-	}
-	else
-		return false;
-}
 
 
 /***

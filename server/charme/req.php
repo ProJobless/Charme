@@ -360,12 +360,6 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 
 
-
-
-
-
-
-
 			unset($item["id"]);
 			unset($item["_id"]);
 		
@@ -1875,21 +1869,17 @@ array("owner" => $_SESSION["charme_userid"],
 
 
 		case "key_update_phase2":
-
-		$p2 = $item["password"];
-
+			$p2 = $item["password"];
 
 			$col = \App\DB\Get::Collection();
 			$cursor = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"]), "password"=>$p2), array('userid', "keyring"));
 
+			// Store key in local key directory for users hosted on this server
+			$col->localkeydirectory->insert(array("userid" => $_SESSION["charme_userid"], "publicKey" => $item["publickey"], "revision" => $item["publickey"]["revision"]));
 			if (isset($cursor["userid"]))
 			{
-
-			$col->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => array("keyring" => $item["newkeyring"], "publickey" => $item["publickey"])));
-
+				$col->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => array("keyring" => $item["newkeyring"], "publickey" => $item["publickey"])));
 			}
-
-
 
 		break;
 
@@ -2069,7 +2059,7 @@ array("owner" => $_SESSION["charme_userid"],
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
-			$content = array("username"=> $username, "time"=> new MongoDate(), "likecount" => 0, "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
+			$content = array("username"=> $username, "time"=> new MongoDate(), "likecount" => 0, "collectionId" => $item["collectionId"], "content"  => $item["content"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage, "signature" => $item["signature"]);
 			
 			if (isset( $item["repost"]))
 				$content["repost"]  = $item["repost"];

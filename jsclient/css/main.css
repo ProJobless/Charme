@@ -12,8 +12,12 @@
 }
 
 
+.postoptions a, .postoptions
+{
+	font-weight: normal;
+	color: gray;
+}
 /* custom scrollbars */
-
 
 
 
