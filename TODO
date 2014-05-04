@@ -9,6 +9,9 @@
 ## signatures for posts and messages
 - Save all public key revisions of other users to validate signatures
 - Repost and like verification by signing and storing hash on server
+- Important: Warn if newer public key available
+
+
 ## ROADMAP
 
 HIGH PRIORITY
@@ -72,9 +75,9 @@ LOW PRIORITY
    - Encrypted Data Storage
    - Messages
    - Private Information
-   - WoT
-   - AES/RSA
-- Graphics
+   - Key Verfication (Web of Trust etc.)
+   - AES/RSA Core
+- Graphics / Promotion
 - Mobile
    - Android
    - iOS

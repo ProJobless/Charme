@@ -12,7 +12,6 @@ function keymanager_increaseKRC(value)
 }
 function keymanager_checkRevCounter(callback)
 {
-
 	$.get("templates/box_askrc.html", function(d) {
 
 		var templateData = {};
@@ -26,14 +25,8 @@ function keymanager_checkRevCounter(callback)
 			 		ui_closeBox();
 			 		 if(callback != undefined && typeof callback == 'function') callback();
 			 	});
-
-
 		});
-
-
 	});
-
-
 }
 
 
@@ -45,15 +38,11 @@ function updateDataOK() {
 		}]
 	}, function(d) {
 		
-		
 		$("#upddatalog").html("Update Data...");
 
-	
 		var rsaKeyNewest = getKeyByRevision(0);
-
 		var currentFastKey1 =  rsaKeyNewest.fastkey1;
 		var currentFastKey2 =  rsaKeyNewest.fastkey2;
-
 
 		var recryptedData = {
 			"conversations" : [],
@@ -424,14 +413,8 @@ function makeNewKey(userId) {
 				for (var i = 0; i < 20; i++)
 					passphrase += possible.charAt(Math.floor(Math.random() * possible.length));
 
-
-
-				console.log(JSON.stringify(certificate));
-
-
 				// Encrypt certificate with passpharse
 				var tt = JSON.stringify(certificate);
-
 				var pub = {
 					"n": e.data.n,
 					"e": e.data.e
@@ -439,16 +422,9 @@ function makeNewKey(userId) {
 
 				$("#pubkey").val(JSON.stringify(pub));
 				$("#template_certkey").text(passphrase);
-
 				$("#rsa").val(tt);
-
 			};
-
-
 			worker.postMessage("");
-
-
-
 		});
 	});
 
@@ -543,11 +519,18 @@ function requestNewKey(userId) {
 							revision: d.key_get.revision,
 							userId: userId // Important to ensure server returns right key!
 						}));
+						
 
+						var keyhash =  aes_encrypt_json(fastkey.fastkey1, {revision: d.key_get.revision ,hash:CharmeModels.Keys.buildHash(key)});
+
+
+					
 						apl_request({
 							"requests": [{
 								"id": "key_storeInDir",
 								"key": e_key,
+								"keyhash" : keyhash,
+								"keyhashrevision" : d.key_get.revision,
 								"fkrevision": fastkey.revision,
 								"value": e_value
 							}, ]

@@ -132,8 +132,15 @@ function asymkey_create()
 
 
 
+function aes_encrypt_json(pass, obj)
+{
+	return aes_encrypt(pass, JSON.stringify(obj));
+}
 
-
+function aes_decrypt_json(pass, obj)
+{
+	return aes_decrypt(pass, $.parse(obj));
+}
 /***
 	Name:
 	aes_encryypt

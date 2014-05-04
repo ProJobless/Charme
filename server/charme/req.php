@@ -1,12 +1,13 @@
 <?php
 header('Cache-Control: no-cache, must-revalidate');
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Expires: Mon, 12 Mar 1992 05:00:00 GMT');
 
 include_once("config.php");
 
 error_reporting(E_ALL);
 
-ini_set('display_errors', 'On');
+// Do not display erros in PHP File, check /var/log/apache2/error.log for errors
+ini_set('display_errors', 'Off');
 
 
 // Disabled, because of jquery post
@@ -1697,9 +1698,21 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 		case "key_storeInDir":
 
 			$col = \App\DB\Get::Collection();
+
+			// Store key hash value in signature keydirectory which is used to verify signatures and contains all revisions
+			$cursor = $col->keydirectory_signatures->update(
+				array("owner" => $_SESSION["charme_userid"],
+					"key" => $item["key"]),
+
+				// fkrevision: revision of my fastkey1, keyrevision: revision of public key stored in directory
+				array("fkrevision" => $item["fkrevision"], "keyhash" => $item["keyhash"], "keyhash_revision" =>  $item["keyhashrevision"])
+
+				, array("upsert" => true));
+			
+			// Store key in owner Directory which is used to get thew public key when writing a message
 			$cursor = $col->keydirectory->update(
 
-array("owner" => $_SESSION["charme_userid"],
+			array("owner" => $_SESSION["charme_userid"],
 					"key" => $item["key"])
 
 				, array(
