@@ -29,13 +29,17 @@
 {
 
 	padding:8px;
-	border-top:1px silver solid;
-	background-color: #efefef;
+	border-top:1px #efefef solid;
+	
 	width:244px;
 
 	  word-wrap: break-word;
 
 	
+}
+.postcomments .comment a
+{
+	font-weight: normal;
 }
 .postcomments .comment .head
 {

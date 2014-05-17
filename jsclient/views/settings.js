@@ -1,3 +1,75 @@
+var view_settings_pwchange = view_subpage.extend({
+
+
+	events: {
+
+
+	},
+	postRender: function() {
+
+		$("#but_savePassword").click(function() {
+			NProgress.start();
+			var oldpass = $("input[name=inp_oldpassword]").val();
+			var newpass = $("input[name=inp_newpassword]").val();
+
+	
+			if (newpass != $("input[name=inp_newpassword2]").val()) {
+				alert("New passwords do not match...");
+				return;
+			}
+			else if (newpass.length<5)
+			{
+				alert("Password is to short...");
+				return;
+			}
+			apl_request({
+				"requests": [{
+						"id": "reg_salt_get",
+						"userid": charmeUser.userId
+					}
+
+				]
+			}, function(d2) {
+
+				var hashpassOld = CryptoJS.SHA256(oldpass + d2.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
+
+				var hashpassNew = CryptoJS.SHA256(newpass + d2.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
+
+		
+
+
+				apl_request({
+					"requests": [{
+							"id": "reg_changepassword",
+							"oldPasswordHash": hashpassOld,
+							"newPasswordHash": hashpassNew
+						}
+
+					]
+				}, function(d) {		
+					if (d.reg_changepassword.STATUS == "WRONG_PASSWORD")
+					{	
+						alert("Old password is incorrect.");
+						$("input[name=inp_oldpassword]").focus();
+					}
+					else if (d.reg_changepassword.STATUS == "OK")
+					{
+						alert("Password has been changed successfully. Will now logout...");
+						delTemp();
+						logout();
+					}
+
+					NProgress.done();
+					console.log(d);
+				});
+
+
+			});
+		});
+
+	}
+});
+
 var view_settings_keymanager = view_subpage.extend({
 
 

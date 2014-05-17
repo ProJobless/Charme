@@ -207,6 +207,34 @@ $(function() {
 
                 });
             } 
+            else  if (id == "password") {
+                apl_request({
+                    "requests": [{
+                          //  "id": "key_getAll"
+                        },
+
+                        /* Unused, we get the keyring already at login 
+                        {
+                            "id" : "key_getPrivateKeyring"
+                        }*/
+
+
+                    ]
+                }, function(d2) {
+
+
+                    var vsd = new view_settings_pwchange({
+                        template: "settings_password",
+                        navMatch: '#nav_' + id,
+                        data: d2
+                    });
+                    container_main.currentView.setSub(vsd);
+                    container_main.currentView.render();
+
+
+
+                });
+            } 
 
              else if (id == "privateinfo_requests") {
 

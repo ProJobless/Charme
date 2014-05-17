@@ -5,9 +5,4 @@ fw_load("page");
 page_init("Stream", 1);
 
 
-
-
-
-
-
 ?>

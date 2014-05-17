@@ -95,6 +95,8 @@
       return CryptoJS.SHA256(CryptoJS.SHA256(key.n) + CryptoJS.SHA256(key.e));
     };
 
+    Keys.querySignatureDirectory = function(user) {};
+
     return Keys;
 
   })();

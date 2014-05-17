@@ -70,13 +70,16 @@ background-color: black;
 }
 .likes .counter
 {
-	background-color: #efefef;
+
+	color:silver;
+	border-radius: 100px;
 	display: inline-block;
 	height: 20px;
 	float:right;
+	font-weight: normal;
 	padding:4px 8px 0px 8px;
 	position: relative;
-
+	
 }
 .likes img
 {

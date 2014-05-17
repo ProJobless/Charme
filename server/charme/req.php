@@ -66,7 +66,7 @@ session_start();
 function clog($str)
 {
 	$fd = fopen("log.txt", "a");
-	fwrite($fd, $str . "\r\n");
+	fwrite($fd, $str."\r\n");
 	fclose($fd);
 }
 
@@ -186,6 +186,27 @@ foreach ($data["requests"] as $item)
 		
 		break;
 
+		// Parameters: oldPasswordHash, newPasswordHash
+		case "reg_changepassword":
+
+			$col = \App\DB\Get::Collection();
+
+			// 1. Check if oldPasswordHash matches
+			$cursor = $col->users->findOne(array("userid"=> $_SESSION["charme_userid"], "password"=>$item["oldPasswordHash"]), array("password"));
+
+			if ($cursor["password"] == $item["oldPasswordHash"])
+			{
+
+				$col->users->update(array("userid"=> $_SESSION["charme_userid"]), array('$set' => array("password" => $item["newPasswordHash"]))); 
+				$returnArray[$action] = array("STATUS" => "OK");
+			}
+			else
+			{
+				$returnArray[$action] = array("STATUS" => "WRONG_PASSWORD");
+			}
+
+		break;
+
 
 
 		case "lists_getRegistred" : 
@@ -301,10 +322,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				$limit = $msgCount;
 
 
-			clog("SENT DATA:----------------------------");
-			clog2($item);
-
-			clog2($res);
+	
 
 
 			$returnArray[$action] = array("messages" => 

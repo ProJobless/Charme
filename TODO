@@ -10,6 +10,7 @@
 - Save all public key revisions of other users to validate signatures
 - Repost and like verification by signing and storing hash on server
 - Important: Warn if newer public key available
+- On recrypt: Resign all posts
 
 
 ## ROADMAP
