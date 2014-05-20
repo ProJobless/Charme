@@ -66,15 +66,64 @@ The project is splitted into the following sub projects:
 
 ## Setup a server
 
-  * Install PHP
+  * Compile and install PHP with ZTS enabled for Apache (See Appendiy below for more information). For Windows there should be some prebuild pthreads binaries.
+  * install pthreads extension with `pecl install -f pthreads` if not added during compilation already
+  * Add pthreads to php.ini: `extension=php_pthreads.dll` in Windows, extension=`pthreads.so` in linux
   * Make sure short_open_tag is set to true in php.ini, otherwise 
     PHP will not parse php files. 
-  * Make sure curl is enabled in php.ini (apt-get install php5-curl)
-  * install gd extenstion for wide image library: apt-get install php5-gd
-  * Install MongoDB, see http://www.php.net/manual/de/mongo.installation.php
+  * Install Curl if not set during compilation:  `apt-get install php5-curl` Make sure curl is enabled in php.ini via extension=curl.so
+  * install gd extenstion for wide image library: `sudo apt-get install libmagickwand-dev libmagickcore-dev` and `pecl install imagick`
+  * Install MongoDB, via pecl install mongo, Add to php.ini via extension=mongo.so
   *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
   * Protect /admin with a .htaccess file
   * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
+  * restart apache2 (Linux: `service apache2 restart`)
+
+###Appendix: Compiling PHP with PThreads
+
+After downloading the PHP sources, goto ./ext dictionary and add pthreads:
+```
+git clone https://github.com/krakjoe/pthreads.git
+```
+
+Make sure Apache Headers (apxs2) exist to generate libphp5.so: 
+
+```
+sudo apt-get install apache2-threaded-dev
+```
+Make sure Curl Headers are available (libcurl4-dev) by installaing a package containing them:
+```
+sudo apt-get install libcurl4-gnutls-dev
+```
+
+
+Then recompile PHP
+```
+cd .. # Goto php source dir
+rm configure
+./buildconf --force
+# --with-[png|jpeg]-dir= may vary here:
+./configure --enable-debug --enable-maintainer-zts --with-apxs2=/usr/bin/apxs2 --enable-pthreads --with-curl --with-gd --with-png-dir=/usr/lib --with-jpeg-dir=/usr/lib/x86_64-linux-gnu/libjpeg.so
+
+make clean
+make
+make install
+libtool --finish /src/php-5.5.12/libs #The pass is given you by make install
+cd libs
+cp libphp5.so /usr/lib/apache2/modules/libphp5.so #second parameter can be found out via locate libphp5.so if upgrading to a newer version
+
+```
+
+For more details, read:
+http://www.php.net/manual/en/install.unix.apache2.php
+Do not forget to edit  httpd.conf to load the right php5 module.
+Edit httpd.conf to load the so module:
+```
+LoadModule php5_module  /usr/lib/apache2/modules/libphp5.so
+```
+
+### Install FAQ
+ * Can not load *.so File? Maybe the destination is wrong. Use `locate file.so` and  cp to Change pass, for example: `cp /usr/lib/php5/20100525/curl.so /usr/local/lib/php/extensions/debug-zts-20121212/curl.so`
 
 ## Install a client
  * copy the files in the /client directory onto a (local) webserver and access via index.html

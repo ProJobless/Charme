@@ -3,14 +3,13 @@
 - update keyhash on key directory recrypt
 - timeout for non responding server at message send: store in db to send later
 - remember timeout requests! try to send them again in cron job
-- change password
 - delete comments/posts
 
 ## signatures for posts and messages
-- Save all public key revisions of other users to validate signatures
-- Repost and like verification by signing and storing hash on server
-- Important: Warn if newer public key available
-- On recrypt: Resign all posts
+   - Save all public key revisions of other users to validate signatures
+   - Repost and like verification by signing and storing hash on server
+   - Important: Warn if newer public key available
+   - On recrypt: Resign all posts
 
 
 ## ROADMAP
@@ -69,6 +68,7 @@ LOW PRIORITY
 - Server
    - Core
    - Performance
+   - Message Distribution
    - GCM
 - UI
 - Documentation

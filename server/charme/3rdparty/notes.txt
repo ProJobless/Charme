@@ -2,6 +2,14 @@ Changes:
 @WideImage, File: Image.php:
 - Changed echo to return at output function ...and removed header 
 
+- Added imagick to allowed extensions
+static function checkGD()
+	{
+		if (!extension_loaded('gd') && !extension_loaded('imagick'))
+			throw new WideImage_Exception("WideImage requires the GD extension, but it's apparently not loaded.");
+	}
+
 @Latex2ML
 - Removed document complete functions at bottom, call translate() in function initPAge in page.js
 - Add AMtranslated=true in translate(), because otherwise funciton is called only once per document complete.
+

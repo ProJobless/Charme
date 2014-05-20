@@ -3,7 +3,7 @@ header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 12 Mar 1992 05:00:00 GMT');
 
 include_once("config.php");
-
+include_once("log.php");
 error_reporting(E_ALL);
 
 // Do not display erros in PHP File, check /var/log/apache2/error.log for errors
@@ -63,17 +63,7 @@ session_start();
 
 //@unlink("log.txt");
 
-function clog($str)
-{
-	$fd = fopen("log.txt", "a");
-	fwrite($fd, $str."\r\n");
-	fclose($fd);
-}
 
-function clog2($ar)
-{
-	clog(print_r($ar, true));
-}
 /**
  * req.php
  * Parses incoming client requests
@@ -626,11 +616,11 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 				$req21 = new \App\Requests\JSON(
 				$resItem["follower"],
-				$result["owner"],
-				$data
+				$resItem["owner"],
+				$resItem["payload"]
 				
 				);
-				$req21->send();
+				$req21->send($resItem["priority"]);
 
 			}
 
@@ -951,7 +941,6 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 							$reqdata["encMessage"] = $item["encMessage"];					
 
 
-
 					$data = array("requests" => $reqdata
 
 					);
@@ -965,12 +954,10 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					);
 
 
-				$req21->send();
+				$req21->givePostman(1);
 			}
 
-			
-
-
+			\App\Hydra\Distribute::start(); // Start message distribution
 			$returnArray[$action] = array("sendername" => $sendername);
 
 

@@ -101,7 +101,7 @@
 		 */
 		static function checkGD()
 		{
-			if (!extension_loaded('gd'))
+			if (!extension_loaded('gd') && !extension_loaded('imagick'))
 				throw new WideImage_Exception("WideImage requires the GD extension, but it's apparently not loaded.");
 		}
 		

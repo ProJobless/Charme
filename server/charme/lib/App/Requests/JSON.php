@@ -30,8 +30,13 @@ class JSON
 		$this->source=$a_source;
 		$this->payload= array("requests" => $a_payload); 
 	}
-
-	function send($debug=false)
+	function givePostman($priority, $errorcode=0, $tries=0)
+	{
+		$message = array("destination" => $this->destination, "source" => $this->source, "payload" => $this->payload);
+		$col = \App\DB\Get::Collection();
+		$col->outbox->insert(array("message" => $message, "priority" => $priority, "errorcode" => $errorcode, "tries" => $tries));
+	}
+	function send($debug=false, $priority=1, $tries=0)
 	{
 		$dest = explode ('@',$this->destination);
 
@@ -68,8 +73,12 @@ class JSON
 
 		if(curl_errno($ch))
 		{
-		    clog( 'Curl error: ' . curl_error($ch));
-		    // 28 is timeout! TODO: Save request and try to send again later on.
+		    $cha = 0;
+		    if (isset($ch))
+		    	$cha = $ch;
+
+		   $this->givePostman($priority, $cha, (intval($tries)+1));
+		    
 		}
 
 

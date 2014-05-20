@@ -12,6 +12,7 @@
 /old/*
 /doxygen/*
 
+*.sublime-project
 #################
 ## Eclipse
 #################

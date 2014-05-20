@@ -12,10 +12,8 @@ class Get
 
 	public static function Collection()
 	{
-		$db_internal_mongo= new \Mongo();
+		$db_internal_mongo= new \MongoClient();
 		return $db_internal_mongo->charme2;
-
-
 	} 
 
 

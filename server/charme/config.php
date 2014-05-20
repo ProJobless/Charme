@@ -3,6 +3,10 @@
 	Charme Configuration File
 */
 
+// Note: Edit lib/App/DB/Get to change Collection
+// Todo: Specify Collection here in Charme Settings.
+
+
 $CHARME_SETTINGS = array();
 
 //Do not change this after users have registred
