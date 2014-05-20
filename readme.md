@@ -67,21 +67,23 @@ The project is splitted into the following sub projects:
 ## Setup a server
 
   * Compile and install PHP with ZTS enabled for Apache (See Appendiy below for more information). For Windows there should be some prebuild pthreads binaries.
-  * install pthreads extension with `pecl install -f pthreads` if not added during compilation already
-  * Add pthreads to php.ini: `extension=php_pthreads.dll` in Windows, extension=`pthreads.so` in linux
+ ~~ * install pthreads extension with `pecl install -f pthreads` if not added during compilation already~~
+ ~~ * Add pthreads to php.ini: `extension=php_pthreads.dll` in Windows, extension=`pthreads.so` in linux~~
   * Make sure short_open_tag is set to true in php.ini, otherwise 
     PHP will not parse php files. 
+  * Install Gearman via `apt-get install gearman` `sudo aptitude install gearman-job-server libgearman-dev` `pecl install gearman-1.0.3`. php.ini: extension = gearman.so
   * Install Curl if not set during compilation:  `apt-get install php5-curl` Make sure curl is enabled in php.ini via extension=curl.so
   * install gd extenstion for wide image library: `sudo apt-get install libmagickwand-dev libmagickcore-dev` and `pecl install imagick`
   * Install MongoDB, via pecl install mongo, Add to php.ini via extension=mongo.so
   *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
   * Protect /admin with a .htaccess file
   * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
+  * Start gearman via `/etc/init.d/gearman-job-server start`
   * restart apache2 (Linux: `service apache2 restart`)
 
 ###Appendix: Compiling PHP with PThreads
 
-After downloading the PHP sources, goto ./ext dictionary and add pthreads:
+After downloading the PHP sources, goto /src/php[VERSION]/ext dictionary and add pthreads:
 ```
 git clone https://github.com/krakjoe/pthreads.git
 ```
