@@ -11,7 +11,7 @@
 /temp/*
 /old/*
 /doxygen/*
-
+*.sublime-workspace
 *.sublime-project
 #################
 ## Eclipse
