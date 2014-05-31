@@ -28,16 +28,20 @@ class JSON
 		//$this->data = json_decode($d);
 		$this->destination=$a_destination;
 		$this->source=$a_source;
-		$this->payload= array("requests" => $a_payload); 
+		$this->payload= ($a_payload); 
 	}
 	function givePostman($priority, $errorcode=0, $tries=0)
 	{
-		$message = array("destination" => $this->destination, "source" => $this->source, "payload" => $this->payload);
+		//clog("POSTMAN PLAYLOAD IS"); clog2($this->payload);
+
+		$message = array("destination" => $this->destination, "source" => $this->source, "payload" => ($this->payload)); // Payload contains request array
 		$col = \App\DB\Get::Collection();
 		$col->outbox->insert(array("message" => $message, "priority" => $priority, "errorcode" => $errorcode, "tries" => $tries));
 	}
 	function send($debug=false, $priority=1, $tries=0)
 	{
+		//clog("SEND PLAYLOAD IS"); clog2($this->payload);
+
 		$dest = explode ('@',$this->destination);
 
 		$server = $dest[1];
@@ -45,6 +49,9 @@ class JSON
 	                 
 
 		$data_string = (json_encode($this->payload));    
+		//clog("DATA STRING IS");
+		//clog($data_string);
+
 
 		$fields = array(
 								'd' => urlencode($data_string),
@@ -59,6 +66,7 @@ class JSON
 		rtrim($fields_string, '&');
 
 		$ch = curl_init();
+	
 
 		curl_setopt($ch,CURLOPT_URL, $url);
 		curl_setopt($ch,CURLOPT_POST, count($fields));
@@ -87,6 +95,7 @@ class JSON
 		if ($debug) // Use $plain=true for debugging
 			echo str_replace('$', '\$', $result);
 
+		clog($result);
 		// Only decode if no local request!!!
 		return json_decode($result, true);
 

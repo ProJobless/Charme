@@ -1,4 +1,11 @@
 <?php
+/**
+ * req.php
+ * Parses incoming client requests
+ *
+ * @author mschultheiss
+ */
+
 header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 12 Mar 1992 05:00:00 GMT');
 
@@ -9,68 +16,17 @@ error_reporting(E_ALL);
 // Do not display erros in PHP File, check /var/log/apache2/error.log for errors
 ini_set('display_errors', 'Off');
 
+//header('Content-type: application/json'); // Disabled, because of jquery post
 
-// Disabled, because of jquery post
-//header('Content-type: application/json');
-
-
-// Enable CORS? May be useful in the future; See http://enable-cors.org/server_php.html
-// header("Access-Control-Allow-Origin: *");
-// See also:
-
-/*
-
-Developers, read this about CORS first:
-
-http://stackoverflow.com/questions/298745/how-do-i-send-a-cross-domain-post-request-via-javascript
-http://stackoverflow.com/questions/5584923/a-cors-post-request-works-from-plain-javascript-but-why-not-with-jquery
-
-*/
-
-/*
-if (isset($_SERVER['REMOTE_HOST']))
-$host = $_SERVER['REMOTE_HOST'];
-else
-$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-
-
-	switch ($host) {
-	   case 'client.local' :
-	    case 'server.local': 
-	    case 'http://charmeproject.com': case 'http://client.charmeproject.com':  // Only allow trusted clients
-	   // header('Access-Control-Allow-Origin: '.$host);
-
-
-	    break;
-	}
-*/
-
-// https://developer.mozilla.org/en-US/docs/HTTP/Access_control_CORS#Access-Control-Allow-Origin
-
+// CORS Headers and stuff
 header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
-
 header('Access-Control-Allow-Origin: http://client.local');
-
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie sending
 
-
-session_start();
-
-// logging Function
-
-//@unlink("log.txt");
-
-
-/**
- * req.php
- * Parses incoming client requests
- *
- * @author mschultheiss
- */
-
+session_start(); // Start session
 
 /*
 	We are using Symphonys class loader here, see
@@ -91,42 +47,27 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
 
-
 if (isset($_POST["d"]))
 	$data = (json_decode($_POST["d"], true));
 else
 	$data = array();
 
 
-
-
-
-/*
-	TODO:
-	- Validate User idenity
-	- Check Privacy (Example: Is this user allowed to send me messages)
-
-*/
-
-
-
-
-// JSON (we use now) does not need callback, JSONP needs Callback, see http://stackoverflow.com/questions/2822609/invalid-label-firebug-error-with-jquery-getjson
-
 $returnArray = array();
 
+
+
+
+// Requests is not a list
 foreach ($data["requests"] as $item)
 {
-
-
-
-
+	
 	$action = $item["id"];
-
 
 	// This array contains a list of request, that can be executed without a session Id
 	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
+				clog("ERROR 1 id was ".$item["id"]);
 				break; // echo error
 	}
 
@@ -686,7 +627,8 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 			//$item["localreceivers"][] = $item["sender"];
 			
-		
+			clog("GOT A MESSAGE RECEIVE!!! ");
+			clog2($item);
 			// Warning! One message per server only!
 			global $CHARME_SETTINGS;
 
@@ -757,10 +699,9 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				else
 				{
 
-
 					
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
-					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false,  '$inc' => array('counter' => 1), "time" => new MongoDate()
+					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false,   "time" => new MongoDate()
 						);
 
 					if ($item["status"] == "addPeople")
@@ -805,15 +746,19 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						$setarray["peoplenames"] = $newpeoplenames;
 
 					}
-
-
-
-					if (isset($item["messagePreview"]))
-					$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray),array('multiple' => true)); 
+					clog("###MSG STEP2");
+					clog2($item);
+					clog2($setarray);
+				
+					if (isset($item["messagePreview"])) // Please not $inc is not supported in $set array
+						$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray, '$inc' => array('counter' => 1)),array('multiple' => true)); 
+					
+						clog("###MSG STEP3");	
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
 					
+		
 					
-			
+				clog("###MSG STEP4");	
 
 					// Increment receivers Counters
 					foreach ($ppl["people"] as $val) {
@@ -821,7 +766,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 						if ( $item["sender"] !=  $val)
 						\App\Counter\CounterUpdate::inc($val, "talks");
 					}
-				
+							clog("###MSG STEP5");
 
 				}
 				
@@ -846,7 +791,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 
 
-		
+			clog("###MSG INSERT MESSAGE");
 				$col->messages->insert($ins);
 
 				/* Notify Android Devices via Google Cloud Messaging (GCM) */
@@ -879,41 +824,26 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 		// Get message from client
 		case "message_distribute_answer":
 
-
-
 			$col = \App\DB\Get::Collection();
-		
 			$convId = new MongoId($item["conversationId"]);
-
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
 
-
 			// Find receivers of this message by $item["conversationId"]
 			$res = $col->conversations->findOne(array("conversationId"=> ($convId)), array('people'));
+			$clustered = \App\Requests\Cluster::ClusterPeople($res["people"]); // Cluster people to save bandwith
 
-
-			$clustered = \App\Requests\Cluster::ClusterPeople($res["people"]);
-
-		//	clog2($clustered);
-
-			// if enc file exists...
-
-			// TODO: Add size limit
 			$fileId = 0;
 
+			// Store files on server
 			if (isset($item["encFile"]))
 			{
 				$col = \App\DB\Get::Collection();
-		
 				$grid = $col->getGridFS();
-
-
 				$fileId = (string)$grid->storeBytes($item["encFile"], array('type'=>"encMsg",'owner' => $_SESSION["charme_userid"]));
 				$ret2 = $grid->storeBytes($item["encFileThumb"], array('type'=>"encMsgThumb",'owner' => $_SESSION["charme_userid"], "orgId" => $fileId));
 				
 			} 
-
 
 			foreach ($clustered as $receiver)
 			{
@@ -941,10 +871,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 							$reqdata["encMessage"] = $item["encMessage"];					
 
 
-					$data = array("requests" => $reqdata
-
-					);
-
+					$data = array("requests" => array($reqdata));
 
 					$req21 = new \App\Requests\JSON(
 					$receiver,
@@ -954,6 +881,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					);
 
 
+				clog("Give postman called in req 878");
 				$req21->givePostman(1);
 			}
 

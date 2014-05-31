@@ -355,8 +355,7 @@ Uv8fN1L/XXx2/2y8Zf9Qmjj/NEpg/x83Uv8fN1L/HzdS/x83Uv8fN1L/HzdS/y5EXv8fN1L/HzdS
 K0Jb/y9FXv8vRV7/L0Ve/y9FXv8vRV7/OlBl/zRJYf8vRV7/L0Ve/y9FXv8vRV7/L0Ve/y9FXv8v
 RV7/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAA==" type="image/x-icon" />
-	<LINK href="mongo.css" rel="stylesheet" type="text/css">
-    
+  
   </head>
 
   <body>
