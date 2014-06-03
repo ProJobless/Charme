@@ -57,9 +57,6 @@ class JSON
 								'd' => urlencode($data_string),
 								'receiver' => urlencode($dest[0]),
 								'sender' => urlencode($this->source),
-						
-							
-								
 						);
 		$fields_string ="";  
 		foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }

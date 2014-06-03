@@ -1,11 +1,4 @@
-@font-face {
-  font-family: OpenSans;
-  src: url(fonts/Open_Sans/OpenSans-Regular.ttf);
-}  
-@font-face {
-  font-family: OpenSansLight;
-  src: url(fonts/Open_Sans/OpenSans-Light.ttf);
-}  
+
 .loggedOutOnly
 {
 	display: none;
@@ -49,11 +42,6 @@
 
 
 
-.button:active
-{
-
-background-color: black;
-}
 
 .sbAlpha ul a:active
 {
@@ -368,6 +356,8 @@ margin-bottom:0px;
 	padding:8px;
 	color:#000;
 	cursor:pointer;
+	font-family: "fira_sans_otlight";
+	line-height: 16px;
 
 	text-decoration:none;
 
@@ -495,10 +485,8 @@ margin-left:150px;
 
 body
 {
-	margin:0px;
-	background-color:#EEE;
-	font-family:OpenSans,Tahoma, Geneva, sans-serif;
-	font-size:12px;
+
+	font-size:13px;
 
 	
 	}

@@ -175,8 +175,6 @@ foreach ($data["requests"] as $item)
 			// itemTime' => array('$lt' =>  new MongoDate($item["itemStartTime"] )
 
 			// array('$lt' =>  new MongoDate($item["itemStartTime"] ))
-
-
 			$returnArray[$action] = array("messages" => 
 			iterator_to_array(
 				$col->messages->find($sel)
