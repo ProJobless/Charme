@@ -3,11 +3,12 @@
 2) update keyhash on key directory recrypt
 3) keymanager_checkRevCounter callqö
 4) responsive mode
-5) host public keys on server
+5) host public keys on server (via class App\Security\PublicKeys)
 
 
 ## to test (also for multiserver)
 post_comment_distribute
+
 
 
 ## signatures for posts and messages

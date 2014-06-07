@@ -49,8 +49,8 @@ class JSON
 	                 
 
 		$data_string = (json_encode($this->payload));    
-		clog("DATA STRING IS");
-		clog($data_string);
+		//clog("DATA STRING IS");
+		//clog($data_string);
 
 
 		$fields = array(

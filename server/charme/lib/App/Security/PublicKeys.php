@@ -14,32 +14,42 @@ class PublicKeys
 		@param $userId 		The user id
 		@param $revision 	The revision
 
-		@returns 1: If newly added, 2: If already exists and no difference 3: If difference
+		@returns 1 if success, 3 if key revision is outdated or invalid
 	*/
 	public static function tryToAdd($userId, $revision)
 	{
-		$col = \App\DB\Get::Collection();
 		
-		// Check if public key already exists
-		$col->serverKeyDirectory->find(array("userId"=>$userId, "revision" => $revision));
-		//return $db_internal_mongo->charme2;
+		$col = \App\DB\Get::Collection();
+		$result = $col->serverKeyDirectory->count(array("userId"=>$userId, "key.revision" => $revision));
+		
 
+		if ($result < 1)
+		{
 		// If not found -> Send request!
-		$data = array("requests" => array(
+		$data = array("requests" => array(array(
 				"id" => "key_get",
 				"profileId" => $userId,
-				));
+				)));
 
 		$req21 = new \App\Requests\JSON(
 		$userId,
 		"SERVERNAME",
 		$data);
 
-		$redData = $req21->send();
-
-		clog2($reqData);
-
+		$reqData = $req21->send();
+		if ($reqData["key_get"]["revision"] == $revision)
+			$col->serverKeyDirectory->insert(array("userId" => $userId, "key" => $reqData["key_get"]));
+		else
+			return 3;
+		//$reqData["key_get"];
+		print_r($reqData);
 		return true;
+		// Check if public key already exists
+		}
+		else
+			return 1;
+
+
 	} 
 }
 ?>

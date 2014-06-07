@@ -430,20 +430,12 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 					)));
 
-
-
-	
-
-
 			$req21 = new \App\Requests\JSON(
 			$receiver,
 			$_SESSION["charme_userid"],
 			$data);
 
-
 			$arr = $req21->send();
-
-
 
 			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["post_comment_distribute"]["commentId"] );
 
@@ -1456,9 +1448,6 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			$data);
 
 			$arr = $req21->send();
-
-
-
 
 		break;
 
