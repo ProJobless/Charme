@@ -2,7 +2,7 @@
 			<div class='aboutContainer' style='margin-right:32px'>
 				<div class='aboutBox'>
 					<div class='title'>Account</div>
-					<table>
+					<table class="selectable">
 						<tr><td class='info'>Name:</td><td id='fld_username'><%- rc.profile_get.info.firstname %> <%- rc.profile_get.info.lastname %></td></tr>
 <tr><td class='info'>Hometown:</td><td><%- rc.profile_get.info.hometown %></td></tr>
 <tr><td class='info'>Charme ID:</td><td><%- rc.profile_get.info.userid %></td></tr>
@@ -38,7 +38,7 @@
 			<div class='aboutContainer'>
 				<div class='aboutBox'>
 					<div class='title'>Public Information</div>
-					<table>
+					<table  class="selectable">
 						<tr><td class='info'>About:</td><td><%- rc.profile_get.info.about %></td></tr>
 						<tr><td class='info'>Hobbies:</td><td><%- rc.profile_get.info.hobbies %></td></tr>
 <tr><td class='info'>Literature:</td><td><%- rc.profile_get.info.literature %></td></tr>
@@ -55,7 +55,7 @@
 
 					<div class='aboutBox' style='margin-top:32px;' id='profileListBox'>
 					<div class='title'>Private Information</div>
-						<table id='table_prvInfo'>
+						<table  class="selectable" id='table_prvInfo'>
 						</table>
 				
 

@@ -4,16 +4,20 @@
 * 	Class directly returns a collection
 */
 
-namespace App\Verificator;
+namespace App\Security;
 
 // Usage: $col = new \App\DB\Get();
-class Check
+class RequestVerificator
 {
 	// Check if it is a valid request
-	public static function Collection()
+	/* 
+		@param json: 	The JSON data of the request
+		@param userId : The complete userId of the session owner e.g you@yourserver.com
+	*/
+	public static function Verify($json, $userId="")
 	{
-		$db_internal_mongo= new \MongoClient();
-		return $db_internal_mongo->charme2;
+		// TODO!!
+		return true;
 	} 
 
 

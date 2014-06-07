@@ -743,9 +743,9 @@ control_postField = Backbone.View.extend({
 
 		var addbox = function(that, items) {
 
-				that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
+				that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' style='margin-right:8px;' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
 
-					$('#postOptions2').append(" <input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-plus'></i></a><a style='display:none' id='but_remImg'>Remove Image</a>");
+					$('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-plus'></i></a><a style='display:none' id='but_remImg'>Remove Image</a>");
 
 					$('#inp_postImg').on("change", function(e) {
 						that.fileChanged(e);
@@ -765,7 +765,7 @@ control_postField = Backbone.View.extend({
 					});
 
 					if (items != "")
-							$('#postOptions').append(" in <select style='' id='collectionSelector'>" + items + "</select>");
+							$('#postOptions').append("in<select  style='margin-right:4px; margin-left:8px;' style='' id='collectionSelector'>" + items + "</select>");
 
 
 

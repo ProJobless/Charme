@@ -65,7 +65,7 @@
 	height: 20px;
 	float:right;
 	font-weight: normal;
-	padding:4px 8px 0px 8px;
+	padding:6px 8px 0px 8px;
 	position: relative;
 	
 }
@@ -344,28 +344,24 @@ width: 150px;
 float:left;
 }
 .sidebar ul 
-{
-padding:0;
-margin:0;
-list-style-type:none;
-margin-bottom:0px;
+	{
+	padding:0;
+	margin:0;
+	list-style-type:none;
+	margin-bottom:0px;
 }
 .sidebar ul li a
 {
 	display:block;
-	padding:8px;
+	padding:9px 8px 7px 8px;
 	color:#000;
-	cursor:pointer;
+	cursor:default;
 	font-family: "fira_sans_otlight";
 	line-height: 16px;
-
 	text-decoration:none;
-
-		font-weight: normal;
-letter-spacing: 1px;
-
+	font-weight: normal;
+	letter-spacing: 1px;
 	text-transform: uppercase;
-	
 }
 .sidebar ul li a:hover
 {

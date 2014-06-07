@@ -98,9 +98,9 @@ foreach ($data["requests"] as $item)
 			    for ($i = 0; $i < 32; $i++) {
 			        $randomString .= $characters[rand(0, strlen($characters) - 1)];
 			    }
-			    $cont = array("userid" => $item["userid"], "salt" => $randomString);
-			   $col->saltvalues->update($cont, $cont, array("upsert" => true));
-			   	$returnArray[$action] = array("salt" => $randomString);
+				$cont = array("userid" => $item["userid"], "salt" => $randomString);
+				$col->saltvalues->update($cont, $cont, array("upsert" => true));
+				$returnArray[$action] = array("salt" => $randomString);
 			}
 			// Save 
 		
@@ -379,7 +379,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 		$data = array("requests" => 
 
-				$itemdata
+				array($itemdata)
 
 		);
 
@@ -418,7 +418,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 	
 
 
-			$data = array("requests" => array(
+			$data = array("requests" => array(array(
 
 					"id" => "post_comment_distribute",
 					"content" => $item["content"],
@@ -428,7 +428,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 					"sendername" => $sendername
 			
 
-					));
+					)));
 
 
 
@@ -541,7 +541,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			foreach ($res2 as $resItem)
 			{
 			
-			$data = array("requests" => array(
+			$data = array("requests" => array(array(
 
 				"id" => "post_like_receive_distribute",
 				"owner" => $result["owner"],
@@ -549,7 +549,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				"postId" => $item["postId"],
 				"count" => $count
 
-			));
+			)));
 
 
 
@@ -591,7 +591,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 			$receiver = $item["userId"];
 
-			$data = array("requests" => array(
+			$data = array("requests" => array(array(
 
 					"id" => "post_like_receive",
 					"liker" => $_SESSION["charme_userid"],
@@ -600,7 +600,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					"status" => $item["status"],
 					"username" => $sendername
 
-					));
+					)));
 
 			
 
@@ -992,7 +992,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 					if (!in_array($receiver["charmeId"], $alreadySent ))
 
 					{
-						$content = array(
+						$content = array(array(
 					
 										"id" => "message_receive",
 										"localreceivers" => array($receiver["charmeId"]),
@@ -1007,7 +1007,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 										"conversationId" => $convId->__toString(),
 										"peoplenames" => $peoplenames
 			
-								);
+								));
 			
 						if (isset( $receiver["aesEnc"]))
 						{
@@ -1440,7 +1440,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 			// Send request to external server
 	
-			$data = array("requests" => array(
+			$data = array("requests" => array(array(
 
 			"id" => "piece_request_receive",
 			"userId" => $item["userId"],
@@ -1448,7 +1448,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			"key" => $item["key"],
 		
 
-			));
+			)));
 
 			$req21 = new \App\Requests\JSON(
 			$item["userId"],
@@ -2044,7 +2044,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			foreach ($res2 as $resItem)
 			{
 			
-			$data = array("requests" => array(
+			$data = array("requests" => array(array(
 
 				"id" => "register_collection_post",
 				"follower" => $resItem["follower"],
@@ -2052,7 +2052,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				"username" => $username,
 				"post" => $content,
 				"postId" => $content["_id"]->__toString()
-			));
+			)));
 
 
 		
@@ -2382,13 +2382,13 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				
 
 
-				$data = array("requests" => array(
+				$data = array("requests" => array(array(
 
 				"id" => "collection_3newest",
 				"collectionId" => ($item["collectionId"]),
 				"follower" => $_SESSION["charme_userid"], // used in 3newest
 	
-				));
+				)));
 
 				
 				$req21 = new \App\Requests\JSON(
@@ -2467,7 +2467,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 
 
 
-			$data = array("requests" => array(
+			$data = array("requests" => array(array(
 
 				"id" => "register_collection_follow",
 				"collectionId" => ($item["collectionId"]),
@@ -2484,7 +2484,7 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 				//"aesEnc" => $receiver["aesEnc"], known already by receiver
 */
 
-			));
+			)));
 
 
 			$req21 = new \App\Requests\JSON(

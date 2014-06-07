@@ -59,10 +59,10 @@ h3
 .cui_mbutton
 {
 	padding: 8px;
-	border-left: 1px #efefef solid;
+	border-left: 1px #ccc solid;
 	display: inline-block;
 	float:left;
-
+color:gray;
 
 }
 .cui_imgbutton:hover
@@ -76,7 +76,7 @@ border:1px transparent solid;
 	color:silver;
 	
 	border-radius: 2px;
-	padding: 8px 7px 6px 7px;
+	padding: 9px 7px 6px 7px;
 	position: relative;
 	
 }
@@ -116,7 +116,7 @@ input, textarea, .selectable {
     -ms-user-select:text;
     user-select:text;
 }
-input[type=text]
+input[type=text], .box
 {
 	border:1px #ccc solid;
 	border-radius: 2px;
@@ -134,6 +134,14 @@ margin:0px;
 .button:hover
 {
 	color:#fff;
+	-webkit-filter: brightness(1.5);
+
+	transition: all 0.3s ease-in 0.0s;
+    -webkit-transition: all 0.3s ease-in 0.0s;
+    -moz-transition: all 0.3s ease-in 0.0s;
+    -o-transition: all 0.3s ease-in 0.0s;
+
+
 }
 .button.gray
 {
@@ -153,10 +161,11 @@ margin:0px;
 select
 {
 	border:1px #efefef solid;
-	 padding: 6px;
+	 padding: 7px 6px 5px 6px;
 	 background-color: transparent;
 	 border-radius: 2px;
     outline:none;
+    background-color: #efefef;
     display: inline-block;
   
     cursor:pointer;
@@ -164,11 +173,18 @@ select
 
 .button
 {
+		transition: all 0.2s linear 0.0s;
+    -webkit-transition: all 0.2s linear 0.0s;
+    -moz-transition: all 0.2s linear 0.0s;
+    -o-transition: all 0.2s linear 0.0s;
+
 	background-color: #1A3C87;
 	border-radius: 2px;
 	color:#fff;
 	letter-spacing: 1px;
 	font-size: 15px;
+	position: relative;
+	top:-2px;
 	padding: 7px;
 	text-transform: uppercase;
 	font-weight:normal;

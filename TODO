@@ -1,8 +1,14 @@
 ## current todo:
 1) delete comments/posts
 2) update keyhash on key directory recrypt
-3) keymanager_checkRevCounter call
+3) keymanager_checkRevCounter callqö
 4) responsive mode
+5) host public keys on server
+
+
+## to test (also for multiserver)
+post_comment_distribute
+
 
 ## signatures for posts and messages
    - Save all public key revisions of other users to validate signatures
@@ -87,7 +93,9 @@ LOW PRIORITY
 - Check also ids for XSS attacks!
 
 
-### Cool libraries
+### Cool libraries to include later
+Google PGP JS Lib
+https://code.google.com/p/end-to-end/
 
 Random Color Generator
 http://llllll.li/randomColor/
@@ -96,3 +104,5 @@ http://llllll.li/randomColor/
 Chrome Extension:
 
 Bypass Same Origin Policy with manifest.json 
+
+
