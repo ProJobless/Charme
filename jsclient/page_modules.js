@@ -848,19 +848,30 @@ control_commentItem = Backbone.View.extend({
 
 
 
-		var str = "<div class='comment'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + xssText(this.options.content) + "</div>";
+		var str = "<div class='comment' id='comment_"+this.options.commentId+"'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + xssText(this.options.content) + "</div>";
 		if (this.options.prepend)
 			this.$el.prepend(str);
 		else
 			this.$el.append(str);
 
-
+		var that = this;
 		// Imporant: Attach event handler AFTER ITEM HAS BEEN ADDED!
 		$('#delete_' + uniIdCounter).click(function() {
+		
+				alert(that.options.commentId);
+				apl_request({
+				"requests": [{
+					"id": "comment_delete",
+					"commentId":  that.options.commentId
+				}, ]
+			}, function(d) {
 
-			// Send this to MY server.
-			// server will find out host  server and notify host server
-			alert($(this).data("commentid"));
+				// Remove post from GUI
+				$("#comment_"+that.options.commentId).fadeOut(0);
+
+			});
+
+
 
 		});
 
@@ -902,8 +913,8 @@ control_postItem = Backbone.View.extend({
 
 			var item = new control_commentItem({
 				content: this.content,
-				commentId: this._id.$id,
-				"username": this.sendername,
+				commentId: this.commentId.$id,
+				"username": this.sendername, 
 				userId: this.userId,
 				prepend: prepend,
 				el: $('#postComments' + parentId)

@@ -1,1 +1,2 @@
-delete GCM Ids in config.php and lib/App/GCM/Send.php
+- delete GCM Ids in config.php and lib/App/GCM/Send.php
+- make sure all clog functions are removed or disabled

@@ -158,35 +158,28 @@ position: relative;
 }
 .actionIcon
 {
-
-width: 48px;
-height: 48px;
-
+	width: 48px;
+	height: 48px;
 	background-image:url(actions2.png);
-
 	display:inline-block;
 	cursor:pointer;
-
-
 }
 
 .uiBlock
 {
-		position:fixed;
-		width:100%;
-		height:100%;
-		display:none;
-		background-color:#efefef;
-		z-index:9998;
-		
-		
+	position:fixed;
+	width:100%;
+	height:100%;
+	display:none;
+	background-color:#efefef;
+	z-index:9998;
 }
 .boxMargin
 {
 	padding: 16px;
-			background-color:#efefef;
-			border-top:1px silver solid;
-			text-align: right;
+	background-color:#efefef;
+	border-top:1px silver solid;
+	text-align: right;
 }
 
 .imagePreview
@@ -269,11 +262,12 @@ padding-top:0;
 }
 .tabBar ul li A
 {
-	display:block;padding:8px; cursor:pointer;
+	display:block;padding:8px; 
 	color:#fff;
 	font-weight: normal;
 	letter-spacing: 1px;
 	text-transform: uppercase;
+	cursor:  default;
 }
 .tabBar ul li a
 {

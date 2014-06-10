@@ -3,6 +3,8 @@
 	Charme Hydra - Handles your distributed requests asynchronously
 
 	Notes: Please restart Apache Server when editing file
+
+	If Gearman Worker was not found: Check if gearman is loaded via php -m
 */
 include("log.php");
 

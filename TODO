@@ -1,11 +1,12 @@
 ## current todo:
 1) delete comments/posts
+   - comment delete: sign request, foreign server checks request, -> comment delete distribute 
 2) update keyhash on key directory recrypt
 3) keymanager_checkRevCounter callqö
 4) responsive mode
 5) host public keys on server (via class App\Security\PublicKeys)
-
-
+6) love funcitonality
+7
 ## to test (also for multiserver)
 post_comment_distribute
 
@@ -107,3 +108,7 @@ Chrome Extension:
 Bypass Same Origin Policy with manifest.json 
 
 
+
+-----------------------------------------------------------------
+notes: right php5 version:
+ cp /src/php-5.5.12/libs/libphp5.so  /usr/lib/apache2/modules/libphp5.so

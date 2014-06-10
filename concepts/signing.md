@@ -66,3 +66,8 @@ Important Server side functions
 ----------------------------------
 key_getByRevision  Get key by revision
 key_update_phase2  Add new public keys to local keyDirectory here
+
+
+Public key dir on server
+------------------------------------
+Problems: Evil server may publish compromised keys of their clients. Solution: Also ask other servers for public key.

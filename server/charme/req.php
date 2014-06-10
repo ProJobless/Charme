@@ -65,7 +65,7 @@ foreach ($data["requests"] as $item)
 	$action = $item["id"];
 
 	// This array contains a list of request, that can be executed without a session Id
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive", "post_delete_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getname",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 				clog("ERROR 1 id was ".$item["id"]);
 				break; // echo error
@@ -303,14 +303,14 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 	
 			$col = \App\DB\Get::Collection();
 
-		
-		//	clog("receive distribute2....");
+	
+			$item["commentId"] = new MongoId($item['_id']['$id']);
 
-
-
+	
 			unset($item["id"]);
 			unset($item["_id"]);
 		
+
 			// TODO: Performance! 1st $item can be reduced!
 			$col->streamcomments->update($item,$item, array("upsert" => true)); // TODO: Remove id in item
 
@@ -346,9 +346,12 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 				"postId" => $item["postId"],
 				"sendername" => $item["sendername"],
 				"postowner" => $item["userId"],
-				"itemTime"  => new MongoDate());
+				"itemTime"  => new MongoDate()
+			
 
-		
+				);
+
+				
 
 
 		 try {
@@ -374,17 +377,15 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 
 
 
+		// Insert local comment WARNING: This must happen before comments are sent to other servers, as the _id field is set afterwards
+		$col->comments->insert($itemdata);
 
-
+		clog2($itemdata);
 
 		$data = array("requests" => 
-
 				array($itemdata)
-
-		);
-
-		// Insert local comment
-		$col->comments->insert($itemdata);
+		); // $data must be defined after comments have been inserted and $itemdata contains the id
+	
 
 		// Send comment to other servers
 		foreach ($cursor3 as $receiver)
@@ -399,11 +400,15 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 		}
 
 
+
 		$returnArray[$action] = array("commentId" => $itemdata["_id"]->__toString());
 
 
 		break;
 		case "post_comment" :
+
+			// TODO: validate signature!
+
 
 			// Send to server owner
 			$col = \App\DB\Get::Collection();
@@ -417,7 +422,7 @@ $sel = array("conversationId" =>  new MongoId($res["conversationId"]), "fileId" 
 			//clog("postcomment ....: postId: ".$item["postId"]);
 	
 
-
+			// Send request to post owner server. Comment is distributed by this server
 			$data = array("requests" => array(array(
 
 					"id" => "post_comment_distribute",
@@ -2549,24 +2554,93 @@ $result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;
+		case "post_delete_receive":
 
-		case "post_delete":
+			// TODO: Verify sender
+			clog("triggered post_delete_receive");
+
 			$col = \App\DB\Get::Collection();
+			$col->streamitems->remove(array("postId" => new MongoId($item["postId"])));
+
+		break;
+		case "post_delete":
+
+			$col = \App\DB\Get::Collection();
+
+			// Find out the collection id to which the post belongs
+			$dbReturn = ($col->posts->findOne(array("_id" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]), array("collectionId", "_id")));
+			$colId = $dbReturn["collectionId"];
+			clog($colId);
+
+			// TODO: Make this more efficient. Only one request per server
+			$dbReturn2 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn["collectionId"])));
+		
+			foreach ($dbReturn2 as $item)
+			{
+				$data = array("requests" => array(array(
+				"id" => "post_delete_receive",
+				"collectionId" => $dbReturn["collectionId"],
+				"postId" => $dbReturn["_id"]->__toString(),
+				)));
+				$req21 = new \App\Requests\JSON(
+				$item["follower"],
+				$_SESSION["charme_userid"],
+				$data);
+				$arr = $req21->givePostman(2);
+			}
+			$col->posts->remove(array("_id" => new MongoId($dbReturn["_id"]), "owner" => $_SESSION["charme_userid"])); // Delete post local first
+			\App\Hydra\Distribute::start(); // Start server distribution
 			
-
-			$col->posts->remove(array("_id" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]));
-			
-			$col->streamitems->remove(array("postId" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]));
-
-
-			// If i created the post, than also delete from collection
-
 
 		break;
 
+		// Comments can either be deleted by post owner or by comment owner
 		case "comment_delete":
+			
+			$col = \App\DB\Get::Collection();
 
+	
+
+			// Find out the post and collection id respectivly to which the post belongs
+			$dbReturn1 = $col->comments->findOne(array("_id" => new MongoId($item["commentId"])), array("postId", "_id")); // has field owner
+			clog($dbReturn1);
+			$dbReturn2 = $col->posts->findOne(array("_id" => new MongoId($dbReturn1["postId"])),array("collectionId", "_id"));  // has field owner
+			$dbReturn3 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn2["collectionId"])));
 		
+			clog("triggerd comment delete".$item["commentId"]);
+
+			foreach ($dbReturn3 as $item2)
+			{
+		
+
+				$data = array("requests" => array(array(
+				"id" => "comment_delete_receive",
+				"commentId" => $dbReturn1["_id"]->__toString(),
+				"postId" => $dbReturn1["postId"],
+				)));
+				$req21 = new \App\Requests\JSON(
+				$item2["follower"],
+				$_SESSION["charme_userid"],
+				$data);
+
+				$arr = $req21->givePostman(2);
+
+				clog("triggerd comment delet 2222e");
+				clog2($arr);
+			}
+			// TODO: later
+			$col->comments->remove(array("_id" => new MongoId($dbReturn2["_id"]), "owner" => $_SESSION["charme_userid"])); // Delete post local first
+			\App\Hydra\Distribute::start(); // Start server distribution
+
+		break;
+
+		// Comments can either be deleted by post owner or by comment owner, so check if the sender is either one of them
+		case "comment_delete_receive":
+				clog("triggerd comment delete receive");
+		
+			$col = \App\DB\Get::Collection();
+			$col->streamcomments->remove(array("commentId" => new MongoId($item["commentId"])));
+
 		break;
 
 

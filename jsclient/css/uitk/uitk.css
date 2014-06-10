@@ -134,15 +134,9 @@ margin:0px;
 .button:hover
 {
 	color:#fff;
-	-webkit-filter: brightness(1.5);
-
-	transition: all 0.3s ease-in 0.0s;
-    -webkit-transition: all 0.3s ease-in 0.0s;
-    -moz-transition: all 0.3s ease-in 0.0s;
-    -o-transition: all 0.3s ease-in 0.0s;
-
 
 }
+
 .button.gray
 {
 	border:1px silver solid;
@@ -173,13 +167,11 @@ select
 
 .button
 {
-		transition: all 0.2s linear 0.0s;
-    -webkit-transition: all 0.2s linear 0.0s;
-    -moz-transition: all 0.2s linear 0.0s;
-    -o-transition: all 0.2s linear 0.0s;
+
 
 	background-color: #1A3C87;
 	border-radius: 2px;
+	cursor: default;
 	color:#fff;
 	letter-spacing: 1px;
 	font-size: 15px;
@@ -194,4 +186,6 @@ font-family: "fira_sans_otlight";
 .button:active
 {
 	background-color: #000;
+	color:#fff;
+
 }
