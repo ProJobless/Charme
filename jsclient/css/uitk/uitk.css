@@ -115,6 +115,8 @@ input, textarea, .selectable {
     -moz-user-select:text;
     -ms-user-select:text;
     user-select:text;
+    font-family: "fira_sans_regular";
+    font-size: 14px;
 }
 input[type=text], .box
 {

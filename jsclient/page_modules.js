@@ -170,8 +170,10 @@ view_page = Backbone.View.extend({
 
 		if (this.options.navMatch != '') {
 
-			$(".sbAlpha ul li").removeClass("active");
+			$(".sbAlpha ul li, .header.responsive .row1 a").removeClass("active");
+
 			$(".sbAlpha ul li a[data-topic='" + this.options.navMatch + "']").parent().addClass("active");
+			$(".header .row1 a[data-topic='" + this.options.navMatch + "']").addClass("active");
 		}
 
 		if (this.options.useSidebar) {

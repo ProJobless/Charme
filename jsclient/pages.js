@@ -306,6 +306,10 @@ console.log("sidebar load=true");
 		     <ul class="subCont"> \
 		     </ul> \
 		        </div> \
+		        <div class="responsive header"> \
+		        	<div class="row1"><a class="active"  data-topic="stream" href="#stream"><i class="fa fa-image"></i></a><a   data-topic="profile"  href="#user/' + (charmeUser.userIdURL) + '"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a></div> \
+		       		<div class="row2"><span id="responsiveTitle">Titel</span></div> \
+		        </div> \
 		        <div class="page_content"> \
 		        <div class="page" style="padding:0px; " id="page"> \
 		        </div> \
@@ -321,7 +325,6 @@ console.log("sidebar load=true");
 
 			$(this.el).html(str);
 
-			console.log("render main container");
 			$(".sbAlpha ul").append("<li ><a id='item_stream' data-topic='stream' href='#stream'>Stream</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/" + (charmeUser.userIdURL) + "'>Profile</a></li>");
 			$(".sbAlpha ul").append("<li><a  style='float:right; width: 17px; text-align:center; border-left: 1px #efefef solid;  color:#666;' href='javascript:sendMessageForm()'>+</a><a style='width:101px'  id='item_talks' data-topic='talks' href='#talks'>Talks</a></li>");

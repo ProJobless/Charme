@@ -112,3 +112,13 @@ Bypass Same Origin Policy with manifest.json
 -----------------------------------------------------------------
 notes: right php5 version:
  cp /src/php-5.5.12/libs/libphp5.so  /usr/lib/apache2/modules/libphp5.so
+
+copy gearman
+cp /usr/local/lib/php/extensions/debug-zts-20121212/gearman.so  /usr/lib/apache2/modules/gearman.so
+
+
+pecl --with-config-file-scan-dir=/usr/local/lib
+
+
+sudo pear config-set php_ini /usr/local/lib/php.ini
+sudo pecl config-set bin_dir /usr/bin/

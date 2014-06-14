@@ -31,7 +31,7 @@
       key1 = getKeyByRevision(0);
       this.revision = key1.revision;
       rsa.setPrivateEx(key1.rsa.rsa.n, key1.rsa.rsa.e, key1.rsa.rsa.d, key1.rsa.rsa.p, key1.rsa.rsa.q, key1.rsa.rsa.dmp1, key1.rsa.rsa.dmq1, key1.rsa.rsa.coeff);
-      this.hash = rsa.signString(originalMessage, "sha1");
+      this.hash = rsa.signStringWithSHA256(originalMessage);
     }
 
     /*
@@ -51,13 +51,14 @@
     	crypto.js
     
     	Code:JS:
-    	hashkeys = buildHashKeyDir(["test@test.de"]);
+    	// TODO
     */
 
 
     Signature.Verify = function(hash2Check, message2verify, publicKey) {
       var key1, result, x509;
       key1 = getKeyByRevision(0);
+      alert("SIGNATURE VERIFICATION NOT WORKING YET!!!");
       x509 = new X509();
       x509.readCertNE(key1.rsa.rsa.n, key1.rsa.rsa.e);
       result = x509.subjectPublicKeyRSA.verifyString(message, signature);
@@ -82,6 +83,30 @@
         template = _.template(d, null);
         return ui_showBox(template, function() {});
       });
+    };
+
+    /*
+    
+    		Return Form: {object, signature {keyRevision, hashvalue}}
+    */
+
+
+    Signature.makeSignedJSON = function(object) {
+      var jsonString, signature;
+      jsonString = JSON.stringify(object);
+      console.log("SIGNJS");
+      console.log(jsonString);
+      signature = new CharmeModels.Signature(jsonString);
+      return {
+        object: object,
+        signature: signature.toJSON()
+      };
+    };
+
+    Signature.verifySignedJSON = function(object, key) {
+      var str;
+      str = JSON.stringify(object);
+      return CharmeModels.Signature.Verify(object.signature.hashvalue, str, key);
     };
 
     return Signature;

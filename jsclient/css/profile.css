@@ -81,12 +81,16 @@ ul.featuredCollections li a:hover
 	height: 100%;
 
 }
-
+.profile_sidebar
+{
+	 width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px;
+}
 
 .aboutBox
 {
 	background-color: #fff;
 	box-shadow:   0 0 3px #aaa;
+	margin-bottom: 32px;
 }
 .aboutBox label
 {padding:4px; clear:both; display:inline-block;}

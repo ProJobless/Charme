@@ -2,15 +2,16 @@
 
 <div style="overflow:auto; background-color:#EFEFEF; position:relative">
 
-	<div style="  width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px; ">
+	<div class='profile_sidebar'>
 	<img src="http://<%- rc.server %>/charme/fs.php?u=<%- rc.uid %>&amp;s=200" style="width:200px;  background-color:#ccc" />
 	<div class="tabBar profileTabs">
 	<ul>
 		<li id='nav_profile_info'><a  href='#user/<%- rc.uid %>'>Info</a></li>
 		<li id='nav_profile_collections'><a href='#user/<%- rc.uid %>/collections'>Collections</a></li>
-		<li id='nav_profile_lists'><a href='#user/<%- rc.uid %>/lists'>In the Lists</a></li>
+		<li id='nav_profile_lists'><a href='#user/<%- rc.uid %>/lists'>Added</a></li>
 	
 	</ul>
+	<br style="clear:both;">
 	<a id='but_sendMsg' class='button' style='margin-top:16px;'>New Conversation</a>
 
 		<a id='but_verifyKey' class='button' style='margin-top:16px;'>Verify Key to send Messages</a>
