@@ -1,0 +1,12 @@
+ ☐ !responsive mode
+     BIS 11°°uhr
+ ☐ !host public keys on server
+   (via class App\Security\PublicKeys) 
+   ..nachmittag
+ ☐ mesage send autocomplete
+
+  ☐ PHP/JS Signature compatibility
+     ☐ Check Signatures at Comment Deletions
+ ☐ update keyhash on key directory recrypt
+
+     
