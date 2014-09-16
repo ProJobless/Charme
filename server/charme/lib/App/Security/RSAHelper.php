@@ -44,7 +44,7 @@ class RSAHelper
 	    $encoding = $encoding."-----END PUBLIC KEY-----\n";
 
 	    // use the PEM version of the key to get a key handle
-	    $publicKey = \openssl_pkey_get_public ($encoding);
+	    $publicKey = ($encoding);
 	    return ($publicKey);
 	}
 

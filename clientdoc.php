@@ -11,9 +11,9 @@
 
 
 $docs = array(
-	array("input" => array("jsclient/apl", "jsclient/lib", "jsclient/pages.js", "jsclient/page_modules.js", "jsclient/devnotes.txt"),
+	array("input" => array("jsclient/apl", "jsclient/lib","jsclient/models", "jsclient/pages.js", "jsclient/page_modules.js", "jsclient/devnotes.txt"),
 		"outputfile" => "doc/client.html",
-		"extensions" => array("js"),
+		"extensions" => array("js", "coffee"),
 		"title" => "Charme Javascript Client Developer Documentation",
 		"foreword" => ""
 
@@ -1871,9 +1871,14 @@ EOD;
 // github.com  codestyle (c) Vasily Polovnyov <vast@whiteants.net>
 $css = <<<EOD
 
+table, body
+{
+	font-size:12px;
+	font-family: "Droid Sans", Tahoma;
+	
+}
 body
 {
-	font-family: Tahoma;
 	padding:32px;
 	margin:0px;
 	padding-left: 332px;
@@ -1910,9 +1915,11 @@ h1
 
 h2
 {
-	font-size: 24px;
-	border-left: 4px blue solid;
-	padding: 8px;
+	font-size: 20px;
+	font-weight:normal;
+	color:gray;
+	padding: 8px 0px;;
+	margin-bottom:8px;
 }
 h3
 {
@@ -2178,6 +2185,7 @@ function parseBlock($blockId, $content)
 }
 function parseFile($filename)
 {
+	echo "<br>PARESE FILE: $filename<br>";
 		global $commands;
 
 		$fh = fopen($filename, 'r');
@@ -2195,12 +2203,21 @@ function parseFile($filename)
 		//'<p class=\"review\">(.*?)</p>'si
 		// Search for Text between /*** and */  %/\*\*\*(.*?)\*/%s
 
+	   if (strpos($filename, '.coffee') !== false)
+	   {
+	   	echo "FILENAME IS COFFEE";
+	   	$res = preg_match_all("'/\*\*\*(.*?)\*/'si", $theData, $matchesAll);
+	   }
+	   else
 		$res = preg_match_all("'/\*\*\*(.*?)\*/'si", $theData, $matchesAll);
+
+	
+
 
 		if (Count($matchesAll)> 0)
 
 			 echo "MATCH IN ".$filename."\n-----------------------\n";
-		print_r($matchesAll);
+	
 
 
 		 {
@@ -2210,11 +2227,12 @@ function parseFile($filename)
 		
 		foreach ($matchesAll[1] as $match) 
 		{
+		
 
 		   $result = $match;
 		  
-		   
-
+		    if (strpos($filename, '.coffee') !== false)
+		   echo "<b>".($result)."</b>";
 		   
 
 		    // Split by lines

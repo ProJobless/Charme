@@ -27,10 +27,11 @@ function xssText(str)
 
 /***
 	Name:
-	xssAttr
+	xssAttr (TODO)
 
 	Info:
 	Make Attrbiute XSS save.. 
+	WARNING not working yet...
 
 	Location:
 	apl/string.js
@@ -39,7 +40,9 @@ function xssText(str)
 	addtohtml("<br id='"+xssAttr(str)+"'>")
 */
 function xssAttr(str)
-{}
+{
+	return xssText(str);
+}
 
 
 

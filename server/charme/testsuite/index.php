@@ -47,27 +47,14 @@ $loader->register();
 include("../log.php");
 
 
-$pubkey = <<<EOT
------BEGIN CERTIFICATE-----
-MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJK
-UDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1
-MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8w
-DQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9Cz
-Thoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQ
-fVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/
-3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1
-ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/M
-LyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K
-3OK+u3ivTSj3zwjtpudY5Xo=
------END CERTIFICATE-----
-EOT;
+$n = "7e470001e6ec9eb772fccc78617b8930ced9dc05f27eb678098ea9fe1584740c9a08761bede311e9191e42e004b66db6ac22c2f7f01520e1b4e865675791e3807ed85b378b8df0bcc7525c5608148625e3563d4ed27ba39ea01aa5b3df9c7a72bde25df717864e123718e021c229e8ffe8ce3652598d12d4d48aa07bb0b8d727cb791b366ab9f84d6fa9e5d65a07309beb63ad501dd312aacac8a98e5b7e8f7b6a140787733e24e4e125af6baffaa2c4bd945721878f6c0fe352d12aba8d88bd1ee59e04fcdad519b52c3ff0b9cf24a2e78164a8bfd15e021c7331e2a73dc54c6e02ac9ed168bde03649395a4996bc60bfbaf061924392d04ae2c62001d1cd37";
+$e = "10001";
 
-var_dump(openssl_verify("aaa", hex2bin("6f7df91d8f973a0619d525c319337741130b77b21f9667dc7d1d74853b644cbe
-5e6b0e84aacc2faee883d43affb811fc653b67c38203d4f206d1b838c4714b6b
-2cf17cd621303c21bac96090df3883e58784a0576e501c10cdefb12b6bf887e5
-48f6b07b09ae80d8416151d7dab7066d645e2eee57ac5f7af2a70ee0724c8e47"), openssl_pkey_get_public($pubkey), "sha1WithRSAEncryption"));
+$json = '{"object":{"test":"esr"},"signature":{"keyRevision":2,"hashvalue":"3af9b3a1aa867ccc4f99e8b00d4de6943eab4ad7d484087f94f3b66b3704b264f6817d4751bd3b443b69438048ccc10f62ef7f9b73472276773b73398794669bd4fd5c47dda07a6ca8a1ea7cdb69261abb45f1258c8f089197047768786945c32e9ac29a89b5d69c6115e3444565d0ecca9d7b886836bf0ef8662bf4fc97759ca7cc70dc7e4abbce14090ff0d4a2a2fc5062d2f637b8de71200d535d3c4b6bda1abf6cdcc99e3bf55d891e17711c35653d4fa2f86418a8cd6be6144a4fea608f661d8a8927a0e8870bc4e682bcf2112153b87500e551132bab112a27f05daf0e173af62334165523b45b11300784e80f056fd04a51715509885ff781d56d450d"}}';
 
 
+
+echo "<h2>debug</h2>";
 
 
 
@@ -87,51 +74,56 @@ echo "<h3>Server Key Directory</h3>";
 echo "invalid key revision return:".(\App\Security\PublicKeys::tryToAdd("ms@charme.local",2213123))."<br>";
 echo "valid key revision return:".(\App\Security\PublicKeys::tryToAdd("ms@charme.local",2));
 
-// Public key of a user stored on server
-$n = "7e470001e6ec9eb772fccc78617b8930ced9dc05f27eb678098ea9fe1584740c9a08761bede311e9191e42e004b66db6ac22c2f7f01520e1b4e865675791e3807ed85b378b8df0bcc7525c5608148625e3563d4ed27ba39ea01aa5b3df9c7a72bde25df717864e123718e021c229e8ffe8ce3652598d12d4d48aa07bb0b8d727cb791b366ab9f84d6fa9e5d65a07309beb63ad501dd312aacac8a98e5b7e8f7b6a140787733e24e4e125af6baffaa2c4bd945721878f6c0fe352d12aba8d88bd1ee59e04fcdad519b52c3ff0b9cf24a2e78164a8bfd15e021c7331e2a73dc54c6e02ac9ed168bde03649395a4996bc60bfbaf061924392d04ae2c62001d1cd37";
-$e = "10001";
-
-$json = '{"object":{"test":"esr"},"signature":{"keyRevision":2,"hashvalue":"41a09f885a1b3fcf9802d0f495c5cf2ab351f6b4613d9481d4537007f620aab32ffbd526a14664b333dabe7a20204db6aadb90358dcbc6183d449eb96981370b727ea7a724280574d01e69d80f029b341fba4d4061ad1b5e347b63cbbaf340ff81131d88d8211d5f5579f73c46d0c4ace2cf9e1129baee3596a43c2398c4d9916bcfb309d17b86f8caa7913d2e6b53b740d4ff5badf0e99fdb581bdda3e64633b9b75e51d47d49f07d56a76a38113539d34f400956d40ced08caa7103b9751da51f8310c4b9ca20af4041e3b6f454b41c1b16d72e3d105e73f963786befdd79c1a949b4b82c26f868885527de8df5d0540c85ef42fb36ef81735d6f8e3c1b0db"}}';
-echo "<br><br>";
-
-$jsonArray = json_decode($json, true);
-
-
-print_r($jsonArray);
-
-\App\Security\PublicKeys::checkX509($jsonArray, $n, $e);
-
 
 
 echo "<br>---------------------------------------------------------------------------------------------------------------------------<br>";
 //data you want to sign
 
-$testkey2 = "
+$cert = <<<EOT
 -----BEGIN CERTIFICATE-----
-MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJK
-UDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1
-MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8w
-DQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9Cz
-Thoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQ
-fVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/
-3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1
-ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/M
-LyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K
-3OK+u3ivTSj3zwjtpudY5Xo=
+MIIBITANBgkqhkiG9w0BAQEFAAOCAQ4AMIIBCQKCAQB+RwAB5uyet3L8zHhhe4kw
+ztncBfJ+tngJjqn+FYR0DJoIdhvt4xHpGR5C4AS2bbasIsL38BUg4bToZWdXkeOA
+fthbN4uN8LzHUlxWCBSGJeNWPU7Se6OeoBqls9+cenK94l33F4ZOEjcY4CHCKej/
+6M42UlmNEtTUiqB7sLjXJ8t5GzZqufhNb6nl1loHMJvrY61QHdMSqsrIqY5bfo97
+ahQHh3M+JOThJa9rr/qixL2UVyGHj2wP41LRKrqNiL0e5Z4E/NrVGbUsP/C5zySi
+54FkqL/RXgIcczHipz3FTG4CrJ7RaL3gNkk5WkmWvGC/uvBhkkOS0ErixiAB0c03
+AgMBAAE=
 -----END CERTIFICATE-----
+EOT;
 
-"; // If ----BEGIN PUBLIC KEY ---- then return val changes
+$pub = <<<PK
+-----BEGIN PUBLIC KEY-----
+MIIBITANBgkqhkiG9w0BAQEFAAOCAQ4AMIIBCQKCAQB+RwAB5uyet3L8zHhhe4kw
+ztncBfJ+tngJjqn+FYR0DJoIdhvt4xHpGR5C4AS2bbasIsL38BUg4bToZWdXkeOA
+fthbN4uN8LzHUlxWCBSGJeNWPU7Se6OeoBqls9+cenK94l33F4ZOEjcY4CHCKej/
+6M42UlmNEtTUiqB7sLjXJ8t5GzZqufhNb6nl1loHMJvrY61QHdMSqsrIqY5bfo97
+ahQHh3M+JOThJa9rr/qixL2UVyGHj2wP41LRKrqNiL0e5Z4E/NrVGbUsP/C5zySi
+54FkqL/RXgIcczHipz3FTG4CrJ7RaL3gNkk5WkmWvGC/uvBhkkOS0ErixiAB0c03
+AgMBAAE=
+-----END PUBLIC KEY-----
+PK;
 
 
-echo "VERIFY TEST:::::<br>";
- var_dump(openssl_verify("aaa", hex2bin("6f7df91d8f973a0619d525c319337741130b77b21f9667dc7d1d74853b644cbe
-5e6b0e84aacc2faee883d43affb811fc653b67c38203d4f206d1b838c4714b6b
-2cf17cd621303c21bac96090df3883e58784a0576e501c10cdefb12b6bf887e5
-48f6b07b09ae80d8416151d7dab7066d645e2eee57ac5f7af2a70ee0724c8e47"), openssl_pkey_get_public($testkey2), "sha1"));
+$pub2 =  App\Security\RSAHelper::kimssl_pkey_get_public($n, $e);
+
+
+//$sign = "6f7df91d8f973a0619d525c319337741130b77b21f9667dc7d1d74853b644cbe5e6b0e84aacc2faee883d43affb811fc653b67c38203d4f206d1b838c4714b6b2cf17cd621303c21bac96090df3883e58784a0576e501c10cdefb12b6bf887e548f6b07b09ae80d8416151d7dab7066d645e2eee57ac5f7af2a70ee0724c8e47";
+
+echo "VERIFY TEST 2 123:::::<br><b>";
+
+
+$obj = json_decode($json, true);
+
+
+App\Security\PublicKeys::checkX509($obj, $pub2);
+
+// var_dump(openssl_verify("aaa", hex2bin($sign),   openssl_pkey_get_public($pub),  "sha1WithRSAEncryption")); // or OPENSSL_ALGO_SHA1
+echo "</b><br>";
+//openssl_free_key($pubkeyid); // important!
 
 
 
-
+/*
 $data = 'aaa';
 
 //create new private and public key
@@ -150,16 +142,13 @@ echo openssl_sign($data, $signature, $private_key_pem, "sha256WithRSAEncryption"
 echo "<br><br><br>SIGNATURE BY PHP:<br>";
 echo bin2hex($signature);
 echo "<br>END SIGNATURE<br><br>";
-//save for later
-file_put_contents('private_key.pem', $private_key_pem);
-file_put_contents('public_key.pem', $public_key_pem);
-file_put_contents('signature.dat', $signature);
+
 
 //verify signature
-$r = openssl_verify($data, $signature, $public_key_pem, "sha256WithRSAEncryption");
+$r = openssl_verify($data,hex2bin( bin2hex($signature)), $public_key_pem, "sha256WithRSAEncryption");
 echo "VERIFY: ";
 var_dump($r);
-
+*/
 
 
 

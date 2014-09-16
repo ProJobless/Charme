@@ -1,15 +1,21 @@
-
-<div class='p32' style='padding-bottom:0'>
-<h1>Results for <span id='fld_q'></span></h1>
-</div>
+<div title='title' class='meta'>Search</div>
 
 
 
 
-<% if (rc.direct == true) { %>
+
 
 
 <div class='p32'>
+
+<div class="onlyResponsive">You can search for UserIDs or Usernames:
+<div style="margin-top:8px; margin-bottom:24px;">
+<input class="box" style="margin-bottom:8px;"> <a style='top:0px;margin-bottom:8px;' class='button' id='btn_search_query'>Search</a></div>
+</div>
+
+<div id='fnd_results'>
+<h1>Results for <span id='fld_q'></span></h1>
+<% if (rc.direct == true) { %>
 
 <div style='margin-top:8px;'>
 <a href="#/user/<%- encodeURIComponent(rc.userId) %>">
@@ -48,5 +54,6 @@
 
 </div>
 </div>
- <% } %>
 
+ <% } %>
+</div>

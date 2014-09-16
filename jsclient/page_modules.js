@@ -53,7 +53,7 @@ function sendMessageForm(receivers) {
 
 
 			$("#token-input-inp_receivers").focus();
-			
+
 		});
 
 
@@ -175,16 +175,19 @@ view_page = Backbone.View.extend({
 			$(".sbAlpha ul li a[data-topic='" + this.options.navMatch + "']").parent().addClass("active");
 			$(".header .row1 a[data-topic='" + this.options.navMatch + "']").addClass("active");
 		}
+		if (this.options.useSidebar || this.options.useResponsiveSidebar)
+			$('.subCont').html($('div[title=submenu_items]').html());
 
 		if (this.options.useSidebar) {
 
+			$('.sbBeta').removeClass("responsive");
 
 			$('.page_content').css("width", "700px");
 			$('.page_content').css("margin-left", "150px");
 			$('.sbBeta').show();
+			$('#barmenu').show();
 
 
-			$('.subCont').html($('div[title=submenu_items]').html());
 
 			// Do this after sidebar items were initialised:
 			$(".subCont").append('<div id="colorbg"></div>');
@@ -201,7 +204,20 @@ view_page = Backbone.View.extend({
 			$('.page_content').css("width", "850px");
 			$('.page_content').css("margin-left", "0");
 			$('.sbBeta').hide();
+			$('#barmenu').hide();
+			$('.sbBeta').addClass("responsive");
+
+			if (this.options.useResponsiveSidebar) {
+				$('#barmenu').show();
+				$('.sbBeta').addClass("responsive");
+			}
+
+
 		}
+
+		if (isResponsive())
+			$(".sbBeta").hide();
+
 
 
 		if (charmeUser == undefined)
@@ -209,6 +225,7 @@ view_page = Backbone.View.extend({
 
 		if (this.postRender != null) {
 			this.postRender();
+
 		}
 
 
@@ -241,7 +258,7 @@ view_page = Backbone.View.extend({
 
 			if (this.options.optionbar != null) {
 
-				$(".sbBeta .actionBar").html(this.options.optionbar);
+				$(".sbBeta .actionBar").html(this.options.optionbar + "<br style='clear:both'>");
 			} else
 				$(".sbBeta .actionBar").html("");
 
@@ -252,17 +269,12 @@ view_page = Backbone.View.extend({
 
 				var templateData = that.getData();
 
-
-
-
 				_.templateSettings.variable = "rc";
 				var template = _.template(d, templateData);
 
 				$(that.$el).html(template);
 
-
 				that.finishRender(d);
-
 
 				//else
 				{
@@ -278,12 +290,9 @@ view_page = Backbone.View.extend({
 
 			});
 		}
-
 	},
 
 });
-
-
 
 
 
@@ -296,12 +305,10 @@ view_subpage = Backbone.View.extend({
 	},
 
 	render: function() {
-		// Done in parent page!
-
 		var that = this;
 
 		// Cancel message update timer
-		$.doTimeout( 'messageupdate', false );
+		$.doTimeout('messageupdate', false);
 
 		$.get("templates/" + this.options.template + ".html", function(d) {
 
@@ -314,27 +321,10 @@ view_subpage = Backbone.View.extend({
 				_.templateSettings.variable = "rc";
 
 			}
-			//console.log(templateData);
-
-
-							console.log(templateData);
-console.log(templateData);
-console.log(templateData);
-
-
 			var template = _.template(d, templateData);
-
-
-			
-			console.log(that.$el);
 
 			// Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
 			$(that.$el.selector).html(template); //that.$el.selector
-
-
-
-			// important:!!
-
 
 			// mouse down effect for 32x32 imge buttons
 			$(".actionIcon").mousedown(function() {
@@ -354,11 +344,20 @@ console.log(templateData);
 
 			});
 
-
 			that.delegateEvents();
+
+			$(".sbBeta ul li, .profileTabs ul li, .navMatch ul li").removeClass("active");
+			$(that.options.navMatch).addClass("active");
+
 
 			if (that.postRender != null) {
 				that.postRender();
+
+
+
+				updateTitle();
+
+
 			}
 
 
@@ -366,8 +365,7 @@ console.log(templateData);
 		// Set sb beta
 		//alert(that.options.navMatch);
 
-		$(".sbBeta ul li, .profileTabs ul li, .navMatch ul li").removeClass("active");
-		$(that.options.navMatch).addClass("active");
+
 
 		// call prototype.finishredner();
 
@@ -376,6 +374,16 @@ console.log(templateData);
 	}
 });
 
+function updateTitle() {
+
+	var title = $(".meta[title='title']").text(); // Page Title
+	if (title == "")
+		title = "&nbsp;";
+
+
+	$("#responsiveTitle").html(title);
+
+}
 
 function setSCHeight() {
 
@@ -390,7 +398,6 @@ $(window).resize(function() {
 
 
 
-
 var view_find = view_page.extend({
 	options: {
 		template: 'find'
@@ -400,6 +407,7 @@ var view_find = view_page.extend({
 	postRender: function() {
 		//
 		$("#fld_q").text(this.options.q);;
+		updateTitle();
 	},
 	getData: function()
 
@@ -429,12 +437,11 @@ var view_register = view_page.extend({
 	},
 	initialize: function() {;
 	},
-	showError: function(code)
-	{
-			$("#box_errors div").hide();
+	showError: function(code) {
+		$("#box_errors div").hide();
 		$("#box_errors").hide();
-				$("#box_errors").show();
-				$("#error" + code).show();
+		$("#box_errors").show();
+		$("#error" + code).show();
 	},
 
 	postRender: function() {
@@ -448,8 +455,8 @@ var view_register = view_page.extend({
 		var that = this;
 		var serverurl = $('#inp_server').val();
 
-		var userid = $("#inp_username").val()+"@"+serverurl;
-		
+		var userid = $("#inp_username").val() + "@" + serverurl;
+
 		var pass = $('#inp_pass').val();
 		/*
 		TODO: check errors!
@@ -460,25 +467,22 @@ var view_register = view_page.extend({
 		else
 		*/
 
-		if ($('#inp_pass2').val() != $('#inp_pass').val())
-		{	this.showError(12); return;
-			
-		}
-		else if ($('#inp_pass').val().length < 4 || $('#inp_pass').val().length > 32)
-		{	
-		
-			this.showError(4); return;	
-					}
+		if ($('#inp_pass2').val() != $('#inp_pass').val()) {
+			this.showError(12);
+			return;
 
+		} else if ($('#inp_pass').val().length < 4 || $('#inp_pass').val().length > 32) {
+
+			this.showError(4);
+			return;
+		}
 
 		$('#inp_pass2').val("");
 		$('#inp_pass').val(""); // DO NOT SERIALIZE PASSWORDS!!
 
+		//reg_salt_set
 
-
-//reg_salt_set
-
-apl_request({
+		apl_request({
 			"requests": [{
 					"id": "reg_salt_set",
 					"userid": userid
@@ -486,58 +490,38 @@ apl_request({
 
 			]
 		}, function(d2) {
-console.log("salt is");
-console.log(d2);
-
-	var hashpass = CryptoJS.SHA256(pass+d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64);
-		alert(hashpass);
-
-		var s = $("#form_signup").serializeObject();
-		s.hashpass = hashpass;
 
 
-		apl_request({
-			"requests": [{
-					"id": "user_register",
-					"data": s
+			var hashpass = CryptoJS.SHA256(pass + d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64);
+			var s = $("#form_signup").serializeObject();
+			s.hashpass = hashpass;
+
+			apl_request({
+				"requests": [{
+						"id": "user_register",
+						"data": s
+					}
+
+				]
+			}, function(d) {
+				var data = d.user_register;
+
+
+				if (data.error != null) {
+
+					that.showError(data.error);
+					// TODO: Scroll to bottom to make sure errors are shown
+					$(window).scrollTop(999999);
+				} else if (data.success == 1) {
+
+
+
+					location.replace('#signup_success');
+
 				}
 
-			]
-		}, function(d) {
-			var data = d.user_register;
-
-
-			if (data.error != null) {
-
-				that.showError( data.error);
-				// TODO: Scroll to bottom to make sure errors are shown
-				$(window).scrollTop(999999);
-			} else if (data.success == 1) {
-
-
-
-				location.replace('#signup_success');
-
-			}
-
+			}, "", serverurl);
 		}, "", serverurl);
-	}, "", serverurl);
-
-		/*
-		var u = 'http://'+$('#inp_server').val()+'/charme/req.php?action=newUser.register&'+s+'&callback=?';
-		console.log("Loading JSON: "+u);
-		$.ajax({
-		  dataType: "jsonp",
-		  url: u,
-		  data: "",
-		  success: function(data) {
-		  
-		  }
-
-		});*/
-
-
-
 	},
 	makecert: function() {
 
@@ -591,9 +575,6 @@ console.log(d2);
 					}
 				}
 			}];
-			console.log("keyring is");
-			console.log(JSON.stringify(certificate));
-
 
 			$('#template_certok').show();
 			$('#template_certhint').hide();
@@ -607,27 +588,25 @@ console.log(d2);
 
 
 
-			console.log(JSON.stringify(certificate));
-
-
-		
 			// Encrypt certificate with passpharse
 			var tt = aes_encrypt(passphrase, JSON.stringify(certificate));
 
 
 			var pub = {
-								revision: 1,
-						
+				revision: 1,
 
-								publickey: {
-									n: e.data.n,
-									e: e.data.e
-								}
-							};
+
+				publickey: {
+					n: e.data.n,
+					e: e.data.e
+				}
+			};
 
 
 			$("#pubkey").val(JSON.stringify(pub));
 
+			var newpublickeyPEM = CharmeModels.Signature.keyToPem(e.data.n, e.data.e);
+			$("#pemkey").val(newpublickeyPEM);
 
 
 			$("#template_certkey").text(passphrase);
@@ -651,23 +630,96 @@ console.log(d2);
 
 
 
-
 // Post field, user can post from here
 control_postField = Backbone.View.extend({
 	events: {
-		'click #mypostbutton': 'doPost'
+		'click #mypostbutton': 'doPost',
+		'click #btn_addContext': 'addContext',
+		'change #collectionSelector': 'changeCollection'
 
 	},
-	doPost: function() {
+	addContext: function() {
+		$.get("templates/box_context.html", function(d) {
+			_.templateSettings.variable = "rc";
+			var template = _.template(d, {});
 
-		var txt = $("#textfield").val();
-		var collectionId = (this.options.collectionId == "");
+			ui_showBox(template, function() {
+				$(".contextItem").click(function() {
+					$("#contextContainer .scroller").animate({
+						left: -400
+					}, 400);
+					$("#but_addContext").fadeIn(400);
+
+					var html = CharmeModels.Context.getForm($(this).data("type"));
+					$("#contextDetails").html(html);
+				});
+			});
+
+		});
+	},
+
+	doRealPost: function(postText, edgekeys) {
+
+
+
+		var myPostKey = "";
+		var isEncrypted = 0;
+		var fkEncPostKey = "";
+		keys = [];
+		var postKey;
+		if (edgekeys != "-") {
+
+
+
+			postKey = randomAesKey(32);
+			postText = aes_encrypt(postKey, postText);
+			isEncrypted = 1;
+
+
+			jQuery.each(edgekeys, function() {
+
+				/*
+					[_id] => 5405d60b109ce304934ebf7f
+					[revisionA] => 4
+					[revisionB] => 4
+					[revision] => 8
+					[rsaEncEdgekey] => 321c2eb37ea301e7358f09203650c8cc25c50986c73479acb55b09cf9d5dd728c14c0519225cb58f8ab1496366361cbf213cc21ad1650d4433f40e19b9f5219e8b1366545ca50c85ac8fb993ead46a79bc48abf3d4425fbc7386ef55376ce731c82920c11468b0c221e21f3cf01cc8e31978e55423b4faf48e2443d264c41b2903f261106707e399ada1bc9d5f13d4790b64b95231f5fd869f1ca20b0f355790197296f9e3f2efa0d76b604ea8d0b8a1ec7af0ec06f489ebf35de628ed50b91327cd2d7262e263321c144834bcd5bf212087d8d00e84afcc0334292b8e24a8316976e28fe1b05ff0d2fea5ee02074b1ddba5e6a428818ac84b89352388c884f7
+					[fkEncEdgekey] => U2FsdGVkX1+zQdfHE4qRyl561ChAefAAbA4hfgWe08o+NIsGj0GPmaTp9BWV6ojj
+
+					[userId] => test8@charme.local
+					[owner] => test8@charme.local
+					[newest] => 1
+				*/
+
+				var fastkey = getFastKey(0, 1);
+				var edgekey = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
+				var postKeyEnc = aes_encrypt(edgekey, postKey);
+
+				fkEncPostKey = aes_encrypt(fastkey.fastkey1, postKey);
+
+				keys.push({
+					userId: this.userId,
+					key: postKeyEnc,
+					revisionB: this.revisionB,
+					edgeKeyRevision: this.revision
+				});
+				if (this.userId == charmeUser.userId)
+					myPostKey = postKey;
+
+				//this.fkEncEdgekey
+			});
+			// Encrypt edgekeys here.
+
+		}
+
+
 		var that = this;
-
+		var collectionId;
 		if (this.options.collectionId == "") // If collection Seletor enabled, get value from collection selector
-			collectionId = $("#postOptions select").val();
+			collectionId = $("#collectionSelector option:selected:first").data("collectionid");
 		else
 			collectionId = this.options.collectionId;
+
 
 		var repostdata;
 
@@ -675,26 +727,55 @@ control_postField = Backbone.View.extend({
 			repostdata = $('#repostContainer').data("postdata");
 
 
-		var x = $('#inp_postImg').data("filecontent");
-		if ( x !=undefined)
-			x = x.result;
-		else
-			x= "";
 
-		var signature = new CharmeModels.Signature(txt+x);
+
+
+		var imgFileContent = $('#inp_postImg').data("filecontent");
 		
+		completePost = function(images){
+				var signature = new CharmeModels.Signature(postText + imgFileContent);
+		// TODO: encrypt post if collection is encrypted here!		
 
-		console.log(signature.toJSON());
+		// All Data that will be signed with the private key
+
+
+
+		var postObj = {
+			content: postText,
+			collectionId: collectionId,
+			isEncrypted: isEncrypted,
+			keyRevision: getFastKey(0, 1).revision, // Current Fastkey, needed to get decryption key version.
+			repost: repostdata,
+			author: charmeUser.userId
+		};
+
+
+
+		// TODO: encrypt image in encrypted collections!
+
+		var postData = CharmeModels.Signature.makeSignedJSON(postObj);
+
+		console.log("postData");
+		console.log(postData);
+
+		console.log(keys);
 		//if (x == undefined || x == "")
+		if (images == undefined)
+		{
+			images = [];
+			images[200] = "";
+			images[900] = "";
+
+		}
 
 		apl_request({
 			"requests": [{
 				"id": "collection_post",
-				"content": txt,
-				"collectionId": collectionId,
-				"repost": repostdata,
-				"imgdata": x,
-				"signature": signature.toJSON()
+				"postData": postData,
+				"imgdata": images[900],
+				"imgthumbdata": images[200],
+				"fkEncPostKey": fkEncPostKey,
+				"keys": keys
 			}, {
 				"id": "profile_get_name",
 				userId: charmeUser.userId
@@ -717,15 +798,54 @@ control_postField = Backbone.View.extend({
 			// Remove image
 			$("#but_remImg").trigger('click');
 			// TODO: Add username
+			/*
+					JSON Dump:
+						[_id] => 53b276a2d8cc9ae43b8b4567
+					    [post] => Array
+					        (
+					            [content] => asdasda
+					            [collectionId] => 52164bd2d8cc9af2188b4568
+					            [imgHash] => e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+					        )
+
+					    [postId] => MongoId Object
+					        (
+					            [$id] => 53b276a2d8cc9a8b3b8b4567
+					        )
+						[time]
+							sec
+							usec
+					    [owner] => ms@charme.local
+					    [username] => 
+				*/
+
+			//var p2 = new control_postItem({
+			//	postObj: this,
+
+			postObj.postKey = myPostKey;
+			var postItem3 = {
+				post: postObj,
+				postId: {
+					$id: d.collection_post.id
+				},
+				time: {
+					sec: new Date().getTime()
+				},
+				meta: {
+					username: name
+				},
+
+			};
 
 			var p2 = new control_postItem({
-				repost: repostdata,
-				postId: d.collection_post.id,
-				username: name,
+				//repost: repostdata,
+				postObj: postItem3,
+				liveAdd: true,
+
+				//postId: d.collection_post.id,
+				//username: name,
 				layout: layout,
-				userId: charmeUser.userId,
-				content: txt,
-				time: new Date().getTime(),
+				//time: new Date().getTime(),
 				el: $(elid),
 				prepend: true,
 				hasImage: d.collection_post.hasImage
@@ -735,6 +855,90 @@ control_postField = Backbone.View.extend({
 
 
 		});
+		}
+
+		if (imgFileContent != undefined)
+		{
+			if (isEncrypted == 1)
+			{
+				
+				var srcimg = new Image();
+				srcimg.src = imgFileContent.result;
+				srcimg.onload = function(){
+					imagesTemp = imageManipulate_multiscale(srcimg, [200, 900]);
+					
+					images = []
+					// Encrypt Images:
+					  jQuery.each(imagesTemp, function(index, item) {
+					  
+						images[index] = aes_encrypt(postKey,item);
+					});
+					completePost(images);
+				}
+			}
+			else
+			{
+				var srcimg = new Image();
+				srcimg.src = imgFileContent.result;
+				srcimg.onload = function(){
+					images = imageManipulate_multiscale(srcimg, [200, 900]);
+					// Encrypt Images:
+					imgFileContent = aes_encrypt(postKey,imgFileContent.result);
+					console.log(images);
+					completePost(images);
+				}
+			}
+		}
+		else
+			completePost();
+
+	
+
+	},
+	doPost: function() {
+
+		var txt = $("#textfield").val();
+		var that = this;
+
+
+		// Check if we need to encrypt the collection
+		if (that.options.forceCurrentList != 0 && that.options.forceCurrentList != undefined)
+		{
+
+			apl_request({
+				"requests": [{
+					"id": "edgekeys_bylist",
+					"listId": that.options.forceCurrentList,
+				}]
+			}, function(d) {
+
+				that.doRealPost(txt, d.edgekeys_bylist.value);
+			});
+		}
+		else if ($("#collectionSelector option:selected:first").data("isencrypted") == true) {
+			apl_request({
+				"requests": [{
+					"id": "edgekeys_bylist",
+					"listId": $("#collectionSelector").val(),
+				}]
+			}, function(d) {
+
+				console.log("DGEKEYS");
+				console.log(d.edgekeys_bylist);
+
+		
+
+				if (d.edgekeys_bylist.value.length < 1)
+				{
+					alert("Error: No Public Keys found....");
+					return;
+				}
+
+
+				that.doRealPost(txt, d.edgekeys_bylist.value);
+			});
+		} else
+			this.doRealPost(txt, "-");
 
 	},
 
@@ -745,30 +949,34 @@ control_postField = Backbone.View.extend({
 
 		var addbox = function(that, items) {
 
-				that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' style='margin-right:8px;' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
+			that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' style='margin-right:8px;' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
 
-					$('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-plus'></i></a><a style='display:none' id='but_remImg'>Remove Image</a>");
+			$('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-plus'></i></a><a title='Add Context' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i></a><a style='display:none' id='but_remImg'>Remove Image</a>");
 
-					$('#inp_postImg').on("change", function(e) {
-						that.fileChanged(e);
-					});
+			$('#inp_postImg').on("change", function(e) {
+				that.fileChanged(e);
+			});
 
-					$('#but_addImg').click(function() {
+			$('#but_addImg').click(function() {
 
-						$("#inp_postImg").trigger('click');
-					});
+				$("#inp_postImg").trigger('click');
+			});
 
-					$('#but_remImg').click(function() {
+			$('#but_remImg').click(function() {
 
-						$('#inp_postImg').data("filecontent", null);
-						$("#but_remImg").hide();
-						$("#but_addImg").show();
+				$('#inp_postImg').data("filecontent", null);
+				$("#but_remImg").hide();
+				$("#but_addImg").show();
 
-					});
+			});
 
-					if (items != "")
-							$('#postOptions').append("in<select  style='margin-right:4px; margin-left:8px;' style='' id='collectionSelector'>" + items + "</select>");
+			if (items != "")
+				$('#postOptions').append("in<select  id='collectionSelector'>" + items + "</select>");
 
+			if (that.options.forceCurrentList!=0 &&that.options.forceCurrentList!=undefined)
+			{
+				$('#postOptions').append("POSTS ARE ENCRYPTED");
+			}
 
 
 		};
@@ -790,32 +998,29 @@ control_postField = Backbone.View.extend({
 				jQuery.each(d.collection_getAll, function() {
 
 
+					var isEncryptedCollection = "false";
+					if (this.currentlist != undefined && this.currentlist != 0)
+						isEncryptedCollection = "true";
 
-
-					items += "<option value='" + this._id.$id + "'>" + xssText(this.name) + "</option>";
+					items += "<option data-collectionid='" + xssAttr(this._id.$id) + "' data-isencrypted='" + xssAttr(isEncryptedCollection) + "' value='" + xssAttr(this.currentlist) + "'>" + xssAttr(this.name) + "</option>";
 
 
 				});
 
 
 				if (d.collection_getAll == 0)
-					that.$el.append("Create <a href='#user/"+charmeUser.userIdURL+"/collections'>a collection</a> to start posting.");
+					that.$el.append("Create <a href='#user/" + xssAttr(charmeUser.userIdURL) + "/collections'>a collection</a> to start posting.");
 				else {
 					addbox(that, items);
 				}
 
-		
-				
-
-
+				that.changeCollection(); // Make yellow field for encrypted collections
 
 			});
 
 
-		}else
-		addbox(this, "");
-
-		
+		} else
+			addbox(this, "");
 
 
 
@@ -835,7 +1040,15 @@ control_postField = Backbone.View.extend({
 
 
 	},
-	render2: function() {
+	changeCollection: function() {
+
+
+		if ($("#collectionSelector option:selected:first").data("isencrypted") == true) {
+			$("#collectionSelector").addClass("encrypted");
+		} else
+			$("#collectionSelector").removeClass("encrypted");
+
+
 
 	}
 
@@ -850,7 +1063,7 @@ control_commentItem = Backbone.View.extend({
 
 
 
-		var str = "<div class='comment' id='comment_"+this.options.commentId+"'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + xssText(this.options.content) + "</div>";
+		var str = "<div class='comment' id='comment_" + this.options.commentId + "'>" + delitem + "<div class='head'><a href='#/user/" + encodeURIComponent(this.options.userId) + "'>" + this.options.username + "</a></div>" + xssText(this.options.content) + "</div>";
 		if (this.options.prepend)
 			this.$el.prepend(str);
 		else
@@ -859,17 +1072,17 @@ control_commentItem = Backbone.View.extend({
 		var that = this;
 		// Imporant: Attach event handler AFTER ITEM HAS BEEN ADDED!
 		$('#delete_' + uniIdCounter).click(function() {
-		
-				alert(that.options.commentId);
-				apl_request({
+
+	
+			apl_request({
 				"requests": [{
 					"id": "comment_delete",
-					"commentId":  that.options.commentId
+					"commentId": that.options.commentId
 				}, ]
 			}, function(d) {
 
 				// Remove post from GUI
-				$("#comment_"+that.options.commentId).fadeOut(0);
+				$("#comment_" + that.options.commentId).fadeOut(0);
 
 			});
 
@@ -884,6 +1097,20 @@ control_commentItem = Backbone.View.extend({
 var uniIdCounter = 1; // Belongs to control_postItem below:
 var repostTemp = null;
 
+/*
+        commentCount: this.commentCount,
+                    comments: this.comments,
+                    like: this.like,
+                    counter: this.likecount,
+                    repost: this.post.repost,
+                    postId: this.postId.$id,
+                    username: this.meta.username,
+                    userId: this.post.author,
+                    content: this.post.content,
+                    time: this.meta.time.sec * 1000,
+                    hasImage:  this.meta.hasImage
+    */
+
 control_postItem = Backbone.View.extend({
 	options: {
 		prepend: false,
@@ -893,8 +1120,9 @@ control_postItem = Backbone.View.extend({
 
 
 	setLikeText: function(itemCounter) {
-		$("#counter" + itemCounter).text(this.options.counter);
-		if (this.options.like) {
+
+		$("#counter" + itemCounter).text(this.options.postObj.likecount);
+		if (this.options.postObj.like) {
 			$("#doLove" + itemCounter).text("Unlove");
 		} else {
 			$("#doLove" + itemCounter).text("Love");
@@ -903,6 +1131,7 @@ control_postItem = Backbone.View.extend({
 	addComments: function(items, parentId, prepend) {
 		var maxComments = 15;
 		var iComments = 0; // !!! Please remove, we will get sued for this name
+		var that = this;
 
 
 		jQuery.each(items, function() {
@@ -911,26 +1140,30 @@ control_postItem = Backbone.View.extend({
 			if (iComments > maxComments)
 				return;
 
+			// Decrypt content here...
+			console.log("COMMENT:");
+			console.log(this);
 
+
+			if (that.options.postObj.post.isEncrypted == 1) {
+				this.commentData.object.text = aes_decrypt(that.options.postKey, this.commentData.object.text);
+			}
 
 			var item = new control_commentItem({
-				content: this.content,
-				commentId: this.commentId.$id,
-				"username": this.sendername, 
+				content: this.commentData.object.text,
+				commentId: this._id.$id,
+				"username": this.sendername,
 				userId: this.userId,
 				prepend: prepend,
 				el: $('#postComments' + parentId)
 			});
 
+
 			item.render();
 		});
 
 	},
-	
-
-	render: function() {
-
-
+	renderFunction: function(that) {
 
 		// Needed for generating unique element identifiers.,
 		uniIdCounter++;
@@ -938,90 +1171,159 @@ control_postItem = Backbone.View.extend({
 
 		//Use uniId inside events like .click() etc., because uniIdCounter is global!!
 		var uniId = uniIdCounter;
-	
+		var postObj = this.options.postObj;
+		var that = this;
 
 
 
-				var that = this;
 		var repoststr = "";
 		var liksstr = "<div class='likes'><a class='counter' id='counter" + uniIdCounter + "'>0</a></div>";
 
-		if (this.options.repost != null)
-			repoststr = " reposts <a href='#user/" + encodeURIComponent(this.options.repost.userId) + "/post/" + this.options.repost.postId + "'>" + this.options.repost.username + "'s post</a> <div class='repost'>" + $.charmeMl(xssText(this.options.repost.content)) + "</div>";
 
-
+		if (this.options.postObj.post.repost != null)
+			repoststr = " reposts <a href='#user/" + encodeURIComponent(this.options.postObj.post.repost.userId) + "/post/" + this.options.postObj.post.repost.postId + "'>" + this.options.postObj.post.repost.username + "'s post</a> <div class='repost'>" + $.charmeMl(xssText(this.options.postObj.post.repost.content)) + "</div>";
 
 		var str;
 		var imgcont = "";
-		var delitem = "<a id='del_post_"+uniIdCounter+"' class='delete'></a>";
+		var delitem = "<a id='del_post_" + uniIdCounter + "' class='delete'></a>";
 
-	
-
-		if (this.options.hasImage) {
+		if (this.options.postObj.meta.hasImage) {
 			//
-			imgcont = "<div style='margin-bottom:8px'><a target='_blank' href='http://" + this.options.userId.split("@")[1] + "/charme/fs.php?type=post&size=800&post=" + this.options.postId + "'><img src='http://" + this.options.userId.split("@")[1] + "/charme/fs.php?type=post&size=250&post=" + this.options.postId + "'></a></div>";
 
+
+			// <a target='_blank' href='http://" + xssAttr(this.options.postObj.post.author.split("@")[1]) + "/charme/fs.php?type=post&size=800&post=" + xssAttr(this.options.postObj.postId.$id) + "'>
+
+			imgcont = "<div style='margin-bottom:8px'><img id='img_"+postObj.postId.$id+"'></div>";
+			
+			var url = "http://" + this.options.postObj.post.author.split("@")[1] + "/charme/fs.php?type=post&size=250&post=" + this.options.postObj.postId.$id;
+
+			console.log(url);
+			$.get(url, function(d){
+
+				if (that.options.postObj.post.isEncrypted == 1)
+					$("#img_"+postObj.postId.$id+"").attr("src", aes_decrypt(that.options.postKey, d));
+				else
+				$("#img_"+postObj.postId.$id+"").attr("src", d);
+
+
+				
+			});
 		}
-		if (this.options.layout == "stream") {
 
-			var postUser = new apl_user(this.options.userId);
 
+
+		if (that.options.layout == "stream") {
+
+
+
+			var postUser = new apl_user(that.options.postObj.post.author);
 			// 
-			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" +
-				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(this.options.username) + "</a>" + repoststr + "<div class='cont'>" + imgcont + $.charmeMl(xssText(this.options.content)) + "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> - <a id='checkSignature_"+uniId+"'>Check Signature</a> -  <span class='time'>" + formatDate(this.options.time) + "</span></div>";
+			str = "<div class='collectionPost' id='post_" + that.options.postId + "'>" +
+				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(that.options.postObj.meta.username) + "</a>" + repoststr + "<div class='cont selectable'>" + imgcont + $.charmeMl(xssText(that.options.postObj.post.content)) + "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a><!-- - <a id='doRepost" + uniId + "'>Repost</a>--> - <a id='checkSignature_" + uniId + "'>Check Signature</a> -  <span class='time'>" + formatDate(that.options.postObj.time) + "</span></div>";
 		} else
-			str = "<div class='collectionPost' id='post_"+that.options.postId+"'>" + repoststr + "<div class='cont' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a> - <a id='doRepost" + uniId + "'>Repost</a> - <span class='time'>" + formatDate(this.options.time) + "</span>";
+			str = "<div class='collectionPost' id='post_" + that.options.postObj.postId.$id + "'>" + repoststr + "<div class='cont selectable' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.postObj.post.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a><!--- <a id='doRepost" + uniId + "'>Repost</a>--> - <span class='time'>" + formatDate(that.options.postObj.time) + "</span>";
 
 
 
-		str += "<div class='commentBox' id='commentBox" + uniId + "'><div class='postcomments' id='postComments" + uniId + "'></div><input id='inputComment" + uniId + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
+		str += "<div class='commentBox' id='commentBox" + xssAttr(uniId) + "'><div class='postcomments' id='postComments" + xssAttr(uniId) + "'></div><input id='inputComment" + xssAttr(uniId) + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
 		str += "</div></div>";
 
 
-		if (this.options.prepend)
-			this.$el.prepend(str);
+		if (that.options.prepend)
+			that.$el.prepend(str);
 		else
-			this.$el.append(str);
+			that.$el.append(str);
 
 
 
-		$("#checkSignature_"+uniIdCounter).click(function(){
+		$("#checkSignature_" + uniIdCounter).click(function() {
 			CharmeModels.Signature.showDialog();
 		});
 		// REgister event handler AFTER HTML has been added
-		$("#del_post_"+uniIdCounter).click(function(){
+		$("#del_post_" + uniIdCounter).click(function() {
 
 			// TODO: ARE YOU SURE?
+
+			var signature = CharmeModels.Signature.makeSignedJSON({
+				postId: that.options.postId,
+				action: "delete_post"
+			});
+
 
 			// Send request for post deletion to server
 			apl_request({
 				"requests": [{
 					"id": "post_delete",
-					"postId": that.options.postId
+					"postId": that.options.postObj.postId.$id,
+					"signature": signature
 				}, ]
 			}, function(d) {
 
 				// Remove post from GUI
-				$("#post_"+that.options.postId).fadeOut(0);
+				$("#post_" + that.options.postObj.postId.$id).fadeOut(0);
 
 			});
-			
+
 		});
 
+		that.setLikeText(uniIdCounter);
+
+		$("#doLove" + uniId).data("uniid", uniId);
+
+		$("#doLove" + uniId).click(function() {
+
+
+			var that2 = this;
+			NProgress.start();
+			// Send like request to post owner:
+			apl_request({
+				"requests": [
+					// Get posts of collection
+					{
+						"id": "post_like",
+						"userId": that.options.postObj.post.author,
+						status: !! !that.options.postObj.like,
+						postId: that.options.postObj.postId.$id
+					},
+					// Get name of collection
+
+				]
+			}, function(d) {
+
+							NProgress.done();
+
+				if (that.options.postObj.like) {
+					that.options.postObj.likecount--;
+					that.options.postObj.like = false;
+				} else {
+					that.options.postObj.likecount++;
+					that.options.postObj.like = true;
+				}
+
+				that.setLikeText($(that2).data("uniid"));
+
+			});
+
+		});
+
+		
 
 		// append some comments
 		var itemStartTime;
-		if (this.options.comments != undefined && this.options.comments.length > 0) {
+		if (that.options.postObj.comments != undefined && that.options.postObj.comments.length > 0) {
 
-			that.addComments(this.options.comments, uniId, false);
-			itemStartTime = this.options.comments[0].itemTime.sec;
+
+			that.addComments(that.options.postObj.comments, uniId, false);
+			itemStartTime = that.options.postObj.comments[0].itemTime.sec;
 
 		}
 
 
 
-		if (this.options.commentCount > 3)
+		if (that.options.postObj.commentCount > 3)
 			$('#commentBox' + uniId).prepend("<a class='morecomments'>More</a>"); //data-start=TotalComments-6
+
+		
 
 
 
@@ -1030,7 +1332,7 @@ control_postItem = Backbone.View.extend({
 
 
 			if (that.options.start == undefined) {
-				that.options.start = that.options.commentCount - 6;
+				that.options.start = that.options.postObj.commentCount - 6;
 				if (that.options.start < 0)
 					that.options.start = 0;
 			}
@@ -1040,22 +1342,22 @@ control_postItem = Backbone.View.extend({
 
 			if (that.options.start == 0) {
 
-				limit = that.options.commentCount % limit;
+				limit = that.options.postObj.commentCount % limit;
 
 			}
 
-
+			NProgress.start();
 			apl_request({
 				"requests": [{
 					"id": "comments_get",
-					"postowner": that.options.userId,
+					"postowner": that.options.postObj.post.author,
 					"itemStartTime": itemStartTime,
 					"start": that.options.start,
 					"limit": limit,
-					"postId": that.options.postId
+					"postId": that.options.postObj.postId.$id
 				}, ]
 			}, function(d) {
-
+				NProgress.done();
 				if (that.options.start == 0)
 					$('#commentBox' + uniId + " .morecomments").remove();
 
@@ -1076,48 +1378,59 @@ control_postItem = Backbone.View.extend({
 
 				}
 
-			}, "", that.options.userId.split("@")[1]);
+			}, "", that.options.postObj.post.author.split("@")[1]);
 
 		});
 
 
-	
 
+		$("#inputComment" + uniId).unbind("keypress").keypress(function(e) {
 
-		$("#inputComment" + uniId).keypress(function(e) {
-
-
+			// Send comment when pressing return key
 			if (e.which == 13) {
-				// Write comment
-				// Get Text
-		
 
-				var content = $(this).val();
-				var that2 = this;
+				var content = $("#inputComment" + xssAttr(uniId)).val();
+				var contentRaw = content; // Used for displaying text.
+				var that2 = that;
+
+				if (that.options.postObj.post.isEncrypted == 1) {
+
+					if (that.options.postObj.post.postKey != undefined) {
+						// Post Control item was added after post click
+						content = aes_encrypt(that.options.postObj.post.postKey, content);
+					} else if (that.options.postKey != undefined) {
+						// Post Control was added after stream was loaded
+						content = aes_encrypt(that.options.postKey, content);
+					} else {
+						return;
+					}
+
+				}
+				// Make signed comment object.
+				var commentData = CharmeModels.Signature.makeSignedJSON({
+					"text": content,
+					"postId": that.options.postObj.postId.$id,
+					"userId": that.options.postObj.post.author
+
+				});
+
+
 				apl_request({
-					"requests": [
-						// Get posts of collection
-						{
-							"id": "post_comment",
-							"userId": that.options.userId,
-							"content": content,
-							"postId": that.options.postId
-						},
-						// Get name of collection
+					"requests": [{
+						"id": "post_comment",
+						"commentData": commentData,
 
-					]
+					}, ]
 				}, function(d) {
-
-				
 					var item2 = new control_commentItem({
-						"content": content,
+						"content": contentRaw,
 						"username": d.post_comment.username,
 						userId: 0,
 						el: $('#postComments' + uniId),
 						commentId: d.post_comment.commentId
 					});
 					item2.render();
-					$(that2).val("");
+					$("#inputComment" + xssAttr(uniId)).val("");
 
 				});
 
@@ -1129,10 +1442,10 @@ control_postItem = Backbone.View.extend({
 		$("#doRepost" + uniId).click(function() {
 
 			repostTemp = {
-				userId: that.options.userId,
-				postId: that.options.postId,
-				content: that.options.content,
-				username: that.options.username
+				userId: that.options.postObj.post.author,
+				postId: that.options.postObj.postId.$id,
+				content: that.options.postObj.content,
+				username: that.options.postObj.username
 			};
 			app_router.navigate("stream", {
 				trigger: true
@@ -1145,6 +1458,7 @@ control_postItem = Backbone.View.extend({
 		});
 
 
+
 		$("#counter" + uniId).click(function() {
 
 
@@ -1155,7 +1469,7 @@ control_postItem = Backbone.View.extend({
 						// Get posts of collection
 						{
 							"id": "post_getLikes",
-							postId: that.options.postId
+							postId: that.options.postObj.postId.$id
 						},
 						// Get name of collection
 
@@ -1175,49 +1489,82 @@ control_postItem = Backbone.View.extend({
 
 				}
 
-				, "", that.options.userId.split("@")[1]);
+				, "", that.options.postObj.post.author.split("@")[1]);
 
 
 		});
 
-		this.setLikeText(uniIdCounter);
 
-		$("#doLove" + uniId).data("uniid", uniId);
 
-		$("#doLove" + uniId).click(function() {
+	}, // Render Function end
 
-			var that2 = this;
 
-			// Send like request to post owner:
+	render: function() {
+
+		var postObj = this.options.postObj;
+		var that = this;
+
+		if (that.options.isCollectionView)
+		{
+			if (that.options.postKey != "")
+			{
+			that.options.postObj.post.content = aes_decrypt(that.options.postKeyTemp, that.options.postObj.post.content);
+			that.options.postObj.post.postKey = that.options.postKeyTemp;
+}
+
+			that.renderFunction(that);
+		}
+		else if (this.options.postObj.post.isEncrypted == 1 && !this.options.liveAdd) {
+
+
+
+			// If we do not have the edgekey yet, then get it and decrypt it!
+		
+
 			apl_request({
-				"requests": [
-					// Get posts of collection
-					{
-						"id": "post_like",
-						"userId": that.options.userId,
-						status: !! !that.options.like,
-						postId: that.options.postId
-					},
-					// Get name of collection
+				"requests": [{
+					"id": "edgekey_request",
+					"publicKeyOwner": that.options.postObj.post.author,
+					"revision": this.options.postObj.edgeKeyRevision,
+					"privateKeyOwner": charmeUser.userId, // This is me
+				}, ]
+			}, function(data) {
+				// Decrypt public key with fk1 first
+				console.log("EDGEKEYREQ");
+				console.log(data);
+				fk1 = getFastKey(0, 1);
 
-				]
-			}, function(d) {
+			
+			//	var pubkey = $.parseJSON(aes_decrypt(fk1.fastkey1, data.edgekey_request.data.value));
+			//	console.log(pubkey);
+
+				//alert(postObj.postKey);
+
+				var edgeKey = (crypto_rsaDecryptWithRevision(data.edgekey_request.data.rsaEncEdgekey, data.edgekey_request.data.revisionB));
+
+				// 
+
+				var postKey = aes_decrypt(edgeKey, postObj.postKey);
+				var text = aes_decrypt(postKey, postObj.post.content)
+				console.log(postObj);
+
+				that.options.postKey = postKey;
 
 
+				that.options.postObj.post.content = text;
 
-				if (that.options.like) {
-					that.options.counter--;
-					that.options.like = false;
-				} else {
-					that.options.counter++;
-					that.options.like = true;
-				}
+				that.renderFunction(that);
 
-				that.setLikeText($(that2).data("uniid"));
+			}, "", that.options.postObj.post.author.split("@")[1]);
 
-			});
+		} else if (this.options.liveAdd && this.options.postObj.post.isEncrypted == 1) {
+		
+			that.options.postObj.post.content = aes_decrypt(that.options.postObj.post.postKey, that.options.postObj.post.content);
+			that.renderFunction(that);
+		} else
+			that.renderFunction(that);
 
-		});
+
 
 	}
 
@@ -1274,15 +1621,14 @@ var view_stream_display = view_subpage.extend({
 
 	postRender: function() {
 
-		if (this.options.streamId == ""){
-		var t = new control_postField({
-			el: $("#postFieldContainer"),
-			collectionId: ""
-		});
-		t.render();
-	}
-	else
-		$("#postFieldContainer").hide();
+		if (this.options.streamId == "") {
+			var t = new control_postField({
+				el: $("#postFieldContainer"),
+				collectionId: ""
+			});
+			t.render();
+		} else
+			$("#postFieldContainer").hide();
 
 
 
@@ -1295,25 +1641,34 @@ var view_stream_display = view_subpage.extend({
 
 			// generate post controls...
 			jQuery.each(d2.stream_get, function() {
-				console.log("this.comments");
-				console.log(this);
 
+
+				/*
+					JSON Dump:
+						[_id] => 53b276a2d8cc9ae43b8b4567
+					    [post] => Array
+					        (
+					            [content] => asdasda
+					            [collectionId] => 52164bd2d8cc9af2188b4568
+					            [imgHash] => e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+					        )
+
+					    [postId] => MongoId Object
+					        (
+					            [$id] => 53b276a2d8cc9a8b3b8b4567
+					        )
+						[time]
+							sec
+							usec
+					    [owner] => ms@charme.local
+					    [username] => 
+				*/
 
 				var p2 = new control_postItem({
-					commentCount: this.commentCount,
-					comments: this.comments,
-					like: this.like,
-					counter: this.likecount,
-					repost: this.post.repost,
-					postId: this.postId.$id,
-					username: this.username,
-					userId: this.post.owner,
+					postObj: this,
 					layout: "stream",
-					content: this.post.content,
-					time: this.post.time.sec * 1000,
 					el: $("#streamContainer"),
 					prepend: false,
-					hasImage: this.post.hasImage
 				});
 				p2.render();
 

@@ -28,6 +28,7 @@ var AppRouter = Backbone.Router.extend({
         "stream": "getStream",
         "stream/:id": "getStream",
         "find/:id": "getFind",
+        "find": "getFind",
         "settings/:id": "getSettings",
         "settings": "getSettings",
         "talks/:id": "getTalks",
@@ -148,7 +149,7 @@ $(function() {
             {
 
                 var vsd = new view_talks_subpage({
-                    superId: id
+                    conversationId: id
                 });
                 container_main.currentView.setSub(vsd);
             }
@@ -373,9 +374,11 @@ $(function() {
                         ]
                     }, function(d) {
 
+                        alert("..");
                         var pa = new view_find({
                             q: decodeURIComponent(id),
                             forceNewRender: true,
+                            navMatch:"find",
                             data: {
                                 info: d.profile_get_name.info,
                                 direct: true,
@@ -401,15 +404,18 @@ $(function() {
                         },
 
                         success: function(data) {
-                            console.log(data);
+                        
 
                             var pa = new view_find({
                                 q: decodeURIComponent(id),
                                 forceNewRender: true,
-                                data: data
+                                data: data,
+                                navMatch:"find"
                             });
                             container_main.setCurrent(pa);
                             pa.render();
+
+
 
                         }
                     });
@@ -534,7 +540,8 @@ $(function() {
                     userIdRaw: id,
                     userId: userId,
                     template: "user",
-                    navMatch: 'profile'
+                    navMatch: 'profile',
+                    useResponsiveSidebar: true
                 }));
 
             }
@@ -544,7 +551,7 @@ $(function() {
 
                 var vsd = new view_profilepage_info({
                     template: "user_",
-                    navMatch: '#nav_profile_info'
+                    navMatch: '.nav_profile_info'
                 });
                 container_main.currentView.setSub(vsd);
                 container_main.currentView.render();
@@ -554,7 +561,7 @@ $(function() {
 
                     var vsd = new view_profilepage_collection({
                         template: "user_collections",
-                        navMatch: '#nav_profile_collections'
+                        navMatch: '.nav_profile_collections'
                     });
                     container_main.currentView.setSub(vsd);
 
@@ -597,7 +604,7 @@ $(function() {
                     var vsd = new view_profilepage_listitems({
                         data: d2,
                         template: "user_lists",
-                        navMatch: '#nav_profile_lists',
+                        navMatch: '.nav_profile_lists',
                         el: '#page3'
                     });
 
@@ -732,8 +739,11 @@ function login() {
     }, function(data) {
 
         console.log(data);
-
-        if (data.user_login.status == "PASS") {
+        if (data.user_login.CHARME_VERSION < CHARME_VERSION_REQUIRED)
+        {
+            alert("Your server version is outdated. Please notify your server administrator.");
+        }
+        else if (data.user_login.status == "PASS") {
 
 
 

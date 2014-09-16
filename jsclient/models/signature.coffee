@@ -29,7 +29,7 @@ class CharmeModels.Signature
 						key1.rsa.rsa.p, key1.rsa.rsa.q, key1.rsa.rsa.dmp1,
 						key1.rsa.rsa.dmq1, key1.rsa.rsa.coeff);
 
-		this.hash = rsa.signStringWithSHA256(originalMessage);
+		this.hash = rsa.signStringWithSHA1(originalMessage);
 
 	###
 	
@@ -66,7 +66,22 @@ class CharmeModels.Signature
 		else
 			return false
 
+	# convert key to real pem format with line breaks and -----headers-----
+	@keyToPem: (n,e) ->
+		rsa = new RSAKey()
+		rsa.setPublic(n,e)
+		pem = rsa.publicKeyToX509PemString()
+		# now we have thew raw base64 pem key. we have to add linebreaks and headers
+		# break
+		linecount = Math.ceil(pem.length/64)
 
+		pemnew = "-----BEGIN PUBLIC KEY-----\n"
+		i=0
+		while i<linecount
+			pemnew += pem.substr(i*64, 64)+"\n"
+			i++
+
+		pemnew += "-----END PUBLIC KEY-----"
 	toJSON: () ->
 		return {keyRevision: this.revision, hashvalue: this.hash }
 
@@ -86,10 +101,8 @@ class CharmeModels.Signature
 	###
 	@makeSignedJSON: (object) ->
 		jsonString = JSON.stringify(object)
-		
-		console.log("SIGNJS");
-		console.log(jsonString);
-
+		console.log ("string is")
+		console.log (jsonString)
 		signature = new CharmeModels.Signature(jsonString);
 		return {object:object, signature: signature.toJSON()}
 

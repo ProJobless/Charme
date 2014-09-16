@@ -181,13 +181,25 @@ position: relative;
 	border-top:1px silver solid;
 	text-align: right;
 }
-
+.imagePreview .close
+{
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	font-size: 20px;
+	border:1px #fff solid;
+	color:#fff;
+	border-radius: 100px;
+	padding: 6px 8px;
+}
 .imagePreview
 {
+	overflow: auto;
 	position:fixed;
 		z-index:9999;
 		left:0;
 		top:0;
+		background-color: #000;
 		width:100%;
 		height:100%
 }

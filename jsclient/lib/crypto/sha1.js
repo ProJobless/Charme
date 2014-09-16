@@ -1,192 +1,136 @@
+/*
+CryptoJS v3.1.2
+code.google.com/p/crypto-js
+(c) 2009-2013 by Jeff Mott. All rights reserved.
+code.google.com/p/crypto-js/wiki/License
+*/
+(function () {
+    // Shortcuts
+    var C = CryptoJS;
+    var C_lib = C.lib;
+    var WordArray = C_lib.WordArray;
+    var Hasher = C_lib.Hasher;
+    var C_algo = C.algo;
 
-/*  /_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-	charset= shift_jis
-	
-    [RFC 3174] US Secure Hash Algorithm 1 (SHA1)
-    ftp://ftp.isi.edu/in-notes/rfc3174.txt
+    // Reusable object
+    var W = [];
 
-    LastModified : 2006-11/14
-    
-    Written by kerry
-    http://user1.matsumoto.ne.jp/~goma/
+    /**
+     * SHA-1 hash algorithm.
+     */
+    var SHA1 = C_algo.SHA1 = Hasher.extend({
+        _doReset: function () {
+            this._hash = new WordArray.init([
+                0x67452301, 0xefcdab89,
+                0x98badcfe, 0x10325476,
+                0xc3d2e1f0
+            ]);
+        },
 
-    動作ブラウザ :: IE4+ , NN4.06+ , Gecko , Opera6
-    
-    ----------------------------------------------------------------
-    
-    Usage
-    
-    // 返り値を 16進数で得る
-    sha1hash = sha1.hex( data );
-	
-	// 返り値をバイナリで得る
-    sha1bin = sha1.bin( data );
-    
-    // 返り値を10進数の配列で得る
-    sha1decs = sha1.dec( data );
-    
-    
-	* data		-> ハッシュ値を得たいデータ
-				data はアンパック済みの配列でも可能
+        _doProcessBlock: function (M, offset) {
+            // Shortcut
+            var H = this._hash.words;
 
-	// e.g.
-	
-	var data_1 = "abc";
-	var hash_1 = sha1.hex( data_1 );
-	var data_2 = sha1 Array(data_1.charCodeAt(0), data_1.charCodeAt(1), data_1.charCodeAt(2));
-	var hash_2 = sha1.hex( data_2 );
-	
-	alert( hash_1 === hash_2 ); // true
-	
-/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/   */
+            // Working variables
+            var a = H[0];
+            var b = H[1];
+            var c = H[2];
+            var d = H[3];
+            var e = H[4];
 
+            // Computation
+            for (var i = 0; i < 80; i++) {
+                if (i < 16) {
+                    W[i] = M[offset + i] | 0;
+                } else {
+                    var n = W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16];
+                    W[i] = (n << 1) | (n >>> 31);
+                }
 
-sha1 = new function()
-{
-	var blockLen = 64;
-	var state = [ 0x67452301 , 0xefcdab89 , 0x98badcfe , 0x10325476 , 0xc3d2e1f0 ];
-	var sttLen = state.length;
-	
-	this.hex = function(_data)
-	{
-		return toHex( getMD(_data) );
-	}
+                var t = ((a << 5) | (a >>> 27)) + e + W[i];
+                if (i < 20) {
+                    t += ((b & c) | (~b & d)) + 0x5a827999;
+                } else if (i < 40) {
+                    t += (b ^ c ^ d) + 0x6ed9eba1;
+                } else if (i < 60) {
+                    t += ((b & c) | (b & d) | (c & d)) - 0x70e44324;
+                } else /* if (i < 80) */ {
+                    t += (b ^ c ^ d) - 0x359d3e2a;
+                }
 
-	this.dec = function(_data)
-	{
-		return getMD(_data);
-	}
-	
-	this.bin = function(_data)
-	{
-		return pack( getMD(_data) );
-	}
-	
-	var getMD = function(_data)
-	{
-		var datz = [];
-		if (isAry(_data)) datz = _data;
-		else if (isStr(_data)) datz = unpack(_data);
-		else "unknown type";
-		datz = paddingData(datz);
-		return round(datz);
-	}
-    
-    var isAry = function(_ary)
-	{
-		return _ary && _ary.constructor === [].constructor;
-	}
-	var isStr = function(_str)
-	{
-		return typeof(_str) == typeof("string");
-	}
+                e = d;
+                d = c;
+                c = (b << 30) | (b >>> 2);
+                b = a;
+                a = t;
+            }
 
-    var rotl = function(_v, _s) { return (_v << _s) | (_v >>> (32 - _s)) };
+            // Intermediate hash value
+            H[0] = (H[0] + a) | 0;
+            H[1] = (H[1] + b) | 0;
+            H[2] = (H[2] + c) | 0;
+            H[3] = (H[3] + d) | 0;
+            H[4] = (H[4] + e) | 0;
+        },
 
-	var round = function(_blk)
-	{
-		var stt = [];
-		var tmpS= [];
-		var i, j, tmp, x = [];
-		for (j=0; j<sttLen; j++) stt[j] = state[j];
-		
-		for (i=0; i<_blk.length; i+=blockLen)
-		{
-			for (j=0; j<sttLen; j++) tmpS[j] = stt[j];
-			x = toBigEndian32( _blk.slice(i, i+ blockLen) );
-			for (j=16; j<80; j++)
-            	x[j] = rotl(x[j-3] ^ x[j-8] ^ x[j-14] ^ x[j-16], 1);
-		
-	        for (j=0; j<80; j++)
-	        {
-	     		if (j<20) 
-	                tmp = ((stt[1] & stt[2]) ^ (~stt[1] & stt[3])) + K[0];
-	            else if (j<40)
-	                tmp = (stt[1] ^ stt[2] ^ stt[3]) + K[1];
-	            else if (j<60)
-	                tmp = ((stt[1] & stt[2]) ^ (stt[1] & stt[3]) ^ (stt[2] & stt[3])) + K[2];
-	            else
-	                tmp = (stt[1] ^ stt[2] ^ stt[3]) + K[3];
+        _doFinalize: function () {
+            // Shortcuts
+            var data = this._data;
+            var dataWords = data.words;
 
-	            tmp += rotl(stt[0], 5) + x[j] + stt[4];
-	            stt[4] = stt[3];
-	            stt[3] = stt[2];
-	            stt[2] = rotl(stt[1], 30);
-	            stt[1] = stt[0];
-	            stt[0] = tmp;
-	        }
-			for (j=0; j<sttLen; j++) stt[j] += tmpS[j];
-		}
+            var nBitsTotal = this._nDataBytes * 8;
+            var nBitsLeft = data.sigBytes * 8;
 
-		return fromBigEndian32(stt);
-	}
+            // Add padding
+            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
+            data.sigBytes = dataWords.length * 4;
 
-	var paddingData = function(_datz)
-	{
-		var datLen = _datz.length;
-		var n = datLen;
-		_datz[n++] = 0x80;
-		while (n% blockLen != 56) _datz[n++] = 0;
-		datLen *= 8;
-		return _datz.concat(0, 0, 0, 0, fromBigEndian32([datLen]) );
-	}
+            // Hash final blocks
+            this._process();
 
-	var toHex = function(_decz)
-	{
-		var i, hex = "";
+            // Return final computed hash
+            return this._hash;
+        },
 
-		for (i=0; i<_decz.length; i++)
-			hex += (_decz[i]>0xf?"":"0")+ _decz[i].toString(16);
-		return hex;
-	}
-	
-	var fromBigEndian32 = function(_blk)
-	{
-		var tmp = [];
-		for (n=i=0; i<_blk.length; i++)
-		{
-			tmp[n++] = (_blk[i] >>> 24) & 0xff;
-			tmp[n++] = (_blk[i] >>> 16) & 0xff;
-			tmp[n++] = (_blk[i] >>>  8) & 0xff;
-			tmp[n++] = _blk[i] & 0xff;
-		}
-		return tmp;
-	}
-	
-	var toBigEndian32 = function(_blk)
-	{
-		var tmp = [];
-		var i, n;
-		for (n=i=0; i<_blk.length; i+=4, n++)
-			tmp[n] = (_blk[i]<<24) | (_blk[i+ 1]<<16) | (_blk[i+ 2]<<8) | _blk[i+ 3];
-		return tmp;
-	}
-	
-	var unpack = function(_dat)
-	{
-		var i, n, c, tmp = [];
+        clone: function () {
+            var clone = Hasher.clone.call(this);
+            clone._hash = this._hash.clone();
 
-	    for (n=i=0; i<_dat.length; i++) 
-	    {
-	    	c = _dat.charCodeAt(i);
-			if (c <= 0xff) tmp[n++] = c;
-			else {
-				tmp[n++] = c >>> 8;
-				tmp[n++] = c &  0xff;
-			}	
-	    }
-	    return tmp;
-	}
+            return clone;
+        }
+    });
 
-	var pack = function(_ary)
-    {
-        var i, tmp = "";
-        for (i in _ary) tmp += String.fromCharCode(_ary[i]);
-        return tmp;
-    }
+    /**
+     * Shortcut function to the hasher's object interface.
+     *
+     * @param {WordArray|string} message The message to hash.
+     *
+     * @return {WordArray} The hash.
+     *
+     * @static
+     *
+     * @example
+     *
+     *     var hash = CryptoJS.SHA1('message');
+     *     var hash = CryptoJS.SHA1(wordArray);
+     */
+    C.SHA1 = Hasher._createHelper(SHA1);
 
-	var K = [ 0x5a827999 , 0x6ed9eba1 , 0x8f1bbcdc , 0xca62c1d6 ];
-
-}
-
-
+    /**
+     * Shortcut function to the HMAC's object interface.
+     *
+     * @param {WordArray|string} message The message to hash.
+     * @param {WordArray|string} key The secret key.
+     *
+     * @return {WordArray} The HMAC.
+     *
+     * @static
+     *
+     * @example
+     *
+     *     var hmac = CryptoJS.HmacSHA1(message, key);
+     */
+    C.HmacSHA1 = Hasher._createHmacHelper(SHA1);
+}());

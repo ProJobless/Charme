@@ -56,6 +56,7 @@ function apl_talks_encryptAESKey(peoplekeys, aeskey)
 
 
 function apl_talks_initConversation(message, receiverArray, peoplekeys, callbackKeyNotFound, callbackError, callbackSuccess) {
+	/*
 	var all;
 	var message;
 
@@ -135,7 +136,7 @@ function apl_talks_initConversation(message, receiverArray, peoplekeys, callback
 
 			ui_closeBox();
 		});
-
+	*/
 
 
 

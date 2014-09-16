@@ -52,6 +52,19 @@ likes your
   <% } %>
 
 
+ <% if (item.type == 7)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.keyOwner) %>'><%- item.name %></a>
+ has a new Public Key. Please verify it.
+</div>
+
+
+  <% } %>
+
+
+
  <% if (item.type == 6)  { %>
 
 

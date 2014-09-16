@@ -8,7 +8,11 @@ function crypto_rsaDecrypt(eText, key)
 
 	return rsa.decrypt(eText);
 }
-
+function crypto_rsaDecryptWithRevision(eText, revision)
+{
+	var key1 = getKeyByRevision(revision);
+	return crypto_rsaDecrypt(eText, key1.rsa.rsa)
+}
 function crypto_rsaEncrypt(text, key)
 {
 	var rsa = new RSAKey();
@@ -129,8 +133,16 @@ function asymkey_create()
 {
 
 }
-
-
+function aes_decryptWithFastKey1(message, revision)
+{
+	var fk1 = getFastKey(revision, 1);
+	return {message: aes_decrypt(fk1.fastkey1, message)};
+}
+function aes_encryptWithFastKey1(message, revision)
+{
+	var fk1 = getFastKey(revision, 1);
+	return {message: aes_encrypt(fk1.fastkey1, message)};
+}
 
 function aes_encrypt_json(pass, obj)
 {

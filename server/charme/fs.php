@@ -1,9 +1,6 @@
 <?php
-
-
-
-
-
+header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
+header('Access-Control-Allow-Origin: http://client.local');
 
 require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
 use Symfony\Component\ClassLoader\UniversalClassLoader;

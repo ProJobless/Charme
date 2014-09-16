@@ -1,0 +1,11 @@
+TODO:
+
+* **Sign Lists:** Currently the server can return additional People for a list. So the server can return some person he knows the private key and read the message posted in an encrypted collection
+
+* Edgekeys: Prevent sending old key revisions! Check key Revisions beforehand! Delete old public keys from localkeydir!
+* Recrypt edgekey: can server return additional posts?
+* Server can return wrong public keys or userIds/usernames when starting new conversations: Solution: encrypt username/userid with fastkey1 and check for userId == decryptedPubKey.userId
+
+* how to check that messagekey is the newest one?
+
+* encrypt username and userid of users in keydir with fastkey1

@@ -64,22 +64,55 @@ The project is splitted into the following sub projects:
 
 ![Screenshot](https://raw.github.com/mschultheiss/charme/dev/demo/screen2.png "Screenshot")
 
+## Setup a client
+  * Just copy the files in `/jsclient` on your server
+
 ## Setup a server
 
-  * Compile and install PHP with ZTS enabled for Apache (See Appendiy below for more information). For Windows there should be some prebuild pthreads binaries.
- ~~ * install pthreads extension with `pecl install -f pthreads` if not added during compilation already~~
- ~~ * Add pthreads to php.ini: `extension=php_pthreads.dll` in Windows, extension=`pthreads.so` in linux~~
-  * Make sure short_open_tag is set to true in php.ini, otherwise 
-    PHP will not parse php files. 
-  * Install Gearman via `apt-get install gearman` `sudo aptitude install gearman-job-server libgearman-dev` `pecl install gearman-1.0.3`. php.ini: extension = gearman.so
-  * Install Curl if not set during compilation:  `apt-get install php5-curl` Make sure curl is enabled in php.ini via extension=curl.so
-  * install gd extenstion for wide image library: `sudo apt-get install libmagickwand-dev libmagickcore-dev` and `pecl install imagick`
-  * Install MongoDB, via pecl install mongo, Add to php.ini via extension=mongo.so
-  *  Copy the files on your webserver so that index.php is in the root directory. Note: If you copied the repository, just copy the files in the /server directory on your server.
-  * Protect /admin with a .htaccess file
-  * Edit config.php. Set a network ID. To be compatible to other beta testers set NETWORK_ID to CHARME_BETA1. You have to read and agree to license_charme.txt when joining networks starting with CHARME.
-  * Start gearman via `/etc/init.d/gearman-job-server start`
-  * restart apache2 (Linux: `service apache2 restart`)
+```
+apt-get install gearman
+apt-get install gearman-job-server libgearman-dev
+pecl install gearman-1.0.3
+
+```
+
+
+  * Make sure PHP5 and apache2 is installed on your machine
+  * Install pecl if not done yet
+    ```
+    apt-get install php5-dev
+    apt-get install make
+    apt-get install php-pear
+    apt-get install php5-curl
+    ```
+  * Install mongoDB via `pecl install mongo` and
+    ```
+    apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
+    apt-get update
+    apt-get install -y mongodb-org
+    apt-get install php5-gd
+    ```
+
+  * Install Gearman via
+
+
+  * Add gearman and mongodb to php.ini via:
+
+    `nano /path/to/php.ini` To find the path run phpinfo(). Then add the lines
+    ```
+    extension=mongo.so
+    extension=curl.so
+    extension = gearman.so
+    ```
+    Also make sure `short_open_tag` is set to true in php.ini
+
+   * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
+   * Protect yourserver.com/charme/admin with a .htaccess file in production use!
+   * Start gearman server via `php hydra.php` in `yourserver.com/charme` directory
+
+   * Restart apache via `service apache2 restart`
+
 
 ###Appendix: Compiling PHP with PThreads
 

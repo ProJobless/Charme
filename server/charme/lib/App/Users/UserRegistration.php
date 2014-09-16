@@ -79,6 +79,15 @@ class UserRegistration implements \App\Models\Action
 			$col = \App\DB\Get::Collection();
 
 			$col->users->insert($obj);
+
+			$col->localkeydirectory->insert(
+				array(
+					"userid" => $data["username"]."@".$data["server"],
+					"publicKey" =>  json_decode($data["pubkey"], true),
+					"revision" => 1,
+					"pemkey" => $data["pemkey"]
+					));
+
 		}
 
 

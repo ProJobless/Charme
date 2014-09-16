@@ -1,10 +1,19 @@
-.header.responsive
+.responsive.header
 {
 	display: none;
 	width: 100%;
-	height: 48px;
-	z-index: 10000;
+	height: 64px;
+	z-index: 9000;
+	position: fixed;
 	background-color: #fff;
+}
+.onlyResponsive
+{
+	display: none;
+}
+.responsive.sbBeta
+{
+	display: none;
 }
 .header.responsive .row1
 {
@@ -27,7 +36,7 @@
 .header.responsive .row1 a
 {
 	width: 14.27%;
-	display: inline-block;
+	float: left;
 	font-size: 20px;
 	line-height: 32px;
 	padding-top:  4px;
@@ -35,46 +44,61 @@
 	text-align: center;
 	color:gray;
 }
-
+#barmenu
+{
+	color: #fff !important;
+	text-decoration: none !important;
+	font-size: 16px;
+	padding-top: 8px;
+	padding-right: 8px;
+}
 @media (max-width: 1000px)
 	{
+		.msgScrollContainer
+		{
+			width: 100%;
+		}
+		.msgItems li a
+		{
+			margin-left: 0px;
+		}
+		.instantanswer
+		{
+			width: 100%;
+			padding:0px;
+		}
+		.instantanswer form
+		{
+			padding: 16px;
+		}
+		.talkbar
+		{
+			width:100%;
+		}
+		.responsive.header
+		{
+			display: block;
+		}
+		.aboutContainer
+		{
+			width: 100%;
+		}
 		.sbAlpha
 		{
 			display: none;
 
 		}
-		.profile_sidebar img
+		.profile_sidebar .profileImage
 		{
 			width: 100px !important;
 			height: 100px !important;
 			border-radius: 10000px;
+			background-size: cover;
+			margin: 0px auto;
 		}
-		.profileTabs li.active
+		.profileTabs
 		{
-			border-bottom: 1px #1A3C87 solid;
-			background-color: transparent;
-
-		}
-		.profileTabs li  a, .profileTabs li  a:active, .profileTabs li.active  a
-		{
-			background-color: transparent !important;
-				box-shadow: none !important;
-			color: #444 !important;
-		}
-		.profileTabs li 
-		{
-
-			float: left;
-			display: inline-block;
-			background-color: transparent;
-			text-align: center;
-		
-
-			margin-top: 8px;
-			width: 33%;
-			color:#444;
-			border-bottom: 1px silver solid;
-
+			display: none;
 		}
 		.profile_sidebar
 		{
@@ -92,6 +116,7 @@
 		#page3
 		{
 			margin-right: 0px !important;
+			margin-left: 0px !important;
 		}
 		.containerAll
 		{
@@ -113,21 +138,68 @@
 		{
 			width: 100%;
 		}
-		.sbBeta
-		{
-			position: absolute;
-			top: 64px;
-			width: 100%;
-		}
-		.header.responsive
+		.onlyResponsive
 		{
 			display: block;
-			position: fixed;
-	
+		}
+		.talkbarbg
+		{
+			display: none;
+		}
+		.talkbar.inactive
+		{
+			display: none;
+		}
 
+		.sbBeta
+		{
+			position: fixed;
+			top: 64px;
+			background-color: #444 !important;
+			z-index: 1000;
+			display: none;
+			width: 100%;
+		}
+		.sbBeta ul li a
+		{
+			color: #fff;
+		}
+		.actionBar
+		{
+				background-color: #444 !important;
 		}
 		.commentBox input
 		{
 			width: 100% !important;
+		}
+		.messageDetails
+		{
+			display: none;
+		}
+		.messageDetails.active
+		{
+			display: block;
+		}
+		.actionBar
+		{
+			height: auto;
+			margin-bottom: 8px;
+		}
+		.sbBeta a.actionButton.vector
+		{
+			font-size: 16px;
+			border:1px #fff solid;
+			border-radius: 500px;
+			margin: 8px;
+		}
+		.sbBeta a.actionButton.vector:active
+		{
+			background-color:#000;
+		}
+		.sbBeta a.actionButton.vector i
+		{
+			color:#fff;
+			position: relative;
+			top:-3px;
 		}
 	}

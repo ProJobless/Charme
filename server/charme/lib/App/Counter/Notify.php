@@ -12,7 +12,7 @@ class Notify
     const notifyNewCollection = 3;
     const notifyListAdded = 4;
     const notifyLike = 5;
-    
+    const notifyNewKey = 7;
 	
 	public static function set($userId, $value)
 	{

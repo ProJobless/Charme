@@ -1,7 +1,12 @@
 <html><script>var hljs=new function(){function l(o){return o.replace(/&/gm,"&amp;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;")}function b(p){for(var o=p.firstChild;o;o=o.nextSibling){if(o.nodeName=="CODE"){return o}if(!(o.nodeType==3&&o.nodeValue.match(/\s+/))){break}}}function h(p,o){return Array.prototype.map.call(p.childNodes,function(q){if(q.nodeType==3){return o?q.nodeValue.replace(/\n/g,""):q.nodeValue}if(q.nodeName=="BR"){return"\n"}return h(q,o)}).join("")}function a(q){var p=(q.className+" "+q.parentNode.className).split(/\s+/);p=p.map(function(r){return r.replace(/^language-/,"")});for(var o=0;o<p.length;o++){if(e[p[o]]||p[o]=="no-highlight"){return p[o]}}}function c(q){var o=[];(function p(r,s){for(var t=r.firstChild;t;t=t.nextSibling){if(t.nodeType==3){s+=t.nodeValue.length}else{if(t.nodeName=="BR"){s+=1}else{if(t.nodeType==1){o.push({event:"start",offset:s,node:t});s=p(t,s);o.push({event:"stop",offset:s,node:t})}}}}return s})(q,0);return o}function j(x,v,w){var p=0;var y="";var r=[];function t(){if(x.length&&v.length){if(x[0].offset!=v[0].offset){return(x[0].offset<v[0].offset)?x:v}else{return v[0].event=="start"?x:v}}else{return x.length?x:v}}function s(A){function z(B){return" "+B.nodeName+'="'+l(B.value)+'"'}return"<"+A.nodeName+Array.prototype.map.call(A.attributes,z).join("")+">"}while(x.length||v.length){var u=t().splice(0,1)[0];y+=l(w.substr(p,u.offset-p));p=u.offset;if(u.event=="start"){y+=s(u.node);r.push(u.node)}else{if(u.event=="stop"){var o,q=r.length;do{q--;o=r[q];y+=("</"+o.nodeName.toLowerCase()+">")}while(o!=u.node);r.splice(q,1);while(q<r.length){y+=s(r[q]);q++}}}}return y+l(w.substr(p))}function f(q){function o(s,r){return RegExp(s,"m"+(q.cI?"i":"")+(r?"g":""))}function p(y,w){if(y.compiled){return}y.compiled=true;var s=[];if(y.k){var r={};function z(A,t){t.split(" ").forEach(function(B){var C=B.split("|");r[C[0]]=[A,C[1]?Number(C[1]):1];s.push(C[0])})}y.lR=o(y.l||hljs.IR,true);if(typeof y.k=="string"){z("keyword",y.k)}else{for(var x in y.k){if(!y.k.hasOwnProperty(x)){continue}z(x,y.k[x])}}y.k=r}if(w){if(y.bWK){y.b="\\b("+s.join("|")+")\\s"}y.bR=o(y.b?y.b:"\\B|\\b");if(!y.e&&!y.eW){y.e="\\B|\\b"}if(y.e){y.eR=o(y.e)}y.tE=y.e||"";if(y.eW&&w.tE){y.tE+=(y.e?"|":"")+w.tE}}if(y.i){y.iR=o(y.i)}if(y.r===undefined){y.r=1}if(!y.c){y.c=[]}for(var v=0;v<y.c.length;v++){if(y.c[v]=="self"){y.c[v]=y}p(y.c[v],y)}if(y.starts){p(y.starts,w)}var u=[];for(var v=0;v<y.c.length;v++){u.push(y.c[v].b)}if(y.tE){u.push(y.tE)}if(y.i){u.push(y.i)}y.t=u.length?o(u.join("|"),true):{exec:function(t){return null}}}p(q)}function d(D,E){function o(r,M){for(var L=0;L<M.c.length;L++){var K=M.c[L].bR.exec(r);if(K&&K.index==0){return M.c[L]}}}function s(K,r){if(K.e&&K.eR.test(r)){return K}if(K.eW){return s(K.parent,r)}}function t(r,K){return K.i&&K.iR.test(r)}function y(L,r){var K=F.cI?r[0].toLowerCase():r[0];return L.k.hasOwnProperty(K)&&L.k[K]}function G(){var K=l(w);if(!A.k){return K}var r="";var N=0;A.lR.lastIndex=0;var L=A.lR.exec(K);while(L){r+=K.substr(N,L.index-N);var M=y(A,L);if(M){v+=M[1];r+='<span class="'+M[0]+'">'+L[0]+"</span>"}else{r+=L[0]}N=A.lR.lastIndex;L=A.lR.exec(K)}return r+K.substr(N)}function z(){if(A.sL&&!e[A.sL]){return l(w)}var r=A.sL?d(A.sL,w):g(w);if(A.r>0){v+=r.keyword_count;B+=r.r}return'<span class="'+r.language+'">'+r.value+"</span>"}function J(){return A.sL!==undefined?z():G()}function I(L,r){var K=L.cN?'<span class="'+L.cN+'">':"";if(L.rB){x+=K;w=""}else{if(L.eB){x+=l(r)+K;w=""}else{x+=K;w=r}}A=Object.create(L,{parent:{value:A}});B+=L.r}function C(K,r){w+=K;if(r===undefined){x+=J();return 0}var L=o(r,A);if(L){x+=J();I(L,r);return L.rB?0:r.length}var M=s(A,r);if(M){if(!(M.rE||M.eE)){w+=r}x+=J();do{if(A.cN){x+="</span>"}A=A.parent}while(A!=M.parent);if(M.eE){x+=l(r)}w="";if(M.starts){I(M.starts,"")}return M.rE?0:r.length}if(t(r,A)){throw"Illegal"}w+=r;return r.length||1}var F=e[D];f(F);var A=F;var w="";var B=0;var v=0;var x="";try{var u,q,p=0;while(true){A.t.lastIndex=p;u=A.t.exec(E);if(!u){break}q=C(E.substr(p,u.index-p),u[0]);p=u.index+q}C(E.substr(p));return{r:B,keyword_count:v,value:x,language:D}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:l(E)}}else{throw H}}}function g(s){var o={keyword_count:0,r:0,value:l(s)};var q=o;for(var p in e){if(!e.hasOwnProperty(p)){continue}var r=d(p,s);r.language=p;if(r.keyword_count+r.r>q.keyword_count+q.r){q=r}if(r.keyword_count+r.r>o.keyword_count+o.r){q=o;o=r}}if(q.language){o.second_best=q}return o}function i(q,p,o){if(p){q=q.replace(/^((<[^>]+>|\t)+)/gm,function(r,v,u,t){return v.replace(/\t/g,p)})}if(o){q=q.replace(/\n/g,"<br>")}return q}function m(r,u,p){var v=h(r,p);var t=a(r);if(t=="no-highlight"){return}var w=t?d(t,v):g(v);t=w.language;var o=c(r);if(o.length){var q=document.createElement("pre");q.innerHTML=w.value;w.value=j(o,c(q),v)}w.value=i(w.value,u,p);var s=r.className;if(!s.match("(\\s|^)(language-)?"+t+"(\\s|$)")){s=s?(s+" "+t):t}r.innerHTML=w.value;r.className=s;r.result={language:t,kw:w.keyword_count,re:w.r};if(w.second_best){r.second_best={language:w.second_best.language,kw:w.second_best.keyword_count,re:w.second_best.r}}}function n(){if(n.called){return}n.called=true;Array.prototype.map.call(document.getElementsByTagName("pre"),b).filter(Boolean).forEach(function(o){m(o,hljs.tabReplace)})}function k(){window.addEventListener("DOMContentLoaded",n,false);window.addEventListener("load",n,false)}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=m;this.initHighlighting=n;this.initHighlightingOnLoad=k;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.BE={b:"\\\\[\\s\\S]",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(q,r){var o={};for(var p in q){o[p]=q[p]}if(r){for(var p in r){o[p]=r[p]}}return o}}();hljs.LANGUAGES.javascript=function(a){return{k:{keyword:"in if for while finally var new function do return void else break catch instanceof with throw case default try this switch continue typeof delete let yield const",literal:"true false null undefined NaN Infinity"},c:[a.ASM,a.QSM,a.CLCM,a.CBLCLM,a.CNM,{b:"("+a.RSR+"|\\b(case|return|throw)\\b)\\s*",k:"return throw case",c:[a.CLCM,a.CBLCLM,{cN:"regexp",b:"/",e:"/[gim]*",i:"\\n",c:[{b:"\\\\/"}]},{b:"<",e:">;",sL:"xml"}],r:0},{cN:"function",bWK:true,e:"{",k:"function",c:[{cN:"title",b:"[A-Za-z$_][0-9A-Za-z$_]*"},{cN:"params",b:"\\(",e:"\\)",c:[a.CLCM,a.CBLCLM],i:"[\"'\\(]"}],i:"\\[|%"}]}}(hljs);hljs.LANGUAGES.http=function(a){return{i:"\\S",c:[{cN:"status",b:"^HTTP/[0-9\\.]+",e:"$",c:[{cN:"number",b:"\\b\\d{3}\\b"}]},{cN:"request",b:"^[A-Z]+ (.*?) HTTP/[0-9\\.]+$",rB:true,e:"$",c:[{cN:"string",b:" ",e:" ",eB:true,eE:true}]},{cN:"attribute",b:"^\\w",e:": ",eE:true,i:"\\n|\\s|=",starts:{cN:"string",e:"$"}},{b:"\\n\\n",starts:{sL:"",eW:true}}]}}(hljs);hljs.LANGUAGES.php=function(a){var e={cN:"variable",b:"\\$+[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*"};var b=[a.inherit(a.ASM,{i:null}),a.inherit(a.QSM,{i:null}),{cN:"string",b:'b"',e:'"',c:[a.BE]},{cN:"string",b:"b'",e:"'",c:[a.BE]}];var c=[a.BNM,a.CNM];var d={cN:"title",b:a.UIR};return{cI:true,k:"and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return implements parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception php_user_filter default die require __FUNCTION__ enddeclare final try this switch continue endfor endif declare unset true false namespace trait goto instanceof insteadof __DIR__ __NAMESPACE__ __halt_compiler",c:[a.CLCM,a.HCM,{cN:"comment",b:"/\\*",e:"\\*/",c:[{cN:"phpdoc",b:"\\s@[A-Za-z]+"}]},{cN:"comment",eB:true,b:"__halt_compiler.+?;",eW:true},{cN:"string",b:"<<<['\"]?\\w+['\"]?$",e:"^\\w+;",c:[a.BE]},{cN:"preprocessor",b:"<\\?php",r:10},{cN:"preprocessor",b:"\\?>"},e,{cN:"function",bWK:true,e:"{",k:"function",i:"\\$|\\[|%",c:[d,{cN:"params",b:"\\(",e:"\\)",c:["self",e,a.CBLCLM].concat(b).concat(c)}]},{cN:"class",bWK:true,e:"{",k:"class",i:"[:\\(\\$]",c:[{bWK:true,eW:true,k:"extends",c:[d]},d]},{b:"=>"}].concat(b).concat(c)}}(hljs);hljs.LANGUAGES.python=function(a){var f={cN:"prompt",b:"^(>>>|\\.\\.\\.) "};var c=[{cN:"string",b:"(u|b)?r?'''",e:"'''",c:[f],r:10},{cN:"string",b:'(u|b)?r?"""',e:'"""',c:[f],r:10},{cN:"string",b:"(u|r|ur)'",e:"'",c:[a.BE],r:10},{cN:"string",b:'(u|r|ur)"',e:'"',c:[a.BE],r:10},{cN:"string",b:"(b|br)'",e:"'",c:[a.BE]},{cN:"string",b:'(b|br)"',e:'"',c:[a.BE]}].concat([a.ASM,a.QSM]);var e={cN:"title",b:a.UIR};var d={cN:"params",b:"\\(",e:"\\)",c:["self",a.CNM,f].concat(c)};var b={bWK:true,e:":",i:"[${=;\\n]",c:[e,d],r:10};return{k:{keyword:"and elif is global as in if from raise for except finally print import pass return exec else break not with class assert yield try while continue del or def lambda nonlocal|10",built_in:"None True False Ellipsis NotImplemented"},i:"(</|->|\\?)",c:c.concat([f,a.HCM,a.inherit(b,{cN:"function",k:"def"}),a.inherit(b,{cN:"class",k:"class"}),a.CNM,{cN:"decorator",b:"@",e:"$"},{b:"\\b(print|exec)\\("}])}}(hljs);</script><style>
+table, body
+{
+	font-size:12px;
+	font-family: "Droid Sans", Tahoma;
+	
+}
 body
 {
-	font-family: Tahoma;
 	padding:32px;
 	margin:0px;
 	padding-left: 332px;
@@ -38,9 +43,11 @@ h1
 
 h2
 {
-	font-size: 24px;
-	border-left: 4px blue solid;
-	padding: 8px;
+	font-size: 20px;
+	font-weight:normal;
+	color:gray;
+	padding: 8px 0px;;
+	margin-bottom:8px;
 }
 h3
 {
@@ -178,7 +185,7 @@ Welcome to Charme Documentation.
 
 </code></pre><h2 id='el_2'>getKeyByRevision
 
-</h2><h3>Info</h3><p>Returns a key from the keyring</p>
+</h2><h3>Info</h3><p>Returns a key from the keyring. If revision=0 then return newest key.</p>
 <h3>Parameters</h3><table></table><h3>Example Code</h3><pre><code>var key = getKeyByRevision(4);
 
 </code></pre><h2 id='el_3'>apl_user
@@ -270,19 +277,7 @@ apl/talks.js</p>
 apl/request.js</p>
 <h3>Example Code</h3><pre><code>var json = $('#myform').serializeObject();
 
-</code></pre><h2 id='el_13'>crypto_sign
-
-</h2><h3>Info</h3><p>Generate a signature with the users private key.</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to sign</td></tr></table><h3>Example Code</h3><pre><code>var signature = crypto_sign(&quot;hallo welt&quot;, );
-
-
-</code></pre><h2 id='el_14'>crypto_checksign
-
-</h2><h3>Info</h3><p>Verify a signature. Returns TRUE or FALSE</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>signature</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The signature to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>publicKey</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>object</td><td>The publicKey (usually from key directory)</td></tr></table><h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
-
-
-</code></pre><h2 id='el_15'>crypto_buildHashKeyDir
+</code></pre><h2 id='el_13'>crypto_buildHashKeyDir
 
 </h2><h3>Info</h3><p>Build the hash keys for querying the key directory. Returns a list in form [{userid, keyhash}, {userid, keyhash}, ...]</p>
 
@@ -291,7 +286,7 @@ crypto.js</p>
 <h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
 
 
-</code></pre><h2 id='el_16'>crypto_checkKeyUpdate
+</code></pre><h2 id='el_14'>crypto_checkKeyUpdate
 
 </h2><h3>Info</h3><p>Check if public keys are up to date.
 Returns an array with outdated keys.</p>
@@ -300,7 +295,7 @@ Returns an array with outdated keys.</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>upToDate = crypto_checkKeyUpdate([&quot;test@test.de&quot;, &quot;test2@test3.de&quot;]);
 
-</code></pre><h2 id='el_17'>asymkey_create
+</code></pre><h2 id='el_15'>asymkey_create
 
 </h2><h3>Info</h3><p>Creates an asymetic key pair</p>
 
@@ -308,7 +303,7 @@ crypto.js</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>somekey = asymkey_create();
 
-</code></pre><h2 id='el_18'>aes_encryypt
+</code></pre><h2 id='el_16'>aes_encryypt
 
 </h2><h3>Info</h3><p>Encrypts String with AES Key</p>
 
@@ -316,7 +311,7 @@ crypto.js</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>enctext= aes_encrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
 
-</code></pre><h2 id='el_19'>checkCache
+</code></pre><h2 id='el_17'>checkCache
 
 </h2><h3>Info</h3><p>Uses  local storage cache to get data encrypted with fastkey1.
 Useful for RSA decrypted values for example. Returns false if Cache was empty</p>
@@ -333,7 +328,7 @@ if (x == null)
 alert(x);
 
 
-</code></pre><h2 id='el_20'>storeCache
+</code></pre><h2 id='el_18'>storeCache
 
 </h2><h3>Info</h3><p>Uses  local storage cache to store data encrypted with fastkey1.
 Useful for RSA decrypted values for example. See also: checkCache</p>
@@ -350,7 +345,7 @@ if (x == false)
 alert(x);
 
 
-</code></pre><h2 id='el_21'>aes_decryypt
+</code></pre><h2 id='el_19'>aes_decryypt
 
 </h2><h3>Info</h3><p>Decrypts String with AES Key, returns string</p>
 
@@ -358,7 +353,7 @@ alert(x);
 crypto.js</p>
 <h3>Example Code</h3><pre><code>enctext= aes_decrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
 
-</code></pre><h2 id='el_22'>mkRSAPublic
+</code></pre><h2 id='el_20'>mkRSAPublic
 
 </h2><h3>Info</h3><p>Generate a public RSA Object which prodvides encrypt functions</p>
 
@@ -368,7 +363,7 @@ crypto.js</p>
 var rsa = mkRSAPublic(key);
 rsa.encrypt(...);
 
-</code></pre><h2 id='el_23'>mkRSA
+</code></pre><h2 id='el_21'>mkRSA
 
 </h2><h3>Info</h3><p>Generate RSA Object which prodvides encrypt/decrypt functions 
 of Key Object</p>
@@ -378,7 +373,7 @@ crypto.js</p>
 <h3>Example Code</h3><pre><code>var rsa = mkRSA(key);
 rsa.encrypt(...);
 
-</code></pre><h2 id='el_24'>getFastKey
+</code></pre><h2 id='el_22'>getFastKey
 
 </h2><h3>Info</h3><p>Get symmetric AES key for fast encryption/decryption
 First Parameter is certificate Version, second is fastkey number
@@ -386,12 +381,12 @@ First Parameter is certificate Version, second is fastkey number
 Returns {fastkey1, revision}</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>version</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var key1 = getFastKey(0, 1);
 
-</code></pre><h2 id='el_25'>getCurrentFastKey
+</code></pre><h2 id='el_23'>getCurrentFastKey
 
-</h2><h3>Info</h3><p>Returns current fast key. This is the same as</p>
+</h2><h3>Info</h3><p>Returns current fast key.</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var fk = getFastKey(getCurrentFastKey);
 
-</code></pre><h2 id='el_26'>getCurrentRSAKey
+</code></pre><h2 id='el_24'>getCurrentRSAKey
 
 </h2><h3>Info</h3><p>Returns current RSA Key in form {rsa, revision}</p>
 
@@ -399,7 +394,7 @@ Returns {fastkey1, revision}</p>
 crypto.js</p>
 <h3>Example Code</h3><pre><code>var rsa = function getCurrentRSAKey()
 
-</code></pre><h2 id='el_27'>randomSalt
+</code></pre><h2 id='el_25'>randomSalt
 
 </h2><h3>Info</h3><p>Generates a random Salt for SHA256 Hashing </p>
 
@@ -407,7 +402,7 @@ crypto.js</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Salt lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomSalt(32);
 
 
-</code></pre><h2 id='el_28'>randomAesKey
+</code></pre><h2 id='el_26'>randomAesKey
 
 </h2><h3>Info</h3><p>Generates a random AES Key. </p>
 
@@ -415,14 +410,14 @@ crypto.js</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Key lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
 
 
-</code></pre><h2 id='el_29'>    routes.js
+</code></pre><h2 id='el_27'>    routes.js
 
 </h2><h3>Info</h3><pre><code>Provides routing and contains document complete handler.
 
 Location:
 lib/routes.js
 </code></pre>
-<h2 id='el_30'>    isLoggedIn
+<h2 id='el_28'>    isLoggedIn
 
 </h2><h3>Info</h3><pre><code>Checks if the user id logged in.
 Returns true or false.
@@ -433,152 +428,7 @@ No passphrase =&gt; Logout
 Location:
 page_modules.js
 </code></pre>
-<h2 id='el_31'>crypto_sign
-
-</h2><h3>Info</h3><p>Generate a signature with the users private key.</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to sign</td></tr></table><h3>Example Code</h3><pre><code>var signature = crypto_sign(&quot;hallo welt&quot;, );
-
-
-</code></pre><h2 id='el_32'>crypto_checksign
-
-</h2><h3>Info</h3><p>Verify a signature. Returns TRUE or FALSE</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>signature</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The signature to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>message</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>The message you want to check</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>publicKey</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>object</td><td>The publicKey (usually from key directory)</td></tr></table><h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
-
-
-</code></pre><h2 id='el_33'>crypto_buildHashKeyDir
-
-</h2><h3>Info</h3><p>Build the hash keys for querying the key directory. Returns a list in form [{userid, keyhash}, {userid, keyhash}, ...]</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>hashkeys = buildHashKeyDir([&quot;test@test.de&quot;]);
-
-
-</code></pre><h2 id='el_34'>crypto_checkKeyUpdate
-
-</h2><h3>Info</h3><p>Check if public keys are up to date.
-Returns an array with outdated keys.</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>upToDate = crypto_checkKeyUpdate([&quot;test@test.de&quot;, &quot;test2@test3.de&quot;]);
-
-</code></pre><h2 id='el_35'>asymkey_create
-
-</h2><h3>Info</h3><p>Creates an asymetic key pair</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>somekey = asymkey_create();
-
-</code></pre><h2 id='el_36'>aes_encryypt
-
-</h2><h3>Info</h3><p>Encrypts String with AES Key</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>enctext= aes_encrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
-
-</code></pre><h2 id='el_37'>checkCache
-
-</h2><h3>Info</h3><p>Uses  local storage cache to get data encrypted with fastkey1.
-Useful for RSA decrypted values for example. Returns false if Cache was empty</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>var x = checkCache(&quot;key&quot;);
-if (x == null)
-{
-  x = 4+4;
-  storeCache(&quot;key&quot;, x);
-}
-
-alert(x);
-
-
-</code></pre><h2 id='el_38'>storeCache
-
-</h2><h3>Info</h3><p>Uses  local storage cache to store data encrypted with fastkey1.
-Useful for RSA decrypted values for example. See also: checkCache</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>var x = checkCache(&quot;key&quot;);
-if (x == false)
-{
-  x = 4+4;
-  storeCache(&quot;key&quot;, x);
-}
-
-alert(x);
-
-
-</code></pre><h2 id='el_39'>aes_decryypt
-
-</h2><h3>Info</h3><p>Decrypts String with AES Key, returns string</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>enctext= aes_decrypt(&quot;myaeskey&quot;, &quot;mytext&quot;);
-
-</code></pre><h2 id='el_40'>mkRSAPublic
-
-</h2><h3>Info</h3><p>Generate a public RSA Object which prodvides encrypt functions</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>var key = { n: 12345..., e: 100011} // Do not define n and e yourself!
-var rsa = mkRSAPublic(key);
-rsa.encrypt(...);
-
-</code></pre><h2 id='el_41'>mkRSA
-
-</h2><h3>Info</h3><p>Generate RSA Object which prodvides encrypt/decrypt functions 
-of Key Object</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>var rsa = mkRSA(key);
-rsa.encrypt(...);
-
-</code></pre><h2 id='el_42'>getFastKey
-
-</h2><h3>Info</h3><p>Get symmetric AES key for fast encryption/decryption
-First Parameter is certificate Version, second is fastkey number
-(which is 1 or 2)
-Returns {fastkey1, revision}</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>version</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var key1 = getFastKey(0, 1);
-
-</code></pre><h2 id='el_43'>getCurrentFastKey
-
-</h2><h3>Info</h3><p>Returns current fast key. This is the same as</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>number</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>1 or 2</td></tr></table><h3>Example Code</h3><pre><code>var fk = getFastKey(getCurrentFastKey);
-
-</code></pre><h2 id='el_44'>getCurrentRSAKey
-
-</h2><h3>Info</h3><p>Returns current RSA Key in form {rsa, revision}</p>
-
-<p>Location:
-crypto.js</p>
-<h3>Example Code</h3><pre><code>var rsa = function getCurrentRSAKey()
-
-</code></pre><h2 id='el_45'>randomSalt
-
-</h2><h3>Info</h3><p>Generates a random Salt for SHA256 Hashing </p>
-
-<p>TODO:LV1: Add Mouse movement etc. as <code>Math.random()</code> is NOT a reliable RNG.</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Salt lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomSalt(32);
-
-
-</code></pre><h2 id='el_46'>randomAesKey
-
-</h2><h3>Info</h3><p>Generates a random AES Key. </p>
-
-<p>TODO:LV1: Add Mouse movement etc. as <code>Math.random()</code> is NOT a reliable RNG.</p>
-<h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>lenghtInByte</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>int</td><td>Key lenght in byte</td></tr></table><h3>Example Code</h3><pre><code>var k = randomAesKey(32); // Generate a random AES key with lenght of 256 Bit.
-
-
-</code></pre><h2 id='el_47'>rsa
+<h2 id='el_29'>rsa
 
 </h2><h3>Info</h3><p>See also the <a href="http://www-cs-students.stanford.edu/~tjw/jsbn/rsa2.html">RSA Library Documentation</a>.</p>
 
@@ -599,19 +449,24 @@ var n =  rsa.n.toString(16);
 
 // All variables must be in string format!!
 rsa.setPublic(n, e);
-// Set properties for encryption
-rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
+// This is how to set properties for encryption
+// rsa.setPrivateEx(n, e, d, p, q, dmp1, dmq1, coeff);
+
+// Decryption:
 var str = rsa.decrypt(&quot;SOME ENCRYPTED TEXT HERE&quot;);
 
-</code></pre><h2 id='el_48'>page_authenticated
+</code></pre><h2 id='el_30'>charme_schema
+
+</h2><h3>Info</h3><p>Global Context Definitions</p>
+<h2 id='el_31'>page_authenticated
 
 </h2><h3>Info</h3><p>Main container with navigation. Init at login() or $.ready when user is logged in.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>currentView</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>view_page</td><td>The current page. Do not set!</td></tr></table><h3>Example Code</h3><pre><code>container_main= new page_authenticated({el:'#layout'});
 
-</code></pre><h2 id='el_49'>page_login
+</code></pre><h2 id='el_32'>page_login
 
 </h2><h3>Info</h3><p>Container if user is NOT logged in.</p>
-<h2 id='el_50'>sendMessageForm
+<h2 id='el_33'>sendMessageForm
 
 </h2><h3>Info</h3><p>Generate a new message box with the specified receivers</p>
 <h3>Parameters</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>receivers</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>JSON Object</td><td>Receiver list in format [{id</td></tr></table><h3>Example Code</h3><pre><code>// Send a message to Alice
@@ -620,7 +475,7 @@ sendMessage(Form(
 		{id: 'alice@myserver.com', name: 'Alice'}
 	]);)
 
-</code></pre><h2 id='el_51'>view_page
+</code></pre><h2 id='el_34'>view_page
 
 </h2><h3>Info</h3><p>Default page class. Build new pages on this model. <code>postRender</code> is called after rendering is complete.</p>
 <h3>Properties</h3><table><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.template</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which template from templates folder do we us?</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.needLogin</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Only for registred users? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.useSidebar</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>bool</td><td>Sidebar enabled? (Default</td></tr><tr><td style='font-family: Consolas, monospace; font-weight:bold;'>options.navMatch</td><td style=' color: blue; font-family: Consolas, monospace; font-weight:bold;'>string</td><td>Which element of main navigation should be highlighted? </td></tr></table><h3>Example Code</h3><pre><code>
@@ -646,21 +501,17 @@ postRender: function()
 var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 
-</code></pre><div class='index'><ul><li><a href='#el_30'>    isLoggedIn
+</code></pre><div class='index'><ul><li><a href='#el_28'>    isLoggedIn
 
-</a></li><li><a href='#el_29'>    routes.js
+</a></li><li><a href='#el_27'>    routes.js
 
 </a></li><li><a href='#el_11'>  apl_request
 
 </a></li><li><a href='#el_12'>$.fn.serializeObject
 
-</a></li><li><a href='#el_21'>aes_decryypt
+</a></li><li><a href='#el_19'>aes_decryypt
 
-</a></li><li><a href='#el_39'>aes_decryypt
-
-</a></li><li><a href='#el_36'>aes_encryypt
-
-</a></li><li><a href='#el_18'>aes_encryypt
+</a></li><li><a href='#el_16'>aes_encryypt
 
 </a></li><li><a href='#el_7'>apl/updater.js
 
@@ -668,81 +519,51 @@ var pa = new view_test({template: &quot;welcome&quot;,  needLogin: false});
 
 </a></li><li><a href='#el_3'>apl_user
 
-</a></li><li><a href='#el_17'>asymkey_create
+</a></li><li><a href='#el_15'>asymkey_create
 
-</a></li><li><a href='#el_35'>asymkey_create
+</a></li><li><a href='#el_30'>charme_schema
 
-</a></li><li><a href='#el_19'>checkCache
+</a></li><li><a href='#el_17'>checkCache
 
-</a></li><li><a href='#el_37'>checkCache
+</a></li><li><a href='#el_13'>crypto_buildHashKeyDir
 
-</a></li><li><a href='#el_33'>crypto_buildHashKeyDir
+</a></li><li><a href='#el_14'>crypto_checkKeyUpdate
 
-</a></li><li><a href='#el_15'>crypto_buildHashKeyDir
+</a></li><li><a href='#el_23'>getCurrentFastKey
 
-</a></li><li><a href='#el_16'>crypto_checkKeyUpdate
+</a></li><li><a href='#el_24'>getCurrentRSAKey
 
-</a></li><li><a href='#el_34'>crypto_checkKeyUpdate
-
-</a></li><li><a href='#el_32'>crypto_checksign
-
-</a></li><li><a href='#el_14'>crypto_checksign
-
-</a></li><li><a href='#el_31'>crypto_sign
-
-</a></li><li><a href='#el_13'>crypto_sign
-
-</a></li><li><a href='#el_43'>getCurrentFastKey
-
-</a></li><li><a href='#el_25'>getCurrentFastKey
-
-</a></li><li><a href='#el_44'>getCurrentRSAKey
-
-</a></li><li><a href='#el_26'>getCurrentRSAKey
-
-</a></li><li><a href='#el_42'>getFastKey
-
-</a></li><li><a href='#el_24'>getFastKey
+</a></li><li><a href='#el_22'>getFastKey
 
 </a></li><li><a href='#el_2'>getKeyByRevision
 
-</a></li><li><a href='#el_23'>mkRSA
+</a></li><li><a href='#el_21'>mkRSA
 
-</a></li><li><a href='#el_41'>mkRSA
+</a></li><li><a href='#el_20'>mkRSAPublic
 
-</a></li><li><a href='#el_22'>mkRSAPublic
+</a></li><li><a href='#el_31'>page_authenticated
 
-</a></li><li><a href='#el_40'>mkRSAPublic
+</a></li><li><a href='#el_32'>page_login
 
-</a></li><li><a href='#el_48'>page_authenticated
+</a></li><li><a href='#el_26'>randomAesKey
 
-</a></li><li><a href='#el_49'>page_login
+</a></li><li><a href='#el_25'>randomSalt
 
-</a></li><li><a href='#el_46'>randomAesKey
-
-</a></li><li><a href='#el_28'>randomAesKey
-
-</a></li><li><a href='#el_27'>randomSalt
-
-</a></li><li><a href='#el_45'>randomSalt
-
-</a></li><li><a href='#el_47'>rsa
+</a></li><li><a href='#el_29'>rsa
 
 </a></li><li><a href='#el_10'>sendMessage
 
-</a></li><li><a href='#el_50'>sendMessageForm
+</a></li><li><a href='#el_33'>sendMessageForm
 
 </a></li><li><a href='#el_6'>smilieParse
 
-</a></li><li><a href='#el_38'>storeCache
-
-</a></li><li><a href='#el_20'>storeCache
+</a></li><li><a href='#el_18'>storeCache
 
 </a></li><li><a href='#el_9'>ui_closeBox
 
 </a></li><li><a href='#el_8'>ui_showBox
 
-</a></li><li><a href='#el_51'>view_page
+</a></li><li><a href='#el_34'>view_page
 
 </a></li><li><a href='#el_5'>xssAttr
 

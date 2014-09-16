@@ -9,7 +9,7 @@ task 'sbuild', '', (options) -> # new build task
 	Array::include = (e) -> @indexOf(e) > -1
 	 
 	settings =
-	  input:  ['jsclient/models/post.coffee', 'jsclient/models/signature.coffee', 'jsclient/models/keys.coffee'] # add folder with 'app' for example
+	  input:  ['jsclient/models/schema.coffee','jsclient/models/listOperations.coffee','jsclient/models/post.coffee', 'jsclient/models/signature.coffee', 'jsclient/models/keys.coffee', 'jsclient/models/views.coffee', 'jsclient/models/context.coffee'] # add folder with 'app' for example
 	  output: 'jsclient/models/models.js'
 	  _files: (dir) ->
 	    unless dir?

@@ -105,8 +105,7 @@ function apl_request(requests, callback, ses,srv)
 		},
 		success: function(data) {
 
-		console.log("GOT THIS:");
-		console.log(data);
+
 		if(callback != undefined && typeof callback == 'function') 
 		{
 			if (data.ERROR == 1 && srv == charmeUser.server)

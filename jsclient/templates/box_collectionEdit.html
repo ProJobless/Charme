@@ -16,7 +16,24 @@
 			<textarea class='box' id='inp_box_description' style='width:275px; height:100px;'></textarea>
 		</td></tr>
 
-		
+		<tr><td class="tdinfo">List:</td><td>
+			<select id='sel_collection_list' style="margin-bottom:8px;">
+				<option value="0">No list</option>
+				  <% _.each( rc.collection_editPrepare.lists, function(item2){ %>
+
+
+				  <option  <% if ( rc.collection_editPrepare.currentlist == item2._id.$id) { %> selected="selected"
+						
+						<% } %>
+ value='<%- item2._id.$id %>'><%- item2.name %></option>
+ 				  <% }); %>
+
+			</select>
+			<br>
+			If you select a list, new posts are encrypted only for people in this list.
+		</td></tr>
+
+
 </tbody></table>
 </div>
 <div class='boxMargin'>

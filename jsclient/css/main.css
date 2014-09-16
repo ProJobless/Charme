@@ -1,9 +1,46 @@
+#collectionSelector.encrypted
+{
+	background-color: #e0e082;
+	border:1px #bf8b30 solid;
 
+}
+#collectionSelector
+{
+	width: 100px;
+	margin-right:4px; margin-left:8px;
+}
 .loggedOutOnly
 {
 	display: none;
 }
+.cont img
+{
+	max-width: 100%;
+}
+.contextItem, .contextItem:hover
+{
+	background-image: url("context.svg");
+	background-position: 0px 0px;
+	width: 70px;
+	margin: 8px;
+	float:left;
 
+	cursor: default;
+	text-align:center;
+	padding-top: 78px;
+	color:#777;
+	font-weight: normal;
+	font-size: 16px;
+}
+.scroller
+{
+	width:100000px;
+	position: relative;
+
+}
+.contextItem:active
+{
+	-webkit-filter: brightness(0.5);}
 
 .postoptions a, .postoptions
 {
@@ -11,7 +48,16 @@
 	color: gray;
 }
 /* custom scrollbars */
+:focus { 
+    outline: none; 
+}
+.profile_sidebar .profileImage
+{
+	width: 200px;
+	height: 200px;
 
+	background-size: cover;
+}
 
 
 ::-webkit-scrollbar {
@@ -229,6 +275,10 @@ label { display: inline-block; width: 130px; float:left; }
 	
 	
 }
+.messageDetails
+{
+	margin-left:300px;overflow:auto;
+}
 
 #button_notifications
 {
@@ -240,6 +290,31 @@ label { display: inline-block; width: 130px; float:left; }
 	font-family: "Tahoma";
 
 
+}
+.topHeader
+{
+	
+	z-index: 9001; /* must be higher than responsive heeader*/
+	border-bottom:1px silver solid;
+	background-color: #efefef;
+	width: 100%;
+	position: fixed;
+}
+.topHeader a
+{
+	color:#555;
+	font-weight: normal;
+	display: inline-block;
+	padding: 8px;
+	font-size: 14px;
+}
+a.actionButton.vector i
+{
+	color:gray;
+}
+a.actionButton.vector
+{
+	background-image: none;
 }
 
 a.actionButton

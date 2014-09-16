@@ -10,7 +10,7 @@
 
  <% if (item.fileId)  { %>
  <div>
-<span class=' imageid' style='height:100px; display:inline-block; width:100px;' data-location='http://<%- item.sender.split("@")[1] %>/charme/fs.php?cache=true&enc=1&id=<%- item.fileId %>'></span>
+<span data-revision='<%- item.message.object.msgKeyRevision %>'  class=' imageid' style='height:100px; display:inline-block; width:100px;' data-location='http://<%- item.message.object.sender.split("@")[1] %>/charme/fs.php?cache=true&enc=1&id=<%- item.fileId %>'></span>
 </div>
  <% } %>
 

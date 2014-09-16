@@ -302,13 +302,13 @@ console.log("sidebar load=true");
 		    <div class="sbBetaCont"> \
 		        <div class="sidebar sbBeta"> \
 		           <div class="actionBar"> \
-		        </div> \
+		        </div>\
 		     <ul class="subCont"> \
 		     </ul> \
 		        </div> \
 		        <div class="responsive header"> \
-		        	<div class="row1"><a class="active"  data-topic="stream" href="#stream"><i class="fa fa-image"></i></a><a   data-topic="profile"  href="#user/' + (charmeUser.userIdURL) + '"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a><a href="#"><i class="fa fa-image"></i></a></div> \
-		       		<div class="row2"><span id="responsiveTitle">Titel</span></div> \
+		        	<div class="row1"><a class="active"  data-topic="stream" href="#stream"><i class="fa fa-list"></i></a><a   data-topic="profile"  href="#user/' + (charmeUser.userIdURL) + '"><i class="fa fa-user"></i></a><a href="#talks" data-topic="talks"><i class="fa fa-envelope-o"></i></a><a href="#lists" data-topic="lists" ><i class="fa fa-users"></i></a><a data-topic="find" href="#find"><i class="fa fa-search"></i></a><a href="#">0</a><a data-topic="settings" href="#settings"><i class="fa fa-cogs"></i></a></div> \
+		       		<br style="clear:both"><div class="row2"><span><a id="barmenu" onclick="$(\'.sbBeta\').toggle()" style="float:right"><i class="fa fa-bars"></i></a></span><span id="responsiveTitle"></span></div><br style="clear:both"> \
 		        </div> \
 		        <div class="page_content"> \
 		        <div class="page" style="padding:0px; " id="page"> \

@@ -32,7 +32,7 @@ $sel = array("owner" => $_SESSION["charme_userid"],
 	'username' => new MongoRegex('/'.$_GET["q"].'/i'));
 
 
-$ar = iterator_to_array($col->listitems->find($sel), true);
+$ar = iterator_to_array($col->keydirectory->find($sel), true);
 $keys = array();
 $jsonArr = array(); 
 
@@ -41,8 +41,11 @@ foreach ($ar as $key => $value) {
 
 	if (!in_array($value["userId"], $keys))
 	{
-		$keys[] = $value["userId"];
-		$jsonArr [] = array("name" => $value["username"], "id" => $value["userId"]);
+		if ($value["userId"] != $_SESSION["charme_userid"])
+		{
+			$keys[] = $value["userId"];
+			$jsonArr [] = array("name" => $value["username"], "id" => $value["userId"]);
+		}
 	}
 }
 

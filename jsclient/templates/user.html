@@ -1,21 +1,33 @@
+<div title='submenu_items' class='meta'>
+  <li class='nav_profile_info'><a  data-defaultDestination="true"  href='#user/<%- rc.uid %>'>Info</a></li>
+  <li class='nav_profile_collections' ><a  href='#user/<%- rc.uid %>/collections'>Collections</a></li>
+  <li class='nav_profile_lists' ><a  href='#user/<%- rc.uid %>/lists'>Lists</a></li>
+
+
+</div>
+
+
+
 <div id='greybg'></div>
 
 <div style="overflow:auto; background-color:#EFEFEF; position:relative">
 
 	<div class='profile_sidebar'>
-	<img src="http://<%- rc.server %>/charme/fs.php?u=<%- rc.uid %>&amp;s=200" style="width:200px;  background-color:#ccc" />
+
+	<div class='profileImage' style="width:200px; background-image: url('http://<%- rc.server %>/charme/fs.php?u=<%- rc.uid %>&amp;s=200');  background-color:#ccc"></div>
+
 	<div class="tabBar profileTabs">
 	<ul>
-		<li id='nav_profile_info'><a  href='#user/<%- rc.uid %>'>Info</a></li>
-		<li id='nav_profile_collections'><a href='#user/<%- rc.uid %>/collections'>Collections</a></li>
-		<li id='nav_profile_lists'><a href='#user/<%- rc.uid %>/lists'>Added</a></li>
+		<li class='nav_profile_info'><a  href='#user/<%- rc.uid %>'>Info</a></li>
+		<li class='nav_profile_collections'><a href='#user/<%- rc.uid %>/collections'>Collections</a></li>
+		<li class='nav_profile_lists'><a href='#user/<%- rc.uid %>/lists'>Lists</a></li>
 	
 	</ul>
 	<br style="clear:both;">
-	<a id='but_sendMsg' class='button' style='margin-top:16px;'>New Conversation</a>
+	<a class='but_sendMsg button' style='margin-top:16px;'>New Conversation</a>
 
-		<a id='but_verifyKey' class='button' style='margin-top:16px;'>Verify Key to send Messages</a>
-			<a id='but_verifyKey2' class='button' style='margin-top:16px;'>Verify Key</a>
+		<a class='but_verifyKey button'  style='margin-top:16px;'>Verify Key to send Messages</a>
+			<a class='but_verifyKey2 button'  style='margin-top:16px;'>Verify Key</a>
 
 
 	</div>

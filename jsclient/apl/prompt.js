@@ -21,10 +21,15 @@ function ui_showImgBox(src, callback)
 	ui_block();
 
 	$("body").parent().append(
-							$('<a class="imagePreview"><img src="'+src+'" class=""></a>').click(function(){
+							$('<div class="imagePreview"><a class="close"><i class="fa fa-times"></i></a><img src="'+src+'" class=""></div>'));
+
+
+
+
+							$(".imagePreview .close").click(function(){
 								ui_closeBox();
 								$('.imagePreview').remove();
-							}));
+							});
 
 
 

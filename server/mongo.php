@@ -20,8 +20,11 @@
 
 header('Pragma: no-cache');
 
+
+
+
 $server = array(
-  'mongodb://localhost:27017',
+  'mongodb://127.0.0.1:27017',
 //  'mongodb://example.org:27017',
 );
 

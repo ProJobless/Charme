@@ -57,8 +57,7 @@ function updateDataOK() {
 			//if (this.revision < rsaKeyNewest.revision)
 			{
 				var rsakey = getKeyByRevision(this.revision).rsa.rsa;
-
-				console.log("REV 1 is"+this.revision);
+				
 				var newAesTemp = crypto_rsaDecrypt(this.aesEnc, rsakey);
 				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
 			
@@ -72,7 +71,6 @@ function updateDataOK() {
 			{
 				var fastkey = getFastKey(this.value.revision, 1);
 
-			console.log("REV 2 is"+this.value.revision);
 
 				
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value.aesEnc);
@@ -89,15 +87,24 @@ function updateDataOK() {
 
 			//if (this.fkrevision < rsaKeyNewest.revision)
 			{	
-							console.log("REV 3 is"+this.fkrevision);
+				
 				var fastkey = getFastKey(this.fkrevision, 1);
 
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
 				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
 
+				var edgekeyTemp = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
+				var edgekeyNew =  aes_encrypt(rsaKeyNewest.fastkey1, edgekeyTemp);
+				
+				var rsaKey = $.parseJSON(newAesTemp);
+
+				rsa = new RSAKey();
+				rsa.setPublic(rsaKey.key.n, rsaKey.key.e);
+				rsaEncKey = rsa.encrypt(edgekeyTemp);
+				
 				//console.log(newAesTemp);
 				//var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
-				recryptedData["keydirectory"].push({id: this._id.$id, value: newValue, revision: rsaKeyNewest.revision });
+				recryptedData["keydirectory"].push({rsaEncEdgekey: rsaEncKey, id: this._id.$id, fkEncEdgekey: edgekeyNew, value: newValue, revision: rsaKeyNewest.revision });
 			}
 		});
 
@@ -122,6 +129,9 @@ function updateDataOK() {
 						console.log(rsakey);
 
 				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+
+				console.log("UPDATED dir DATA:");
+				console.log({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
 
 				recryptedData["piecebuckets"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
 				}
@@ -302,7 +312,7 @@ function makeNewKey(userId) {
 
 									var dec = aes_decrypt(passphrase, d.key_update_phase1.keyring);
 
-									alert(dec);
+								
 
 									keyring = jQuery.parseJSON(dec);
 								} catch (err) {
@@ -363,6 +373,7 @@ function makeNewKey(userId) {
 										e: rsa.rsa.e
 									}
 								};
+								var newpublickeyPEM = CharmeModels.Signature.keyToPem(rsa.rsa.n, rsa.rsa.e);
 
 								// Now start phase 2
 								apl_request({
@@ -370,7 +381,8 @@ function makeNewKey(userId) {
 										"id": "key_update_phase2",
 										"password": hashpass,
 										"newkeyring": newkeyring,
-										"publickey": newpublickey
+										"publickey": newpublickey,
+										"pemkey":newpublickeyPEM
 									}, ]
 								}, function(d) {
 									alert("Update sucessful, will now logout. Next you should recrypt your data from this page on.");
@@ -507,7 +519,6 @@ function requestNewKey(userId) {
 					// Get public key if exists
 					// The key is AES encrypted with passphrase
 					// So 
-
 					// On click button
 					$('#but_box_save').click(function() {
 
@@ -520,37 +531,88 @@ function requestNewKey(userId) {
 							userId: userId // Important to ensure server returns right key!
 						}));
 						
+				
+						var keypair = CharmeModels.Keys.makeRsaFkKeypair( d.key_get.publickey);
+
+						var username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
+
 
 						var keyhash =  aes_encrypt_json(fastkey.fastkey1, {revision: d.key_get.revision ,hash:CharmeModels.Keys.buildHash(key)});
 
-
+						
+						var edgekey = 
+						{
+							"revisionA": fastkey.revision,
+							"revisionB": d.key_get.revision,
+							"revision" :  fastkey.revision+d.key_get.revision,
+							"rsaEncEdgekey" : keypair.rsaEncKey,
+							"fkEncEdgekey" : keypair.randomKey,
+							"userId": userId
+						};
 					
 						apl_request({
 							"requests": [{
 								"id": "key_storeInDir",
 								"key": e_key,
+								"userId" : userId,
 								"keyhash" : keyhash,
-								"keyhashrevision" : d.key_get.revision,
-								"fkrevision": fastkey.revision,
-								"value": e_value
+								"username" : username,
+								"pubKeyRevision" : d.key_get.revision, // Revision of public key of user B!
+								"fkrevision": fastkey.revision, // Pubkey revision of user A
+								"rsaEncEdgekey" : keypair.rsaEncKey,
+								"fkEncEdgekey" : keypair.randomKey,
+								"value": e_value,
+								"edgekey" : edgekey
 							}, ]
-						}, function(d4) {
+},						function(d4) {
 
+							apl_request({
+								"requests": [{
+									"id": "edgekey_recrypt_getData",
+									"userId": userId
 
-							// Sucess is here.,
-							ui_closeBox();
+								}, ]
+							}, function(d5) {
 
+								console.log("DATA TO RECRYPT IS:");
+								console.log(d5.edgekey_recrypt_getData.data.postKeys);
+
+								newpostkeys = [];
+								$.each(d5.edgekey_recrypt_getData.data.postKeys, function(index, item) {
+									var postkey = aes_decryptWithFastKey1(item.fkEncPostKey, item.postData.signature.keyRevision);
 							
-							// Allow sending messages on profile
-							$("#but_sendMsg").show();
-							$("#but_verifyKey").hide();
-							$("#but_verifyKey2").show();
+									newpostkeys.push({postId: this._id.$id, postKeyEnc: aes_encrypt(keypair.randomKeyRaw, postkey.message)});
+								});
+
+
+								apl_request({
+									"requests": [{
+										"id": "edgekey_recrypt_setData",
+										"userId": userId,
+										"newPostKeys": newpostkeys,
+
+									}, ]
+								}, function(d5) {
+
+									// Sucess is here.,
+									ui_closeBox();
+
+									console.log(newpostkeys);
+
+									// Allow sending messages and adding to lists on profile
+									$(".but_sendMsg").show();
+									$(".but_verifyKey").hide();
+									$(".but_verifyKey2").show();
+
+									if (userId != charmeUser.userId) // Can not add myself to a list
+										$("#profileListBox").show();
+
+								});
+							});
 						});
-
-
 						// Encrypt new key with passphrase
 
-					});
+					});// End key_get from dir
 
 				});
 

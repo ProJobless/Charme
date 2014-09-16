@@ -1,15 +1,31 @@
-## current todo:
-1) delete comments/posts
-   - comment delete: sign request, foreign server checks request, -> comment delete distribute 
-2) update keyhash on key directory recrypt
-3) keymanager_checkRevCounter callqö
-4) responsive mode
-5) host public keys on server (via class App\Security\PublicKeys)
-6) love funcitonality
-7
-## to test (also for multiserver)
-post_comment_distribute
+message refactoring:
+ 1. message owner is current sender link / image server -> must be author!
+2. messages responsive
+3. images (+picturebox generic)
+4. cache EDGEKEYS IN STREAM key: (userid+edgekeyrevision)!!!!!!
 
+edgekeys:
+1. key exists on profile working correctly?
+2. update all edgekeys when my public key changes
+3. update 1 edgekey if publicKey of another users changes
+4. update edgekey encrypted postkeys!
+5. only update edgekey if new public key revision when clicking on profile link update
+6. make sure returned edgekey revision is not an old one when encrypting with edgekey.
+
+misc:
+1. picturebox (generic)!
+2. update encryptedcollectionstate after collection edit to encrypted collection
+3. new conversation not working (?)
+4. search responsive complete
+5. delete comments     -> sign id+action    for delete command, like post!
+
+major changes:
+ ☐  do not use fastkey1 for hash values (search fastkey1!)
+ ☐ keymanager_checkRevCount 
+       alternative: do not allow old public keys by receiver!
+ ☐ recrypt: update of data needed before new recrypt!
+    -> check current revision here
+ ☐ (use this key to encrypt posts later)
 
 
 ## signatures for posts and messages
@@ -21,17 +37,13 @@ post_comment_distribute
 ## ROADMAP
 
 HIGH PRIORITY
-- Perfect Forward Secrecy: Delete old private Keys from Encrypted Data Storage.
-	-> Problem: How to decrypt old messages?: Solution: Recrypt! (recrypt ok (?))
-- make sure sendernames/ids can not be changed in messages!
+- Delete old private Keys from Encrypted Data Storage.
+- make sure sendernames/ids can not be changed in messages! -> SIGN!
 - Multiserver support
-- message send: get public key,
-	- autocomplete use $in to check if key available
-	- add person to mesasge / leave message
 
 
 ------
-- demo video
+
 - key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
 - messages: send: autocomplete only receivers with key
 - badkey error , when new bucket, and request send. error disapears when saving private info again.
@@ -44,6 +56,8 @@ HIGH PRIORITY
 
 MEDIUM PRIORITY
 #- GCM: do not notify myself if message is from me
+- sign comments
+- signature verification also on client side
 - images zip download: ignore failed request attempts
 - testing library
 - Make sure requests are delivered, repeat if failed to deliver
@@ -58,17 +72,17 @@ MEDIUM PRIORITY
 - Public key verification in background
 
 LOW PRIORITY
-- Delete Post and Comments
 - love/repost on status detail not working
 - revoke private info access
-- notify people who are not in lists any more!
-- RSA decryption in web worker
+- notify people who are not in lists any more!r
 - repost images, cache image on own server then.
 - small image  appended to post is scaled to big for thumbnail
 
 
 
 ## Development Areas
+Note: We have the Instant section for code tasks that do not require much knowledge about the whole architecture.
+
 - Server
    - Core
    - Performance
