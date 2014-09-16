@@ -1,4 +1,6 @@
 message refactoring:
+
+ 0. messages to mysqlf are created twice
  1. message owner is current sender link / image server -> must be author!
 2. messages responsive
 3. images (+picturebox generic)
@@ -13,9 +15,7 @@ edgekeys:
 6. make sure returned edgekey revision is not an old one when encrypting with edgekey.
 
 misc:
-1. picturebox (generic)!
 2. update encryptedcollectionstate after collection edit to encrypted collection
-3. new conversation not working (?)
 4. search responsive complete
 5. delete comments     -> sign id+action    for delete command, like post!
 

@@ -69,12 +69,7 @@ The project is splitted into the following sub projects:
 
 ## Setup a server
 
-```
-apt-get install gearman
-apt-get install gearman-job-server libgearman-dev
-pecl install gearman-1.0.3
 
-```
 
 
   * Make sure PHP5 and apache2 is installed on your machine
@@ -93,10 +88,14 @@ pecl install gearman-1.0.3
     apt-get install -y mongodb-org
     apt-get install php5-gd
     ```
+   
+  * Install gearman
+    ```
+    apt-get install gearman
+    apt-get install gearman-job-server libgearman-dev
+    pecl install gearman-1.0.3
 
-  * Install Gearman via
-
-
+    ```
   * Add gearman and mongodb to php.ini via:
 
     `nano /path/to/php.ini` To find the path run phpinfo(). Then add the lines
@@ -109,56 +108,12 @@ pecl install gearman-1.0.3
 
    * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
    * Protect yourserver.com/charme/admin with a .htaccess file in production use!
-   * Start gearman server via `php hydra.php` in `yourserver.com/charme` directory
-
+   * Start gearman server via `php hydra.php` in `yourserver.com/charme` directory. If you do not do this, your  server will crash when sending messages :)
+   * make sure `yourserver.com/charme/log.txt` is writeable
    * Restart apache via `service apache2 restart`
+   * Always check /var/log/apache2/error.log when something is not working.
 
 
-###Appendix: Compiling PHP with PThreads
-
-After downloading the PHP sources, goto /src/php[VERSION]/ext dictionary and add pthreads:
-```
-git clone https://github.com/krakjoe/pthreads.git
-```
-
-Make sure Apache Headers (apxs2) exist to generate libphp5.so: 
-
-```
-sudo apt-get install apache2-threaded-dev
-```
-Make sure Curl Headers are available (libcurl4-dev) by installaing a package containing them:
-```
-sudo apt-get install libcurl4-gnutls-dev
-```
-
-
-Then recompile PHP
-```
-cd .. # Goto php source dir
-rm configure
-./buildconf --force
-# --with-[png|jpeg]-dir= may vary here:
-./configure --enable-debug --enable-maintainer-zts --with-apxs2=/usr/bin/apxs2 --enable-pthreads --with-curl --with-gd --with-png-dir=/usr/lib --with-jpeg-dir=/usr/lib/x86_64-linux-gnu/libjpeg.so
-
-make clean
-make
-make install
-libtool --finish /src/php-5.5.12/libs #The pass is given you by make install
-cd libs
-cp libphp5.so /usr/lib/apache2/modules/libphp5.so #second parameter can be found out via locate libphp5.so if upgrading to a newer version
-
-```
-
-For more details, read:
-http://www.php.net/manual/en/install.unix.apache2.php
-Do not forget to edit  httpd.conf to load the right php5 module.
-Edit httpd.conf to load the so module:
-```
-LoadModule php5_module  /usr/lib/apache2/modules/libphp5.so
-```
-
-### Install FAQ
- * Can not load *.so File? Maybe the destination is wrong. Use `locate file.so` and  cp to Change pass, for example: `cp /usr/lib/php5/20100525/curl.so /usr/local/lib/php/extensions/debug-zts-20121212/curl.so`
 
 ## Install a client
  * copy the files in the /client directory onto a (local) webserver and access via index.html
