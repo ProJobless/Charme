@@ -19,7 +19,7 @@ $CHARME_SETTINGS["serverURL"] ="localhost";
 //If you want to create a private network leave this empty
 $CHARME_SETTINGS["NETWORK_ID"] ="CHARME_BETA_1";
 
-$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] ="http://10.149.35.85";
+$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] = array("http://mschultheiss.com", "http://client.local");
 // http://client.local
 $CHARME_SETTINGS["DEBUG"] =true;
 

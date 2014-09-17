@@ -21,8 +21,14 @@ ini_set('display_errors', 'Off');
 //header('Content-type: application/json'); // Disabled, because of jquery post
 
 // CORS Headers and stuff
-header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
+/*header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
 header('Access-Control-Allow-Origin: http://client.local');
+header('Access-Control-Allow-Origin: http://mschultheiss.com');*/
+
+if (in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
+header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
+
+
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -182,6 +188,7 @@ foreach ($data["requests"] as $item)
 
 		case "messages_get_sub":
 			
+
 			// Important: apply changes also to message_get_sub_updates
 			$startSet = false;
 			if (isset($item["start"]) && $item["start"] != "-1")
@@ -969,11 +976,27 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				unset($item["message"]["signature"]);
 
 				// Insert Message in db for every user
+				
+				// This is currently only calledo once per server, localreceivers is incomplete!
 				foreach ($item["localreceivers"] as $receiver) {
 						$col->messages->insert(array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"], "fileId" => $item["fileId"]));
+					
+						
+						\App\Counter\CounterUpdate::inc( $receiver, "talks"); 
 				}
 
-				$col->messageGroups->update(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])));
+				// Get Conversation User
+				$groups = $col->messageGroups->find(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array("owner"));
+
+				foreach ($groups as $group)
+				{
+					clog("NOTIFY".$group["owner"]);
+					if ($item["message"]["object"]["sender"] != $group["owner"])
+						\App\Counter\CounterUpdate::inc($group["owner"], "talks"); 
+					
+				}
+
+				$res = $col->messageGroups->update(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])), array("multiple" => true));
 			
 			}
 
@@ -1566,10 +1589,11 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			$content = array();
 
 			// 
-			$content = $col->pieceBuckets->findOne(array("key" =>  $item["key"],  "itemcount" => array('$lt' => 10), "owner" => $_SESSION["charme_userid"]), array("_id"));
+			$content = $col->pieceBuckets->findOne(array("key" =>  $item["key"],  "itemcount" => array('$lt' => 10), "owner" => $_SESSION["charme_userid"]), array("_id", "bucketaes"));
 
 			if ($content == null) // New bucket
 			{
+				clog("NEW BUCKET BECAUSE CONTENT IS NULL");
 				$content = array("owner" => $_SESSION["charme_userid"],
 					"key" => $item["key"],
 					"itemcount" => 0,
@@ -1580,13 +1604,13 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			}
 			
 
-	
+		clog("BUCKET ID IS ".$content["_id"]->__toString()." aes is".$content["bucketaes"] );
 
 			// RETURN BUCKET ID and bucket AES
 			
 			$returnArray[$action] = 
 			array("bucketid" => $content["_id"]->__toString(),
-				"bucketaes" => $item["bucketaes"]
+				"bucketaes" => $content["bucketaes"]
 
 				);
 
@@ -1857,7 +1881,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			$item["edgekey"]["owner"] = $_SESSION["charme_userid"];
 			$item["edgekey"]["newest"] = true;
 
-			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"]))<1)
+			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]))<1)
 			{
 			$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), array("newest" => false));
 
@@ -2159,10 +2183,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				// Get all stream items
 				
 			//	$col->streamitems->ensureIndex('owner');
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->limit(15)->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
-
-
-
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
 				$stra=  iterator_to_array($iter , false);
 		
 			}
@@ -2174,8 +2195,6 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 	
 				$ar = iterator_to_array($col->listitems->find(array("list" => new MongoId($list))), true);
-
-				
 				$finalList = array();
   	 
 
@@ -2189,7 +2208,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		
 			
 
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->limit(15)->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
 				
 				$stra=  iterator_to_array($iter , false);
 
@@ -2315,6 +2334,8 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		case "register_collection_post":
 			
 
+			//clog("COLLECTION ITEM!");
+			//clog2($item);
 			// TODO: check if user is subscribed to collection! (NEEDED FOR SPAM PROTECTION!)
 				$col = \App\DB\Get::Collection();
 			/* 
@@ -2343,9 +2364,10 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 			$receiverPublicKeyRevision = $col->users->findOne(array("userid"=> ($item["follower"])), array('publickey.revision'));
 		
-
-			if ($item["revisionB"] < $receiverPublicKeyRevision["publickey"]["revision"])
+			clog2($item);
+			if ($item["revisionB"] < $receiverPublicKeyRevision["publickey"]["revision"] && $item["postData"]["object"]["isEncrypted"] == 1)
 			{
+				clog("IS ENCRYPTED");
 				// Key is not valid anymore :(
 				$data=  array("requests" => 
 
@@ -2359,7 +2381,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				
 				$req21 = new \App\Requests\JSON(
 				$item["follower"],  // receiver
-				$_SESSION["charme_userid"], // sender
+				$item["postData"]["object"]['author'], // sender
 
 				$data);
 
@@ -2372,17 +2394,16 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 				if ($ok)
 				{
+					clog("INSERT STREAMITEM");
+					$content = array("post" => $item["postData"]["object"], "postId" => new MongoId($item["postId"]), "owner"  => $item["follower"], "meta"  => $item["meta"], "like" => false, "likecount" => 0 );
+					if (isset($item["postKey"]))
+					{
+						$content["postKey"] = $item["postKey"];
+						$content["edgeKeyRevision"] = $item["edgeKeyRevision"];
+					}
+					$col->streamitems->insert($content);
 
-			
-				$content = array("post" => $item["postData"]["object"], "postId" => new MongoId($item["postId"]), "owner"  => $item["follower"], "meta"  => $item["meta"], "like" => false, "likecount" => 0 );
-				if (isset($item["postKey"]))
-				{
-					$content["postKey"] = $item["postKey"];
-					$content["edgeKeyRevision"] = $item["edgeKeyRevision"];
-				}
-				$col->streamitems->insert($content);
-
-				\App\Counter\CounterUpdate::inc($item["follower"], "stream");
+					\App\Counter\CounterUpdate::inc($item["follower"], "stream");
 				}
 				else
 				{

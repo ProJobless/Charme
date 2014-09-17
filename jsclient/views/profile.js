@@ -259,7 +259,9 @@ view_profilepage_collection_show = view_subpage.extend({
 				}]
 			}, function(d2) {
 
-			
+				console.log("cpl prp");
+				var currentListId = d2.collection_editPrepare.currentlist;
+				
 
 
 				$.get("templates/box_collectionEdit.html", function(d) {
@@ -287,6 +289,11 @@ view_profilepage_collection_show = view_subpage.extend({
 								
 								$("#colName").text($("#inp_box_name").val());
 								ui_closeBox();
+
+								// reload if encrypted list changed!
+
+								if ( $("#sel_collection_list").val() != currentListId)
+									location.reload();
 								// TODO: Add collection control...
 
 							});
@@ -880,7 +887,7 @@ var view_profilepage_info = view_subpage.extend({
 
 						} else if (this.bucketaes != undefined) {
 							// bucketaes, bucketrsa, piecedata
-							console.log((that2.bucketrsa));
+						
 							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
 
 
@@ -888,13 +895,13 @@ var view_profilepage_info = view_subpage.extend({
 
 							// Look for cached AES key to save expensive RSA decryption time
 							// Our unique key consits of revision, userid and piece key:
-							var key = "--," + container_main.currentView.options.userId + "," + that2.version + "," + this.key;
+							var key = charmeUser.userId+"--," + container_main.currentView.options.userId + "," + that2.version + "," + this.key;
 							var aes = checkCache(key);
 							
 							if (aes == null) {
 
 								key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
-								aes = key1.decrypt(that2.bucketrsa.data); // get aes key to decrypt piecedata
+								aes = key1.decrypt(that2.bucketrsa.data); // get aes key for decrypting piecedata
 						
 							
 							}
@@ -905,6 +912,7 @@ var view_profilepage_info = view_subpage.extend({
 							} else {
 
 								try{
+							
 								var t = aes_decrypt(aes, that2.piecedata);
 
 								if (t != "")
@@ -914,8 +922,8 @@ var view_profilepage_info = view_subpage.extend({
 							}
 							catch(e){
 
-							console.log("error at decrypting pieceinfo...");
-				
+							console.log("error at decrypting pieceinfo... aes:"+aes+" data:"+that2.piecedata);
+						console.log(e);
 
 							rq = "<span style='color:red'>Error at decryption. Try to clean your cache.</span>"; // This may be caused by cached keys if pieces collection has been deleted on server!
 							

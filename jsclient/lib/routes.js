@@ -134,9 +134,16 @@ $(function() {
 
         app_router.on('route:getTalks', function(id) {
 
-            if (id == undefined)
-                id = "";
+            if (typeof id == 'undefined')
+           {   
 
+             id = "";
+            
+
+
+   }
+
+ 
             if (container_main.currentViewId != "talks") {
                 var pa = new view_talks({
                     template: "talks",
@@ -145,7 +152,7 @@ $(function() {
                 container_main.setCurrent(pa);
 
             }
-            // if (id != "")
+          //  if (id != "")
             {
 
                 var vsd = new view_talks_subpage({

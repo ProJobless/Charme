@@ -20,14 +20,13 @@ function talks_encryptEdgekeys(edgeKeyList, messageKey) {
 	return peopleMessageKeys;
 }
 
-function but_addPeople(revision, conversationId,  currentPeople, currentUsernames,  currentPeopleHash)
-{
-	newRevision = revision+1;
+function but_addPeople(revision, conversationId, currentPeople, currentUsernames, currentPeopleHash) {
+	newRevision = revision + 1;
 	messageKey = randomAesKey(32);
 
 	// Get receivers from UI element
 	var receiversTemp = ($("#inp_receivers").tokenInput("get"));
-	var receivers  = [];
+	var receivers = [];
 	// Remove duplicate receivers
 	$.each(receiversTemp, function(index, item) {
 		if (!$.inArray(receivers, item))
@@ -38,24 +37,27 @@ function but_addPeople(revision, conversationId,  currentPeople, currentUsername
 	var output = [];
 	var usernames = [];
 
- 	/* These are the new users */
+	/* These are the new users */
 	$.each(receiversTemp, function(index, item) {
 		output.push(item.id); // add userid
-		usernames.push({userId: item.id, name: item.name});
+		usernames.push({
+			userId: item.id,
+			name: item.name
+		});
 
 	});
 
-	var message= usernames.length+" people were added.";
+	var message = usernames.length + " people were added.";
 	messageRaw = {
-						"conversationId": conversationId,
-						"content": aes_encrypt(messageKey, message ),
-						"preview": aes_encrypt(messageKey, message ),
-						"msgKeyRevision" : newRevision,
-						"sender" : charmeUser.userId,
-						"time": {
-							sec: new Date().getTime() / 1000
-						},
-					};
+		"conversationId": conversationId,
+		"content": aes_encrypt(messageKey, message),
+		"preview": aes_encrypt(messageKey, message),
+		"msgKeyRevision": newRevision,
+		"sender": charmeUser.userId,
+		"time": {
+			sec: new Date().getTime() / 1000
+		},
+	};
 
 	/*
 		Remove duplicate Usernames from list
@@ -82,28 +84,35 @@ function but_addPeople(revision, conversationId,  currentPeople, currentUsername
 		var peopleMessageKeys = talks_encryptEdgekeys(d.edgekeys_byUserIds.value, messageKey);
 		apl_request({
 			"requests": [{
-					"id": "message_distribute",
-					"messageKeys" : peopleMessageKeys,
-					
-					"messageData" : {"receivers": peopleList, "messageKeysRevision" : newRevision, "usernames" :newUsernames,"conversationId" : conversationId, "message":CharmeModels.Signature.makeSignedJSON(messageRaw),
-					
-					"action": "initConversation"},
+				"id": "message_distribute",
+				"messageKeys": peopleMessageKeys,
 
-				}
-			]
+				"messageData": {
+					"receivers": peopleList,
+					"messageKeysRevision": newRevision,
+					"usernames": newUsernames,
+					"conversationId": conversationId,
+					"message": CharmeModels.Signature.makeSignedJSON(messageRaw),
+
+					"action": "initConversation"
+				},
+
+			}]
 		}, function(d2) {
 			alert("MESSAGE DISTRIBUTED");
+			ui_closeBox();
 			//	location.reload();
 		});
 	});
 }
 
 // Fired on message ok button click, leave arguments empty if new conversation, fill in arguments if adding people to conversation
+
 function but_initConversationOk(currentAESKey, currentConversationId) {
 
 	// Get receivers from UI element
 	var receiversTemp = ($("#inp_receivers").tokenInput("get"));
-	var receivers  = [];
+	var receivers = [];
 	// Remove duplicate receivers
 	$.each(receiversTemp, function(index, item) {
 		if (!$.inArray(receivers, item))
@@ -113,11 +122,17 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 
 	// Get plain receiver userIds in a list
 	var output = [charmeUser.userId];
-	var usernames = [{userId: charmeUser.userId, name: "Me"}];
+	var usernames = [{
+		userId: charmeUser.userId,
+		name: "Me"
+	}];
 
 	$.each(receiversTemp, function(index, item) {
 		output.push(item.id); // add userid
-		usernames.push({userId: item.id, name: item.name});
+		usernames.push({
+			userId: item.id,
+			name: item.name
+		});
 
 	});
 
@@ -154,19 +169,21 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 
 		var messageKey = randomAesKey(32);
 		var peopleMessageKeys = talks_encryptEdgekeys(d.edgekeys_byUserIds.value, messageKey);
-		
 
-		
-	
+
+
 		//var requestData = CharmeModels.Signature.makeSignedJSON(postObj);
 
 
 		apl_request({
 			"requests": [{
 					"id": "message_distribute",
-					"messageKeys" : peopleMessageKeys,
-					"messageData" : {"receivers": output, "usernames" :usernames,
-					"action": "initConversation"}
+					"messageKeys": peopleMessageKeys,
+					"messageData": {
+						"receivers": output,
+						"usernames": usernames,
+						"action": "initConversation"
+					}
 				}
 
 			]
@@ -174,9 +191,9 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 
 			alert("MESSAGE DISTRIBUTED");
 
-		//	location.reload();
+			//	location.reload();
 		});
-	
+
 
 		// returns key.key.e|n, key.revision, key.userid
 		// (2) Now check if key.revision matches with the users server. TODO: This should also check his friends servers to prevent evil servers.
@@ -268,17 +285,18 @@ var view_talks_subpage = view_subpage.extend({
 	initialize: function() {
 		this.messagePaginationIndex = 0;
 		this.options.lastid = 0;
+
 	},
 	refreshMessages: function() {
 
-	
+
 		var that = this;
 
 		apl_request({
 			"requests": [{
 				"id": "message_get_sub_updates",
 				lastId: this.options.lastid,
-				conversationId:  this.options.conversationId,
+				conversationId: this.options.conversationId,
 
 			}]
 		}, function(serverData) {
@@ -318,13 +336,13 @@ var view_talks_subpage = view_subpage.extend({
 			// Check if new key required:
 			var newKeyRequired = false;
 			var newest = that.getMessageKey(-1);
-			
+
 			$.each(serverData.message_get_sub_updates.messages, function() {
 
-				if (this.message.object.msgKeyRevision> newest.revision )
+				if (this.message.object.msgKeyRevision > newest.revision)
 					newKeyRequired = true;
 			});
-		
+
 
 			if (newKeyRequired) {
 
@@ -340,9 +358,7 @@ var view_talks_subpage = view_subpage.extend({
 				});
 
 
-			}
-			else
-			{
+			} else {
 				renderMessages(serverData);
 			}
 
@@ -388,14 +404,14 @@ var view_talks_subpage = view_subpage.extend({
 
 
 				messageRaw = {
-						"conversationId": that.options.conversationId,
-						"encFileHash" : CryptoJS.SHA256(fileEnc),
-						"msgKeyRevision" : msgKeyRevision,
-						"sender" : charmeUser.userId,
-						"time": {
-							sec: new Date().getTime() / 1000
-						},
-					};
+					"conversationId": that.options.conversationId,
+					"encFileHash": CryptoJS.SHA256(fileEnc),
+					"msgKeyRevision": msgKeyRevision,
+					"sender": charmeUser.userId,
+					"time": {
+						sec: new Date().getTime() / 1000
+					},
+				};
 
 
 
@@ -403,9 +419,9 @@ var view_talks_subpage = view_subpage.extend({
 				apl_request({
 					"requests": [{
 							"id": "message_distribute_answer",
-							"message" : CharmeModels.Signature.makeSignedJSON(messageRaw),
-								"encFile": fileEnc,
-						"encFileThumb": thumbEnc,	
+							"message": CharmeModels.Signature.makeSignedJSON(messageRaw),
+							"encFile": fileEnc,
+							"encFileThumb": thumbEnc,
 						}
 
 					]
@@ -452,34 +468,19 @@ var view_talks_subpage = view_subpage.extend({
 			that.fileChanged(e);
 		});
 
-		if (this.options.superId != "")
-		{
+		// Do not load messages of a conversation if in responsive mode. Here the user has
+		// to select an conversation first.
+		if (!isResponsive() || this.options.conversationId != "") {
 			this.loadMessages(-1);
 			$(".messageDetails").addClass("active");
 			$(".talkbar").addClass("inactive");
-		}
-		else
-		{
+		} else {
 			$(".messageDetails").removeClass("active");
 			$(".talkbar").removeClass("inactive");
-
 		}
-
 	},
 	uploadFile: function() {
-
-
-
 		$("#theFile").trigger('click');
-
-
-
-		// Check if image?
-		// if yes -> make thumbnail!
-
-		// encrypt file&thumbnail base64 with aes key.
-
-
 	},
 	addPeople: function() {
 
@@ -494,14 +495,12 @@ var view_talks_subpage = view_subpage.extend({
 				});
 
 				$("#but_addPeopleOk").click(function() {
-
-
 					// Update key directory first, maybe the newest message key revision has already changed!
 					apl_request({
 						"requests": [{
 							"id": "messages_get_keys",
-							"conversationId":  that.options.conversationId,
-						
+							"conversationId": that.options.conversationId,
+
 						}]
 					}, function(d2) {
 						that.options.messageKeys = d2.messages_get_keys.messageKeys;
@@ -567,16 +566,15 @@ var view_talks_subpage = view_subpage.extend({
 								console.log(d3.messages_get_sub);
 								var fileidlist = [];
 								$.each(d3.messages_get_sub.messages, function(d341) {
-									
-									// Sender name is needed for server
-									if (this.fileId != 0)
-									{
-									fileidlist.push({
-										fileId: this.fileId,
-										sender: this.message.object.sender,
-										msgKeyRevision: this.message.object.msgKeyRevision
 
-									});
+									// Sender name is needed for server
+									if (this.fileId != 0) {
+										fileidlist.push({
+											fileId: this.fileId,
+											sender: this.message.object.sender,
+											msgKeyRevision: this.message.object.msgKeyRevision
+
+										});
 									}
 								});
 
@@ -638,10 +636,10 @@ var view_talks_subpage = view_subpage.extend({
 										}
 
 
-											worker.postMessage({
-									key: that.getMessageKey(fileidlist[imgnow].msgKeyRevision).key,
-							encData: d2
-								});
+										worker.postMessage({
+											key: that.getMessageKey(fileidlist[imgnow].msgKeyRevision).key,
+											encData: d2
+										});
 
 
 
@@ -761,89 +759,77 @@ var view_talks_subpage = view_subpage.extend({
 				var par = $(that).parent();
 
 				$.get(loc, function(d) {
-					
 
 
-						var worker2 = new Worker("lib/crypto/thread_decrypt.js");
+
+					var worker2 = new Worker("lib/crypto/thread_decrypt.js");
 
 
-						var el = $('<a class="imgThumb"></a>');
-						$(par).append(el);
-						worker2.onmessage = function(e) {
-
-						
-
-								var i = new Image();
-								i.src = e.data;
+					var el = $('<a class="imgThumb"></a>');
+					$(par).append(el);
+					worker2.onmessage = function(e) {
 
 
-							(
+
+						var i = new Image();
+						i.src = e.data;
+
+
+						(
 							el.click(function() {
 
-							$(par).append(
-								'<span class="imgLoading">Loading...</span>');
-
-
-							$.get(loc + "&type=original", function(d2) {
-								$(".imgLoading").remove();
-
-
-
-								var worker = new Worker("lib/crypto/thread_decrypt.js");
-
-
-
-								worker.onmessage = function(e) {
-
-									// Hide cancel descryption button
-									$(".cancelDec").hide();
-									ui_showImgBox(e.data);
-
-								}
-
-								// Add cancel decryption button
 								$(par).append(
-									$('<a class="cancelDec">Cancel Decryption</a>').click(function() {
+									'<span class="imgLoading">Loading...</span>');
 
-										$(this).remove();
-										worker.terminate();
-									}));
 
-								worker.postMessage({
-									key: that2.getMessageKey(msgKeyRevision).key,
-							encData: d2
+								$.get(loc + "&type=original", function(d2) {
+									$(".imgLoading").remove();
+
+
+
+									var worker = new Worker("lib/crypto/thread_decrypt.js");
+
+
+
+									worker.onmessage = function(e) {
+
+										// Hide cancel descryption button
+										$(".cancelDec").hide();
+										ui_showImgBox(e.data);
+
+									}
+
+									// Add cancel decryption button
+									$(par).append(
+										$('<a class="cancelDec">Cancel Decryption</a>').click(function() {
+
+											$(this).remove();
+											worker.terminate();
+										}));
+
+									worker.postMessage({
+										key: that2.getMessageKey(msgKeyRevision).key,
+										encData: d2
+									});
+
+
+
 								});
 
 
+							}).html($(i))
 
-							});
-
-
-						}).html($(i))
-
-					);
+						);
 
 
 
-							
+					}
 
-							
-
-
-
-
-
-						}
-
-						//
-						worker2.postMessage({
-							key: that2.getMessageKey(msgKeyRevision).key,
-							encData: d
-						});
-
-
-
-
+					//
+					worker2.postMessage({
+						key: that2.getMessageKey(msgKeyRevision).key,
+						encData: d
+					});
 
 
 
@@ -851,7 +837,7 @@ var view_talks_subpage = view_subpage.extend({
 
 					//</a>
 
-					
+
 					//remove class imageid
 					$(that).remove();
 
@@ -865,24 +851,25 @@ var view_talks_subpage = view_subpage.extend({
 
 				// Decode
 
-			} catch (e) { alert(e);}
+			} catch (e) {
+				alert(e);
+			}
 
 		});
 
 	},
 
 	// -1 for newest revision:
-	getMessageKey: function(revision)
-	{
+	getMessageKey: function(revision) {
 
 
-		var maxRevision =-1;
+		var maxRevision = -1;
 		var bestKey;
 		$.each(this.options.messageKeys, function(i) {
-			
 
-			if ((this.revision > maxRevision && revision==-1) || revision == this.revision)
-			{	bestKey = this;
+
+			if ((this.revision > maxRevision && revision == -1) || revision == this.revision) {
+				bestKey = this;
 				maxRevision = this.revision;
 
 			}
@@ -893,10 +880,15 @@ var view_talks_subpage = view_subpage.extend({
 
 		var msgKey = aes_decrypt(edgekey_raw, bestKey.key.messageKey);
 
-		return {key: msgKey, revision: bestKey.revision};
+		return {
+			key: msgKey,
+			revision: bestKey.revision
+		};
 
 	},
 	loadMessages: function(start) {
+
+
 
 		var limit = -1;
 
@@ -914,8 +906,8 @@ var view_talks_subpage = view_subpage.extend({
 		}, function(d2) {
 
 			that.options.conversationId = d2.messages_get_sub.conversationId;
-			that.options.receivers  = d2.messages_get_sub.receivers;
-			that.options.usernames  = d2.messages_get_sub.usernames;
+			that.options.receivers = d2.messages_get_sub.receivers;
+			that.options.usernames = d2.messages_get_sub.usernames;
 
 
 			var newstart = start - 10;
@@ -930,30 +922,30 @@ var view_talks_subpage = view_subpage.extend({
 				console.log("DATA IS");
 				console.log(d2);
 
-				
+
 
 				that.options.messageKeys = d2.messages_get_sub.messageKeys;
 				//return; // TODO: remove
-				
-				
+
+
 				//return;
-				
+
 
 				$.each(d2.messages_get_sub.messages, function() {
 
 
 					var msgKey = that.getMessageKey(this.message.object.msgKeyRevision);
-			
+
 
 
 					if (start == -1) // Only after first load messages
 						that.options.lastid = this._id.$id;
 
 					try {
-							if (typeof this.message.object.content != 'undefined')
-								this.message.object.content = aes_decrypt(msgKey.key, this.message.object.content);
+						if (typeof this.message.object.content != 'undefined')
+							this.message.object.content = aes_decrypt(msgKey.key, this.message.object.content);
 					} catch (err) {
-						this.message.object.content = err+"\r\nmsgKeyRevision required: "+this.message.object.msgKeyRevision +" Found: "+msgKey.revision;
+						this.message.object.content = err + "\r\nmsgKeyRevision required: " + this.message.object.msgKeyRevision + " Found: " + msgKey.revision;
 					}
 				});
 
@@ -969,7 +961,7 @@ var view_talks_subpage = view_subpage.extend({
 						if (i != 0)
 							$("#inp_receiversinstant").append(", ");
 
-				
+
 						// {userid, name}
 						{
 							$("#inp_receiversinstant").append("<a href='#user/" +
@@ -984,9 +976,9 @@ var view_talks_subpage = view_subpage.extend({
 				// Poll new messages
 				if (that.options.lastid != 0) {
 					$.doTimeout('messageupdate', 5000, function(state) {
-							that.refreshMessages();
+						that.refreshMessages();
 
-						});
+					});
 				}
 				/*
 
@@ -1032,7 +1024,7 @@ var view_talks_subpage = view_subpage.extend({
 				*/
 
 
-					/*
+				/*
 
 						apl_request({
 							"requests": [{
@@ -1113,7 +1105,7 @@ var view_talks_subpage = view_subpage.extend({
 
 					$("#but_smilies").click(function() {
 
-					
+
 						if ($("#msg_smiliecontainer").html() == "") {
 							var t = new control_smilies({
 								el: $("#msg_smiliecontainer"),
@@ -1141,23 +1133,23 @@ var view_talks_subpage = view_subpage.extend({
 						var msgKey = that.getMessageKey(-1).key;
 						var msgKeyRevision = that.getMessageKey(-1).revision;
 
-					
-						
+
+
 						var messageUnencrypted = smilieParse($('#inp_newmsginstant').html());
 						if (messageUnencrypted == "") return;
-						
+
 						messageEncrypted = aes_encrypt(msgKey, messageUnencrypted);
 						messageEncryptedPreview = aes_encrypt(msgKey, messageUnencrypted.substring(0, 127));
 
-					
+
 						//var conversationId = ($('#msg_conversationId').data("val"));
-						
+
 						messageRaw = {
 							"conversationId": that.options.conversationId,
 							"content": messageEncrypted,
 							"preview": messageEncryptedPreview,
-							"msgKeyRevision" : msgKeyRevision,
-							"sender" : charmeUser.userId,
+							"msgKeyRevision": msgKeyRevision,
+							"sender": charmeUser.userId,
 							"time": {
 								sec: new Date().getTime() / 1000
 							},
@@ -1167,7 +1159,7 @@ var view_talks_subpage = view_subpage.extend({
 						apl_request({
 							"requests": [{
 									"id": "message_distribute_answer",
-									"message" : CharmeModels.Signature.makeSignedJSON(messageRaw)
+									"message": CharmeModels.Signature.makeSignedJSON(messageRaw)
 								}
 
 							]
@@ -1177,7 +1169,7 @@ var view_talks_subpage = view_subpage.extend({
 							$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
 
 							$.get("templates/control_messageview.html", function(d) {
-	
+
 								_.templateSettings.variable = "rc";
 								var tmpl = _.template(d, {
 									messages: [{
@@ -1267,18 +1259,19 @@ var view_talks = view_page.extend({
 
 		this.loadMessages(0);
 		$("#item_talks .count").remove();
+
+
 		// Load some messages
 
 	},
-	
 
-	getNewestMessageKey: function(messageKeys)
-	{
-		var maxRevision =-1;
+	// Get the newest message key to decrypt preview of a message
+	getNewestMessageKey: function(messageKeys) {
+		var maxRevision = -1;
 		var bestKey;
 		$.each(messageKeys, function(i) {
-			if (this.revision > maxRevision)
-			{	bestKey = this;
+			if (this.revision > maxRevision) {
+				bestKey = this;
 				maxRevision = this.revision;
 			}
 		});
@@ -1286,11 +1279,14 @@ var view_talks = view_page.extend({
 
 		var edgekey_raw = crypto_rsaDecryptWithRevision(bestKey.key.rsaEncEdgekey, 0);
 		var msgKey = aes_decrypt(edgekey_raw, bestKey.key.messageKey);
-		return {key: msgKey, revision: bestKey.revision} ;
+		return {
+			key: msgKey,
+			revision: bestKey.revision
+		};
 
 	},
 
-
+	// Function to load conversations
 	loadMessages: function(start) {
 		// load template
 		var cr = false;
@@ -1317,7 +1313,7 @@ var view_talks = view_page.extend({
 
 				console.log(d2.messages_get.messageKeys);
 
-				jQuery.each(d2.messages_get.messages, function(index,item) {
+				jQuery.each(d2.messages_get.messages, function(index, item) {
 
 					// Decode AES Key with private RSA Key
 					console.log("THIS IS");
@@ -1333,16 +1329,16 @@ var view_talks = view_page.extend({
 					console.log(this.messageKeys);
 					this.messageTitle = this.sendername;
 					if (this.messageData.receivers.length > 1)
-						this.messageTitle+=  " and " +(this.messageData.receivers.length-1) + " more.";
-					
-					try{
-					var msgKey = that.getNewestMessageKey(msgKeys).key;
-					this.messagePreview = aes_decrypt(msgKey, this.preview);
-					this.messagePreview = $.charmeMl(this.messagePreview, {
-						tags: ["smiliedelete"]});
+						this.messageTitle += " and " + (this.messageData.receivers.length - 1) + " more.";
 
-					}
-					catch(e){}
+					try {
+						var msgKey = that.getNewestMessageKey(msgKeys).key;
+						this.messagePreview = aes_decrypt(msgKey, this.preview);
+						this.messagePreview = $.charmeMl(this.messagePreview, {
+							tags: ["smiliedelete"]
+						});
+
+					} catch (e) {}
 					/*
 					// Look for cached AES key to save expensive RSA decryption time
 					var aeskey = checkCache("msg" + this._id.$id);

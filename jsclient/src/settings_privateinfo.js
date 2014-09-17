@@ -87,9 +87,6 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 					var aesstrPK = aes_decrypt(fastkey.fastkey1, d.key_getFromDir.value);
 					var aesobjPK = $.parseJSON(aesstrPK);
 
-				
-console.log(aesobjPK);
-
 					if (aesobjPK.userId != userId)
 					{
 						alert("Userid does not match. Your server returned public key of another user.");
@@ -103,8 +100,9 @@ console.log(aesobjPK);
 
 						var rsa = mkRSAPublic(aesobjPK.key);
 
+
 						
-						// Get the real bucket AES and decrypt with fastkey. DO NOT USE aesENC as we do not know it it was accepted
+						// Get the real bucket AES and decrypt with fastkey. DO NOT USE aesENC as we do not know if it was accepted
 						var bucketaes= aes_decrypt(fastkey.fastkey1, d.piece_request_findbucket.bucketaes);
 
 
@@ -122,7 +120,7 @@ console.log(aesobjPK);
 							var piecedata = aes_encrypt(bucketaes, piecedataRAW);
 						}
 
-					
+						
 						// Now we have a key bucket. Now 
 						apl_request({
 						"requests": [{
@@ -130,7 +128,7 @@ console.log(aesobjPK);
 							"id": "piece_request_accept",
 							"userid" : userId,
 							"piecedata" : piecedata,
-							"bucketkey" : rsabucketkey,
+							"bucketkey" : rsabucketkey, // rsa encrypted bucket key for user
 							"bucket" : d.piece_request_findbucket.bucketid
 						}, ]
 						}, function(d2) {

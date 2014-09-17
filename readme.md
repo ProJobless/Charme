@@ -94,7 +94,6 @@ The project is splitted into the following sub projects:
     apt-get install gearman
     apt-get install gearman-job-server libgearman-dev
     pecl install gearman-1.0.3
-
     ```
   * Add gearman and mongodb to php.ini via:
 
@@ -108,7 +107,7 @@ The project is splitted into the following sub projects:
 
    * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
    * Protect yourserver.com/charme/admin with a .htaccess file in production use!
-   * Start gearman server via `php hydra.php` in `yourserver.com/charme` directory. If you do not do this, your  server will crash when sending messages :)
+   * Start gearman server via `nohup php hydra.php &` in `yourserver.com/charme` directory. If you do not do this, your  server will crash when sending messages :)
    * make sure `yourserver.com/charme/log.txt` is writeable
    * Restart apache via `service apache2 restart`
    * Always check /var/log/apache2/error.log when something is not working.
