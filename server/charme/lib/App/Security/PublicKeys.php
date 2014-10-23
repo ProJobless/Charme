@@ -38,7 +38,7 @@ class PublicKeys
 
 		$jsonRequest = new \App\Requests\JSON(
 		$userId,
-		"SERVERNAME",
+		$userId,
 		$data);
 
 		$reqData = $jsonRequest->send();

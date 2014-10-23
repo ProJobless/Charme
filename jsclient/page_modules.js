@@ -660,6 +660,8 @@ control_postField = Backbone.View.extend({
 
 	doRealPost: function(postText, edgekeys) {
 
+		console.log("EDGEKEYS ARE");
+		console.log(edgekeys);
 
 
 		var myPostKey = "";
@@ -767,7 +769,8 @@ control_postField = Backbone.View.extend({
 			images[900] = "";
 
 		}
-
+		console.log("postkeys are");
+		console.log(keys);
 		apl_request({
 			"requests": [{
 				"id": "collection_post",
@@ -828,11 +831,10 @@ control_postField = Backbone.View.extend({
 				postId: {
 					$id: d.collection_post.id
 				},
-				time: {
-					sec: new Date().getTime()
-				},
+				
 				meta: {
-					username: name
+					username: name,
+					time: {sec:  new Date().getTime()/1000}
 				},
 
 			};
@@ -908,6 +910,7 @@ control_postField = Backbone.View.extend({
 			apl_request({
 				"requests": [{
 					"id": "edgekeys_bylist",
+					"addSessionUser" : true,
 					"listId": that.options.forceCurrentList,
 				}]
 			}, function(d) {
@@ -919,6 +922,7 @@ control_postField = Backbone.View.extend({
 			apl_request({
 				"requests": [{
 					"id": "edgekeys_bylist",
+					"addSessionUser" : true,
 					"listId": $("#collectionSelector").val(),
 				}]
 			}, function(d) {
@@ -1215,17 +1219,16 @@ control_postItem = Backbone.View.extend({
 		if (that.options.layout == "stream") {
 
 
-
 			var postUser = new apl_user(that.options.postObj.post.author);
 			// 
 			str = "<div class='collectionPost' id='post_" + that.options.postId + "'>" +
-				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(that.options.postObj.meta.username) + "</a>" + repoststr + "<div class='cont selectable'>" + imgcont + $.charmeMl(xssText(that.options.postObj.post.content)) + "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a><!-- - <a id='doRepost" + uniId + "'>Repost</a>--> - <a id='checkSignature_" + uniId + "'>Check Signature</a> -  <span class='time'>" + formatDate(that.options.postObj.time) + "</span></div>";
+				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(that.options.postObj.meta.username) + "</a>" + repoststr + "<div class='cont selectable'>" + imgcont + $.charmeMl(xssText(that.options.postObj.post.content)) + "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a><!-- - <a id='doRepost" + uniId + "'>Repost</a>--> - <a id='checkSignature_" + uniId + "'>Check Signature</a> -  <span class='time'>" + formatDate(that.options.postObj.meta.time.sec*1000) + "</span></div>";
 		} else
-			str = "<div class='collectionPost' id='post_" + that.options.postObj.postId.$id + "'>" + repoststr + "<div class='cont selectable' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.postObj.post.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a><!--- <a id='doRepost" + uniId + "'>Repost</a>--> - <span class='time'>" + formatDate(that.options.postObj.time) + "</span>";
+			str = "<div class='collectionPost' id='post_" + that.options.postObj.postId.$id + "'>" + repoststr + "<div class='cont selectable' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.postObj.post.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a><!--- <a id='doRepost" + uniId + "'>Repost</a>--> - <span class='time'>" + formatDate(that.options.postObj.meta.time) + "</span>";
 
 
 
-		str += "<div class='commentBox' id='commentBox" + xssAttr(uniId) + "'><div class='postcomments' id='postComments" + xssAttr(uniId) + "'></div><input id='inputComment" + xssAttr(uniId) + "' class='box' type='text' style='width:250px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
+		str += "<div class='commentBox' id='commentBox" + xssAttr(uniId) + "'><div class='postcomments' id='postComments" + xssAttr(uniId) + "'></div><input id='inputComment" + xssAttr(uniId) + "' class='box' type='text' style='width:100%;  max-width:246px; margin-top:1px;' placeholder='Write a comment'><br></div>"; //<a class='button' id='submitComment"+uniIdCounter+"'>Write Comment</a>
 		str += "</div></div>";
 
 
@@ -1519,7 +1522,7 @@ control_postItem = Backbone.View.extend({
 
 
 			// If we do not have the edgekey yet, then get it and decrypt it!
-		
+			
 
 			apl_request({
 				"requests": [{
@@ -1542,11 +1545,14 @@ control_postItem = Backbone.View.extend({
 
 				var edgeKey = (crypto_rsaDecryptWithRevision(data.edgekey_request.data.rsaEncEdgekey, data.edgekey_request.data.revisionB));
 
+				
 				// 
 
 				var postKey = aes_decrypt(edgeKey, postObj.postKey);
 				var text = aes_decrypt(postKey, postObj.post.content)
 				console.log(postObj);
+
+
 
 				that.options.postKey = postKey;
 
@@ -1642,28 +1648,46 @@ var view_stream_display = view_subpage.extend({
 			// generate post controls...
 			jQuery.each(d2.stream_get, function() {
 
+					console.log(this.meta.time.sec);
 
 				/*
 					JSON Dump:
-						[_id] => 53b276a2d8cc9ae43b8b4567
-					    [post] => Array
-					        (
-					            [content] => asdasda
-					            [collectionId] => 52164bd2d8cc9af2188b4568
-					            [imgHash] => e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-					        )
+						 [_id] => 541bf32ed8cc9ac51d8b456f
+    [post] => Array
+        (
+            [content] => U2FsdGVkX1+usp3zaBVW29cjxQLUCWFpsvwYxjNADtA=
 
-					    [postId] => MongoId Object
-					        (
-					            [$id] => 53b276a2d8cc9a8b3b8b4567
-					        )
-						[time]
-							sec
-							usec
-					    [owner] => ms@charme.local
-					    [username] => 
+            [collectionId] => 5419c6c3d8cc9a9d041930b9
+            [isEncrypted] => 1
+            [keyRevision] => 4
+            [author] => test8@charme.local
+        )
+
+    [postId] => MongoId Object
+        (
+            [$id] => 541bf32ed8cc9a1a1c8b4567
+        )
+
+    [owner] => test6@charme.local
+    [meta] => Array
+        (
+            [hasImage] => 
+            [time] => Array
+                (
+                    [sec] => 1411117870
+                    [usec] => 832000
+                )
+
+            [username] => m s
+        )
+
+    [like] => 
+    [likecount] => 0
+    [postKey] => U2FsdGVkX19l2rjCVCUmhtTL3nhFbB0HeZ0cExPqxJbUU/KgfrPHxtVaXAOtz1dW
+
+    [edgeKeyRevision] => 5
 				*/
-
+			
 				var p2 = new control_postItem({
 					postObj: this,
 					layout: "stream",

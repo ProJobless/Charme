@@ -3,7 +3,7 @@
 
 include_once("config.php");
 
-if (in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
+ if (in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
 header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
 

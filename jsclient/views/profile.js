@@ -249,6 +249,10 @@ view_profilepage_collection_show = view_subpage.extend({
 		checkVerified();
 
 		var that = this;
+
+		if (container_main.currentView.options.userId != charmeUser.userId)
+			$("#but_editCollection").hide();
+
 		$("#but_editCollection").click(function() {
 
 			// Get current collection information
@@ -349,6 +353,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 			]
 		}, function(d) {
+
 			console.log("DIS");
 			console.log(d);
 			
@@ -395,7 +400,10 @@ view_profilepage_collection_show = view_subpage.extend({
 				});
 				}
 				if (postKey != "")
+				{
+				
 				postKey = aes_decrypt(edgeKey, postKey);
+			}
 
 				/*
 						var p2 = new control_postItem({
@@ -452,7 +460,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 			});
 
-		}, "", container_main.currentView.options.userId);
+		}, "", container_main.currentView.options.userId.split("@")[1]);
 
 
 

@@ -25,6 +25,7 @@ ini_set('display_errors', 'Off');
 header('Access-Control-Allow-Origin: http://client.local');
 header('Access-Control-Allow-Origin: http://mschultheiss.com');*/
 
+
 if (in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
 header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
@@ -1821,6 +1822,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			$col = \App\DB\Get::Collection();
 
 
+
 			$ar = iterator_to_array($col->listitems->find(array("list" => new MongoId($item["listId"]), "owner" => $_SESSION["charme_userid"])), false);
 			$finalList = array();
 	 
@@ -1830,6 +1832,10 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		  	 		isset($ritem["userId"]))
 		  	 	$finalList[] = $ritem["userId"];
 		  	}
+
+		  	if (isset($item["addSessionUser"]) && $item["addSessionUser"] = true)
+				$finalList[] =  $_SESSION["charme_userid"];
+			
 
 		 
 		  	$retList = $col->edgekeys->find(array("owner" => $_SESSION["charme_userid"],  'userId' => array('$in' => $finalList), "newest" => true));
@@ -1883,7 +1889,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]))<1)
 			{
-			$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), array("newest" => false));
+			$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), array(array('$set' => array("newest" => false))), array("multiple" => true));
 
 			$col->edgekeys->update(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), $item["edgekey"], array("upsert" => true));
 			}
@@ -1918,11 +1924,11 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			case "key_get":
 
 			
-			
+				clog2($item);
 				// Return public key and revision
 				$col = \App\DB\Get::Collection();
 
-				if ($item["pem"] == true)
+				if (isset($item["pem"]) && $item["pem"] == true)
 				{
 					$cursor = $col->localkeydirectory->findOne(array("userid"=> ($item["profileId"]), "revision" => $item["revision"]) ,
 					 array('pemkey', "revision"));
@@ -2185,6 +2191,8 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			//	$col->streamitems->ensureIndex('owner');
 				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
 				$stra=  iterator_to_array($iter , false);
+
+
 		
 			}
 			else
@@ -2208,7 +2216,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		
 			
 
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->limit(115); // ->slice(-15)
 				
 				$stra=  iterator_to_array($iter , false);
 
@@ -2228,8 +2236,10 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 				// Total comments
 				$count = $col->streamcomments->count(array("commentData.object.postId" => (string)$item2["postId"], "postowner" => $item2["post"]["author"]) );
-				
-			
+
+
+
+				//clog("TIME:".$item2["meta"]["time"]["sec"]);
 
 			//	clog((string)$item2["postId"]."-- owner: ". $item2["post"]["owner"]."-- count: ".$count );
 
@@ -2333,11 +2343,10 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		*/
 		case "register_collection_post":
 			
-
 			//clog("COLLECTION ITEM!");
 			//clog2($item);
 			// TODO: check if user is subscribed to collection! (NEEDED FOR SPAM PROTECTION!)
-				$col = \App\DB\Get::Collection();
+			$col = \App\DB\Get::Collection();
 			/* 
 				Requst JSON Structure:
 
@@ -2441,7 +2450,17 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				$edgeKeyRevisions[$key["userId"]] = $key["edgeKeyRevision"];
 			}
 
-		
+/*
+			clog("KEYS");
+			clog2($keys);
+
+			clog("REVISIONs");
+			clog2($revisions);
+
+			clog("edgeKeyRevisions");
+			clog2($edgeKeyRevisions);*/
+
+
 			/*
 			JSON Object Structure:
 
@@ -2511,50 +2530,73 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 			$res2 = $col->followers->find(array("collectionId" => new MongoId($item["postData"]["object"]["collectionId"]) ));
 
+			
+			foreach ($item["keys"] as $userkey)
+			{
+				// Insert Keys into db.
+				$col->postkeys->insert(array(
+					"postId" => $content["_id"]->__toString(),
+					"postKey" => $keys[$userkey["userId"]],
+					"userId" => $userkey["userId"],
+					"postOwner" => $_SESSION["charme_userid"],
+					"revisionB" => $revisions[$userkey["userId"]],
+					"edgeKeyRevision" => $edgeKeyRevisions[$userkey["userId"]]
+				));
+
+
+			}
+
 
 
 			foreach ($res2 as $resItem)
 			{
+				clog("FOR FOLOWER:".$resItem["follower"]);
+				/*clog("REVISION ARE");
+				clog2( $revisions);
+				clog("FOLLOWER IS ".$resItem["follower"]);
+clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
-			
-				$dataArray = array(
-				"id" => "register_collection_post",
-				"follower" => $resItem["follower"],
-				"postData" => $item["postData"],
-				"meta" => array("hasImage" => $hasImage,
-				"time" => new MongoDate(), "username" => $username),
-				"postId" => $content["_id"]->__toString(),
-				"revisionB" => $revisions[$resItem["follower"]],
-				"edgeKeyRevision" => $edgeKeyRevisions[$resItem["follower"]]
-				);
-			
-				// Send decryption key if post is encrypted
-				if ($item["postData"]["object"]["isEncrypted"])
+				//if (isset($revisions[$resItem["follower"]]))
 				{
-					$dataArray["postKey"] = $keys[$resItem["follower"]];
-				
-					// Insert Keys into db.
-					$col->postkeys->insert(array(
+						$dataArray = array(
+						"id" => "register_collection_post",
+						"follower" => $resItem["follower"],
+						"postData" => $item["postData"],
+						"meta" => array("hasImage" => $hasImage,
+						"time" => new MongoDate(), "username" => $username),
 						"postId" => $content["_id"]->__toString(),
-						"postKey" => $keys[$resItem["follower"]],
-						"userId" => $resItem["follower"],
-						"postOwner" => $_SESSION["charme_userid"],
 						"revisionB" => $revisions[$resItem["follower"]],
 						"edgeKeyRevision" => $edgeKeyRevisions[$resItem["follower"]]
-					));
+						);
+					
+						// Send decryption key if post is encrypted
+						if ($item["postData"]["object"]["isEncrypted"])
+						{
+							$dataArray["postKey"] = $keys[$resItem["follower"]];
+						
+							// Insert Keys into db.
+							
+							/*$col->postkeys->insert(array(
+								"postId" => $content["_id"]->__toString(),
+								"postKey" => $keys[$resItem["follower"]],
+								"userId" => $resItem["follower"],
+								"postOwner" => $_SESSION["charme_userid"],
+								"revisionB" => $revisions[$resItem["follower"]],
+								"edgeKeyRevision" => $edgeKeyRevisions[$resItem["follower"]]
+							));*/
 
+						}
+					
+						$data = array("requests" => array($dataArray));
+
+						$req21 = new \App\Requests\JSON(
+						$resItem["follower"],
+						$_SESSION["charme_userid"],
+						$data
+						
+						);
+						$req21->send();
 				}
-			
-				$data = array("requests" => array($dataArray));
-
-				$req21 = new \App\Requests\JSON(
-				$resItem["follower"],
-				$_SESSION["charme_userid"],
-				$data
-				
-				);
-				$req21->send();
-
 			}
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString(), "hasImage" => $hasImage);	
 

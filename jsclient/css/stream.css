@@ -18,7 +18,7 @@
 	border:1px #efefef solid;
 
 	color:gray;
-	width: 242px;
+	max-width: 242px;
 }
 .postcomments .comment:first-child
 {
@@ -32,7 +32,7 @@
 	padding:8px;
 	border-top:1px #efefef solid;
 	
-	width:244px;
+	max-width:244px;
 
 	  word-wrap: break-word;
 
