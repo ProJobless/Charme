@@ -1889,7 +1889,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]))<1)
 			{
-			$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), array(array('$set' => array("newest" => false))), array("multiple" => true));
+			$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), array('$set' => array("newest" => false)), array("multiple" => true));
 
 			$col->edgekeys->update(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), $item["edgekey"], array("upsert" => true));
 			}
