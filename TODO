@@ -1,9 +1,12 @@
 major bugs:
+ svg animation
   stream updates not working
+ pagination
+ save image height
 
 message refactoring:
 -1: save charme version in charme cache
- 0. messages to mysqlf are created twice
+ 0. messages to myself are created twice
  1. message owner is current sender link / image server -> must be author!
 2. messages responsive
 3. images (+picturebox generic)

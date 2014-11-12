@@ -7,30 +7,113 @@
 
 ###
 
+@charme_schema_categories = [
+	{
+		id: 'el'
+		name: 'Electronics and Hardware'
+		sub: [
+			{
+				id: 'el_smartphone'
+				name: 'Smartphones and Mobile Phones'
+			},
+			{
+				id: 'el_smartphone'
+				name: 'PC Components'
+				sub: [
+					{
+						id: 'el_pc_cpu'
+						name: 'CPU'
+					},
+					{
+						id: 'el_pc_ram'
+						name: 'RAM'
+					},
+					{
+						id: 'el_pc_mainbaord'
+						name: 'Mainboard'
+					},
+					{
+						id: 'el_pc_hdd'
+						name: 'Harddisk'
+					}
+				]
 
+			}
+		]
+
+	},
+	{
+		id: 'cl'
+		name: 'Clothing'
+		sub: [
+			{
+				id: 'cl_shoes'
+				name: 'Shoes'
+			},
+			{
+				id: 'cl_hats'
+				name: 'Hats'
+			}
+		]
+
+	},
+	{
+		id: 'fo'
+		name: 'Food and drinks'
+		sub: [
+			{
+				id: 'fo_drink'
+				name: 'Drinks'
+				sub: [
+					{
+						id: 'fo_drink_lemonade'
+						name: 'Lemonade'
+					},
+					{
+						id: 'fo_drink_milk'
+						name: 'Milk'
+					}
+					,
+					{
+						id: 'fo_drink_beer'
+						name: 'Beer'
+					},
+					{
+						id: 'fo_drink_water'
+						name: 'Water'
+					}
+				]
+
+
+			},
+			{
+				id: 'fo_meal'
+				name: 'Meal'
+			}
+		]
+
+	}
+
+]
 @charme_schema = 
 	global: 
 		'offer': {
 			attributes: [
-				{
-					id: "Title"
-					type: "string"
-					name: "Title:"
-				},			
+	
 				{
 					id: "price"
 					type: "moneyamount"
 					name: "Price:"
 				},
 				{
-					id: "Curreny:"
+					id: "currency"
 					type: "currency"
 					name: "Currency:"
 				}
 				{
-					id: "Sell:"
+					id: "sell"
 					type: "productcategory"
-					name: "Category:"
+					name: "Product Identifier:"
 				}
 			]
 		},
@@ -48,7 +131,7 @@
 				},		
 				{
 					id: "rating"
-					type: "5stars"
+					type: "rating"
 					name: "Rating:"
 				}
 			]

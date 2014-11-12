@@ -13,6 +13,56 @@
 {
 	display: none;
 }
+.metaData
+{
+margin-top: 8px;	color: gray;	line-height: 16px;
+}
+.metaData .point
+{
+	border-radius: 333px;
+	background-color: #efefef;
+	float:left;
+	width:16px;
+	height: 16px;
+
+	margin-right:4px;
+
+
+}
+a.category
+{
+	font-weight:  normal;
+
+}
+.mapOsm
+{
+	height: 400px;
+	width: auto;
+	width: 100%;
+}
+.metaData.meta_move .point
+{
+	background-color: #1e9905;
+}
+.metaData.meta_offer .point
+{
+	background-color: #b88504;
+}
+
+.metaData.meta_move
+{
+	color: #1e9905;
+}
+.metaData.meta_offer
+{
+	color: #b88504;
+}
+
+.metaData a
+{
+	color:inherit;
+	cursor: pointer;
+}
 .cont img
 {
 	max-width: 100%;
@@ -196,6 +246,7 @@ padding: 8px 0;
 .usergrid .item
 {
 	width: 85px;
+	height: 150px;
 	margin:16px;
 	float:left;
 	text-align: center;

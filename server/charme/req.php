@@ -83,6 +83,30 @@ foreach ($data["requests"] as $item)
 
 	switch ($action) 
 	{
+		case "simpleStore" :
+			$col = \App\DB\Get::Collection(); 
+			if ($item["action"]=="add")
+			{
+				$col = \App\DB\Get::Collection();
+				$data = array("owner" => $_SESSION["charme_userid"], "data" => $item["data"], "createdAt" => new MongoDate(), "class" => $item["class"]);
+				$ret = $col->simpleStorage->insert($data);
+
+				$returnArray[$action] = array("itemId" => $data["_id"]);
+			}
+			if ($item["action"]=="update")
+			{
+				
+			}
+			if ($item["action"]=="get")
+			{
+				$returnArray[$action] = iterator_to_array(
+				$col->simpleStorage->find(array("owner" =>   ($_SESSION["charme_userid"]), "class" => $item["class"])));			
+			}
+			if ($item["action"]=="delete")
+			{
+				
+			}
+		break;
 		case "profile_pubKey":
 			$col = \App\DB\Get::Collection();
 			$cursor = $col->users->findOne(array("userid"=> ($item["profileId"])), array('publickey'));
@@ -319,8 +343,8 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 			$messageKeys = $col->messageKeys->find(array("conversationId" => array('$in' => $messageIds)));
 
-			// Get 10 conversations 
-			$returnArray[$action] = array("count" => $count,  "messages" =>
+			// Get 10 conversations
+ 			$returnArray[$action] = array("count" => $count,  "messages" =>
 			iterator_to_array(
 				$messages
 			, false), "messageKeys" =>
@@ -3124,7 +3148,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			$realPostId = $item["signature"]["object"]["postId"];
 			$pemkey = \App\Security\PublicKeys::tryToGet($item["userId"],$item["signature"]["signature"]["keyRevision"]);
 
-
+			clog("GOT POST DELETE RECEIVE");
 			if ($pemkey != false)
 			{
 				$ok = \App\Security\PublicKeys::checkX509($item["signature"], $pemkey);
@@ -3139,12 +3163,12 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		break;
 
 		case "post_delete":
-
 			$col = \App\DB\Get::Collection();
 
 			// Find out the collection id to which the post belongs
-			$dbReturn = ($col->posts->findOne(array("_id" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]), array("collectionId", "_id")));
-			$colId = $dbReturn["collectionId"];
+			$dbReturn = ($col->posts->findOne(array("_id" => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]), array("postData.object.collectionId", "_id")));
+				clog2($dbReturn);
+			$colId = $dbReturn["postData"]["object"]["collectionId"];
 
 
 			// TODO: Make this more efficient. Only one request per server
@@ -3152,6 +3176,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		
 			foreach ($dbReturn2 as $m_item)
 			{
+
 				$data = array("requests" => array(array(
 				"id" => "post_delete_receive",
 				"signature" => $item["signature"],

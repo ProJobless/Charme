@@ -35,6 +35,33 @@ function ui_showImgBox(src, callback)
 
 }
 
+function ui_showMap(latitude, longitude, name)
+{
+
+	ui_showBox("<div  ><div id='map' class='mapOsm fixedBoxInner'></div></div><div class='p32' style='background-color:#efefef'>" + ui_closeBoxButton() + "</div>", function()
+		{
+				// create a map in the "map" div, set the view to a given place and zoom
+			var map = L.map('map').setView([latitude, longitude], 13);
+
+			// add an OpenStreetMap tile layer
+			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(map);
+
+			// add a marker in the given location, attach some popup content to it and open the popup
+			L.marker([latitude, longitude]).addTo(map)
+			.bindPopup(name)
+			.openPopup();
+
+
+		}, 800);
+
+	
+
+
+
+}
+
 /***
 	Name:
 	ui_showBox
@@ -54,14 +81,18 @@ function ui_showImgBox(src, callback)
 	ui_showBox("Hello World", function(){alert("Box is visible");});
 */
 
-function ui_showBox(content, callback)
+function ui_showBox(content, callback, a_width)
 {
-	//TODO: Remove box if already exists:!
-	
 
+	//TODO: Remove box if already exists:!
+	if (typeof a_width === "undefined")
+		a_width = 400;
 	ui_block();
+
 	if (!$("body .fixedBox").length)
 	$("body").prepend("<div class='fixedBox'></div>");
+
+	$('.fixedBox').css("max-width", a_width+"px");
 	
 	
 	$("body .fixedBox").html(content);

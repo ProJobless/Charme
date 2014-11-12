@@ -107,9 +107,9 @@ The project is splitted into the following sub projects:
 
    * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
    * Protect yourserver.com/charme/admin with a .htaccess file in production use!
-   * Start gearman server via `nohup php hydra.php &` in `yourserver.com/charme` directory. If you do not do this, your  server will crash when sending messages :)
    * make sure `yourserver.com/charme/log.txt` is writeable
    * Restart apache via `service apache2 restart`
+   * Start gearman server via `nohup php hydra.php &` in `yourserver.com/charme` directory. If you do not do this, your  server will crash when sending messages :)
    * Always check /var/log/apache2/error.log when something is not working.
 
 
@@ -130,9 +130,32 @@ The project is splitted into the following sub projects:
 * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
 * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
+You can develop modules that do not require much knowledge about the main infrastructure. Such include.
+* An admin interface
+* A map selector
+* Find semantic information: Identify often used 
+for example. Create a issue if you are interested in :)
+
 ## License
-Charme is distributed under the terms of the GNU General Public License,
-version 3. See the LICENSE.txt file for details.
+Charme is a distributed social network with end-to-end encryption
+
+Copyright (C) 2014 Manuel Schultheiß
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
 
 ## Recommended IDE
 Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin.
@@ -218,6 +241,13 @@ Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin.
         <td>MIT</td>
         <td>server/charme/lib/App/ClassLoader</td>
     </tr>
+
+  <tr>
+        <td>Leaflet</td>
+        <td>Custom</td>
+        <td>jsclient/vendor/leaflet</td>
+    </tr>
+
 
 
  <tr>

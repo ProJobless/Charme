@@ -638,60 +638,161 @@ control_postField = Backbone.View.extend({
 		'change #collectionSelector': 'changeCollection'
 
 	},
+
 	addContext: function() {
+
+		var that = this;
+
 		$.get("templates/box_context.html", function(d) {
 			_.templateSettings.variable = "rc";
 			var template = _.template(d, {});
 
 			ui_showBox(template, function() {
 				$(".contextItem").click(function() {
+
+					var contextType = $(this).data("type");
+					var html = CharmeModels.Context.getForm(contextType);
+					$("#contextDetails").html(html);
 					$("#contextContainer .scroller").animate({
 						left: -400
 					}, 400);
 					$("#but_addContext").fadeIn(400);
 
-					var html = CharmeModels.Context.getForm($(this).data("type"));
-					$("#contextDetails").html(html);
+
+					apl_request({
+						"requests": [{
+							"id": "simpleStore",
+							"action": "get",
+							"class": "location"
+
+						}, ]
+					}, function(d22) {
+
+						$.each(d22.simpleStore, function(d) {
+							$(".locationContainer").append("<option value='" + this._id.$id + "'>" + this.data.name + "</option>");
+							$(".locationContainer option:last-child").data("json", this.data);
+
+						});
+
+						var updateDataTag = function() {
+							// This function updates the data-xyz attributes which are stored in database later
+							$(".locationContainer option:selected").each(function() {
+						
+								$(this).parent().data("storage", $(this).data("json"));
+							});
+						}
+						updateDataTag();
+
+						var updateProductClick = function(){
+						$("#productidentifierHelp a").unbind("click").click(function(){
+
+							if ($(this).data("cat") != "" && $(this).data("cat") != null)
+							{	$("#productidentifierHelp").html(CharmeModels.Context.renderCateogries($(this).data("cat")));
+														updateProductClick();}
+							else
+							{
+								$("#productidentifierHelp").html("<b>"+$(this).text()+"</b> - <a id='resetProduct'>Select another Category</a>");
+								$("#productSelector").val($(this).data("final"));
+
+								$("#resetProduct").click(function()
+									{	$("#productidentifierSearch").show().focus().select();	
+
+										$("#productidentifierHelp").html(CharmeModels.Context.renderCateogries(null));
+										updateProductClick();
+									});
+								$("#productidentifierSearch").hide();	
+
+							}
+
+						});
+						} 
+						updateProductClick();
+
+
+						$("#productidentifierSearch").bind("propertychange onkeydown  click keyup input paste",function(){
+						
+								$("#productidentifierHelp").html(CharmeModels.Context.renderCateogries(null, $(this).val()));
+								updateProductClick();
+						});
+
+						$("#but_addContext").click(function() {
+
+							// TODO: encrypt data in encrypted collections
+
+							that.metaData = $('#contextDetails').serializeObject();
+							that.metaData.type = contextType;
+
+							$("#but_remMeta").show();
+							ui_closeBox();
+
+
+						});
+
+					
+						$(".locationContainer").change(function() {
+							updateDataTag();
+						});
+
+						$(".but_addLocation").click(function() {
+							var name = prompt("Enter a Name");
+							if (name == null) return;
+							var lat = prompt("Enter a Latitude");
+							if (lat == null) return;
+							var lon = prompt("Enter a Longitude");
+							if (lon == null) return;
+							data = {
+										"longitude": lon,
+										"latitude": lat,
+										"name": name
+									};
+
+							apl_request({
+								"requests": [{
+									"id": "simpleStore",
+									"action": "add",
+									"class": "location",
+									"data": data
+								}, ]
+							}, function(d) {
+
+						
+									$(".locationContainer").append("<option value='" + d.simpleStore.itemId + "'>" + data.name + "</option>");
+							$(".locationContainer option:last-child").data("json", data);
+
+
+							});
+						});
+
+
+
+					});
+
+
+
 				});
 			});
 
 		});
 	},
-
 	doRealPost: function(postText, edgekeys) {
-
-		console.log("EDGEKEYS ARE");
-		console.log(edgekeys);
-
 
 		var myPostKey = "";
 		var isEncrypted = 0;
 		var fkEncPostKey = "";
-		keys = [];
 		var postKey;
+		var keys = [];
+		var that = this;
+		var collectionId;
+		var imgFileContent = $('#inp_postImg').data("filecontent");
+		var repostdata;
+
 		if (edgekeys != "-") {
-
-
 
 			postKey = randomAesKey(32);
 			postText = aes_encrypt(postKey, postText);
 			isEncrypted = 1;
 
-
 			jQuery.each(edgekeys, function() {
-
-				/*
-					[_id] => 5405d60b109ce304934ebf7f
-					[revisionA] => 4
-					[revisionB] => 4
-					[revision] => 8
-					[rsaEncEdgekey] => 321c2eb37ea301e7358f09203650c8cc25c50986c73479acb55b09cf9d5dd728c14c0519225cb58f8ab1496366361cbf213cc21ad1650d4433f40e19b9f5219e8b1366545ca50c85ac8fb993ead46a79bc48abf3d4425fbc7386ef55376ce731c82920c11468b0c221e21f3cf01cc8e31978e55423b4faf48e2443d264c41b2903f261106707e399ada1bc9d5f13d4790b64b95231f5fd869f1ca20b0f355790197296f9e3f2efa0d76b604ea8d0b8a1ec7af0ec06f489ebf35de628ed50b91327cd2d7262e263321c144834bcd5bf212087d8d00e84afcc0334292b8e24a8316976e28fe1b05ff0d2fea5ee02074b1ddba5e6a428818ac84b89352388c884f7
-					[fkEncEdgekey] => U2FsdGVkX1+zQdfHE4qRyl561ChAefAAbA4hfgWe08o+NIsGj0GPmaTp9BWV6ojj
-
-					[userId] => test8@charme.local
-					[owner] => test8@charme.local
-					[newest] => 1
-				*/
 
 				var fastkey = getFastKey(0, 1);
 				var edgekey = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
@@ -715,62 +816,39 @@ control_postField = Backbone.View.extend({
 		}
 
 
-		var that = this;
-		var collectionId;
 		if (this.options.collectionId == "") // If collection Seletor enabled, get value from collection selector
 			collectionId = $("#collectionSelector option:selected:first").data("collectionid");
 		else
 			collectionId = this.options.collectionId;
 
-
-		var repostdata;
-
 		if ($('#repostContainer').is(':visible'))
 			repostdata = $('#repostContainer').data("postdata");
 
 
-
-
-
-		var imgFileContent = $('#inp_postImg').data("filecontent");
-		
 		completePost = function(images){
 				var signature = new CharmeModels.Signature(postText + imgFileContent);
-		// TODO: encrypt post if collection is encrypted here!		
 
-		// All Data that will be signed with the private key
-
-
-
+		// Public post object, should not contain any keys. All Data that will be signed with the private key
 		var postObj = {
 			content: postText,
 			collectionId: collectionId,
 			isEncrypted: isEncrypted,
 			keyRevision: getFastKey(0, 1).revision, // Current Fastkey, needed to get decryption key version.
 			repost: repostdata,
-			author: charmeUser.userId
+			author: charmeUser.userId,
+			metaData: that.metaData
 		};
-
-
-
-		// TODO: encrypt image in encrypted collections!
 
 		var postData = CharmeModels.Signature.makeSignedJSON(postObj);
 
-		console.log("postData");
-		console.log(postData);
-
-		console.log(keys);
-		//if (x == undefined || x == "")
-		if (images == undefined)
+		if (typeof images === "undefined")
 		{
 			images = [];
 			images[200] = "";
 			images[900] = "";
 
 		}
-		console.log("postkeys are");
-		console.log(keys);
+
 		apl_request({
 			"requests": [{
 				"id": "collection_post",
@@ -786,12 +864,10 @@ control_postField = Backbone.View.extend({
 		}, function(d) {
 
 
-
 			var name = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
-
 			var elid, layout;
-			if (that.options.collectionId != "") {
 
+			if (that.options.collectionId != "") {
 				elid = ".collectionPostbox";
 			} else {
 				layout = "stream";
@@ -800,62 +876,33 @@ control_postField = Backbone.View.extend({
 
 			// Remove image
 			$("#but_remImg").trigger('click');
-			// TODO: Add username
-			/*
-					JSON Dump:
-						[_id] => 53b276a2d8cc9ae43b8b4567
-					    [post] => Array
-					        (
-					            [content] => asdasda
-					            [collectionId] => 52164bd2d8cc9af2188b4568
-					            [imgHash] => e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-					        )
+			
+			that.metaData = null;
+			$("#but_remMeta").hide();
+			$("#textfield").val("");
 
-					    [postId] => MongoId Object
-					        (
-					            [$id] => 53b276a2d8cc9a8b3b8b4567
-					        )
-						[time]
-							sec
-							usec
-					    [owner] => ms@charme.local
-					    [username] => 
-				*/
-
-			//var p2 = new control_postItem({
-			//	postObj: this,
-
-			postObj.postKey = myPostKey;
 			var postItem3 = {
 				post: postObj,
 				postId: {
-					$id: d.collection_post.id
+					'$id': d.collection_post.id
 				},
-				
 				meta: {
 					username: name,
-					time: {sec:  new Date().getTime()/1000}
+					time: {sec:  new Date().getTime()/1000},
+					hasImage: d.collection_post.hasImage
 				},
-
 			};
 
-			var p2 = new control_postItem({
-				//repost: repostdata,
-				postObj: postItem3,
-				liveAdd: true,
 
-				//postId: d.collection_post.id,
-				//username: name,
+			var p2 = new control_postItem({
+				postObj: postItem3,
+				postKeyTemp: myPostKey,
+				liveAdd: true,
 				layout: layout,
-				//time: new Date().getTime(),
 				el: $(elid),
 				prepend: true,
-				hasImage: d.collection_post.hasImage
 			});
 			p2.render();
-
-
-
 		});
 		}
 
@@ -927,10 +974,7 @@ control_postField = Backbone.View.extend({
 				}]
 			}, function(d) {
 
-				console.log("DGEKEYS");
-				console.log(d.edgekeys_bylist);
 
-		
 
 				if (d.edgekeys_bylist.value.length < 1)
 				{
@@ -955,7 +999,13 @@ control_postField = Backbone.View.extend({
 
 			that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' style='margin-right:8px;' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
 
-			$('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-plus'></i></a><a title='Add Context' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i></a><a style='display:none' id='but_remImg'>Remove Image</a>");
+			$('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-plus'></i></a><a title='Add Context' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i></a><a style='display:none' id='but_remImg'>Remove Image</a> <a style='display:none' id='but_remMeta'>Remove Meta Information</a>");
+
+			$("#but_remMeta").click(function(){
+				that.metaData = null;
+				$("#but_remMeta").hide();
+			});
+
 
 			$('#inp_postImg').on("change", function(e) {
 				that.fileChanged(e);
@@ -1172,6 +1222,10 @@ control_postItem = Backbone.View.extend({
 		// Needed for generating unique element identifiers.,
 		uniIdCounter++;
 
+		var metaDataStr = "";
+		// META DATA START
+
+		//
 
 		//Use uniId inside events like .click() etc., because uniIdCounter is global!!
 		var uniId = uniIdCounter;
@@ -1194,18 +1248,25 @@ control_postItem = Backbone.View.extend({
 		if (this.options.postObj.meta.hasImage) {
 			//
 
-
 			// <a target='_blank' href='http://" + xssAttr(this.options.postObj.post.author.split("@")[1]) + "/charme/fs.php?type=post&size=800&post=" + xssAttr(this.options.postObj.postId.$id) + "'>
 
 			imgcont = "<div style='margin-bottom:8px'><img id='img_"+postObj.postId.$id+"'></div>";
-			
-			var url = "http://" + this.options.postObj.post.author.split("@")[1] + "/charme/fs.php?type=post&size=250&post=" + this.options.postObj.postId.$id;
+
+			var url = "http://" + postObj.post.author.split("@")[1] + "/charme/fs.php?type=post&size=250&post=" + postObj.postId.$id;
 
 			console.log(url);
 			$.get(url, function(d){
 
 				if (that.options.postObj.post.isEncrypted == 1)
-					$("#img_"+postObj.postId.$id+"").attr("src", aes_decrypt(that.options.postKey, d));
+				{
+					if (that.options.liveAdd)
+					{	
+			
+						$("#img_"+postObj.postId.$id+"").attr("src", aes_decrypt(that.options.postObj.post.postKey, d));
+					}
+					else
+						$("#img_"+postObj.postId.$id+"").attr("src", aes_decrypt(that.options.postKey, d));
+				}
 				else
 				$("#img_"+postObj.postId.$id+"").attr("src", d);
 
@@ -1221,8 +1282,8 @@ control_postItem = Backbone.View.extend({
 
 			var postUser = new apl_user(that.options.postObj.post.author);
 			// 
-			str = "<div class='collectionPost' id='post_" + that.options.postId + "'>" +
-				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(that.options.postObj.meta.username) + "</a>" + repoststr + "<div class='cont selectable'>" + imgcont + $.charmeMl(xssText(that.options.postObj.post.content)) + "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a><!-- - <a id='doRepost" + uniId + "'>Repost</a>--> - <a id='checkSignature_" + uniId + "'>Check Signature</a> -  <span class='time'>" + formatDate(that.options.postObj.meta.time.sec*1000) + "</span></div>";
+			str = "<div class='collectionPost' id='post_" +  that.options.postObj.postId.$id+ "'>" +
+				"<a href='#user/" + postUser.userIdURL + "'><img class='profilePic' src='" + postUser.getImageURL(64) + "'></a>" + "<div class='subDiv'>" + liksstr + delitem + "<a href='#user/" + postUser.userIdURL + "'>" + xssText(that.options.postObj.meta.username) + "</a>" + repoststr + "<div class='cont selectable'>" + imgcont + $.charmeMl(xssText(that.options.postObj.post.content)) +  "</div><div class='postoptions'><a id='doLove" + uniId + "'>Love</a><!-- - <a id='doRepost" + uniId + "'>Repost</a>--> - <a id='checkSignature_" + uniId + "'>Check Signature</a> -  <span class='time'>" + formatDate(that.options.postObj.meta.time.sec*1000) + "</span></div>";
 		} else
 			str = "<div class='collectionPost' id='post_" + that.options.postObj.postId.$id + "'>" + repoststr + "<div class='cont selectable' style='padding-top:0'>" + imgcont + liksstr + delitem + "" + $.charmeMl(xssText(this.options.postObj.post.content)) + "</div><div><a id='doLove" + uniId + "'>Love</a><!--- <a id='doRepost" + uniId + "'>Repost</a>--> - <span class='time'>" + formatDate(that.options.postObj.meta.time) + "</span>";
 
@@ -1232,10 +1293,47 @@ control_postItem = Backbone.View.extend({
 		str += "</div></div>";
 
 
+
 		if (that.options.prepend)
 			that.$el.prepend(str);
 		else
 			that.$el.append(str);
+
+
+		if (typeof this.options.postObj.post.metaData !== "undefined")
+		{	
+			var metaData = this.options.postObj.post.metaData;
+
+			if (metaData.type == "move")
+			{
+				/*
+					onclick='ui_showMap("+parseFloat(metaData.startLocation_data.latitude)+","+parseFloat(metaData.startLocation_data.longitude)+")'>"+xssText(metaData.startLocation_data.name)+ "</a> to <a  onclick='ui_showMap("+parseFloat(metaData.endLocation_data.longitude)+","+parseFloat(metaData.endLocation_data.latitude)+", '"+xssAttr( metaData.startLocation_data.name)+"')'> "+xssText(metaData.endLocation_data.name)+ "</a> 
+
+				*/
+				metaDataStr = "<div class='metaData meta_"+metaData.type+"'><div class='point'></div><a id='loc_"+uniIdCounter+"_start'> "+xssText(metaData.startLocation_data.name)+"</a> <i class='fa fa-long-arrow-right'></i> <a id='loc_"+uniIdCounter+"_end'> "+xssText(metaData.endLocation_data.name)+"</a> at "+xssText(metaData.startTime)+"  "+xssText(metaData.startTime_hour)+ " "+ xssText(metaData.startTime_minute)+" with having "+ xssText(metaData.seats)+" seats free </div>";
+
+				$("#post_" +  that.options.postObj.postId.$id+ " .cont").append(metaDataStr);
+				$("#loc_"+uniIdCounter+"_start").click(function(){
+					ui_showMap(metaData.startLocation_data.latitude, metaData.startLocation_data.longitude, metaData.startLocation_data.name);
+				});
+				$("#loc_"+uniIdCounter+"_end").click(function(){
+					ui_showMap(metaData.endLocation_data.latitude, metaData.endLocation_data.longitude, metaData.endLocation_data.name);
+				});
+
+
+			}
+			if (metaData.type == "offer")
+			{	
+
+				metaDataStr = "<div class='metaData meta_"+metaData.type+"'><div class='point'></div>"+xssText(metaData.currency+" "+metaData.price)+"</div>";
+				$("#post_" +  that.options.postObj.postId.$id+ " .cont").append(metaDataStr);
+
+
+			}
+
+		}
+
+
 
 
 
@@ -1261,7 +1359,6 @@ control_postItem = Backbone.View.extend({
 					"signature": signature
 				}, ]
 			}, function(d) {
-
 				// Remove post from GUI
 				$("#post_" + that.options.postObj.postId.$id).fadeOut(0);
 
@@ -1399,7 +1496,7 @@ control_postItem = Backbone.View.extend({
 				if (that.options.postObj.post.isEncrypted == 1) {
 
 					if (that.options.postObj.post.postKey != undefined) {
-						// Post Control item was added after post click
+						// Post Control item was added after post click (e.g user posts something new). The key was transmitted over options.postKeyTemp
 						content = aes_encrypt(that.options.postObj.post.postKey, content);
 					} else if (that.options.postKey != undefined) {
 						// Post Control was added after stream was loaded
@@ -1507,13 +1604,13 @@ control_postItem = Backbone.View.extend({
 		var postObj = this.options.postObj;
 		var that = this;
 
-		if (that.options.isCollectionView)
+		if (that.options.isCollectionView || that.options.liveAdd)
 		{
 			if (that.options.postKey != "")
 			{
 			that.options.postObj.post.content = aes_decrypt(that.options.postKeyTemp, that.options.postObj.post.content);
 			that.options.postObj.post.postKey = that.options.postKeyTemp;
-}
+			}
 
 			that.renderFunction(that);
 		}
@@ -1564,7 +1661,8 @@ control_postItem = Backbone.View.extend({
 			}, "", that.options.postObj.post.author.split("@")[1]);
 
 		} else if (this.options.liveAdd && this.options.postObj.post.isEncrypted == 1) {
-		
+			
+
 			that.options.postObj.post.content = aes_decrypt(that.options.postObj.post.postKey, that.options.postObj.post.content);
 			that.renderFunction(that);
 		} else

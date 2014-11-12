@@ -9,26 +9,92 @@
 
 
 (function() {
+  this.charme_schema_categories = [
+    {
+      id: 'el',
+      name: 'Electronics and Hardware',
+      sub: [
+        {
+          id: 'el_smartphone',
+          name: 'Smartphones and Mobile Phones'
+        }, {
+          id: 'el_smartphone',
+          name: 'PC Components',
+          sub: [
+            {
+              id: 'el_pc_cpu',
+              name: 'CPU'
+            }, {
+              id: 'el_pc_ram',
+              name: 'RAM'
+            }, {
+              id: 'el_pc_mainbaord',
+              name: 'Mainboard'
+            }, {
+              id: 'el_pc_hdd',
+              name: 'Harddisk'
+            }
+          ]
+        }
+      ]
+    }, {
+      id: 'cl',
+      name: 'Clothing',
+      sub: [
+        {
+          id: 'cl_shoes',
+          name: 'Shoes'
+        }, {
+          id: 'cl_hats',
+          name: 'Hats'
+        }
+      ]
+    }, {
+      id: 'fo',
+      name: 'Food and drinks',
+      sub: [
+        {
+          id: 'fo_drink',
+          name: 'Drinks',
+          sub: [
+            {
+              id: 'fo_drink_lemonade',
+              name: 'Lemonade'
+            }, {
+              id: 'fo_drink_milk',
+              name: 'Milk'
+            }, {
+              id: 'fo_drink_beer',
+              name: 'Beer'
+            }, {
+              id: 'fo_drink_water',
+              name: 'Water'
+            }
+          ]
+        }, {
+          id: 'fo_meal',
+          name: 'Meal'
+        }
+      ]
+    }
+  ];
+
   this.charme_schema = {
     global: {
       'offer': {
         attributes: [
           {
-            id: "Title",
-            type: "string",
-            name: "Title:"
-          }, {
             id: "price",
             type: "moneyamount",
             name: "Price:"
           }, {
-            id: "Curreny:",
+            id: "currency",
             type: "currency",
             name: "Currency:"
           }, {
-            id: "Sell:",
+            id: "sell",
             type: "productcategory",
-            name: "Category:"
+            name: "Product Identifier:"
           }
         ]
       },
@@ -44,7 +110,7 @@
             name: "Entity:"
           }, {
             id: "rating",
-            type: "5stars",
+            type: "rating",
             name: "Rating:"
           }
         ]
@@ -284,6 +350,128 @@
   CharmeModels.Context = (function() {
     function Context() {}
 
+    Context.getTimeHours = function() {
+      var k, str, _i, _len, _ref;
+      str = "";
+      _ref = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        str += "<option>" + k + "</option>";
+      }
+      return str;
+    };
+
+    Context.getTimeMinutes = function() {
+      var k, str, _i, _len, _ref;
+      str = "";
+      _ref = [0, 15, 30, 45];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        str += "<option>" + k + "</option>";
+      }
+      return str;
+    };
+
+    Context.getRad = function() {
+      var k, str, _i, _len, _ref;
+      str = "";
+      _ref = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        str += "<option>" + k + "km</option>";
+      }
+      return str;
+    };
+
+    Context.getCurrencies = function() {
+      var k, str, _i, _len, _ref;
+      str = "";
+      _ref = ["EUR", "USD", "BTC", "YEN"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        str += "<option vale='" + k + "'>" + k + "</option>";
+      }
+      return str;
+    };
+
+    Context.getRating = function() {
+      var k, str, _i, _len, _ref;
+      str = "";
+      _ref = ["5", "4", "3", "2", "1"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        str += "<option>" + k + "</option>";
+      }
+      return str;
+    };
+
+    Context.searchRecursiveId = function(node, parentId, level) {
+      var retval, subnode, _i, _len;
+      if (level == null) {
+        level = 0;
+      }
+      console.log("LOOKUP LEVEL" + level);
+      for (_i = 0, _len = node.length; _i < _len; _i++) {
+        subnode = node[_i];
+        console.log("iterate el" + subnode.name);
+        if (subnode.id === parentId) {
+          console.log("RETURN");
+          console.log(subnode);
+          return subnode.sub;
+        } else if (subnode.sub != null) {
+          console.log("	RECURSIVE CALL");
+          retval = this.searchRecursiveId(subnode.sub, parentId, level + 1);
+          if (retval != null) {
+            return retval;
+          }
+        }
+      }
+    };
+
+    Context.searchRecursiveText = function(node, query) {
+      var retArray, subnode, subres, _i, _len;
+      retArray = [];
+      for (_i = 0, _len = node.length; _i < _len; _i++) {
+        subnode = node[_i];
+        if (subnode.name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+          console.log("PSUH" + subnode.name);
+          retArray.push(subnode);
+        }
+        if (subnode.sub != null) {
+          subres = this.searchRecursiveText(subnode.sub, query);
+          retArray = retArray.concat(subres);
+        }
+      }
+      return retArray;
+    };
+
+    Context.renderCateogries = function(parentId, searchQuery) {
+      var item, parent, str, _i, _len;
+      str = "";
+      if (searchQuery !== "" && (searchQuery != null)) {
+        parent = CharmeModels.Context.searchRecursiveText(charme_schema_categories, searchQuery);
+      } else {
+        if (parentId == null) {
+          parent = charme_schema_categories;
+        } else {
+          parent = CharmeModels.Context.searchRecursiveId(charme_schema_categories, parentId);
+        }
+      }
+      console.log(parent);
+      for (_i = 0, _len = parent.length; _i < _len; _i++) {
+        item = parent[_i];
+        if (str !== "") {
+          str += ", ";
+        }
+        if (item.sub != null) {
+          str += "<a class='selectCategory' data-cat='" + item.id + "'>" + item.name + "</a>";
+        } else {
+          str += "<a class='selectCategory' data-final='" + item.id + "'>" + item.name + "</a>";
+        }
+      }
+      return str;
+    };
+
     Context.getForm = function(fieldId) {
       var html, k, v, _ref;
       html = "";
@@ -293,17 +481,25 @@
         v = _ref[k];
         html += "<div style='padding:8px 0px; font-weight:bold;'>" + v["name"] + "</div>";
         if (v["type"] === "area") {
-          html += "<select><option></option></select> Radius: <select><option></option></select>";
+          html += "<select  name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a> Radius: <select name='" + v["id"] + "_radius'>" + CharmeModels.Context.getRad() + "</select>";
         } else if (v["type"] === "location") {
-          html += "<select><option></option></select>";
+          html += "<select name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a>";
         } else if (v["type"] === "string") {
-          html += "<input type='text' class='box'>";
+          html += "<input  name='" + v["id"] + "' type='text' class='box'>";
+        } else if (v["type"] === "entity") {
+          html += "<input  name='" + v["id"] + "' type='text' class='box'>";
+        } else if (v["type"] === "rating") {
+          html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getRating() + '</select> (5 is best)';
         } else if (v["type"] === "datetime") {
-          html += '<input class="box" type="date">';
+          html += '<input  name="' + v["id"] + '" class="box" type="date"> <select name="' + v["id"] + '_hour">' + CharmeModels.Context.getTimeHours() + '</select>:<select  name="' + v["id"] + '_minute">' + CharmeModels.Context.getTimeMinutes() + '</select>';
         } else if (v["type"] === "int") {
-          html += "<input type='text' class='box'>";
+          html += "<input name='" + v["id"] + "' type='text' class='box'>";
         } else if (v["type"] === "moneyamount") {
-          html += "<input type='text' class='box'>";
+          html += "<input name='" + v["id"] + "' type='text' class='box'>";
+        } else if (v["type"] === "currency") {
+          html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getCurrencies() + '</select>';
+        } else if (v["type"] === "productcategory") {
+          html += '<input placeholder="Search..." id="productidentifierSearch" class="box" type="text" style="margin-bottom:8px;"><input style="clear:both" type="hidden" name="' + v["id"] + '" id="productSelector"><div  id="productidentifierHelp">' + CharmeModels.Context.renderCateogries() + '</div>';
         }
         html += "<br>";
       }

@@ -538,10 +538,14 @@ var view_profilepage_posts = view_subpage.extend({
 			]
 		}, function(d) {
 
-		
+			console.log("VALUE");
+			console.log(d.edgekey_request);
+
+			
 			fk1 = getFastKey(0, 1);
-			var pubkey = $.parseJSON(aes_decrypt(fk1.fastkey1, d.edgekey_request.data.value));
-			var edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey, pubkey.revision));
+
+			//var pubkey = $.parseJSON(aes_decrypt(fk1.fastkey1, d.edgekey_request.data[0]));
+			var edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey,  d.edgekey_request.data.revisionB));
 			
 console.log(d);
 			jQuery.each(d.collection_posts_get.items, function(index, item) {
