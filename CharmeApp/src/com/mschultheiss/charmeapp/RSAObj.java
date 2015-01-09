@@ -8,6 +8,8 @@ import java.security.spec.RSAPrivateKeySpec;
 
 import javax.crypto.Cipher;
 
+import org.json.JSONObject;
+
 public class RSAObj {
 	public String n; // Modulus
 	public String d; // Private Exponent
@@ -15,6 +17,11 @@ public class RSAObj {
 	public String p;
 	public String q;
 	
+	public JSONObject makeSignedJSON()
+	{
+		
+		return null; // TODO!!!
+	}
 	public String decryptText(String chypText)
 	{
 		try{

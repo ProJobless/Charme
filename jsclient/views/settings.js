@@ -109,8 +109,7 @@ var view_settings_keymanager = view_subpage.extend({
 
 			var aesobj = $.parseJSON(aesstr);
 
-			console.log("ELEMETNT");
-			console.log(aesobj);
+		
 			//var obj = aes_decrypt(passphrase, item.value);
 
 			var text = CryptoJS.SHA256(aesobj.key.n).toString(CryptoJS.enc.Base64);

@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:text="android@192.168.43.31" >
+            android:text="test52@192.168.43.31" >
 
             <requestFocus />
         </EditText>
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:text="O9mGHu1OpsaK784wpPCM" />
+            android:text="v9EGMeq9b85YcY2thBCH" />
 
         <TextView
             android:id="@+id/TextView01"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
-            android:text="test" />
+            android:text="test52" />
 
         <Button
             android:id="@+id/button1"

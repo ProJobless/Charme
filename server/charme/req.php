@@ -140,11 +140,16 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "reg_salt_get":
+
+		
+
 			$col = \App\DB\Get::Collection();
 		//	$salt = $CHARME_SETTINGS["passwordSalt"];
 		//	$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
 			// Only allow if user not exists!
 			$res = $col->saltvalues->findOne(array("userid" => $item["userid"]));
+
+			clog2($res);
 			$returnArray[$action] = array("salt" => $res["salt"]);
 			
 		
@@ -196,17 +201,27 @@ foreach ($data["requests"] as $item)
 
 		case "message_get_sub_updates" :
 
-			clog2($item);
 			$col = \App\DB\Get::Collection();
-			$sel = array("message.object.conversationId" =>  ($item["conversationId"]),  "_id" => array('$gt' => new MongoId($item["lastId"])));
+			
 
-			$returnArray[$action] = array("messages" => 
-			iterator_to_array(
-				$col->messages->find($sel)
-				->sort(array("message.object.time" => 1))
-		
+
+				  
+				$sel = array("message.object.conversationId" =>  ($item["conversationId"]),  "_id" => array('$gt' => new MongoId($item["lastId"])));
+
+				{
+					$res = $col->messages->find($sel);
+
+					$returnArray[$action] = array("messages" => 
+					iterator_to_array(
+						
+						$res->sort(array("message.object.time" => 1))
 				
-			, false));
+						
+					, false));
+
+				
+				}
+		
 			
 		
 		break;
@@ -302,7 +317,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 		break;
 		case "messages_get_keys" : 
-
+			clog("Session owner is:". $item["conversationId"]);
 			$col = \App\DB\Get::Collection();
 			$messageKeys  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
 			$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys, false));
@@ -314,6 +329,9 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		case "messages_get":
 
 				$col = \App\DB\Get::Collection();
+
+					\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "messages", 0);
+
 
 
 			if (isset($item["start"]))
@@ -616,6 +634,19 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 	
 		break;
+		case "post_archive":
+			
+			$col = \App\DB\Get::Collection();
+			$query = array('postId' => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]);
+
+			// Set archive status in my stream
+			if ($item["status"] == true)
+			$col->streamitems->update($query ,	array('$set' => array("archived" => true)));
+			else
+			$col->streamitems->update($query ,	array('$set' => array("archived" => false)));//array("upsert" => true)
+
+
+		break;
 
 		case "post_like" : 
 			// Save like on my own server at stream items
@@ -863,9 +894,11 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 		break;
 
+		
 
 		// Get message from client
 		case "message_distribute_answer":
+
 
 			$col = \App\DB\Get::Collection();
 			$convId = new MongoId($item["message"]["object"]["conversationId"]);
@@ -961,18 +994,18 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 					if ($col->messageGroups->count(array("messageData.conversationId" => ($item["messageData"]["conversationId"]), "owner" => $item["key"]["userId"]))> 0)
 					{	
 						$alreadyExists = true;
-						clog("ALREADY EXIST");
+				
 
 
 					}
-					else
-						clog("does not  EXIST");
+					//else
+					//	clog("does not  EXIST");
 				}
 
 				if ($alreadyExists)
 				{
 				
-							clog2($item["messageData"]["usernames"]);
+					
 					// set new people here....
 					$col->messageGroups->update(array("messageData.conversationId" => ($item["messageData"]["conversationId"]),
 						"owner" => $item["key"]["userId"]),
@@ -980,8 +1013,9 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 							"messageData.usernames" =>  $item["messageData"]["usernames"],
 							)));
 
+					$messageInsertion = array("message" => $item["messageData"]["message"], "owner" => $item["key"]["userId"], "sendername" => $item["messageData"]["sendername"], "fileId" => $item["fileId"]);
+					$col->messages->insert($messageInsertion);
 
-					$col->messages->insert(array("message" => $item["messageData"]["message"], "owner" => $item["key"]["userId"], "sendername" => $item["messageData"]["sendername"], "fileId" => $item["fileId"]));
 
 					//$col->messages->insert(array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"]));
 
@@ -1001,26 +1035,31 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				unset($item["message"]["signature"]);
 
 				// Insert Message in db for every user
-				
+				$messageInsertion  = array();
 				// This is currently only calledo once per server, localreceivers is incomplete!
 				foreach ($item["localreceivers"] as $receiver) {
-						$col->messages->insert(array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"], "fileId" => $item["fileId"]));
-					
-						
-						\App\Counter\CounterUpdate::inc( $receiver, "talks"); 
+						$messageInsertion =array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"], "fileId" => $item["fileId"]);
+						$col->messages->insert($messageInsertion);
+					 
 				}
+
+
 
 				// Get Conversation User
 				$groups = $col->messageGroups->find(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array("owner"));
 
 				foreach ($groups as $group)
 				{
-					clog("NOTIFY".$group["owner"]);
-					if ($item["message"]["object"]["sender"] != $group["owner"])
-						\App\Counter\CounterUpdate::inc($group["owner"], "talks"); 
-					
-				}
+					if ($item["message"]["object"]["sender"] != $group["owner"]) // No notification for myself
+					{
+						$context = new ZMQContext(); // Notifiy events.php which send the notification via web sockets to the client.
+						$socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
+						$socket->connect("tcp://localhost:5555");
+						$socket->send(json_encode(array("message" => $item["message"], "owner" => $group["owner"], "sendername" => $item["sendername"], "_id" => $messageInsertion["_id"], "fileId" => $item["fileId"])));
+						
 
+					} 
+				}
 				$res = $col->messageGroups->update(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])), array("multiple" => true));
 			
 			}
@@ -1090,13 +1129,9 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 	
 						$serverRequest->send();
 				}
-
+				$returnArray[$action] = array("STATUS" => "OK", "messageId" => $item["messageData"]["conversationId"]);
 			}
-			else
-			{
-				// Send a normal message
-
-			}
+		
 
 			/*
 			// As this is a new message we generate a unique converation Id
@@ -1235,7 +1270,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 
 
-			$returnArray[$action] = array("STATUS" => "OK");
+			
 		break;
 
 		case "message_notify_newpeople":
@@ -1243,7 +1278,6 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		break;
 
 		case "user_login":
-
 			// Get certificate
 
 			global $CHARME_SETTINGS;
@@ -1257,11 +1291,9 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				die("CHARME_SETTINGS NOT INCLUDED");
 
 			//$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
-			
 
-			
 			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p1), array('userid', "rsa", "keyring"));
-
+			clog($cursor["userid"]."///");
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
 				
@@ -1269,13 +1301,14 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 
 				//echo $_SESSION["charme_userid"] ;
-
+			
 				$stat = "PASS";
 			}
 			else
+			{
 				$stat = "FAIL";
-			clog("VERSION");
-			clog($CHARME_VERSION);
+
+		}
 			$returnArray[$action] =   (array("status" => $stat, "CHARME_VERSION" => $CHARME_VERSION, "ret"=>$cursor, "gcmprojectid" => $CHARME_SETTINGS["GCM_PROJECTID"]));
 
 		break;
@@ -1833,11 +1866,22 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 		// Returns edgekeys by userId
 		case "edgekeys_byUserIds" :
+			$item["userIdList"] = array_unique($item["userIdList"]);
+			$col = \App\DB\Get::Collection();
+			$returnArray = iterator_to_array($col->edgekeys->find(array("owner" => $_SESSION["charme_userid"], 'newest' => true, 'userId' => array('$in' => $item["userIdList"]))), false);
+			if (Count($item["userIdList"]) != Count($returnArray)) // Some keys were not found, array_uniqu removes duplicates in array
+			{
+				$diffarray = []; // Contains the userIds where a key was found
+				foreach ($returnArray as $key) {
+				$diffarray[] = $key["userId"];
 
-		 	$col = \App\DB\Get::Collection();
-		 	$returnArray[$action] = array("value" => 
-			iterator_to_array($col->edgekeys->find(array("owner" => $_SESSION["charme_userid"], 'newest' => true, 'userId' => array('$in' => $item["userIdList"]))), false));
-		
+				}
+				$returnArray[$action] = array("status" => "KEYS_NOT_FOUND", "users" => array_diff($item["userIdList"], $diffarray)); 
+			}
+			else // Everything is right
+			{
+				$returnArray[$action] = array("value" => $returnArray); 
+			}				
 		break;
 
 		case "edgekeys_bylist" :
@@ -2207,13 +2251,41 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 
 			$stra = array();
 			$col = \App\DB\Get::Collection();
+			$additionalConstraints = array();
+
+			if ($item["list"] == "archive")
+			{	
+				unset($item["list"]);
+				$additionalConstraints = array("archived" => true);
+			}
+			else if ($item["list"] == "myevents")
+			{	
+				unset($item["list"]);
+				$additionalConstraints = array("post.metaData.type" => "publicevent");
+			}
+			else if ($item["list"] == "mymoves")
+			{	
+				unset($item["list"]);
+				$additionalConstraints = array("post.metaData.type" => "move");
+			}
+			else if ($item["list"] == "myoffers")
+			{	
+				unset($item["list"]);
+				$additionalConstraints = array("post.metaData.type" => "offer");
+			}
+			else if ($item["list"] == "myreviews")
+			{	
+				unset($item["list"]);
+				$additionalConstraints = array("post.metaData.type" => "review");
+			}
+
 
 			if (!isset($item["list"]) ||$item["list"] == "")
 			{
 				// Get all stream items
 				
 			//	$col->streamitems->ensureIndex('owner');
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"]))->sort(array('meta.time.sec' => -1))->limit(15); // ->slice(-15)
+				$iter = $col->streamitems->find(array_merge(array("owner" => $_SESSION["charme_userid"]), $additionalConstraints))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 				$stra=  iterator_to_array($iter , false);
 
 
@@ -2240,7 +2312,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		
 			
 
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->limit(115); // ->slice(-15)
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 				
 				$stra=  iterator_to_array($iter , false);
 
@@ -2685,6 +2757,14 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			  			);
 
 			$col->collections->insert($content);
+
+			// Auto Subscribe to my own collections 
+			$content3 = array("owner" => $_SESSION["charme_userid"], "collectionOwner" => $_SESSION["charme_userid"], "collectionId" => new MongoId($content["_id"]));
+			$col->following->insert($content3);
+			$content2 = array("follower" => $_SESSION["charme_userid"],
+			 "collectionId" => new MongoId($content["_id"]));
+			$col->followers->insert($content2);
+
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
 
 		break;
@@ -2879,9 +2959,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			}
 		break;
 
-		// Register collection follow on followers server
-
-		// return the 3 newest collection items.
+		// return the 3 newest collection items. Useful when subscribing to a collection and adding the items to the newsstream.
 		case "collection_3newest":
 
 		

@@ -31,7 +31,7 @@ public class ActivityLogin extends Activity {
     	
     	
     	
-    	if (!sharedPref.getString("user_rsaN", "").equals(""))
+    	if (!sharedPref.getString("user_rsaN", "").equals("")) // login already exist
     	{
     		
     		super.onCreate(savedInstanceState);
@@ -170,7 +170,7 @@ public class ActivityLogin extends Activity {
 
 			JSONObject jsonSaltRequest = new JSONObject();
 			jsonSaltRequest.put("userid", userid);
-			//r1.put("p", "test"); // TODO: Challenge respond
+
 			jsonSaltRequest.put("id", "reg_salt_get");
 
 			listSalt.put(jsonSaltRequest);
@@ -178,9 +178,7 @@ public class ActivityLogin extends Activity {
 			objectSalt.put("requests", listSalt);
 			
 			
-			System.out.println("CHARME 1: STEP -1");
-			
-			
+
 			
 			
 			new AsyncHTTP(){
@@ -194,12 +192,15 @@ public class ActivityLogin extends Activity {
 					
 					JSONObject jo2 = new JSONObject(result2);
 					String saltvalue = jo2.getJSONObject("reg_salt_get").getString("salt");
-					
+					System.out.println("saltvalue 1: "+saltvalue+" saltvalue");
 					if (!isPasswordHash)
-					 hashpass = Crypto.makeSha256(password+saltvalue);
+					 hashpass = Crypto.makeSha256(password+saltvalue, true);
 					else
-					 hashpass = password;
+						hashpass = password;
 					
+					
+					System.out.println("hashpass 1: "+hashpass);
+						
 		
 					
 			

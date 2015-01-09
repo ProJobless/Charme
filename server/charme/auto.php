@@ -1,5 +1,5 @@
 <?php
-// Autocomplete JSONP provider
+// Autocomplete JSONP provider for Charme messages receiver autocompletion
 include_once("config.php");
 
 header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);

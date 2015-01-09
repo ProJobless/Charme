@@ -53,7 +53,7 @@
 
 .stream .collectionPost
 {
-	border-top:1px silver solid;
+	border-top:1px #efefef solid;
 	padding:32px;
 	overflow:auto;
 

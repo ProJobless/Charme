@@ -1,11 +1,29 @@
 #collectionSelector.encrypted
 {
-	background-color: #e0e082;
-	border:1px #bf8b30 solid;
+	background-color: #F3F394;
+
+	border-bottom:1px #C2C265 solid;
+
 
 }
-#collectionSelector
+.notificationContainer > div
 {
+	padding: 8px 16px;
+}
+.notificationContainer
+{
+	padding: 8px 0px;
+}
+.sbBeta i
+{
+	width: 20px;
+	color: gray;
+	text-align: center;
+}
+#collectionSelector
+{	border-radius: 3px;
+		border:0;
+		border-bottom: 1px silver solid;
 	width: 100px;
 	margin-right:4px; margin-left:8px;
 }
@@ -40,6 +58,10 @@ a.category
 	width: auto;
 	width: 100%;
 }
+.metaData.meta_publicevent .point
+{
+	background-color: maroon;
+}
 .metaData.meta_move .point
 {
 	background-color: #1e9905;
@@ -48,7 +70,10 @@ a.category
 {
 	background-color: #b88504;
 }
-
+.metaData.meta_publicevent
+{
+	color: maroon;
+}
 .metaData.meta_move
 {
 	color: #1e9905;
@@ -266,6 +291,20 @@ padding: 8px 0;
 	-webkit-border-radius: 150px;
 	-moz-border-radius: 150px;
 }
+.linkCaption
+{
+	font-size: 140%;
+	margin-bottom: 8px;
+	display: block;
+
+}
+.linkSubCaption
+{
+color:gray;
+margin-bottom: 16px;
+margin-top:8px;
+font-size: 60%;
+}
 .infobox
 {
 	padding:32px;
@@ -305,7 +344,7 @@ label { display: inline-block; width: 130px; float:left; }
 
 	background-color:#fff;
 	position:fixed;
-	border:1px #222 solid;
+	border:1px #d7d7d7 solid;
 	
 	display:   none;
 	z-index:8000;
@@ -318,7 +357,7 @@ label { display: inline-block; width: 130px; float:left; }
 	height: 1px;
 	top:-1px;
 	background-color: #fff;
-	width:27px;
+	width:29px;
 
 }
 .actionBar a.active
@@ -331,6 +370,14 @@ label { display: inline-block; width: 130px; float:left; }
 	margin-left:300px;overflow:auto;
 }
 
+#button_notifications.active
+{
+	color:gray;
+}
+#button_notifications:active
+{
+		background-color: #555;
+}
 #button_notifications
 {
 
@@ -338,10 +385,16 @@ label { display: inline-block; width: 130px; float:left; }
 	line-height: 10px;
 	color:#fff;
 	font-weight: normal;
-	font-family: "Tahoma";
+
+	background-color: #777;
 
 
 }
+#button_notifications.highlight
+{
+	background-color: #1A3C87;
+}
+
 .topHeader
 {
 	

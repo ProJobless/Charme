@@ -100,10 +100,11 @@ function apl_setup(callback, onLogin)
 
 	
 		
-
-
-			console.log(data);
+			
 			apl_postloader_lists.items = data.lists_get;
+		
+
+
 			
 			if (charmeUser != null)
 			charmeUser.sessionId = data.sessionId_get.sessionId
@@ -171,5 +172,48 @@ function apl_postloader_getLists()
 	// Choose an unique identifier here "listitems"
 	return apl_postloader_lists;
 
+
+}
+function apl_postloader_getListsExtended()
+{
+	var returnLists = [];
+		returnLists.push({
+				'_id': {
+					"$id": 'myevents'
+				},
+				"name": "Events",
+				"icon" : "clock-o"
+			});
+			returnLists.push({
+				'_id': {
+					"$id": 'mymoves'
+				},
+				"name": "Moves",
+				"icon": "taxi"
+			});
+			returnLists.push({
+				'_id': {
+					"$id": 'myoffers'
+				},
+				"name": "Offers",
+				"icon": "dollar"
+			});
+			returnLists.push({
+				'_id': {
+					"$id": 'myreviews'
+				},
+				"name": "Reviews",
+				"icon": "star"
+			});
+
+				returnLists.push({
+				'_id': {
+					"$id": 'archive'
+				},
+				"name": "Archive",
+				"icon": "archive"
+			});
+
+	return returnLists;
 
 }

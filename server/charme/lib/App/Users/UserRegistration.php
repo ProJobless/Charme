@@ -28,6 +28,14 @@ class UserRegistration implements \App\Models\Action
 		
 
 
+	 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			    $randomString = '';
+			    for ($i = 0; $i < 32; $i++) {
+			        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+			    }
+
+
+
 
 		/**
 		*		Error codes, see jsclient/templates/signup.html:
@@ -73,6 +81,7 @@ class UserRegistration implements \App\Models\Action
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],
 			"lastname" =>$data["lastname"],
+			"salt" => $randomString,
 			"publickey" => json_decode($data["pubkey"], true), // Unencrypted public key
 			"keyring" => $data["rsa"] // Encrypted AES keyring
 		);

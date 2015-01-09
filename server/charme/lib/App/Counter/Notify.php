@@ -31,6 +31,17 @@ class Notify
 		$item["time"] = new \MongoDate();
 		$col->notifications->insert($item);
 
+		$context = new \ZMQContext(); // Notifiy events.php which send the notification via web sockets to the client.
+
+		// Send notfication to events.php for push notification to user device.
+		$socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'my pusher');
+		$socket->connect("tcp://localhost:5555");
+		$socket->send(json_encode(array("type" => "newNotifications", "owner" =>  $userId)));
+
+		clog("ADD NOTIGF SENT3");
+
+
+
 	} 
 	public static function getNotifications($userId)
 	{

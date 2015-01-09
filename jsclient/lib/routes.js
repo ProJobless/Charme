@@ -29,6 +29,7 @@ var AppRouter = Backbone.Router.extend({
         "stream/:id": "getStream",
         "find/:id": "getFind",
         "find": "getFind",
+        "notifications": "getNotifications",
         "settings/:id": "getSettings",
         "settings": "getSettings",
         "talks/:id": "getTalks",
@@ -311,7 +312,6 @@ $(function() {
                         d2.prvInfo[this.key] = original;
 
                     });
-                    console.log(d2.prvInfo);
 
                     var vsd = new view_settings_privateinfo({
                         template: "settings_privateinfo",
@@ -356,7 +356,21 @@ $(function() {
             }
 
         });
+        
+           app_router.on('route:getNotifications', function(id) {
+            var pa = new view_notifications({
+                forceNewRender: true,
+                navMatch:"notifications",
+                data: {
 
+                }
+            });
+            container_main.setCurrent(pa);
+            pa.render();
+
+
+
+           });
 
         app_router.on('route:getFind', function(id) {
 

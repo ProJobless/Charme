@@ -354,7 +354,7 @@ public class Talks extends Activity {
 
 			JSONObject r1 = new JSONObject();
 			r1.put("countReturn", true);
-			r1.put("start", 0); // TODO: Challenge respond
+			r1.put("start", 0);
 			r1.put("id", "messages_get");
 
 			list.put(r1);
@@ -372,38 +372,98 @@ public class Talks extends Activity {
 						GibberishAESCrypto gib = new GibberishAESCrypto();
 						JSONArray arr = jo.getJSONObject("messages_get")
 								.getJSONArray("messages");
+						
+						JSONArray messageKeys =  jo.getJSONObject("messages_get")
+								.getJSONArray("messageKeys");
+						
+
+						
 						System.out.println("CH1: arr" + arr.toString());
 						for (int i = 0; i < arr.length(); i++) {
 							JSONObject oo = arr.getJSONObject(i);
 
+	
+							String newestMessageKey = "";
+							JSONObject bestKeyObj = null;
+							int highestRevision = 0;
+							
+							for (int j = 0; j<messageKeys.length(); j++)
+							{
+								
+								JSONObject keyObj = messageKeys.getJSONObject(j);
+							
+								System.out.println("ITERATE");
+								
+								if (keyObj.getJSONObject("conversationId").getString("$id").equals(oo.getJSONObject("messageData").getString("conversationId")))
+								{
+									if (keyObj.getInt("revision") >= highestRevision)
+									{
+										bestKeyObj = keyObj;
+										
+										
+									}
+								}
+							}
+							
+							if (bestKeyObj != null)
+							{
+						
+							
+							int rsaRevision = bestKeyObj.getInt("revision");
+							String rsaEncEdgeKey = bestKeyObj.getJSONObject("key").getString("rsaEncEdgekey");
+							
+							
+							// Set up RSA decryption
 							RSAObj rsa = new RSAObj();
 							JSONObject oo5 = ActivityLogin
-									.findKey(oo.getInt("revision"))
+									.findKey(rsaRevision)
 									.getJSONObject("rsa").getJSONObject("rsa");
 
 							rsa.n = oo5.getString("n");
 							rsa.d = oo5.getString("d");
 							rsa.e = oo5.getString("e");
-
-							String aes = rsa
-									.decryptText(oo.getString("aesEnc"));
-
-							System.out.println("CH1:cid "+oo.getJSONObject("conversationId"));
+							
+							System.out.println("rsaEncEdgeKey is " +rsaEncEdgeKey);
+							// Decrypt the message key with RSA
+							String edgekey = rsa
+									.decryptText(rsaEncEdgeKey);
+							
+							
+							System.out.println("edgekey is " +edgekey);
+							
+							
+							
+							newestMessageKey =  gib.decrypt(
+									bestKeyObj.getJSONObject("key").getString("messageKey"), edgekey.toCharArray());
+							
+							System.out.println("newestMessageKey is " +newestMessageKey);
+							
+							
+							
+							
+							
+						
+							// With having the message key, we can decrypt the preview text now
+							//System.out.println("CH1:cid "+oo.getJSONObject("conversationId"));
 							String prev = gib.decrypt(
-									oo.getString("messagePreview"),
-									aes.toCharArray());
+									oo.getString("preview"),
+									newestMessageKey.toCharArray());
 
 							int count1 = 0;
 							if (oo.has("counter"))
 								count1 = oo.getInt("counter");
 
 							System.out.println("CH1:ab " + prev);
-							list2.add(new TalkItem(oo.getJSONObject("_id")
-									.getString("$id"), prev, oo
-									.getString("pplCount") + " People", aes,
-									count1, oo.getJSONObject("conversationId")
-											.getString("$id")));
-						}
+							list2.add(new TalkItem(oo.getJSONObject("messageData").getString("conversationId"), prev, String.valueOf(oo.getJSONObject("messageData").getJSONArray("receivers").length()) + " People", newestMessageKey,
+									count1, oo.getJSONObject("messageData").getString("conversationId")));
+						
+							
+							}
+							else
+							{
+								// key not found exec[ption
+							}
+						}	
 						System.out.println("SIZE OF L2: "+list2.size());
 						
 						
@@ -421,6 +481,7 @@ public class Talks extends Activity {
 
 					} catch (Exception ee) {
 						System.out.println("CHARME ERROR12341" + ee.toString());
+						ee.printStackTrace();
 					}
 				}
 			}.execute(new AsyncHTTPParams(object.toString()));
@@ -438,7 +499,7 @@ public class Talks extends Activity {
 				Intent intent = new Intent(getBaseContext(),
 						TalksMessages.class);
 				t.Count = 0; // Reset new messages counter
-				intent.putExtra("superId", t.ID);
+				intent.putExtra("conversationId", t.ID);
 				// intent.putExtra("aes", t.AES);
 				startActivity(intent);
 			}

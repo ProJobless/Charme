@@ -3,3 +3,22 @@ Activities:
 
 Bring to front in history stack:
 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+
+localhost connection:
+make wlan hotspot on device and provide notebook ip address as userid postfix (e.g username@192.168.43.31) 
+
+
+
+
+Standard request
+
+	JSONObject object = new JSONObject();
+
+
+	new AsyncHTTP() {
+				@Override
+				protected void onPostExecute(String result) {
+				
+				}
+				}.execute(new AsyncHTTPParams(object.toString()));

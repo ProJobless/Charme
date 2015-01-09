@@ -47,9 +47,7 @@ var view_profilepage = view_page.extend({
 					{
 						"id": "key_getMultipleFromDir", // To my server
 						"hashes": hashes
-					}
-
-				]
+					}]
 			}, function(d3) {
 
 

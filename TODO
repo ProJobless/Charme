@@ -1,8 +1,18 @@
+today:
+responsive search etc.
+   save image height
+
+documentation
+
+security:
+  sign fileId
+
+window.addEventListener("error", function(e) {
+before message all keys including own key is required to add!!!!!!!!!
+
 major bugs:
- svg animation
   stream updates not working
- pagination
- save image height
+ only add postitems if all decrypted!
 
 message refactoring:
 -1: save charme version in charme cache

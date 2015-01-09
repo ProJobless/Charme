@@ -89,11 +89,13 @@ The project is splitted into the following sub projects:
     apt-get install php5-gd
     ```
    
-  * Install gearman
+  * Install gearman and ZeroMq
     ```
     apt-get install gearman
     apt-get install gearman-job-server libgearman-dev
     pecl install gearman-1.0.3
+    apt-get install libzmq-dev
+    pecl install zmq-beta
     ```
   * Add gearman and mongodb to php.ini via:
 
@@ -261,6 +263,15 @@ Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin.
         <td>MIT</td>
         <td>jsclient/lib/qrcode.min.js</td>
     </tr>
+
+
+
+ <tr>
+        <td>AutobahnJS  Legacy (WAMP v1)</td>
+        <td>MIT</td>
+        <td>http://autobahn.ws/js/reference_wampv1.html</td>
+    </tr>
+
 
 
 

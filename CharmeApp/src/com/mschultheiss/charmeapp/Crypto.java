@@ -4,11 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.util.Base64;
+
 public class Crypto {
 	
 
 
-		public static String makeSha256(String text)
+		public static String makeSha256(String text, boolean useBase64)
 		{
 			MessageDigest md;
 			try {
@@ -16,8 +18,10 @@ public class Crypto {
 				md.update(text.getBytes("UTF-8"));
 				byte[] digest = md.digest();
 				 
-				return bytesToHex(digest);
-				
+				if (useBase64)
+				return Base64.encodeToString(digest, Base64.DEFAULT).trim(); // trim is important as otherwise new line is added
+				else
+					return bytesToHex(digest);
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

@@ -45,13 +45,14 @@ page_authenticated = Backbone.View.extend({
 			console.log("Cleared current view");
 		}
 		this.currentView = obj;
-		console.log("Set current view");
 
 		//this.hideNotificationsMenu();
 	},
 
 	hideNotificationsMenu: function() {
 		$('.actionBar a').removeClass("active");
+		$("#button_notifications").removeClass("highlight");
+
 		$('.actionCont').hide();
 
 		var obj = $('#button_notifications');
@@ -159,7 +160,6 @@ console.log("sidebar load=true");
 
 	initialize: function() {
 
-		console.log("el" + this.el);
 	},
 
 
@@ -286,13 +286,24 @@ console.log("sidebar load=true");
 
 	},
 
+	showSettings: function()
+	{
+		$.get("templates/box_settings.html", function(d) {
+			_.templateSettings.variable = "rc";
+			var template = _.template(d, {});
 
+			ui_showBox(template, function() {
+
+			});
+		});
+
+	},
 
 	render: function() {
 
 
 		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
-		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  href="javascript:logout()" style="background-position:-30px 0; " class="actionButton"></a></div> \
+		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  id="button_settings" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:67px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
@@ -307,7 +318,7 @@ console.log("sidebar load=true");
 		     </ul> \
 		        </div> \
 		        <div class="responsive header"> \
-		        	<div class="row1"><a class="active"  data-topic="stream" href="#stream"><i class="fa fa-list"></i></a><a   data-topic="profile"  href="#user/' + (charmeUser.userIdURL) + '"><i class="fa fa-user"></i></a><a href="#talks" data-topic="talks"><i class="fa fa-envelope-o"></i></a><a href="#lists" data-topic="lists" ><i class="fa fa-users"></i></a><a data-topic="find" href="#find"><i class="fa fa-search"></i></a><a href="#">0</a><a data-topic="settings" href="#settings"><i class="fa fa-cogs"></i></a></div> \
+		        	<div class="row1"><a class="active"  data-topic="stream" href="#stream"><i class="fa fa-list"></i></a><a   data-topic="profile"  href="#user/' + (charmeUser.userIdURL) + '"><i class="fa fa-user"></i></a><a href="#talks" data-topic="talks"><i class="fa fa-envelope-o"></i></a><a href="#lists" data-topic="lists" ><i class="fa fa-users"></i></a><a data-topic="find" href="#find"><i class="fa fa-search"></i></a><a data-topic="notifications" href="#notifications" style="position:relative;  font-size:14px; line-height:25px;">0</a><a data-topic="settings" href="#settings"><i class="fa fa-cogs"></i></a></div> \
 		       		<br style="clear:both"><div class="row2"><span><a id="barmenu" onclick="$(\'.sbBeta\').toggle()" style="float:right"><i class="fa fa-bars"></i></a></span><span id="responsiveTitle"></span></div><br style="clear:both"> \
 		        </div> \
 		        <div class="page_content"> \
@@ -377,7 +388,7 @@ console.log("sidebar load=true");
 
 		});
 
-
+		$("#button_settings").click(this.showSettings);
 
 		apl_update_apply(this.tempCountData);
 
@@ -400,7 +411,6 @@ page_login = Backbone.View.extend({
 
 
 	initialize: function() {
-		console.log("guest container render");
 	},
 
 

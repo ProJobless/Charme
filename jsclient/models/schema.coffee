@@ -89,6 +89,21 @@
 			{
 				id: 'fo_meal'
 				name: 'Meal'
+			},
+			{
+				id: 'fo_snack'
+				name: 'Sweets'
+	
+				sub: [
+					{
+						id: 'fo_snack_chocolate'
+						name: 'Chocolate'
+					}
+			
+
+				]
+
+
 			}
 		]
 
