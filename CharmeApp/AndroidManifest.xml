@@ -14,12 +14,10 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+    <!-- NEEDED FOR ONLINE CHECK -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- NEEDED FOR GOOGLE CLOUD MESSAGING: -->
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -30,11 +28,27 @@
 
     <uses-permission android:name="com.mschultheiss.charmeapp.gcm.permission.C2D_MESSAGE" />
 
+    <!-- NEEDED FOR PHOTO SENDING -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="DATABASE"
+            android:value="sugar_main.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="9" /> <!-- INCREMENT IF PROBLEMS OCCUR!! -->
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.mschultheiss.charmeapp.ORM" />
+.
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -53,8 +67,8 @@
 
         <activity
             android:name="com.mschultheiss.charmeapp.ActivityLogin"
-            android:noHistory="true"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,10 +93,11 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-           android:name="com.mschultheiss.charmeapp.ImageViewer"
+            android:name="com.mschultheiss.charmeapp.ImageViewer"
             android:label="@string/title_activity_image_viewer" >
         </activity>
-        <activity android:name="com.mschultheiss.charmeapp.AboutPage"
+        <activity
+            android:name="com.mschultheiss.charmeapp.AboutPage"
             android:label="@string/title_activity_about_page" >
         </activity>
     </application>

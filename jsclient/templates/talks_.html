@@ -6,7 +6,8 @@
 	<input type="hidden" name="col_to" value="">
 	<input type="hidden" name="col_type" value="instant">
 	<div class='box'>
-	<div id="inp_newmsginstant" class='smiliearea'  contenteditable="plaintext-only" style="width:100%; outline: 0; "></div>
+ <!-- contenteditable = plaintext only is just working in chrome, not in firefox :( -->
+	<div id="inp_newmsginstant" class='smiliearea'  contenteditable="true" style="width:100%; min-height:30px; overflow: auto; outline: 0; "></div>
 	</div>
 
 	<div style="margin-top:8px;">

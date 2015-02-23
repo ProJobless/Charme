@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Google Cloud Messageing Class -> Allows PUSH Notifications for Android Devices.
 */

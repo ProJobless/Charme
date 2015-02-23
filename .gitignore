@@ -8,6 +8,7 @@
 /server/mongodb.php
 /server/charme/config.php
 /server/charme/log.txt
+/server/charme/admin/log.txt
 /temp/*
 /old/*
 /doxygen/*

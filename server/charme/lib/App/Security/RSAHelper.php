@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  Taken from http://www.identityblog.com/?p=389
 */

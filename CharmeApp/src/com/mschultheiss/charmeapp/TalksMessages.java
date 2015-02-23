@@ -2,10 +2,15 @@ package com.mschultheiss.charmeapp;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.mschultheiss.charmeapp.ORM.CharmeMessage;
+import com.mschultheiss.charmeapp.ORM.CharmeRequest;
+import com.orm.SugarContext;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -50,6 +55,8 @@ public class TalksMessages extends Activity {
 	BroadcastReceiver receiver;
 	JSONArray messageKeys = new JSONArray();
 
+	int newestMessageKeyRevision = 0;
+
 	private JSONObject getMessageKeyByRevision(int revision) {
 
 		JSONObject newestKey = null; // Only used for revision = -1
@@ -57,11 +64,16 @@ public class TalksMessages extends Activity {
 
 		for (int j = 0; j < messageKeys.length(); j++) {
 			try {
+
 				JSONObject keyObj = messageKeys.getJSONObject(j);
+
+				if (keyObj.getInt("revision") >= newestMessageKeyRevision)
+					newestMessageKeyRevision = keyObj.getInt("revision");
+
 				if (revision != -1 && keyObj.getInt("revision") == revision) {
 					return keyObj;
 				} else if (revision == -1) {
-					if (keyObj.getInt("revision") > bestRevision) {
+					if (keyObj.getInt("revision") >= bestRevision) {
 						newestKey = keyObj;
 						bestRevision = keyObj.getInt("revision");
 					}
@@ -78,7 +90,37 @@ public class TalksMessages extends Activity {
 
 		return null;
 	}
+	
+	void doDBPopulate()
+	{
+		SugarContext.init(this);
+		List<CharmeMessage> cr2 = CharmeRequest.find(CharmeMessage.class, "conversationId = ?", String.valueOf(this.conversationId));
+		
+		for (int i = 0; i<cr2.size(); i++)
+		{
+			try{
+			CharmeMessage msg = cr2.get(i);
+			JSONObject messageJSON = new JSONObject(msg.messageJSON);
 
+			
+			JSONObject messageKey = getMessageKeyByRevision(messageJSON
+					.getJSONObject("object")
+					.getInt("msgKeyRevision"));
+
+			String newestMessageKey = getAesMessageKey(messageKey);
+			insertMessage(0, messageJSON, newestMessageKey);
+			}
+			catch(Exception ee)
+			{
+				ee.printStackTrace();
+			}
+		}
+		SugarContext.terminate();
+		
+		
+		
+	}
+	
 	void getMessageKeys() {
 		JSONObject object = new JSONObject();
 
@@ -111,7 +153,7 @@ public class TalksMessages extends Activity {
 
 				}
 			}
-		}.execute(new AsyncHTTPParams(object.toString()));
+		}.execute(new AsyncHTTPParams(object.toString(), this, ""));
 
 		/*
 		 * 
@@ -152,6 +194,7 @@ public class TalksMessages extends Activity {
 			return newestMessageKey;
 
 		} catch (Exception e) {
+			System.out.println("CHARME ERROR 32");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "";
@@ -164,14 +207,7 @@ public class TalksMessages extends Activity {
 		final TalksMessages that = this;
 		m_listview.setDivider(null);
 
-		Button buttonLogin = (Button) findViewById(R.id.button1);
-		buttonLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				sendAnswer();
-			}
-		});
+	
 
 		try {
 
@@ -312,7 +348,7 @@ public class TalksMessages extends Activity {
 
 					}
 				}
-			}.execute(new AsyncHTTPParams(object.toString()));
+			}.execute(new AsyncHTTPParams(object.toString(), this, "messages_get_sub"+that.conversationId+nextlimit+nextstart));
 		} catch (Exception ex) {
 			System.out.println("CHARME ERROR" + ex.toString());
 		}
@@ -376,6 +412,7 @@ public class TalksMessages extends Activity {
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(), "Internal error",
 						Toast.LENGTH_LONG).show();
+				e.printStackTrace();
 
 			}
 		}
@@ -421,6 +458,16 @@ public class TalksMessages extends Activity {
 		registerReceiver(receiver, filter);
 
 		this.getMessageKeys();
+		
+		Button buttonLogin = (Button) findViewById(R.id.button1);
+		buttonLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				sendAnswer();
+			}
+		});
+		
 	}
 
 	@Override
@@ -475,65 +522,143 @@ public class TalksMessages extends Activity {
 		// start server request here...
 
 		// Make Thumbnail
-		Bitmap bitmapThumb = null;
+
+		final int THUMBNAIL_SIZE = 100;
+
+		Bitmap imageBitmap = Bitmap.createBitmap(bitmap);
+
+		final Bitmap bitmapThumb = Bitmap.createScaledBitmap(imageBitmap,
+				THUMBNAIL_SIZE, THUMBNAIL_SIZE, false);
+
+		final TalksMessages that = this;
 
 		try {
 
-			final int THUMBNAIL_SIZE = 100;
+			/*
+			 * messageRaw = { "conversationId": that.options.conversationId,
+			 * "encFileHash": CryptoJS.SHA256(fileEnc), "msgKeyRevision":
+			 * msgKeyRevision, "sender": charmeUser.userId, // TODO: add
+			 * receiver "time": { sec: new Date().getTime() / 1000 }, };
+			 */
 
-			Bitmap imageBitmap = Bitmap.createBitmap(bitmap);
 
-			bitmapThumb = Bitmap.createScaledBitmap(imageBitmap,
-					THUMBNAIL_SIZE, THUMBNAIL_SIZE, false);
+		
 
-		} catch (Exception ex) {
+			//
+			// test start
+			//
 
-		}
+			String newestMessageKey = getTheNewestMessageKey();
 
-		try {
+			// Generate Object to sign
+			final JSONObject messageRaw = new JSONObject();
 
-			JSONObject object = new JSONObject();
-			JSONArray list = new JSONArray();
+			String fileBlob = gib.encrypt(mkBase64(bitmap),
+					getTheNewestMessageKey().toCharArray());
+			messageRaw.put("conversationId", this.conversationId);
+			messageRaw.put("encFileHash", Crypto.makeSha256(fileBlob, true));
+			messageRaw.put("time", "12345");
+			messageRaw.put("msgKeyRevision", newestMessageKeyRevision);
+			messageRaw.put("sender", ActivityLogin.global_userid);
 
-			JSONObject r1 = new JSONObject();
-			r1.put("encFileThumb", gib.encrypt(mkBase64(bitmapThumb),
-					getTheNewestMessageKey().toCharArray()));
-			r1.put("encFile", gib.encrypt(mkBase64(bitmap),
-					getTheNewestMessageKey().toCharArray()));
-			r1.put("conversationId", this.conversationId);
-			r1.put("id", "message_distribute_answer");
+			
 
-			list.put(r1);
 
-			object.put("requests", list);
+			
+			final RSAObj rsa = getRSAEncryptObject();
 
-			new AsyncHTTP() {
+
+			new AsyncCrypto() {
 				@Override
-				protected void onPostExecute(String result) {
+				protected void onPostExecute(String result2) {
 
 					try {
+					
 
-						JSONObject jo = new JSONObject(result);
+						JSONObject object = new JSONObject();
+						JSONArray list = new JSONArray();
+						
+						JSONObject r1 = new JSONObject();
+						r1.put("encFileThumb", gib.encrypt(mkBase64(bitmapThumb),
+								getTheNewestMessageKey().toCharArray()));
+						r1.put("encFile", gib.encrypt(mkBase64(bitmap),
+								getTheNewestMessageKey().toCharArray()));
+						r1.put("message", new JSONObject(result2));
+						r1.put("id", "message_distribute_answer");
+							
+						list.put(r1);
 
-						JSONArray arr = jo.getJSONObject("messages_get_sub")
-								.getJSONArray("messages");
+						object.put("requests", list);
+								 
+						
 
-						// /MessageItem mi = new MessageItem("You", "", 0, "");
+						// Async HTTP
+						new AsyncHTTP() {
+							@Override
+							protected void onPostExecute(String result) {
 
-						// mi.fileId = "";
+								try {
+									JSONObject jo = new JSONObject(result);
+									String myname = jo.getJSONObject(
+											"message_distribute_answer")
+											.getString("sendername");
 
-						// Insert message
-						// adapter.addItem(mi,
-						// adapter.getSize());
+									adapter.addItem(
+											new MessageItem(
+													"",
+													myname,
+													ActivityLogin.global_userid,
+													0, ""), adapter.getSize());
+
+									// must run in ui thread to maintain scroll
+									// position
+									TalksMessages.this
+											.runOnUiThread(new Runnable() {
+
+												@Override
+												public void run() {
+													// refresh list
+													adapter.refresh();
+
+													
+
+													Button btn = (Button) findViewById(R.id.button1);
+													btn.setEnabled(true);
+
+													// scroll down
+													m_listview
+															.setSelection(adapter
+																	.getSize() - 1); // scroll
+																						// to
+																						// bottom
+												}
+											});
+
+								} catch (Exception ex) {
+									System.out.println("CHARME ERROR2"
+											+ ex.toString());
+								}
+
+							}
+						}.execute(new AsyncHTTPParams(object.toString(), that, ""));
 
 					} catch (Exception ee) {
-						System.out.println("CHARME ERROR" + ee.toString());
-
 					}
+
 				}
-			}.execute(new AsyncHTTPParams(object.toString()));
+
+			}.execute(new AsyncCryptoArgs(rsa, messageRaw,
+					AsyncCryptoArgs.ACTION_SIGN));
+
+			//
+			// test end
+			//
+
+			
 		} catch (Exception ex) {
 			System.out.println("CHARME ERROR" + ex.toString());
+			ex.printStackTrace();
+			
 		}
 
 		/*
@@ -556,7 +681,7 @@ public class TalksMessages extends Activity {
 	MessageItem insertMessage(int insertpos, JSONObject oo,
 			final String messageAesKey) throws Exception {
 
-		if (oo.has("fileId") && oo.getInt("fileId") != 0) {
+		if (oo.has("fileId")) {
 			final MessageItem msgitem;
 
 			msgitem = new MessageItem("", oo.getString("sendername"), oo
@@ -568,7 +693,7 @@ public class TalksMessages extends Activity {
 			// if its an image, load the image!
 
 			JSONObject object = new JSONObject();
-			AsyncHTTPParams param = new AsyncHTTPParams(object.toString());
+			AsyncHTTPParams param = new AsyncHTTPParams(object.toString(), this, "");
 			param.Url = "http://192.168.43.31/charme/fs.php?enc=1&id="
 					+ oo.getString("fileId"); // The url of the image
 
@@ -596,7 +721,9 @@ public class TalksMessages extends Activity {
 						});
 
 					} catch (Exception ex) {
+
 						System.out.println("CHARME IMAGE" + ex.toString());
+						ex.printStackTrace();
 					}
 
 				}
@@ -674,7 +801,8 @@ public class TalksMessages extends Activity {
 			startActivityForResult(intent, CAMERA_REQUEST);
 
 			return true;
-
+		case R.id.action_refresh:
+			checkNewMessages();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -911,10 +1039,26 @@ public class TalksMessages extends Activity {
 
 	}
 
+	RSAObj getRSAEncryptObject() {
+		try{
+		JSONObject oo4 = ActivityLogin.findKey(0);
+		
+		JSONObject oo5 = oo4.getJSONObject("rsa").getJSONObject("rsa");
+
+		final RSAObj rsa = new RSAObj();
+		rsa.n = oo5.getString("n");
+		rsa.d = oo5.getString("d");
+		rsa.e = oo5.getString("e");
+		return rsa;
+		}
+		catch(Exception ee){ee.printStackTrace(); return null;}
+
+	}
+
 	void sendAnswer() {
-	
+
 		final TalksMessages that = this;
-		EditText mEdit = (EditText) findViewById(R.id.editText1);
+		final EditText mEdit = (EditText) findViewById(R.id.editText1);
 		final String realmessage = mEdit.getText().toString();
 		String shortmessage = StringFormatter.shorten(mEdit.getText()
 				.toString(), 127);
@@ -923,92 +1067,121 @@ public class TalksMessages extends Activity {
 			return;
 
 		try {
-			String newestMessageKey =getTheNewestMessageKey();
+			String newestMessageKey = getTheNewestMessageKey();
 
-			/*
-			 * messageRaw = { "conversationId": that.options.conversationId,
-			 * "content": messageEncrypted, "preview": messageEncryptedPreview,
-			 * "msgKeyRevision": msgKeyRevision, "sender": charmeUser.userId,
-			 * "time": { sec: new Date().getTime() / 1000 }, };
-			 * 
-			 * NProgress.start(); apl_request({ "requests": [{ "id":
-			 * "message_distribute_answer", "message":
-			 * CharmeModels.Signature.makeSignedJSON(messageRaw) }
-			 * 
-			 * ] },
-			 */
+			// Generate Object to sign
+			JSONObject messageRaw = new JSONObject();
+			messageRaw.put("conversationId", this.conversationId);
+			messageRaw.put("content",
+					gib.encrypt(realmessage, newestMessageKey.toCharArray()));
+			messageRaw.put("time", "12345");
+			messageRaw.put("preview",
+					gib.encrypt(shortmessage, newestMessageKey.toCharArray()));
+			messageRaw.put("msgKeyRevision", newestMessageKeyRevision);
+			messageRaw.put("sender", ActivityLogin.global_userid);
 
-			JSONObject object = new JSONObject();
-			JSONArray list = new JSONArray();
+	
 
-			GibberishAESCrypto gib = new GibberishAESCrypto();
+			final RSAObj rsa = getRSAEncryptObject();
 
-			String cryptoMessage = gib.encrypt(realmessage,
-					newestMessageKey.toCharArray());
-			String cryptoPreview = gib.encrypt(shortmessage,
-					newestMessageKey.toCharArray());
+			Button btn = (Button) findViewById(R.id.button1);
+			btn.setEnabled(false);
 
-			JSONObject r1 = new JSONObject();
-			r1.put("id", "message_distribute_answer");
-			r1.put("conversationId", this.conversationId);
-
-			r1.put("encMessage", cryptoMessage);
-			r1.put("messagePreview", cryptoPreview);
-
-			list.put(r1);
-
-			object.put("requests", list);
-
-			new AsyncHTTP() {
+			new AsyncCrypto() {
 				@Override
-				protected void onPostExecute(String result) {
+				protected void onPostExecute(String result2) {
 
-					System.out.println("RESULT IS:" + result);
 					try {
-						JSONObject jo = new JSONObject(result);
-						String myname = jo.getJSONObject(
-								"message_distribute_answer").getString(
-								"sendername");
+						// Sign and build object which will be send to server
+						JSONObject signedJSON = new JSONObject(result2);
+						JSONArray list = new JSONArray();
+						JSONObject r1 = new JSONObject();
+						r1.put("id", "message_distribute_answer");
+						r1.put("message", signedJSON);
+						list.put(r1);
+						final JSONObject object = new JSONObject();
+						object.put("requests", list);
 
-						adapter.addItem(new MessageItem(realmessage, myname,
-								ActivityLogin.global_userid, 0, ""), adapter
-								.getSize());
-
-						// must run in ui thread to maintain scroll position
-						TalksMessages.this.runOnUiThread(new Runnable() {
-
+						// Async HTTP
+						new AsyncHTTP() {
 							@Override
-							public void run() {
-								// refresh list
-								adapter.refresh();
-								// scroll down
-								m_listview.setSelection(adapter.getSize() - 1); // scroll
-																				// to
-																				// bottom
-							}
-						});
+							protected void onPostExecute(String result) {
 
-					} catch (Exception ex) {
-						System.out.println("CHARME ERROR2" + ex.toString());
+								try {
+									JSONObject jo = new JSONObject(result);
+									String myname = jo.getJSONObject(
+											"message_distribute_answer")
+											.getString("sendername");
+
+									adapter.addItem(
+											new MessageItem(
+													realmessage,
+													myname,
+													ActivityLogin.global_userid,
+													0, ""), adapter.getSize());
+
+									// must run in ui thread to maintain scroll
+									// position
+									TalksMessages.this
+											.runOnUiThread(new Runnable() {
+
+												@Override
+												public void run() {
+													// refresh list
+													adapter.refresh();
+
+													mEdit.setText("");
+
+													Button btn = (Button) findViewById(R.id.button1);
+													btn.setEnabled(true);
+
+													// scroll down
+													m_listview
+															.setSelection(adapter
+																	.getSize() - 1); // scroll
+																						// to
+																						// bottom
+												}
+											});
+
+								} catch (Exception ex) {
+									System.out.println("CHARME ERROR2"
+											+ ex.toString());
+								}
+
+							}
+						}.execute(new AsyncHTTPParams(object.toString(), that, ""));
+
+					} catch (Exception ee) {
 					}
 
 				}
-			}.execute(new AsyncHTTPParams(object.toString()));
+
+			}.execute(new AsyncCryptoArgs(rsa, messageRaw,
+					AsyncCryptoArgs.ACTION_SIGN));
+
+			// Async HTTP End
+
 		} catch (Exception ex) {
 			System.out.println("CHARME ERROR" + ex.toString());
+			ex.printStackTrace();
 		}
 
 	}
 
 	public void checkNewMessages() {
 		// Not workign at the moment
+
+		// TODO: Do key update if necessary
+		checkNewMessagesOld();
+
 	}
 
 	public void checkNewMessagesOld() {
 
-		// // Not working at the moment :(
-		// return;
+		// TODO: Do key update if necessary
 
+		System.out.println("STEP 1");
 		final TalksMessages that = this;
 		try {
 
@@ -1019,7 +1192,7 @@ public class TalksMessages extends Activity {
 			r1.put("id", "message_get_sub_updates");
 			r1.put("conversationId", this.conversationId);
 			System.out.println("lastid IST " + lastid);
-			r1.put("lastid", lastid);
+			r1.put("lastId", lastid);
 
 			list.put(r1);
 
@@ -1028,6 +1201,7 @@ public class TalksMessages extends Activity {
 			new AsyncHTTP() {
 				@Override
 				protected void onPostExecute(String result) {
+					System.out.println("STEP 2");
 
 					try {
 						JSONObject jo = new JSONObject(result);
@@ -1037,18 +1211,33 @@ public class TalksMessages extends Activity {
 								"messages");
 
 						for (int i = (arr.length() - 1); i >= 0; i--) {
-							// adapter.putMessage(-1, ));
-							try {
-								insertMessage(adapter.getSize(),
-										arr.getJSONObject(i),
-										"TODO: MESSAGEAESKEY");
 
-							} catch (Exception ee) {
-							}
+							JSONObject messageKey = getMessageKeyByRevision(arr
+									.getJSONObject(i).getJSONObject("message")
+									.getJSONObject("object")
+									.getInt("msgKeyRevision"));
+
+							String newestMessageKey = getAesMessageKey(messageKey);
+
+							insertMessage(adapter.getSize(),
+									arr.getJSONObject(i), newestMessageKey);
 
 							if (i == (arr.length() - 1))
 								lastid = arr.getJSONObject(i)
 										.getJSONObject("_id").getString("$id");
+
+							/*
+							 * // adapter.putMessage(-1, )); try {
+							 * insertMessage(adapter.getSize(),
+							 * arr.getJSONObject(i), "TODO: MESSAGEAESKEY");
+							 * 
+							 * } catch (Exception ee) { }
+							 * 
+							 * if (i == (arr.length() - 1)) lastid =
+							 * arr.getJSONObject(i)
+							 * .getJSONObject("_id").getString("$id");
+							 */
+
 						}
 
 						// must run in ui thread to maintain scroll position
@@ -1071,11 +1260,11 @@ public class TalksMessages extends Activity {
 						});
 
 					} catch (Exception ee) {
-
+						ee.printStackTrace();
 					}
 
 				}
-			}.execute(new AsyncHTTPParams(object.toString()));
+			}.execute(new AsyncHTTPParams(object.toString(), that, ""));
 		} catch (Exception ex) {
 			System.out.println("CHARME ERROR" + ex.toString());
 		}

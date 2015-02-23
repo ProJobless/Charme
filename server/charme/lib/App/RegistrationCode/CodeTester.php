@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * 	You can replace this class by you own class to enable Registration codes.
 */

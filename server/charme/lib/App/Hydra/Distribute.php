@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * 	Send Messages to Gearman Client
 */

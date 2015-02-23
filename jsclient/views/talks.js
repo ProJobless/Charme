@@ -345,14 +345,9 @@ var view_talks_subpage = view_subpage.extend({
 				// encrypt here
 
 				var msgKeyRevision = that.getMessageKey(-1).revision;
-
 				var thumbEnc = aes_encrypt(that.getMessageKey(-1).key, thumb);
 				var fileEnc = aes_encrypt(that.getMessageKey(-1).key, file);
-
-
 				var conversationId = ($('#msg_conversationId').data("val"));
-
-
 
 				messageRaw = {
 					"conversationId": that.options.conversationId,

@@ -46,7 +46,7 @@ public class ImageViewer extends Activity {
 		{
 		
 		JSONObject object = new JSONObject();
-		AsyncHTTPParams param = new AsyncHTTPParams(object.toString());
+		AsyncHTTPParams param = new AsyncHTTPParams(object.toString(), this, "");
 		param.Url = "http://192.168.43.31/charme/fs.php?enc=1&id="+fileId+"&type=original"; // The url of the image
 
 		new AsyncHTTP() {

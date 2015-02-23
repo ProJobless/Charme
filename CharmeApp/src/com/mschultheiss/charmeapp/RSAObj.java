@@ -2,8 +2,11 @@ package com.mschultheiss.charmeapp;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.PrivateKey;
-import java.security.Security;
+import java.security.Signature;
 import java.security.spec.RSAPrivateKeySpec;
 
 import javax.crypto.Cipher;
@@ -16,11 +19,99 @@ public class RSAObj {
 	public String e; // Public Exponent
 	public String p;
 	public String q;
-	
-	public JSONObject makeSignedJSON()
+	PrivateKey getPrivateKey()
 	{
+		try{
+		BigInteger modulus = new BigInteger(
+				n,
+				16);
+
+		KeyFactory factory2 = KeyFactory.getInstance("RSA");
+
+		// Private Exponent for private key!
+		BigInteger exponent2 = new BigInteger(
+				d,
+				16);
+
+		RSAPrivateKeySpec spec2 = new RSAPrivateKeySpec(modulus, exponent2);
 		
-		return null; // TODO!!!
+		return factory2.generatePrivate(spec2);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			return null;
+		}
+		
+	}
+	public Cipher getPrivateChipher()
+	{
+		try{
+			
+			PrivateKey privKey = getPrivateKey();
+			Cipher cipher2 = Cipher.getInstance("RSA/NONE/PKCS1Padding"); // , "BC"
+			cipher2.init(Cipher.DECRYPT_MODE, privKey);
+
+			return cipher2;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	public JSONObject makeSignedJSON(JSONObject json, int keyRevision)
+	{	
+		JSONObject returnOb = new JSONObject();
+		try
+		{
+			String jsonStr = json.toString();
+			returnOb.put("object", json);
+			
+			//{keyRevision: this.revision, hashvalue: this.hash }
+			JSONObject signatureObj = new JSONObject();
+			signatureObj.put("keyRevision", keyRevision );
+
+			// Generate new key
+			KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+			PrivateKey privateKey = getPrivateKey();
+
+			// Compute signature
+			Signature instance = Signature.getInstance("SHA1withRSA");
+			instance.initSign(privateKey);
+			instance.update((jsonStr).getBytes());
+			byte[] signature = instance.sign();
+
+			// Compute digest
+			MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+		
+			byte[] digest = sha1.digest((jsonStr).getBytes());
+
+			// Encrypt digest
+			Cipher cipher = Cipher.getInstance("RSA");
+			cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+			byte[] cipherText = cipher.doFinal(digest);
+
+			// Display results
+			System.out.println("Input data: " + jsonStr);
+			System.out.println("Digest: " + bytesToHex(digest));
+			System.out.println("Cipher text: " + bytesToHex(cipherText));
+			System.out.println("Signature: " + bytesToHex(signature));
+
+			signatureObj.put("hashvalue", bytesToHex(signature));
+			returnOb.put("signature", signature);
+			
+
+			System.out.println("signed is " +returnOb.toString());
+			
+			return returnOb;
+		}
+		catch(Exception ee){
+			
+			ee.printStackTrace();
+		}
+		return returnOb; // TODO!!!
 	}
 	public String decryptText(String chypText)
 	{
@@ -39,10 +130,9 @@ public class RSAObj {
 		RSAPrivateKeySpec spec2 = new RSAPrivateKeySpec(modulus, exponent2);
 		PrivateKey privKey = factory2.generatePrivate(spec2);
 
-		Cipher cipher2 = Cipher.getInstance("RSA/NONE/PKCS1Padding"); // , "BC"
+		Cipher cipher2 = getPrivateChipher();
 
-		System.out.print("CHYP TEXT: " + chypText); // IS HEX!!!!
-		cipher2.init(Cipher.DECRYPT_MODE, privKey);
+	
 
 		// Integer.parseInt(chypText, 16);
 
@@ -51,7 +141,6 @@ public class RSAObj {
 		// RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
 		}
 		catch(Exception ee){
-			System.out.println("CH1: cryptoerror"+ee.toString());
 			return "";
 		}
    

@@ -1,0 +1,153 @@
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20100525/pthreads.so' - /usr/lib/php5/20100525/pthreads.so: cannot open shared object file: No such file or directory in Unknown on line 0
+PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20100525/pthreads.so' - /usr/lib/php5/20100525/pthreads.so: cannot open shared object file: No such file or directory in Unknown on line 0
+onpen USER ID IStest456@charme.localonpen PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20100525/pthreads.so' - /usr/lib/php5/20100525/pthreads.so: cannot open shared object file: No such file or directory in Unknown on line 0
+PHP Notice:  Undefined offset: 1 in /var/www/Charme/server/charme/lib/App/Requests/JSON.php on line 47
+PHP Notice:  Undefined offset: 1 in /var/www/Charme/server/charme/lib/App/Requests/JSON.php on line 47
+[][]PHP Notice:  Undefined offset: 1 in /var/www/Charme/server/charme/lib/App/Requests/JSON.php on line 47
+PHP Notice:  Undefined offset: 1 in /var/www/Charme/server/charme/lib/App/Requests/JSON.php on line 47
+[]onpen USER ID IStest34@charme.localonpen 
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Fatal error:  Class 'ZMQContext' not found in /var/www/Charme/server/charme/vendor/react/zmq/src/React/ZMQ/Context.php on line 15
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+<?
+/*
+	Charme Hydra - Handles your distributed requests asynchronously
+
+	Notes: Please restart Apache Server when editing file
+
+	If Gearman Worker was not found: Check if gearman is loaded via php -m
+*/
+include("log.php");
+
+//
+// Warning: Do not start session (aka session_start()) here as session file gets locked otherwise...
+//
+
+require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+// Load Symfony Class Loader
+$loader = new UniversalClassLoader();
+$loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
+$loader->register();
+
+// Initialize Gearman
+$gmworker= new GearmanWorker();
+$gmworker->addServer("127.0.0.1", 4730 );
+$gmworker->addFunction("hunt_postman", "hunt_postman_fn");
+
+// Waiting for Job...
+while($gmworker->work())
+{
+  if ($gmworker->returnCode() != GEARMAN_SUCCESS)
+  {
+    echo "return_code: " . $gmworker->returnCode() . "\n";
+    break;
+  }
+}
+
+function hunt_postman_fn($job)
+{
+	clog("gearman Received hunt_postman command");
+	// Send items out
+
+	$col = \App\DB\Get::Collection();
+	$res2 = $col->outbox->find(); // TODO: order by priority
+
+	foreach ($res2 as $resItem)
+	{
+
+		$req21 = new \App\Requests\JSON(
+		$resItem["message"]["destination"],
+		$resItem["message"]["source"],
+		$resItem["message"]["payload"]
+		
+		);
+
+		// Remove from collection
+		$col->outbox->remove(array("_id"=> $resItem["_id"]));
+
+		$req21->send(true, $resItem["priority"], $resItem["tries"]);
+	}
+
+}
+
+
+?>PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Fatal error:  Class 'ZMQContext' not found in /var/www/Charme/server/charme/vendor/react/zmq/src/React/ZMQ/Context.php on line 15
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Fatal error:  Class 'ZMQContext' not found in /var/www/Charme/server/charme/vendor/react/zmq/src/React/ZMQ/Context.php on line 15
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+<?
+/*
+	Charme Hydra - Handles your distributed requests asynchronously
+
+	Notes: Please restart Apache Server when editing file
+
+	If Gearman Worker was not found: Check if gearman is loaded via php -m
+*/
+include("log.php");
+
+//
+// Warning: Do not start session (aka session_start()) here as session file gets locked otherwise...
+//
+
+require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+// Load Symfony Class Loader
+$loader = new UniversalClassLoader();
+$loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
+$loader->register();
+
+// Initialize Gearman
+$gmworker= new GearmanWorker();
+$gmworker->addServer("127.0.0.1", 4730 );
+$gmworker->addFunction("hunt_postman", "hunt_postman_fn");
+
+// Waiting for Job...
+while($gmworker->work())
+{
+  if ($gmworker->returnCode() != GEARMAN_SUCCESS)
+  {
+    echo "return_code: " . $gmworker->returnCode() . "\n";
+    break;
+  }
+}
+
+function hunt_postman_fn($job)
+{
+	clog("gearman Received hunt_postman command");
+	// Send items out
+
+	$col = \App\DB\Get::Collection();
+	$res2 = $col->outbox->find(); // TODO: order by priority
+
+	foreach ($res2 as $resItem)
+	{
+
+		$req21 = new \App\Requests\JSON(
+		$resItem["message"]["destination"],
+		$resItem["message"]["source"],
+		$resItem["message"]["payload"]
+		
+		);
+
+		// Remove from collection
+		$col->outbox->remove(array("_id"=> $resItem["_id"]));
+
+		$req21->send(true, $resItem["priority"], $resItem["tries"]);
+	}
+
+}
+
+
+?>PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen onpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.local

@@ -1,4 +1,5 @@
 <?
+die("Not ready.... Please use status.sh in this folder for administration");
 include_once("../config.php");
 include_once("../version.php");
 require_once '../lib/App/ClassLoader/UniversalClassLoader.php';

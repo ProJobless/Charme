@@ -1,8 +1,13 @@
 package com.mschultheiss.charmeapp;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.mschultheiss.charmeapp.ORM.CharmeRequest;
+import com.orm.SugarContext;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +24,16 @@ import android.widget.Toast;
 
 public class ActivityLogin extends Activity {
 
+	public void dbTest()
+	{
+		System.out.println("dbTEST");
+		sqLiteHelper db = new sqLiteHelper(this);
+		db.addMessage("testmessage", "conversationId", 1, "irgendwer");
+		
+		
+		
+	}
+
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +49,33 @@ public class ActivityLogin extends Activity {
     	if (!sharedPref.getString("user_rsaN", "").equals("")) // login already exist
     	{
     		
+    	
+    		
     		super.onCreate(savedInstanceState);
+    		
+    		
+    		
+    		
+    		dbTest();
+    	
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
     		// oKuPCeiB9STehwBguYyF, Passphrase can be empty here as we already own the keyring!
     		tryLogin(sharedPref.getString("user_id", ""),sharedPref.getString("user_passwordhash", ""),"KEYRINGALREADYEXISTS", true);
     		//StartLogin();
+    		
+    		
     	}
     	else
     	{
@@ -64,6 +102,10 @@ public class ActivityLogin extends Activity {
     	
     	
     	
+    
+		
+		
+    	
     }
     public static String global_userid = "";
     public void StartLogin()
@@ -85,8 +127,8 @@ public class ActivityLogin extends Activity {
     	
     	
     	String ring =  sharedPref.getString("user_keyring",  "");
-
-    	
+    	if (!global_rsakey.n.equals( ""))
+    	{
     	try
     	{
 		global_keyring = new JSONArray(ring); 
@@ -101,7 +143,14 @@ public class ActivityLogin extends Activity {
 		Intent intent = new Intent(getBaseContext(), Talks.class);
     	startActivity(intent);
       	finish();
-		
+    	}
+    	else
+    	{
+    		Toast.makeText(
+					getApplicationContext(),
+					"Unable to login. Please check your connection.",
+					Toast.LENGTH_SHORT).show();
+    	}
     	
     	
     }
@@ -157,7 +206,12 @@ public class ActivityLogin extends Activity {
     {
     	final ActivityLogin that = this;
   
-    
+    	
+    	if (!Tools.isOnline(this))
+    	{	
+    		StartLogin(); // try login if there is not internet connection
+    		return;
+    	}
     	
 		try 
 		{
@@ -190,6 +244,10 @@ public class ActivityLogin extends Activity {
 					
 					try{
 					
+						
+					System.out.println("result2  "+result2);
+						
+						
 					JSONObject jo2 = new JSONObject(result2);
 					String saltvalue = jo2.getJSONObject("reg_salt_get").getString("salt");
 					System.out.println("saltvalue 1: "+saltvalue+" saltvalue");
@@ -312,17 +370,19 @@ public class ActivityLogin extends Activity {
 					button.setEnabled(true);
 
 				}
-			}.execute(new AsyncHTTPParams(object.toString()));
+			}.execute(new AsyncHTTPParams(object.toString(), that, ""));
 			
 			}
 			catch(Exception ee){
 				
-				System.out.println("CHARME 1: EXECP 1");
+				System.out.println("CHARME ERROR 1: Not connected to server?");
 				ee.printStackTrace();
+				StartLogin();
+				
 			}
 			}
 			
-			}.execute(new AsyncHTTPParams(objectSalt.toString()));
+			}.execute(new AsyncHTTPParams(objectSalt.toString(), this, ""));
 			// com.mschultheiss.charme.HTTP.ConnectionTask.getJSON(object);
 	
 		} catch (Exception ef) {

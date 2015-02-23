@@ -1,0 +1,4 @@
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/hydra.php on line 24
+PHP Fatal error:  Class 'GearmanWorker' not found in /var/www/Charme/server/charme/hydra.php on line 24
+Could not open input file: ../bg_hydra.php

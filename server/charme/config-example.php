@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 	Charme Configuration File
 	Rename this sample file to config.php after you have edited the settings.

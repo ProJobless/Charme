@@ -225,6 +225,7 @@ containing a value of this type.
     public static final class id {
         public static final int EditTextPassword=0x7f05000a;
         public static final int TextView01=0x7f050009;
+        public static final int action_refresh=0x7f050016;
         public static final int action_settings=0x7f050014;
         public static final int action_takepic=0x7f050015;
         public static final int button1=0x7f05000b;

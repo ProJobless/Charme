@@ -9,3 +9,7 @@ TODO:
 * how to check that messagekey is the newest one?
 
 * encrypt username and userid of users in keydir with fastkey1
+
+
+## Security
+MongoDB: http://cispa.saarland/wp-content/uploads/2015/02/MongoDB_documentation.pdf

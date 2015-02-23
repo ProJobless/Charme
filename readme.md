@@ -4,7 +4,7 @@ Charme is a distributed and open source social network. In contrast to current s
 
 **Warning: This is for preview puposes only. This version is NOT stable and NOT secure yet. It will be released after it has been completed and peer reviewed. This will probably take some years.**
 
-The project is splitted into the following sub projects:
+The project is splitted into the following sub projects, most important directories are:
 
 
 
@@ -17,19 +17,13 @@ The project is splitted into the following sub projects:
 
    <tr>
         <td>/doc</td>
-        <td>Developer Documentation</td>
+        <td>Developer Documentation. See the Github Wiki also</td>
 
     </tr>
 
         <tr>
-        <td>/android</td>
+        <td>/CharmeApp</td>
         <td>Android App Files</td>
-
-    </tr>
-
-     <tr>
-        <td>/demo</td>
-        <td>Screenshots and promotion images.</td>
 
     </tr>
 
@@ -45,18 +39,7 @@ The project is splitted into the following sub projects:
 
     </tr>
 
-<tr>
-        <td>/graph</td>
-        <td>Visualisation tools</td>
 
-    </tr>
-
-    
-  <tr>
-        <td>/web (deprecated)</td>
-        <td>Files of the old version.</td>
-
-    </tr>
     
 </table>
 
@@ -70,8 +53,6 @@ The project is splitted into the following sub projects:
 ## Setup a server
 
 
-
-
   * Make sure PHP5 and apache2 is installed on your machine
   * Install pecl if not done yet
     ```
@@ -80,7 +61,10 @@ The project is splitted into the following sub projects:
     apt-get install php-pear
     apt-get install php5-curl
     ```
-  * Install mongoDB via `pecl install mongo` and
+
+    On Fedora install PECL with `yum install php` `yum install php-pear` and the PHP headers with `yum install php-devel`.
+
+  * Install mongoDB
     ```
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
     echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
@@ -88,6 +72,9 @@ The project is splitted into the following sub projects:
     apt-get install -y mongodb-org
     apt-get install php5-gd
     ```
+    Then run `pecl install mongo`.
+    If you use Fedora. see this page for instructions: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-red-hat-centos-or-fedora-linux/
+
    
   * Install gearman and ZeroMq
     ```
@@ -97,6 +84,8 @@ The project is splitted into the following sub projects:
     apt-get install libzmq-dev
     pecl install zmq-beta
     ```
+    Note that you need to have installed a C compiler like gcc for pecl. For fedora use `yum install zeromq-devel`, `yum install libgearman-devel` and `yum install gearman` , and `pecl install gearman` instead of apt-get.
+
   * Add gearman and mongodb to php.ini via:
 
     `nano /path/to/php.ini` To find the path run phpinfo(). Then add the lines
@@ -104,44 +93,54 @@ The project is splitted into the following sub projects:
     extension=mongo.so
     extension=curl.so
     extension = gearman.so
+    extension=zmq.so
     ```
     Also make sure `short_open_tag` is set to true in php.ini
 
    * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
-   * Protect yourserver.com/charme/admin with a .htaccess file in production use!
    * make sure `yourserver.com/charme/log.txt` is writeable
-   * Restart apache via `service apache2 restart`
-   * Start gearman server via `nohup php hydra.php &` in `yourserver.com/charme` directory. If you do not do this, your  server will crash when sending messages :)
-   * Always check /var/log/apache2/error.log when something is not working.
+   * Restart apache via `service apache2 restart` (or `service httpd restart` on fedroa)
+   * Start background services  in `yourserver.com/charme` directory via ./startbg.sh
+   * Always check /var/log/apache2/error.log when something is not working and google the error message.
+   * Protect yourserver.com/charme/admin with a .htaccess file in production use!
+   * IMPORTANT: You can check the status of the installation by running the script in `/charme/admin/status.sh`. IF something is not working, look here first. This does work on Debian only however. Make sure the admin directory files are only executable by an admin. Also set the php.ini path of your PHP CGI installation (find out via phpinfo(), do not use php --ini) in variables.sh. 
+## FAQ
+###Unable to connect to mongoDB
+```
+service httpd restart
+```
+or 
 
+```
+service apache2 restart
+```
+### How to check loaded PHP modules
+```
+phpinfo();
+```
 
+### Fedora: MongoDB permission denied
+```
+/usr/sbin/setsebool -P httpd_can_network_connect 1 
+service httpd restart
+```
+### Gearman
+    * When getting a `GearmanException` with message `Failed to set exception option`: Make sure gearmand is running. To check use `ps aux | grep gearmand`!
 
 ## Install a client
  * copy the files in the /client directory onto a (local) webserver and access via index.html
- * Please note that Firefox currently has some problems with the textbox for writing messages. Everything shoudl work fine in Chromium/Chrome however.
-
-## Crypto
-
-* We use a RSA/AES cryptosystem to encrypt messages and private data
-* The private key is stored on a server, encrypted with a 20 digit passphrase.
-* To validate public keys we will implement a Web-Of-Trust like key verification system, that checks if some/all friends of a user own the same public key of him in the background. You currently have to validate the public keys in the key manager in the client via Settings/Key Manager.
+ * Please note that Firefox currently has some problems with the textbox for writing messages. Everything should work fine in Chromium/Chrome however.
 
 ## How to Contribute?
 
-* Write Code, generate Documentation, check Crypto Concepts
+* Write code, write documentation, check security
 * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
 * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
-
-You can develop modules that do not require much knowledge about the main infrastructure. Such include.
-* An admin interface
-* A map selector
-* Find semantic information: Identify often used 
-for example. Create a issue if you are interested in :)
 
 ## License
 Charme is a distributed social network with end-to-end encryption
 
-Copyright (C) 2014 Manuel Schultheiß
+Copyright (C) 2015 Manuel Schultheiß
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -156,11 +155,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
-
-## Recommended IDE
-Sublime Text 3 with https://github.com/jdc0589/JsFormat plugin.
 
 ## Libraries
 

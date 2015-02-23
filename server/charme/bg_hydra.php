@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 	Charme Hydra - Handles your distributed requests asynchronously
 

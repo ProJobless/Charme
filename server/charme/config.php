@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 	Charme Configuration File
 */

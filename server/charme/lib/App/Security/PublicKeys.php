@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * 	What DB and collection do we use?
 * 	Class directly returns a collection

@@ -27,15 +27,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.mschultheiss.charmeapp.TalksMessages.MessageItem;
+import com.mschultheiss.charmeapp.ORM.CharmeRequest;
+import com.orm.SugarContext;
 
 public class Talks extends Activity {
 
@@ -192,7 +193,7 @@ public class Talks extends Activity {
 
 				}
 
-			}.execute(new AsyncHTTPParams(object.toString()));
+			}.execute(new AsyncHTTPParams(object.toString(), this, ""));
 		} catch (Exception ex) {
 			System.out.println("CHARME1234 ERROR" + ex.toString());
 		}
@@ -320,9 +321,29 @@ public class Talks extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_talks);
 		
+		
+		
+	/*	SugarContext.init(this);
+		
+		// todo delete old items before inserting new ones!
+	
+		// Save result to db if cacheable
+		CharmeRequest cr = new CharmeRequest("debug", "lorem ipsum");
+		cr.save();
+	
+		
+		List<CharmeRequest> cr2 = CharmeRequest.find(CharmeRequest.class, "thekey = 'debug'");
+		
+		System.out.println("321: "+cr2.get(0).data);
+		SugarContext.terminate();
+		*/
+		
+		
+		
 		list2 =  new ArrayList<TalkItem>();
 		
-
+	
+		
 		context = getApplicationContext();
 
 		if (checkPlayServices()) {
@@ -336,6 +357,9 @@ public class Talks extends Activity {
 		}
 		
 		updateMessages();
+		
+	
+		
 
 	}
 
@@ -343,7 +367,7 @@ public class Talks extends Activity {
 		
 		list2 =  new ArrayList<TalkItem>();
 		final ListView listview = (ListView) findViewById(R.id.listView1);
-
+		final String cacheId = "messages_get";
 		final Talks that = this;
 
 		try {
@@ -367,6 +391,16 @@ public class Talks extends Activity {
 
 					// Problem: not logged in!
 					System.out.println("CH1: RESULT IS " + result.toString());
+					
+					
+					if ( result.toString().equals(""))
+					Toast.makeText(
+							getApplicationContext(),
+							"No Internet connection...",
+							Toast.LENGTH_SHORT).show();
+					
+					
+					
 					try {
 						JSONObject jo = new JSONObject(result);
 						GibberishAESCrypto gib = new GibberishAESCrypto();
@@ -404,7 +438,7 @@ public class Talks extends Activity {
 									}
 								}
 							}
-							
+
 							if (bestKeyObj != null)
 							{
 						
@@ -445,10 +479,14 @@ public class Talks extends Activity {
 						
 							// With having the message key, we can decrypt the preview text now
 							//System.out.println("CH1:cid "+oo.getJSONObject("conversationId"));
-							String prev = gib.decrypt(
+							String prev =  "";
+							try
+							{
+							prev = gib.decrypt(
 									oo.getString("preview"),
 									newestMessageKey.toCharArray());
-
+							}
+							catch(Exception ex){}
 							int count1 = 0;
 							if (oo.has("counter"))
 								count1 = oo.getInt("counter");
@@ -484,7 +522,7 @@ public class Talks extends Activity {
 						ee.printStackTrace();
 					}
 				}
-			}.execute(new AsyncHTTPParams(object.toString()));
+			}.execute(new AsyncHTTPParams(object.toString(), this, cacheId));
 		} catch (Exception ex) {
 			System.out.println("CHARME ERROR3211 " + ex.toString());
 		}

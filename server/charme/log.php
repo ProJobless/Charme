@@ -1,7 +1,7 @@
-<?
+<?php
 function clog($str)
 {
-	$fd = fopen("log.txt", "a");
+	$fd = fopen("./log.txt", "a");
 	fwrite($fd, $str."\r\n");
 	fclose($fd);
 }

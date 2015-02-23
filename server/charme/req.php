@@ -1,15 +1,16 @@
 <?php
 /**
  * req.php
- * Parses incoming client requests
+ * Parses incoming client requests.
+ * Accepts and returns JSON data consiting of an id attribute which is further processed via switch case.
  *
  * @author mschultheiss
  */
+
 $CHARME_VERSION = 1;
 
-
 header('Cache-Control: no-cache, must-revalidate');
-header('Expires: Mon, 12 Mar 1992 05:00:00 GMT');
+header('Expires: Mon, 12 Mar 1992 05:12:00 GMT');
 
 include_once("config.php");
 include_once("log.php");
@@ -18,38 +19,20 @@ error_reporting(E_ALL);
 // Do not display erros in PHP File, check /var/log/apache2/error.log for errors
 ini_set('display_errors', 'Off');
 
-//header('Content-type: application/json'); // Disabled, because of jquery post
-
-// CORS Headers and stuff
-/*header('Access-Control-Allow-Origin: '.$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]);
-header('Access-Control-Allow-Origin: http://client.local');
-header('Access-Control-Allow-Origin: http://mschultheiss.com');*/
-
-
+// Allow Origin is not set to allow all as otherwise every website on the world wide web could
+// query private session information for tracking by sending a request to your server.
+// Later on it could be changed in a way, so that the user can provide trusted client urls in his profile settings.
 if (in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
 header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
-
 
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie sending
 
-session_start(); // Start session
+session_start(); // Start PHP session
 
-/*
-	We are using Symphonys class loader here, see
-	http://symfony.com/doc/2.0/components/class_loader.html
-	for more information
-
-	Resources:
-	http://stackoverflow.com/questions/10371073/symfony-class-loader-usage-no-examples-of-actual-usage
-
-	Performance:
-	http://www.zalas.eu/autoloading-classes-in-any-php-project-with-symfony2-classloader-component
-*/
-
-require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
+require_once 'lib/App/ClassLoader/UniversalClassLoader.php'; // We are using Symphonys class loader here
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
@@ -57,31 +40,25 @@ $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
 
 if (isset($_POST["d"]))
-	$data = (json_decode($_POST["d"], true));
+	$data = (json_decode($_POST["d"], true)); // Parse JSON to array
 else
 	$data = array();
 
-
-$returnArray = array();
-
-
-
+$returnArray = array(); // This array will contain the returned data
 
 // Requests is not a list
 foreach ($data["requests"] as $item)
 {
-	
+	clog2($item);
 	$action = $item["id"];
-	// This array contains a list of request, that can be executed without a session Id
+	// This array contains a list of requests Ids, that can be executed without a session Id
 	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive", 
 	 "key_update_notification", "post_delete_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getinfo", "edgekey_request",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
-				
 				break; // echo error
 	}
-
-
-	switch ($action) 
+	
+	switch ($action)  // Here the different operations are processed
 	{
 		case "simpleStore" :
 			$col = \App\DB\Get::Collection(); 
@@ -234,7 +211,7 @@ foreach ($data["requests"] as $item)
 			if (isset($item["start"]) && $item["start"] != "-1")
 				$startSet = true;
 
-			// TODO: Do not return at pagination??
+		
 			$col = \App\DB\Get::Collection();
 		
 
@@ -1013,7 +990,11 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 							"messageData.usernames" =>  $item["messageData"]["usernames"],
 							)));
 
-					$messageInsertion = array("message" => $item["messageData"]["message"], "owner" => $item["key"]["userId"], "sendername" => $item["messageData"]["sendername"], "fileId" => $item["fileId"]);
+					$messageInsertion = array("message" => $item["messageData"]["message"], "owner" => $item["key"]["userId"], "sendername" => $item["messageData"]["sendername"]);
+
+					if ($item["fileId"] != 0)
+						$messageInsertion["fileId"] = $item["fileId"];
+
 					$col->messages->insert($messageInsertion);
 
 
@@ -1038,7 +1019,14 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				$messageInsertion  = array();
 				// This is currently only calledo once per server, localreceivers is incomplete!
 				foreach ($item["localreceivers"] as $receiver) {
-						$messageInsertion =array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"], "fileId" => $item["fileId"]);
+
+
+						$messageInsertion =array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"]);
+
+							if ($item["fileId"] != 0)
+						$messageInsertion["fileId"] = $item["fileId"];
+
+					
 						$col->messages->insert($messageInsertion);
 					 
 				}
@@ -3463,24 +3451,13 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 	}
 }
 
-// This file accepts requests from clients or other servers.
-
-
-//scheme: category.action, like: account.passwordchange
-
-// account: signup, login, passwordchange, passwordnew
-
-
-// stream: getPosts(Timestamp, max count), post
 echo json_encode($returnArray);
-
-
 
 /*
 	You just found a train:
-   _______                _______      <>_<>      
-   (_______) |_|_|_|_|_|_|| [] [] | .---|'"`|---.  
-  `-oo---oo-'`-oo-----oo-'`-o---o-'`o"O-OO-OO-O"o' 
+    _______                _______     <>_<>      
+   (_______) |_|_|______| |[] [ ]| .---|'"`|---.  
+  `-oo---oo-'`-o---ooo-'`-o---o-'`o"O-OO-OO-O"o' 
 */
 
 ?>
