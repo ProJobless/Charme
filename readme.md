@@ -104,8 +104,11 @@ The project is splitted into the following sub projects, most important director
    * Always check /var/log/apache2/error.log when something is not working and google the error message.
    * Protect yourserver.com/charme/admin with a .htaccess file in production use!
    * IMPORTANT: You can check the status of the installation by running the script in `/charme/admin/status.sh`. IF something is not working, look here first. This does work on Debian only however. Make sure the admin directory files are only executable by an admin. Also set the php.ini path of your PHP CGI installation (find out via phpinfo(), do not use php --ini) in variables.sh. 
+
 ## FAQ
+
 ###Unable to connect to mongoDB
+
 ```
 service httpd restart
 ```
@@ -114,7 +117,9 @@ or
 ```
 service apache2 restart
 ```
+
 ### How to check loaded PHP modules
+
 ```
 phpinfo();
 ```
