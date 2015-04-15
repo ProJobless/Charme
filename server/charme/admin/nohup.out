@@ -150,4 +150,71 @@ function hunt_postman_fn($job)
 
 
 ?>PHP Warning:  Module 'curl' already loaded in Unknown on line 0
-onpen onpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.local
+onpen onpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Fatal error:  Uncaught exception 'GearmanException' with message 'Failed to set exception option' in /var/www/Charme/server/charme/bg_hydra.php:25
+Stack trace:
+#0 /var/www/Charme/server/charme/bg_hydra.php(25): GearmanWorker->addServer('127.0.0.1', 4730)
+#1 {main}
+  thrown in /var/www/Charme/server/charme/bg_hydra.php on line 25
+onpen USER ID ISms@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Fatal error:  Uncaught exception 'GearmanException' with message 'Failed to set exception option' in /var/www/Charme/server/charme/bg_hydra.php:25
+Stack trace:
+#0 /var/www/Charme/server/charme/bg_hydra.php(25): GearmanWorker->addServer('127.0.0.1', 4730)
+#1 {main}
+  thrown in /var/www/Charme/server/charme/bg_hydra.php on line 25
+onpen USER ID ISms@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+onpen USER ID ISms@charme.localonpen USER ID ISms@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen USER ID ISms@charme.localonpen USER ID ISms@charme.local[]onpen USER ID ISms@charme.localonpen USER ID ISms@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+onpen onpen onpen onpen onpen onpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen onpen onpen onpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.local[][][][]onpen [][][]onpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.localonpen onpen USER ID ISms3@charme.local[][]onpen USER ID ISms3@charme.local[][][][]onpen USER ID ISms3@charme.local[][][][]onpen USER ID ISms2@charme.local[][]onpen USER ID ISms3@charme.local[][]onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen onpen USER ID ISms2@charme.local[]onpen USER ID ISms2@charme.local[][][][]onpen USER ID ISms2@charme.localonpen USER ID ISms2@charme.local[][][][][][]onpen USER ID ISms2@charme.local[][][][][][][][][]onpen USER ID ISms2@charme.local[]onpen onpen USER ID ISms3@charme.local[][][][]onpen USER ID ISms3@charme.local[][][][][][][][][][][][][][][][][][][][][][]onpen onpen USER ID ISms3@charme.local[]PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen onpen USER ID ISms3@charme.local[][]onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.local[][]onpen USER ID ISms3@charme.local[]onpen USER ID ISms3@charme.local[][]onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.local[][][][][][][][][][][][][][][][][][][][][][][][][][][]onpen [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localSENT IT OUT!!onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.local[][][][]SENT IT OUT!!SENT IT OUT!![]SENT IT OUT!![]SENT IT OUT!![][][][][][][][][]SENT IT OUT!![][][][][][][][][][][][][]SENT IT OUT!![]SENT IT OUT!![]PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Unterminated comment starting line 40 in /var/www/Charme/server/charme/bg_events.php on line 40
+PHP Parse error:  syntax error, unexpected end of file in /var/www/Charme/server/charme/bg_events.php on line 110
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Unterminated comment starting line 40 in /var/www/Charme/server/charme/bg_events.php on line 40
+PHP Parse error:  syntax error, unexpected end of file in /var/www/Charme/server/charme/bg_events.php on line 110
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Unterminated comment starting line 40 in /var/www/Charme/server/charme/bg_events.php on line 40
+PHP Parse error:  syntax error, unexpected end of file in /var/www/Charme/server/charme/bg_events.php on line 110
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Unterminated comment starting line 40 in /var/www/Charme/server/charme/bg_events.php on line 40
+PHP Parse error:  syntax error, unexpected end of file in /var/www/Charme/server/charme/bg_events.php on line 110
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Unterminated comment starting line 40 in /var/www/Charme/server/charme/bg_events.php on line 40
+PHP Parse error:  syntax error, unexpected end of file in /var/www/Charme/server/charme/bg_events.php on line 110
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen [][][]onpen USER ID ISms3@charme.local[][][][][][][][][][]onpen USER ID ISms3@charme.local[]onpen onpen [][][][]onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen [][]onpen USER ID ISms3@charme.local[][]onpen USER ID ISms3@charme.local[]onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.local[]SENT IT OUT!!SENT IT OUT!!SENT IT OUT!!onpen USER ID ISms3@charme.localonpen onpen USER ID ISms3@charme.localonpen USER ID ISms3@charme.localPHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen onpen PHP Warning:  GearmanWorker::work(): flush(GEARMAN_COULD_NOT_CONNECT) Connection to 127.0.0.1:4730 failed -> libgearman/connection.cc:712: pid(28772) in /var/www/Charme/server/charme/bg_hydra.php on line 29
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen onpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.localonpen USER ID ISms@charme.local

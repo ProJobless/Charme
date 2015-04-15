@@ -22,7 +22,7 @@ ini_set('display_errors', 'Off');
 // Allow Origin is not set to allow all as otherwise every website on the world wide web could
 // query private session information for tracking by sending a request to your server.
 // Later on it could be changed in a way, so that the user can provide trusted client urls in his profile settings.
-if (in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
+if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
 header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
@@ -31,9 +31,12 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true'); // Needed for CORS Cookie sending
 
 session_start(); // Start PHP session
-
 require_once 'lib/App/ClassLoader/UniversalClassLoader.php'; // We are using Symphonys class loader here
 use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+clog("SESSION USER IS ".$_SESSION["charme_userid"]." and id is ".session_id());
+clog2($data["requests"] );
+
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
@@ -46,6 +49,7 @@ else
 
 $returnArray = array(); // This array will contain the returned data
 
+
 // Requests is not a list
 foreach ($data["requests"] as $item)
 {
@@ -55,6 +59,8 @@ foreach ($data["requests"] as $item)
 	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive", 
 	 "key_update_notification", "post_delete_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getinfo", "edgekey_request",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
+
+			clog("THIS WAS ERROR 1 WITH SESSIOn ".session_id()." and user".$_SESSION["charme_userid"]);
 				break; // echo error
 	}
 	
@@ -119,7 +125,7 @@ foreach ($data["requests"] as $item)
 		case "reg_salt_get":
 
 		
-
+			clog("request salt for userid ".$item["userid"]);
 			$col = \App\DB\Get::Collection();
 		//	$salt = $CHARME_SETTINGS["passwordSalt"];
 		//	$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
@@ -249,47 +255,89 @@ foreach ($data["requests"] as $item)
 
 			$msgCount = 10;
 
-
-if (isset($item["onlyFiles"]) &&
-				$item["onlyFiles"] == true)
-{
-$sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$exists' => true));
-	$msgCount = 30; // Return 30 Images only
-  }			else
-			$sel = array("message.object.conversationId" =>  ($res["messageData"]["conversationId"]));
-
-
-
-			if ($startSet )
-				$start = $item["start"];
-			else
+			if (isset($item["beforeMessageId"]))
 			{
-				// Also return total message Count!
-				$count = $col->messages->count($sel);
-				$start =$count -$msgCount;
+		
+
+				if ($item["beforeMessageId"] == "NO_MESSAGES_LOCALLY")
+				{
+					$sel = array("message.object.conversationId" =>  ($item["conversationId"]));
+				}
+				else		
+					$sel = array("message.object.conversationId" =>  ($item["conversationId"]),  "_id" => array('$lt' => new MongoId($item["beforeMessageId"])));
 
 			}
+			else if (isset($item["onlyFiles"]) &&	$item["onlyFiles"] == true)
+			{
+				$sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$exists' => true));
+				$msgCount = 30; // Return 30 Images only
+			}
+			else
+				$sel = array("message.object.conversationId" =>  ($res["messageData"]["conversationId"]));
 
 
-			if ($start <0)
-				$start = 0;
+			$messageKeys23  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
+			
 
 			if ($item["limit"] > 0)
 				$limit = $item["limit"];
 			else
 				$limit = $msgCount;
 
-			
-			$messageKeys23  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
-			
-			$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" => 
-			iterator_to_array(
-				$col->messages->find($sel)
-				->sort(array("time" => 1))
-				->skip($start)->limit($limit)
+			if (isset($item["beforeMessageId"])) // Get all messages before a message given a messageId of this message
+			{
 				
-			, false), "count" => $count, "revision" =>  $res["revision"], "usernames" =>  $res["messageData"]["usernames"], "receivers" => ($res["messageData"]["receivers"]), "conversationId" => $item["conversationId"]);
+				if ($item["beforeMessageId"] == "NO_MESSAGES_LOCALLY")
+				{
+				
+				$count = $col->messages->count($sel);
+				$query = array_reverse(iterator_to_array(
+					$col->messages->find($sel)
+					->sort(array("message.object.time" => -1))->limit($limit), false));   //->skip($count-$limit)
+				}
+				else
+				{
+					$query = array_reverse(iterator_to_array(
+					$col->messages->find($sel)
+					->sort(array("message.object.time" => -1))
+					->limit($limit),false));
+				}
+				$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" => 
+				
+					$query
+				, "count" => $count, "revision" =>  $res["revision"], "usernames" =>  $res["messageData"]["usernames"], "receivers" => ($res["messageData"]["receivers"]), "conversationId" => $item["conversationId"]);
 			
+				clog2("returned messages num: ".Count($returnArray[$action]));
+			}
+			else  // Get messages by index
+			{
+				if ($startSet )
+					$start = $item["start"];
+				else
+				{
+					// Also return total message Count!
+					$count = $col->messages->count($sel);
+					$start =$count -$msgCount;
+				}
+
+				if ($start <0)
+					$start = 0;
+
+				
+				$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" => 
+				iterator_to_array(
+					$col->messages->find($sel)
+					->sort(array("message.object.time" => 1))
+					->skip($start)->limit($limit)
+					
+				, false), "count" => $count, "revision" =>  $res["revision"], "usernames" =>  $res["messageData"]["usernames"], "receivers" => ($res["messageData"]["receivers"]), "conversationId" => $item["conversationId"]);
+				
+
+
+
+			}
+
+		
 			
 
 		break;
@@ -848,21 +896,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				// Notify Android Devices via Google Cloud Messaging (GCM)
 			
 
-				
-				// TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
-				/*$gcmpeople = $item["localreceivers"];
-				$bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
-				$deviceIds = array();
-				foreach ($bucketCol as $citem)
-				{	
-					$deviceIds[] = $citem["regId"];
-				}
 			
-				$gcmcontent = array("messageEnc" => "", "conversationId" => $item["conversationId"], "sendername" => $item["sendername"]);
-
-				if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
-				(\App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent)));
-				}
 
 			} // End foreach of receivers
 
@@ -1021,6 +1055,9 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				foreach ($item["localreceivers"] as $receiver) {
 
 
+
+
+
 						$messageInsertion =array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"]);
 
 							if ($item["fileId"] != 0)
@@ -1030,6 +1067,25 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 						$col->messages->insert($messageInsertion);
 					 
 				}
+
+
+				   // TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
+                $gcmpeople = $item["localreceivers"];
+                $bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
+                $deviceIds = array();
+                foreach ($bucketCol as $citem)
+                {   
+                    $deviceIds[] = $citem["regId"];
+                }
+            
+                $gcmcontent = array("messageEnc" =>  $item["message"]["object"]["content"], "conversationId" => $item["message"]["object"]["conversationId"], "sendername" => $item["sendername"]);
+
+               // if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
+              	{
+                	\App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
+                }
+
+
 
 
 
@@ -1044,7 +1100,6 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 						$socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
 						$socket->connect("tcp://localhost:5555");
 						$socket->send(json_encode(array("message" => $item["message"], "owner" => $group["owner"], "sendername" => $item["sendername"], "_id" => $messageInsertion["_id"], "fileId" => $item["fileId"])));
-						
 
 					} 
 				}
@@ -1268,6 +1323,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 		case "user_login":
 			// Get certificate
 
+			$sessionIdOfUser = "";
 			global $CHARME_SETTINGS;
 			global $CHARME_VERSION;
 
@@ -1278,16 +1334,15 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 			if (!isset($CHARME_SETTINGS["passwordSalt"]))
 				die("CHARME_SETTINGS NOT INCLUDED");
 
-			//$p2 =hash('sha256', $CHARME_SETTINGS["passwordSalt"].$p1);
-
+	
 			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p1), array('userid', "rsa", "keyring"));
 			clog($cursor["userid"]."///");
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
 				
 				$_SESSION["charme_userid"] = $cursor["userid"];
-
-
+				clog("SET SESSION USER ID COMPLETE: ".$cursor["userid"]);
+				$sessionIdOfUser = session_id();
 				//echo $_SESSION["charme_userid"] ;
 			
 				$stat = "PASS";
@@ -1297,7 +1352,7 @@ $sel = array("conversationId" =>  ($res["conversationId"]), "fileId" => array('$
 				$stat = "FAIL";
 
 		}
-			$returnArray[$action] =   (array("status" => $stat, "CHARME_VERSION" => $CHARME_VERSION, "ret"=>$cursor, "gcmprojectid" => $CHARME_SETTINGS["GCM_PROJECTID"]));
+			$returnArray[$action] =   (array("status" => $stat, "sessionId" => $sessionIdOfUser, "CHARME_VERSION" => $CHARME_VERSION, "ret"=>$cursor, "gcmprojectid" => $CHARME_SETTINGS["GCM_PROJECTID"]));
 
 		break;
 
@@ -3457,7 +3512,7 @@ echo json_encode($returnArray);
 	You just found a train:
     _______                _______     <>_<>      
    (_______) |_|_|______| |[] [ ]| .---|'"`|---.  
-  `-oo---oo-'`-o---ooo-'`-o---o-'`o"O-OO-OO-O"o' 
+  `-oo---oo-'`-o---ooo-'`-o---o-'` \o=oo=oo==o=/ 
 */
 
 ?>

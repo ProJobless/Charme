@@ -34,6 +34,9 @@ var AppRouter = Backbone.Router.extend({
         "settings": "getSettings",
         "talks/:id": "getTalks",
         "talks": "getTalks",
+      //  "rooms/:id": "getRooms",
+       // "rooms": "getRooms",
+
         "lists": "getLists",
         "lists/:id": "getLists",
         "welcome": "getWelcome",
@@ -831,7 +834,7 @@ function login() {
 
 
         } else
-            alert("Wrong mail or password.");
+            alert("Wrong Charme UserId or password.");
 
         /*
          *  ON SUCCESS

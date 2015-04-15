@@ -935,7 +935,6 @@ var view_talks_subpage = view_subpage.extend({
 								sec: new Date().getTime() / 1000
 							},
 						};
-
 						NProgress.start();
 						apl_request({
 							"requests": [{

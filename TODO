@@ -4,6 +4,10 @@ responsive search etc.
 
 documentation
 
+- multiple editors per collection
+  -> STEP 1 edit field in properties
+  -> step 2 inform new editors if they were elected editor
+  -> step 3: author sends new posts to collection owner server who then distributes it
 security:
   sign fileId
 

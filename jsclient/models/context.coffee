@@ -95,7 +95,6 @@ class CharmeModels.Context
 	@getForm: (fieldId) ->
 	# the event handlers are set in page_modules.js, function addContext
 		html = ""
-		console.log(charme_schema.global["move"])
 
 		for k,v of charme_schema.global[fieldId].attributes
 			html += "<div style='padding:8px 0px; font-weight:bold;'>"+v["name"]+"</div>"

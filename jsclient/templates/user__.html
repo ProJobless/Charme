@@ -17,18 +17,23 @@
 					<div style="padding:6px;" id='select_lists'>
 
 
+ <% if  (typeof(item2) != 'undefined') { %>
+
+						<a  class="hotCheckbox active"><%- item2.name %></a>
+
+
 						 <% _.each( rc.userlists, function(item2){ %>
 
 						 <% if (item2.isActive) { %>
-						<a id='but_test' class="hotCheckbox active" data-listid="<%- item2.id %>"><%- item2.name %></a><br>
+						<a  class="hotCheckbox active" data-listid="<%- item2.id %>"><%- item2.name %></a><br>
 						<% } %>
 
 						 <% if (!item2.isActive) { %>
-						<a id='but_test' class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
+						<a class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
 						<% } %>
 
 						  <% }); %>
-
+<% } %>
 					</div>
 
 				</div>

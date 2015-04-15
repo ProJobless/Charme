@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CharmeAppGradle.iml" filepath="$PROJECT_DIR$/CharmeAppGradle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/charmeApp/charmeApp.iml" filepath="$PROJECT_DIR$/charmeApp/charmeApp.iml" />
+    </modules>
+  </component>
+</project>
+

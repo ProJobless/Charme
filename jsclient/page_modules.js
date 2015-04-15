@@ -673,6 +673,36 @@ var view_register = view_page.extend({
 
 });
 
+function global_addLocation()
+{
+	var name = prompt("Enter a Name");
+	if (name == null) return;
+	var lat = prompt("Enter a Latitude");
+	if (lat == null) return;
+	var lon = prompt("Enter a Longitude");
+	if (lon == null) return;
+	data = {
+				"longitude": lon,
+				"latitude": lat,
+				"name": name
+			};
+
+	apl_request({
+		"requests": [{
+			"id": "simpleStore",
+			"action": "add",
+			"class": "location",
+			"data": data
+		}, ]
+	}, function(d) {
+
+
+			$(".locationContainer").append("<option value='" + d.simpleStore.itemId + "'>" + data.name + "</option>");
+	$(".locationContainer option:last-child").data("json", data);
+
+
+	});
+}
 
 
 // Post field, user can post from here
@@ -779,33 +809,7 @@ control_postField = Backbone.View.extend({
 						});
 
 						$(".but_addLocation").click(function() {
-							var name = prompt("Enter a Name");
-							if (name == null) return;
-							var lat = prompt("Enter a Latitude");
-							if (lat == null) return;
-							var lon = prompt("Enter a Longitude");
-							if (lon == null) return;
-							data = {
-										"longitude": lon,
-										"latitude": lat,
-										"name": name
-									};
-
-							apl_request({
-								"requests": [{
-									"id": "simpleStore",
-									"action": "add",
-									"class": "location",
-									"data": data
-								}, ]
-							}, function(d) {
-
-						
-									$(".locationContainer").append("<option value='" + d.simpleStore.itemId + "'>" + data.name + "</option>");
-							$(".locationContainer option:last-child").data("json", data);
-
-
-							});
+							global_addLocation();
 						});
 
 
@@ -1945,7 +1949,13 @@ var view_welcome = view_page.extend({
 var view_stream = view_page.extend({
 
 	userId: '',
-	options: {},
+
+
+	options: {
+
+		optionbar: '<a style="background-position: -60px 0px;" data-bgpos="-60" id="addFilterButton" class="actionButton"></a>'
+
+	},
 	getData: function() {
 		var templateData = {
 			globaldata: [],
@@ -1973,12 +1983,99 @@ var view_stream = view_page.extend({
 		console.log("share");
 	},
 	postRender: function() {
-		$("#item_stream .count").remove();
+			$('#addFilterButton').click(function() {
+
+					apl_request({
+						"requests": [{
+							"id": "simpleStore",
+							"action": "get",
+							"class": "location"
+
+						}, 	    {"id" : "lists_get"} ]
+					}, function(d22) {
+
+				
+
+					console.log( d22.lists_get);;
+
+				$.get("templates/box_filter.html", function(d) {
+
+					contextChoices = [{id:"asd", name: "test 1"}]
+					var templateData = { userlists: d22.lists_get, contextChoices: contextChoices	};
+
+					
+					
 
 
 
+
+
+					_.templateSettings.variable = "rc";
+					var template = _.template(d, templateData);
+
+					ui_showBox(template, function() {
+						$("#contextChoices a").click(function(){
+							$(this).toggleClass("active");
+						});
+						$('#filter_lists a').click(function() { // These are the people filter lists
+
+							$(this).toggleClass("active");
+
+							if ($("#cb_onlyMyLists").hasClass("active"))
+							{
+								$("#filter_list_detail").show();
+							}
+							else
+							{
+								$("#filter_list_detail").hide();
+							}
+
+						});
+
+
+						$(".filter_addnew").click(function(){
+						$(this).next().slideDown(300);
+						$(this).slideUp(300);
+
+						});
+
+
+						$.each(d22.simpleStore, function(d) {
+							$(".locationContainer").append("<option value='" + this._id.$id + "'>" + this.data.name + "</option>");
+							$(".locationContainer option:last-child").data("json", this.data);
+
+						});
+
+						$("select[name=filter_location_radius]").html(CharmeModels.Context.getRad());
+
+
+
+						$(".but_addLocation").click(function() {
+							global_addLocation();
+						});
+
+
+
+
+				
+
+
+
+						$("input[name=filter_name]").focus().select();
+						$("#but_addFilterOk").click(function()
+						{
+							if ($("input[name=filter_name]").val() == "")
+								alert("Please enter a filter name!");
+							else
+							{
+								
+							}
+
+						});
+					});
+				});
+			});
+
+		});
 	}
-
-
-
 });

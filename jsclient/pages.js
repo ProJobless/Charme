@@ -338,6 +338,7 @@ console.log("sidebar load=true");
 
 			$(".sbAlpha ul").append("<li ><a id='item_stream' data-topic='stream' href='#stream'>Stream</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='profile' href='#user/" + (charmeUser.userIdURL) + "'>Profile</a></li>");
+			//$(".sbAlpha ul").append("<li><a data-topic='rooms' href='#rooms'>Rooms</a></li>");
 			$(".sbAlpha ul").append("<li><a  style='float:right; width: 17px; text-align:center; border-left: 1px #efefef solid;  color:#666;' href='javascript:sendMessageForm()'>+</a><a style='width:101px'  id='item_talks' data-topic='talks' href='#talks'>Talks</a></li>");
 			$(".sbAlpha ul").append("<li><a data-topic='lists' href='#lists' >Lists</a></li>");
 			//$(".sbAlpha ul").append("<li><a data-topic='groups' href='#groups'>Groups</a></li>");

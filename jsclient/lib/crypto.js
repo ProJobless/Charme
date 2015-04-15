@@ -24,8 +24,6 @@ function crypto_rsaEncrypt(text, key)
 	return rsa.encrypt(text);
 }
 
-
-
 function cryptotest()
 {
 	var msg = "ein test";
@@ -35,9 +33,6 @@ function cryptotest()
 		console.log(crypto_checksign(sign, "false signature", ""));
 	//console.log(crypto_checksign(sign, "boese nachricht", ""));
 }
-
-
-
 
 /***
 	Name:
@@ -60,7 +55,7 @@ function crypto_buildHashKeyDir(inputItems)
 	var fastkey = getFastKey(0, 1);
 	var output = [];
 
-	
+
 
 
 	$.each(inputItems, function(index, item) {
@@ -291,7 +286,7 @@ function aes_decrypt(pass, encText)
 
 	Info:
 	Generate a public RSA Object which prodvides encrypt functions
-	
+
 
 	Location:
 	crypto.js
@@ -318,7 +313,7 @@ function mkRSAPublic(key)
 	mkRSA
 
 	Info:
-	Generate RSA Object which prodvides encrypt/decrypt functions 
+	Generate RSA Object which prodvides encrypt/decrypt functions
 	of Key Object
 
 
@@ -352,7 +347,7 @@ function mkRSA(key)
 	First Parameter is certificate Version, second is fastkey number
 	(which is 1 or 2)
 	Returns {fastkey1, revision}
-	
+
 
 	Params:
 	version:int:fast key version, must be saved in fastkey encrypted values to maintain decryption ability for older values.
@@ -387,7 +382,7 @@ function getFastKey(version, number) {
 
 	Info:
 	Returns current fast key.
-	
+
 	Params:
 	number:int:1 or 2
 
@@ -442,7 +437,7 @@ function getCurrentRSAKey() {
 	randomSalt
 
 	Info:
-	Generates a random Salt for SHA256 Hashing 
+	Generates a random Salt for SHA256 Hashing
 
 	TODO:LV1: Add Mouse movement etc. as `Math.random()` is NOT a reliable RNG.
 
@@ -469,7 +464,7 @@ var key = "";
         key += possible.charAt(Math.floor(Math.random() * possible.length));
 return key;
 
-	
+
 }
 
 
@@ -480,7 +475,7 @@ return key;
 	randomAesKey
 
 	Info:
-	Generates a random AES Key. 
+	Generates a random AES Key.
 
 	TODO:LV1: Add Mouse movement etc. as `Math.random()` is NOT a reliable RNG.
 
@@ -510,4 +505,3 @@ return key;
 
 
 }
-

@@ -49,6 +49,7 @@ $(function(){
 					}
 					else if (typeof container_main.currentView.sub.refreshMessages !== "undefined")
 					{	
+			
 						container_main.currentView.sub.refreshMessages([data]);
 					}
 					else

@@ -1,3 +1,32 @@
+a.filter_addnew
+{
+	background-color: #efefef;
+	padding: 8px;
+	color: gray;
+	border-radius: 2px;
+	margin-top: 4px;
+cursor: pointer;
+
+
+	display: block;
+
+}
+a.filter_addnew:active
+{
+	background-color: #ddd;
+}
+.filter_expanded select
+{
+	border:1px silver solid;
+}
+.filter_expanded
+{	margin-top: 4px;
+	background-color: #efefef;
+	padding: 8px;
+	color: gray;
+	border-radius: 2px;
+	display: none;
+}
 #collectionSelector.encrypted
 {
 	background-color: #F3F394;

@@ -1,27 +1,31 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}
 \contentsline {section}{\numberline {2}Encryption and Security}{3}{section.2}
 \contentsline {subsection}{\numberline {2.1}Existing work}{3}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}AES-CBC}{3}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}RSA}{3}{subsubsection.2.1.2}
-\contentsline {subsubsection}{\numberline {2.1.3}Further reading}{4}{subsubsection.2.1.3}
-\contentsline {subsection}{\numberline {2.2}Diffie-Hellman Key Exchange}{4}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Implementation}{4}{subsubsection.2.2.1}
-\contentsline {subsection}{\numberline {2.3}Client server seperation}{4}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}Passphrase}{5}{subsection.2.4}
-\contentsline {subsection}{\numberline {2.5}Verifying private keys}{5}{subsection.2.5}
-\contentsline {subsection}{\numberline {2.6}Message encryption}{5}{subsection.2.6}
-\contentsline {subsection}{\numberline {2.7}Distributing private information}{6}{subsection.2.7}
-\contentsline {subsection}{\numberline {2.8}Key Updates}{6}{subsection.2.8}
-\contentsline {subsection}{\numberline {2.9}Possible Attack Vectors}{7}{subsection.2.9}
-\contentsline {subsubsection}{\numberline {2.9.1}XSS}{7}{subsubsection.2.9.1}
-\contentsline {subsubsection}{\numberline {2.9.2}Encrypting with Old, Compromised Private Keys}{7}{subsubsection.2.9.2}
-\contentsline {subsubsection}{\numberline {2.9.3}DOS}{7}{subsubsection.2.9.3}
-\contentsline {subsubsection}{\numberline {2.9.4}False requests}{7}{subsubsection.2.9.4}
-\contentsline {subsubsection}{\numberline {2.9.5}Replay attacks}{7}{subsubsection.2.9.5}
-\contentsline {section}{\numberline {3}Backend}{7}{section.3}
-\contentsline {subsection}{\numberline {3.1}Technology Stack}{7}{subsection.3.1}
-\contentsline {section}{\numberline {4}Search}{7}{section.4}
+\contentsline {subsection}{\numberline {2.2}Fundamental Concepts}{3}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}AES-CBC }{3}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}RSA}{4}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}Further reading}{4}{subsubsection.2.2.3}
+\contentsline {subsection}{\numberline {2.3}Diffie-Hellman Key Exchange}{4}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Implementation}{4}{subsubsection.2.3.1}
+\contentsline {subsection}{\numberline {2.4}Client server seperation}{5}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Passphrase}{5}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}Verifying private keys}{5}{subsection.2.6}
+\contentsline {subsection}{\numberline {2.7}Message encryption}{6}{subsection.2.7}
+\contentsline {subsection}{\numberline {2.8}Distributing private information}{6}{subsection.2.8}
+\contentsline {subsection}{\numberline {2.9}Key Updates}{7}{subsection.2.9}
+\contentsline {subsection}{\numberline {2.10}Possible Attack Vectors}{7}{subsection.2.10}
+\contentsline {subsubsection}{\numberline {2.10.1}XSS}{7}{subsubsection.2.10.1}
+\contentsline {subsubsection}{\numberline {2.10.2}DOS}{7}{subsubsection.2.10.2}
+\contentsline {subsubsection}{\numberline {2.10.3}Replay attacks}{7}{subsubsection.2.10.3}
+\contentsline {subsubsection}{\numberline {2.10.4}Malformed data}{8}{subsubsection.2.10.4}
+\contentsline {subsubsection}{\numberline {2.10.5}Spam}{8}{subsubsection.2.10.5}
+\contentsline {section}{\numberline {3}Backend}{8}{section.3}
+\contentsline {subsection}{\numberline {3.1}Technology Stack}{8}{subsection.3.1}
+\contentsline {section}{\numberline {4}Search}{8}{section.4}
 \contentsline {subsection}{\numberline {4.1}Further reading}{8}{subsection.4.1}
 \contentsline {section}{\numberline {5}Technical Documentation}{8}{section.5}
 \contentsline {subsection}{\numberline {5.1}Login}{8}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Messages}{8}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.2}Messages}{9}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Edgekeys}{9}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Recryption of data}{9}{subsection.5.4}
+\contentsline {section}{\numberline {6}Sources}{9}{section.6}

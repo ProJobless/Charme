@@ -89,10 +89,8 @@ function updateDataOK() {
 			{	
 				
 				var fastkey = getFastKey(this.fkrevision, 1);
-
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
 				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
-
 				var edgekeyTemp = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
 				var edgekeyNew =  aes_encrypt(rsaKeyNewest.fastkey1, edgekeyTemp);
 				
@@ -522,8 +520,6 @@ function requestNewKey(userId) {
 					// On click button
 					$('#but_box_save').click(function() {
 
-
-
 						// Build value hash
 						var e_value = aes_encrypt(fastkey.fastkey1, JSON.stringify({
 							key: key,
@@ -533,10 +529,7 @@ function requestNewKey(userId) {
 						
 				
 						var keypair = CharmeModels.Keys.makeRsaFkKeypair( d.key_get.publickey);
-
 						var username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
-
-
 						var keyhash =  aes_encrypt_json(fastkey.fastkey1, {revision: d.key_get.revision ,hash:CharmeModels.Keys.buildHash(key)});
 
 						

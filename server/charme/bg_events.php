@@ -23,7 +23,7 @@ class Pusher implements WampServerInterface {
 
     public function onNewMessage($message) {
         $entryData = json_decode($message, true);
-      
+        echo "SENT IT OUT!!";
         if (!array_key_exists($entryData['owner'], $this->theUserIds))
             return;
         else
@@ -33,6 +33,7 @@ class Pusher implements WampServerInterface {
         // re-send the data to all the clients subscribed to that category
       // if ($entryData["owner"] != $this->theUserId)
          $topic->broadcast($entryData);
+ 
         }
 
       //echo "onnewmessage";

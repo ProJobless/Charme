@@ -1,0 +1,50 @@
+<div style='width:400px'>
+<div style='padding:16px;'>
+		
+Filters help you to find relevant information in your stream. You can show only Events from your friends in a 10km radius for example.
+<br>
+<br>
+<input placeholder="Filter Name" name="filter_name" type="text" class=""><br>
+
+<br>
+<a class="filter_addnew"><i class="fa fa-plus"></i> Location</a><div class="filter_expanded">
+
+<select name='filter_location' class='locationContainer'></select>  <a class='but_addLocation'>Add Location</a><br> with a minimum radius of <select name="filter_location_radius"></select>.
+</div>
+<a class="filter_addnew"><i class="fa fa-plus"></i> People</a><div class="filter_expanded">
+	
+	<div id="filter_lists">
+	<a  class="hotCheckbox" id="cb_onlyMyLists" >Only people from my lists</a><br>
+
+	<div id="filter_list_detail" style="display:none;">
+	 <% _.each( rc.userlists, function(item2){ %>
+
+					
+						<a  class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
+				
+
+						  <% }); %>
+
+						</div></div>
+
+</div>
+<a class="filter_addnew"><i class="fa fa-plus"></i> Context</a><div class="filter_expanded">
+
+<div id="contextChoices">
+	 <% _.each( rc.contextChoices, function(item2){ %>
+
+					
+						<a  class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
+				
+
+	 <% }); %>
+</div>
+
+
+</div>
+
+
+</div>
+<div class='boxMargin'>
+<a href='javascript:ui_closeBox();' class='button gray' style='margin-right:8px;'>Cancel</a><a id="but_addFilterOk" class='button'>Add Filter</a>
+</div></div>
