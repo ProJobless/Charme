@@ -1,4 +1,12 @@
 today:
+- disable encrypted context
+
+
+own key not added:
+- collections no not display own posts
+- no messages to myself etc.
+
+
 responsive search etc.
    save image height
 

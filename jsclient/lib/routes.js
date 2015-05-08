@@ -519,10 +519,6 @@ $(function() {
             if (id == undefined)
                 id = "";
 
-
-
-            // only if not yet exists...:
-
             if (container_main.currentViewId != "stream") {
                 console.log("Instantiate ParentView");
                 container_main.setCurrent(new view_stream({
@@ -532,17 +528,23 @@ $(function() {
                 }));
             }
 
-
-            var vsd = new view_stream_display({
+            var options = {
                 streamId: id,
                 template: "stream_",
                 navMatch: '#nav_' + id
-            });
+            };
+
+            if (strStartsWith(id, "filter_")) { // Add filter is exists (e.g. only posts from friends in radius 3km)
+                var filterIndex = id.substr(7);
+                options.filter = apl_postloader_filters.filterReferences[filterIndex];
+
+                console.log(options.filter);
+
+            }
+
+            var vsd = new view_stream_display(options);
             container_main.currentView.setSub(vsd);
             container_main.currentView.render();
-
-
-
         });
 
         app_router.on('route:getUser', function(id, id2, id3) {
@@ -552,8 +554,6 @@ $(function() {
 
             console.log("getuser");
             var userId = decodeURIComponent(id);
-
-
 
             if (container_main.currentViewId != "profile_" + id) {
 

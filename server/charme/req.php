@@ -83,7 +83,7 @@ foreach ($data["requests"] as $item)
 			if ($item["action"]=="get")
 			{
 				$returnArray[$action] = iterator_to_array(
-				$col->simpleStorage->find(array("owner" =>   ($_SESSION["charme_userid"]), "class" => $item["class"])));			
+				$col->simpleStorage->find(array("owner" =>   ($_SESSION["charme_userid"]), "class" => $item["class"])), false);			
 			}
 			if ($item["action"]=="delete")
 			{
@@ -1082,7 +1082,8 @@ foreach ($data["requests"] as $item)
 
                // if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
               	{
-                	\App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
+              		if ($CHARME_SETTINGS["DEBUG"])
+                	$messageFromServerIfDebugIsOn = \App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
                 }
 
 
@@ -2247,15 +2248,9 @@ foreach ($data["requests"] as $item)
 		break;
 
 
-		
-
 		case "comments_get" : 
 			
 			$col = \App\DB\Get::Collection();
-
-		
-			//echo "START:".$item["start"];
-
 
 			if ($item["start"] == "-1" || !isset($item["start"]) )
 			{
@@ -2266,9 +2261,9 @@ foreach ($data["requests"] as $item)
 				$item["start"] = $count-3;
 			}
 
-		//echo "Count:".$count."!!!STARTTIME".$item["postId"]."!!!";
 
-			if ($item["start"] < 0) $item["start"] = 0;
+			if ($item["start"] < 0)
+				$item["start"] = 0;
 			
 
 			if ($item["limit"] > 0)
@@ -2281,22 +2276,20 @@ foreach ($data["requests"] as $item)
 				array("commentData.object.postId" => (string)$item["postId"], "postowner" => $item["postowner"]) )->sort(array('itemTime' => 1))
 			->skip($item["start"])
 			->limit($limit), false));
-
-
-
-
-
 		break;
 
 		case "stream_get":
 
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
 
-			$stra = array();
+			$streamItems = array();
 			$col = \App\DB\Get::Collection();
 			$additionalConstraints = array();
 
-			if ($item["list"] == "archive")
+			if (isset($item["filter"]) && isset($item["filter"]["context"])) {
+				$additionalConstraints = array("post.metaData.type" => array('$in' => $item["filter"]["context"]));
+			}
+			/*if ($item["list"] == "archive")
 			{	
 				unset($item["list"]);
 				$additionalConstraints = array("archived" => true);
@@ -2320,99 +2313,64 @@ foreach ($data["requests"] as $item)
 			{	
 				unset($item["list"]);
 				$additionalConstraints = array("post.metaData.type" => "review");
-			}
+			}*/
 
 
-			if (!isset($item["list"]) ||$item["list"] == "")
+			//if (!isset($item["list"]) ||$item["list"] == "")
 			{
 				// Get all stream items
 				
 			//	$col->streamitems->ensureIndex('owner');
-				$iter = $col->streamitems->find(array_merge(array("owner" => $_SESSION["charme_userid"]), $additionalConstraints))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
-				$stra=  iterator_to_array($iter , false);
+
+			$iter = $col->streamitems->find(array_merge(array("owner" => $_SESSION["charme_userid"]), $additionalConstraints))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
+			$streamItems=  iterator_to_array($iter , false);
 
 
 		
 			}
-			else
+			/*else
 			{
+
 				$list = new MongoId($item["list"]);
-
-				// Get people in list...
-
-	
 				$ar = iterator_to_array($col->listitems->find(array("list" => new MongoId($list))), true);
 				$finalList = array();
   	 
-
-			  	 foreach ($ar  as $item)
-			  	 {
+			  	 foreach ($ar  as $item) {
 			  	 	if ($item["userId"] != "" && 
 			  	 		isset($item["userId"]))
 			  	 	$finalList[] = $item["userId"];
 			  	 }
 		
-		
-			
-
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
-				
-				$stra=  iterator_to_array($iter , false);
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)		
+				$streamItems=  iterator_to_array($iter , false);
 
 			
-			}
+			}*/
 			// Append last 3 comments for each item.
-			foreach ($stra  as $key => $item2)
+			foreach ($streamItems  as $key => $item2)
 			{
-				// start $item[start]
-
-				
-
-				// increased performance from 400ms to 170ms
-				
-				//$col->streamcomments->deleteIndex (array('postId', "postowner"));
-				//$col->streamcomments->ensureIndex('postowner');
-
-				// Total comments
 				$count = $col->streamcomments->count(array("commentData.object.postId" => (string)$item2["postId"], "postowner" => $item2["post"]["author"]) );
 
-
-
-				//clog("TIME:".$item2["meta"]["time"]["sec"]);
-
-			//	clog((string)$item2["postId"]."-- owner: ". $item2["post"]["owner"]."-- count: ".$count );
-
-				$stra[$key ]["commentCount"] = $count ;
-			
-				$groupCount = 3;
+				$streamItems[$key ]["commentCount"] = $count ;
+				$numberOfComments = 3;
 
 				if (!isset($item["start"]))
-					$start = $count -$groupCount;
+					$startIndex = $count - $numberOfComments;
 				else
-					$start = $item["start"];
+					$startIndex = $item["start"];
 
-				if ($start<0) $start = 0;
+				if ($startIndex<0)
+					$startIndex = 0;
 				
+				if (!isset($streamItems[$key ]["likecount"]))
+					$streamItems[$key ]["likecount"] = 0;
 
-				if (!isset($stra[$key ]["likecount"]))
-					$stra[$key ]["likecount"] = 0;
-
-				
-			
-
-				$stra[$key ]["comments"] = 
-				iterator_to_array($col->streamcomments->find(array("commentData.object.postId" => (string)$item2["postId"], "postowner" => $item2["post"]["author"]) )->skip($start)->limit($groupCount), false);
-
-				//print_r($item["comments"]);
+				$streamItems[$key ]["comments"] = 
+				iterator_to_array($col->streamcomments->find(array("commentData.object.postId" => (string)$item2["postId"], "postowner" => $item2["post"]["author"]) )->skip($startIndex)->limit($numberOfComments), false);
 			}
-	
 
-		
+			$returnArray[$action] = $streamItems;
 
-
-			$returnArray[$action] = $stra;
-
-			// if !
 		break;
 
 		case "edgekey_request" : 

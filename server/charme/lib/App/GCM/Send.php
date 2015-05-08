@@ -72,7 +72,6 @@ class Send
 			curl_close($ch);
 			// Debug GCM response
 	
-			if ($CHARME_SETTINGS["DEBUG"])
 			return $result;
 
 	} 

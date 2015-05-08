@@ -23,9 +23,10 @@
 \contentsline {subsection}{\numberline {3.1}Technology Stack}{8}{subsection.3.1}
 \contentsline {section}{\numberline {4}Search}{8}{section.4}
 \contentsline {subsection}{\numberline {4.1}Further reading}{8}{subsection.4.1}
-\contentsline {section}{\numberline {5}Technical Documentation}{8}{section.5}
-\contentsline {subsection}{\numberline {5.1}Login}{8}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Messages}{9}{subsection.5.2}
-\contentsline {subsection}{\numberline {5.3}Edgekeys}{9}{subsection.5.3}
-\contentsline {subsection}{\numberline {5.4}Recryption of data}{9}{subsection.5.4}
-\contentsline {section}{\numberline {6}Sources}{9}{section.6}
+\contentsline {section}{\numberline {5}Coding Guidelines}{8}{section.5}
+\contentsline {section}{\numberline {6}Technical Documentation}{9}{section.6}
+\contentsline {subsection}{\numberline {6.1}Login}{9}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Messages}{9}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Edgekeys}{9}{subsection.6.3}
+\contentsline {subsection}{\numberline {6.4}Recryption of data}{9}{subsection.6.4}
+\contentsline {section}{\numberline {7}Sources}{10}{section.7}

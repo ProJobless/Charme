@@ -110,6 +110,7 @@
 	}
 
 ]
+
 @charme_schema = 
 	global: 
 		'offer': {
@@ -117,8 +118,8 @@
 	
 				{
 					id: "price"
-					type: "moneyamount"
-					name: "Price:"
+					type: "string" # 
+					name: "Price"
 				},
 				{
 					id: "currency"
@@ -132,6 +133,58 @@
 				}
 			]
 		},
+
+		'service': {
+			attributes: [
+	
+				{
+					id: "price"
+					type: "moneyamount"
+					name: "Price (e.g EUR 2 / hour): "
+				}
+				{
+					id: "currency"
+					type: "service"
+					name: "Typ:"
+				},
+
+			]
+		},
+
+		'meal': {
+			attributes: [
+	
+				{
+					id: "people"
+					type: "int"
+					name: "Number of People:"
+				}
+				{
+					id: "location"
+					type: "optionallocation"
+					name: "Location (optional):"
+				},
+
+			]
+		},
+
+
+
+		'activity': {
+				attributes: [
+		
+					
+					{
+						id: "activity"
+						type: "activity"
+						name: "Type:"
+					},
+
+				]
+			},
+
+
+
 		'review': {
 			attributes: [
 				{

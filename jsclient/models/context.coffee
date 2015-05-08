@@ -5,21 +5,38 @@ class CharmeModels.Context
 		for k in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
 			str += "<option>"+k+"</option>"
 		return str 
+
 	@getTimeMinutes: () ->
 		str = ""
 		for k in [0,15,30,45]
 			str += "<option>"+k+"</option>"
 		return str
+
 	@getRad: () ->
 		str = ""
-		for k in [0,1,2,3,4,5,6,7,8,9]
-			str += "<option>"+k+"km</option>"
+		for k in [1,3,5,10,25,50]
+			str += "<option value='"+k+"'>"+k+"km</option>"
 		return str
+
+	@getActivities: () ->
+		str = ""
+		for k in ["Watching Soccer on TV", "Making Music", "Baseball", "Volleyball", "Table Tennis", "Soccer"]
+			str += "<option vale='"+k+"'>"+k+"</option>"
+		return str
+
+	@getServices: () ->
+		str = ""
+		for k in ["Software Engineer", "Electronic Repair", "Room Cleaner", "Musican"]
+			str += "<option vale='"+k+"'>"+k+"</option>"
+		return str
+
+
 	@getCurrencies: () ->
 		str = ""
 		for k in ["EUR", "USD", "BTC", "YEN"]
 			str += "<option vale='"+k+"'>"+k+"</option>"
 		return str
+
 	@getRating: () ->
 		str = ""
 		for k in ["5", "4", "3", "2", "1"]
@@ -39,7 +56,6 @@ class CharmeModels.Context
 				retval =  this.searchRecursiveId(subnode.sub, parentId, (level+1))
 				
 				return retval if retval?
-
 
 	@searchRecursiveText: (node, query) ->
 		retArray = []
@@ -103,6 +119,9 @@ class CharmeModels.Context
 				html += "<select  name='"+v["id"]+"' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a> Radius: <select name='"+v["id"]+"_radius'>"+CharmeModels.Context.getRad()+"</select>"
 			else if v["type"] == "location"
 				html += "<select name='"+v["id"]+"' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a>"
+			else if v["type"] == "optionallocation"
+				html += "<select name='"+v["id"]+"' class='locationContainer'><option value='0' class='nolocation'>No location</option></select> <a class='but_addLocation'>Add Location</a>"
+			
 			else if v["type"] == "string"
 				html += "<input  name='"+v["id"]+"' type='text' class='box'>"
 			else if v["type"] == "entity"
@@ -118,6 +137,12 @@ class CharmeModels.Context
 				html += "<input name='"+v["id"]+"' type='text' class='box'>"
 			else if v["type"] == "currency"
 				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getCurrencies()+'</select>'
+			else if v["type"] == "activity"
+				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getActivities()+'</select>'
+			
+			else if v["type"] == "service"
+				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getServices()+'</select>'
+			
 			else if v["type"] == "productcategory"
 				html += '<input placeholder="Search..." id="productidentifierSearch" class="box" type="text" style="margin-bottom:8px;"><input style="clear:both" type="hidden" name="'+v["id"]+'" id="productSelector"><div  id="productidentifierHelp">'+CharmeModels.Context.renderCateogries()+'</div>'
 

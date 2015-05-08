@@ -1,2 +1,5 @@
+Before release
+-------------------------------------------------------
 - delete GCM Ids in config.php and lib/App/GCM/Send.php
 - make sure all clog functions are removed or disabled
+- disable debug in config.php

@@ -7,11 +7,13 @@ Filters help you to find relevant information in your stream. You can show only 
 <input placeholder="Filter Name" name="filter_name" type="text" class=""><br>
 
 <br>
-<a class="filter_addnew"><i class="fa fa-plus"></i> Location</a><div class="filter_expanded">
+<a class="filter_addnew"><i class="fa fa-plus"></i> Location</a><div  id="filter_location"  class="filter_expanded">
+<a class="filter_remove"><i class="fa fa-times"></i></a>
 
-<select name='filter_location' class='locationContainer'></select>  <a class='but_addLocation'>Add Location</a><br> with a minimum radius of <select name="filter_location_radius"></select>.
+<select name='filter_location' class='locationContainer'></select>  <a class='but_addLocation'>Add Location</a><br> with a maximum radius of <select name="filter_location_radius"></select>.
 </div>
-<a class="filter_addnew"><i class="fa fa-plus"></i> People</a><div class="filter_expanded">
+<a class="filter_addnew"><i class="fa fa-plus"></i> People</a><div  id="filter_people"  class="filter_expanded">
+<a class="filter_remove"><i class="fa fa-times"></i></a>
 	
 	<div id="filter_lists">
 	<a  class="hotCheckbox" id="cb_onlyMyLists" >Only people from my lists</a><br>
@@ -28,13 +30,17 @@ Filters help you to find relevant information in your stream. You can show only 
 						</div></div>
 
 </div>
-<a class="filter_addnew"><i class="fa fa-plus"></i> Context</a><div class="filter_expanded">
+<a class="filter_addnew"><i class="fa fa-plus"></i> Context</a><div id="filter_context" class="filter_expanded">
+<a class="filter_remove"><i class="fa fa-times"></i></a>
+
 
 <div id="contextChoices">
+
+
 	 <% _.each( rc.contextChoices, function(item2){ %>
 
 					
-						<a  class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
+						<label><input  <% if (item2.id == "move") { %> selected="selected" <% } %> type="radio"  name="rb_context" value="<%- item2.id  %>"><%- item2.name %></label><br style="clear:both"/>
 				
 
 	 <% }); %>

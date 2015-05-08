@@ -1,0 +1,4 @@
+include ':androidSugarORM'
+include ':googleplayservices_lib'
+include ':library'
+include ':charmeApp'

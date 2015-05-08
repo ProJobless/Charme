@@ -1,0 +1,6 @@
+Add Context/Meta:
+
+Modify:
+- box_filter.html, box_context: Add context
+- context.svg: Add Context Image
+- Add id to schema.coffee

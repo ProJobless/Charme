@@ -20,7 +20,7 @@ function talks_encryptEdgekeys(edgeKeyList, messageKey) {
 	return peopleMessageKeys;
 }
 
-function but_addPeople(revision, conversationId, currentPeople, currentUsernames, currentPeopleHash) {
+function talks_addPeople(revision, conversationId, currentPeople, currentUsernames, currentPeopleHash) {
 	newRevision = revision + 1;
 	messageKey = randomAesKey(32);
 
@@ -107,8 +107,7 @@ function but_addPeople(revision, conversationId, currentPeople, currentUsernames
 }
 
 // Fired on message ok button click, leave arguments empty if new conversation, fill in arguments if adding people to conversation
-
-function but_initConversationOk(currentAESKey, currentConversationId) {
+function talks_startConversation() {
 
 	// Get receivers from UI element
 	var receiversTemp = ($("#inp_receivers").tokenInput("get"));
@@ -118,7 +117,6 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 		if (!$.inArray(receivers, item))
 			receivers.push(item);
 	});
-
 
 	// Get plain receiver userIds in a list
 	var output = [charmeUser.userId];
@@ -136,8 +134,6 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 
 	});
 
-
-
 	var keyAlert = function(problems) {
 
 		// Some keys are invalid, display them!
@@ -153,9 +149,6 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 		});
 	};
 
-	console.log("edg output");
-	console.log(output);
-
 	// Send apl_request to server to get edgekeys
 	apl_request({
 			"requests": [{
@@ -165,9 +158,7 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 		}, function(d) {
 
 			if (d.edgekeys_byUserIds.status=="KEYS_NOT_FOUND") { // one or more key were not found in the key directory
-		
 				keyAlert(d.edgekeys_byUserIds.users);
-
 			} else {
 
 				var messageKey = randomAesKey(32);
@@ -190,13 +181,8 @@ function but_initConversationOk(currentAESKey, currentConversationId) {
 				});
 
 			}
-	
-
 	});
-
-
 }
-
 
 // Backbone view for talk subpage (containing messages)
 var view_talks_subpage = view_subpage.extend({
@@ -320,29 +306,16 @@ var view_talks_subpage = view_subpage.extend({
 
 	fileChanged: function(h) {
 		var that = this;
-
 		var files = h.target.files; // FileList object
-		//var output = [];
-		// atid = $(x).attr('id'); // ID of attachment container
-
-
 		var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
-
-
-
 		var reader = new FileReader();
-		reader.file = files[0];
 
+		reader.file = files[0];
 
 		reader.onload = function(e) {
 
-			// Working:
-			//document.getElementById("uploadPreview").src = e.target.result;
 			var str = e.target.result;
-
-			// encrypt:
 			var startUpload = function(file, thumb) {
-				// encrypt here
 
 				var msgKeyRevision = that.getMessageKey(-1).revision;
 				var thumbEnc = aes_encrypt(that.getMessageKey(-1).key, thumb);
@@ -360,8 +333,6 @@ var view_talks_subpage = view_subpage.extend({
 					},
 				};
 
-
-
 				NProgress.start();
 				apl_request({
 					"requests": [{
@@ -376,39 +347,23 @@ var view_talks_subpage = view_subpage.extend({
 					location.reload();
 					NProgress.done();
 				});
-
-				// Append thumb...
-
-
-				// Send apl request here
-
 			};
 
 			var img = new Image;
 			img.src = e.target.result;
-
-
-
 			img.onload = function(e3) {
-
 				var img2 = new Image;
 				img2.src = e.target.result;
 
 				img2.onload = function(e4) {
 					startUpload(scaleImage(img2), makeThumb(img));
 				};
-
 			};
-
-
-
 		}
-		//  if (!rFilter.test(reader.file))
-		// { alert("You must select a valid image file!"); return; }
 
 		reader.readAsDataURL(reader.file);
-
 	},
+
 	postRender: function() {
 		var that = this;
 		$('#theFile').on("change", function(e) {
@@ -426,9 +381,11 @@ var view_talks_subpage = view_subpage.extend({
 			$(".talkbar").removeClass("inactive");
 		}
 	},
+	
 	uploadFile: function() {
 		$("#theFile").trigger('click');
 	},
+
 	addPeople: function() {
 
 		var that = this;
@@ -451,7 +408,7 @@ var view_talks_subpage = view_subpage.extend({
 						}]
 					}, function(d2) {
 						that.options.messageKeys = d2.messages_get_keys.messageKeys;
-						but_addPeople(that.getMessageKey(-1).revision, that.options.conversationId, that.options.receivers, that.options.usernames);
+						talks_addPeople(that.getMessageKey(-1).revision, that.options.conversationId, that.options.receivers, that.options.usernames);
 					});
 				});
 
@@ -587,9 +544,6 @@ var view_talks_subpage = view_subpage.extend({
 											key: that.getMessageKey(fileidlist[imgnow].msgKeyRevision).key,
 											encData: d2
 										});
-
-
-
 									});
 								};
 
@@ -612,15 +566,10 @@ var view_talks_subpage = view_subpage.extend({
 			this.mediaDisplayOn = true;
 			$("#mediaDisplayOff").hide();
 			$("#mediaDisplayOn").show();
-
 			this.loadMedia(-1);
-
-
 		} else {
 			$("#mediaDisplayOff").show();
 			$("#mediaDisplayOn").hide();
-
-
 		}
 	},
 	decodeImages: function() {
@@ -637,20 +586,15 @@ var view_talks_subpage = view_subpage.extend({
 
 				$.get(loc, function(d) {
 
-
-
 					var worker2 = new Worker("lib/crypto/thread_decrypt.js");
-
-
 					var el = $('<a class="imgThumb"></a>');
+					
 					$(par).append(el);
+
 					worker2.onmessage = function(e) {
-
-
 
 						var i = new Image();
 						i.src = e.data;
-
 
 						(
 							el.click(function() {
@@ -661,19 +605,12 @@ var view_talks_subpage = view_subpage.extend({
 
 								$.get(loc + "&type=original", function(d2) {
 									$(".imgLoading").remove();
-
-
-
 									var worker = new Worker("lib/crypto/thread_decrypt.js");
 
-
-
 									worker.onmessage = function(e) {
-
 										// Hide cancel descryption button
 										$(".cancelDec").hide();
 										ui_showImgBox(e.data);
-
 									}
 
 									// Add cancel decryption button
@@ -688,52 +625,21 @@ var view_talks_subpage = view_subpage.extend({
 										key: that2.getMessageKey(msgKeyRevision).key,
 										encData: d2
 									});
-
-
-
 								});
-
-
 							}).html($(i))
-
 						);
-
-
-
 					}
 
-					//
 					worker2.postMessage({
 						key: that2.getMessageKey(msgKeyRevision).key,
 						encData: d
 					});
-
-
-
-					//<a class='showImgEnc' data-location='"+$(this).data("location")+"'>
-
-					//</a>
-
-
-					//remove class imageid
 					$(that).remove();
-
-
-
 				});
-
-				// TODO: in own thread!
-
-				// Open filestream
-
-				// Decode
-
 			} catch (e) {
 				alert(e);
 			}
-
 		});
-
 	},
 
 	// -1 for newest revision:
@@ -744,6 +650,7 @@ var view_talks_subpage = view_subpage.extend({
 
 		var maxRevision = -1;
 		var bestKey;
+		
 		$.each(this.options.messageKeys[conversationId], function(i) {
 
 
@@ -755,8 +662,6 @@ var view_talks_subpage = view_subpage.extend({
 		});
 
 		var edgekey_raw = crypto_rsaDecryptWithRevision(bestKey.key.rsaEncEdgekey, 0);
-
-
 		var msgKey = aes_decrypt(edgekey_raw, bestKey.key.messageKey);
 
 		return {
@@ -766,8 +671,6 @@ var view_talks_subpage = view_subpage.extend({
 
 	},
 	loadMessages: function(start) {
-
-
 
 		var limit = -1;
 
@@ -936,6 +839,8 @@ var view_talks_subpage = view_subpage.extend({
 							},
 						};
 						NProgress.start();
+
+						console.log(messageRaw);
 						apl_request({
 							"requests": [{
 									"id": "message_distribute_answer",
@@ -992,15 +897,10 @@ var view_talks_subpage = view_subpage.extend({
 				if (newstart < 0)
 					newstart = 0;
 
-
-
 				$('#moremsg2').click(function() {
 
 					$('#moremsg2').remove();
 					that.loadMessages(newstart);
-
-
-
 				});
 
 			});
@@ -1138,12 +1038,7 @@ var view_talks = view_page.extend({
 					$('#moremsg').remove();
 
 					that.paginationIndex += 1;
-
-
 					that.loadMessages(that.paginationIndex);
-
-
-
 				});
 
 				$('.msgItems li a').click(function() {
@@ -1168,18 +1063,7 @@ var view_talks = view_page.extend({
 
 				$(".msgItems li a:first").addClass("active");
 				setSCHeight();
-
-
-
 			});
-
 		});
-		// Decrpyt, TODO: in background Thread!
-
-		// append....
-
-		// load first message
 	}
-
-
 });

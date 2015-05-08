@@ -11,6 +11,11 @@ cursor: pointer;
 	display: block;
 
 }
+.filter_remove
+{
+	float: right;
+	color:gray;
+}
 a.filter_addnew:active
 {
 	background-color: #ddd;
@@ -99,6 +104,15 @@ a.category
 {
 	background-color: #b88504;
 }
+.metaData.meta_meal .point
+{
+	background-color: #1fad92;
+}
+.metaData.meta_activity .point
+{
+	background-color: #4937a4;
+}
+
 .metaData.meta_publicevent
 {
 	color: maroon;

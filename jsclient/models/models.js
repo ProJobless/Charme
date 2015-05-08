@@ -94,8 +94,8 @@
         attributes: [
           {
             id: "price",
-            type: "moneyamount",
-            name: "Price:"
+            type: "string",
+            name: "Price (e.g EUR 2 / hour):"
           }, {
             id: "currency",
             type: "currency",
@@ -104,6 +104,41 @@
             id: "sell",
             type: "productcategory",
             name: "Product Identifier:"
+          }
+        ]
+      },
+      'service': {
+        attributes: [
+          {
+            id: "price",
+            type: "moneyamount",
+            name: "Price:"
+          }, {
+            id: "currency",
+            type: "service",
+            name: "Typ:"
+          }
+        ]
+      },
+      'meal': {
+        attributes: [
+          {
+            id: "people",
+            type: "int",
+            name: "Number of People:"
+          }, {
+            id: "location",
+            type: "optionallocation",
+            name: "Location (optional):"
+          }
+        ]
+      },
+      'activity': {
+        attributes: [
+          {
+            id: "activity",
+            type: "activity",
+            name: "Type:"
           }
         ]
       },
@@ -195,6 +230,50 @@
 
   })();
 
+  CharmeModels.SimpleStorage = (function() {
+    function SimpleStorage() {}
+
+    SimpleStorage.getItems = function(className, encrypt, callbackFunction) {
+      if (encrypt == null) {
+        encrypt = false;
+      }
+      return apl_request({
+        'requests': [
+          {
+            'id': 'simpleStore',
+            'action': 'get',
+            'class': className
+          }
+        ]
+      }, function(dataFromServer) {
+        return typeof callbackFunction === "function" ? callbackFunction(dataFromServer.simpleStore) : void 0;
+      });
+    };
+
+    SimpleStorage.storeItem = function(className, data, encrypt, callbackFunction) {
+      if (encrypt == null) {
+        encrypt = false;
+      }
+      return apl_request({
+        'requests': [
+          {
+            'id': 'simpleStore',
+            'action': 'add',
+            'class': className,
+            'data': data
+          }
+        ]
+      }, function(d) {
+        var status;
+        status = 200;
+        return typeof callbackFunction === "function" ? callbackFunction(status) : void 0;
+      });
+    };
+
+    return SimpleStorage;
+
+  })();
+
   CharmeModels.Signature = (function() {
     Signature.hash;
 
@@ -219,13 +298,14 @@
     	var signature = crypto_sign("hallo welt", );
      */
 
-    function Signature(originalMessage1) {
+    function Signature(originalMessage) {
       var key1, rsa;
-      this.originalMessage = originalMessage1;
       rsa = new RSAKey();
       key1 = getKeyByRevision(0);
       this.revision = key1.revision;
       rsa.setPrivateEx(key1.rsa.rsa.n, key1.rsa.rsa.e, key1.rsa.rsa.d, key1.rsa.rsa.p, key1.rsa.rsa.q, key1.rsa.rsa.dmp1, key1.rsa.rsa.dmq1, key1.rsa.rsa.coeff);
+      console.log("---------------------------");
+      console.log(originalMessage);
       this.hash = rsa.signStringWithSHA1(originalMessage);
     }
 
@@ -302,14 +382,15 @@
      */
 
     Signature.makeSignedJSON = function(object) {
-      var jsonString, signature;
+      var jsonString, theSignature;
       jsonString = JSON.stringify(object);
-      console.log("string is");
       console.log(jsonString);
-      signature = new CharmeModels.Signature(jsonString);
+      console.log("signature is");
+      theSignature = new CharmeModels.Signature(jsonString);
+      console.log(theSignature);
       return {
-        object: object,
-        signature: signature.toJSON()
+        "object": object,
+        "signature": theSignature.toJSON()
       };
     };
 
@@ -387,7 +468,29 @@
       ref = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
       for (j = 0, len = ref.length; j < len; j++) {
         k = ref[j];
-        str += "<option>" + k + "km</option>";
+        str += "<option value='" + k + "'>" + k + "km</option>";
+      }
+      return str;
+    };
+
+    Context.getActivities = function() {
+      var j, k, len, ref, str;
+      str = "";
+      ref = ["Watching Soccer on TV", "Making Music", "Table Tennis", "Soccer"];
+      for (j = 0, len = ref.length; j < len; j++) {
+        k = ref[j];
+        str += "<option vale='" + k + "'>" + k + "</option>";
+      }
+      return str;
+    };
+
+    Context.getServices = function() {
+      var j, k, len, ref, str;
+      str = "";
+      ref = ["Software Engineer", "Electronic Repair", "Room Cleaner", "Artist"];
+      for (j = 0, len = ref.length; j < len; j++) {
+        k = ref[j];
+        str += "<option vale='" + k + "'>" + k + "</option>";
       }
       return str;
     };
@@ -492,6 +595,8 @@
           html += "<select  name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a> Radius: <select name='" + v["id"] + "_radius'>" + CharmeModels.Context.getRad() + "</select>";
         } else if (v["type"] === "location") {
           html += "<select name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a>";
+        } else if (v["type"] === "optionallocation") {
+          html += "<select name='" + v["id"] + "' class='locationContainer'><option value='0' class='nolocation'>No location</option></select> <a class='but_addLocation'>Add Location</a>";
         } else if (v["type"] === "string") {
           html += "<input  name='" + v["id"] + "' type='text' class='box'>";
         } else if (v["type"] === "entity") {
@@ -506,6 +611,10 @@
           html += "<input name='" + v["id"] + "' type='text' class='box'>";
         } else if (v["type"] === "currency") {
           html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getCurrencies() + '</select>';
+        } else if (v["type"] === "activity") {
+          html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getActivities() + '</select>';
+        } else if (v["type"] === "service") {
+          html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getServices() + '</select>';
         } else if (v["type"] === "productcategory") {
           html += '<input placeholder="Search..." id="productidentifierSearch" class="box" type="text" style="margin-bottom:8px;"><input style="clear:both" type="hidden" name="' + v["id"] + '" id="productSelector"><div  id="productidentifierHelp">' + CharmeModels.Context.renderCateogries() + '</div>';
         }

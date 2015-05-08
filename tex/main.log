@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.23)  7 MAR 2015 19:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.23)  21 APR 2015 23:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -718,19 +718,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 87--88
 s / h11300 -[] pkcs -[] 1v2 -[] 2 -[] rsa -[]
  []
 
-[4] <eds.pdf, id=195, 257.91585pt x 124.53975pt>
+[4] <eds.pdf, id=200, 257.91585pt x 124.53975pt>
 File: eds.pdf Graphic file (type pdf)
  <use eds.pdf>
 Package pdftex.def Info: eds.pdf used on input line 101.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
  [5 <./eds.pdf>]
-<pubkey.pdf, id=263, 257.91585pt x 218.16658pt>
+<pubkey.pdf, id=268, 257.91585pt x 218.16658pt>
 File: pubkey.pdf Graphic file (type pdf)
  <use pubkey.pdf>
 Package pdftex.def Info: pubkey.pdf used on input line 144.
 (pdftex.def)             Requested size: 257.9152pt x 218.16605pt.
 
-<prvInfo.pdf, id=265, 257.91585pt x 124.53975pt>
+<prvInfo.pdf, id=270, 257.91585pt x 124.53975pt>
 File: prvInfo.pdf Graphic file (type pdf)
  <use prvInfo.pdf>
 Package pdftex.def Info: prvInfo.pdf used on input line 153.
@@ -740,27 +740,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 190--194
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 203--207
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 210--214
 
  []
 
-[8]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 235.
- [9]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 235.
+[9]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 242.
+ [10]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 242.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 235.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 235.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 242.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 242.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: DAE132D8DA8DBE67CAF70544A0E448E5;1984.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 235.
+(rerunfilecheck)             Checksum: D13CCAD45D495B520CFC3C05102D643B;2037.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 242.
  ) 
 Here is how much of TeX's memory you used:
- 9597 strings out of 495025
- 139158 string characters out of 6181515
- 258553 words of memory out of 5000000
- 12608 multiletter control sequences out of 15000+600000
+ 9604 strings out of 495025
+ 139213 string characters out of 6181515
+ 259553 words of memory out of 5000000
+ 12609 multiletter control sequences out of 15000+600000
  62402 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  36i,8n,38p,588b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -778,10 +778,10 @@ fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtt10.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
 >
-Output written on main.pdf (9 pages, 254562 bytes).
+Output written on main.pdf (10 pages, 255907 bytes).
 PDF statistics:
- 383 PDF objects out of 1000 (max. 8388607)
- 329 compressed objects within 4 object streams
- 69 named destinations out of 1000 (max. 500000)
- 264 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 398 PDF objects out of 1000 (max. 8388607)
+ 343 compressed objects within 4 object streams
+ 75 named destinations out of 1000 (max. 500000)
+ 272 words of extra memory for PDF output out of 10000 (max. 10000000)
 
