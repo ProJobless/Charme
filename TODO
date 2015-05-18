@@ -1,9 +1,11 @@
 today:
 - disable encrypted context
+- lists are not shown in other users profile
+
 
 
 own key not added:
-- collections no not display own posts
+- collections do not display own posts
 - no messages to myself etc.
 
 

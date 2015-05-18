@@ -800,28 +800,19 @@ var view_profilepage_info = view_subpage.extend({
 				]
 			}, function(d9) {
 
-
-
 				$.get("templates/user__.html", function(d) {
 
-
-	
 					$(".but_verifyKey2, .but_verifyKey").unbind("click").click(function() {
-
 						requestNewKey(container_main.currentView.options.userId);
 					});
 
 					$(".but_sendMsg").unbind("click").click(function(){
-
 						sendMessageForm([{
 								id:container_main.currentView.options.userId,
 								name: container_main.currentView.username
 							}
-
 						]); 
-							console.log("CALLED SEND MESG");
 					});
-
 
 					// Mark lists which contain the user
 					var userlistsRegistred = new Array();
@@ -829,21 +820,10 @@ var view_profilepage_info = view_subpage.extend({
 
 
 					jQuery.each(d9.lists_getRegistred, function() {
-
-
-
 						userlistsRegistred[this.list.$id] = true;
-
-
-
 					});
 
-					//console.log(userlistsRegistred);
-
 					jQuery.each(apl_postloader_getLists().items, function() {
-
-
-
 						if (userlistsRegistred[this._id.$id] != undefined)
 							userlists.push({
 								name: this.name,
@@ -856,22 +836,19 @@ var view_profilepage_info = view_subpage.extend({
 								id: this._id.$id,
 								isActive: false
 							});
-
 					});
 
 
 					// Convert it to list (needed for underscore.js)
-
-
-
 					_.templateSettings.variable = "rc";
 
 					d2.userlists = userlists;
 					d2.test = "userlists";
 
+						console.log(d2);
 					var tmpl = _.template(d, d2);
 
-					console.log(d2.lists);
+		
 					$("#userinfo_container").html(tmpl);
 
 
@@ -933,7 +910,7 @@ var view_profilepage_info = view_subpage.extend({
 							catch(e){
 
 							console.log("error at decrypting pieceinfo... aes:"+aes+" data:"+that2.piecedata);
-						console.log(e);
+							console.log(e);
 
 							rq = "<span style='color:red'>Error at decryption. Try to clean your cache.</span>"; // This may be caused by cached keys if pieces collection has been deleted on server!
 							

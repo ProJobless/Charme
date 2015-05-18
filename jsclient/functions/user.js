@@ -74,9 +74,6 @@ function getKeyByRevision(revision)
 	console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
 */
 
-
-
-
 function apl_user(uid)
 {
 	this.userId = uid;

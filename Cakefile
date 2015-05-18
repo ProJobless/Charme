@@ -9,8 +9,8 @@ task 'sbuild', '', (options) -> # new build task
 	Array::include = (e) -> @indexOf(e) > -1
 	 
 	settings =
-	  input:  ['jsclient/models/schema.coffee','jsclient/models/listOperations.coffee','jsclient/models/post.coffee', 'jsclient/models/simpleStorage.coffee', 'jsclient/models/signature.coffee', 'jsclient/models/keys.coffee', 'jsclient/models/views.coffee', 'jsclient/models/context.coffee'] # add folder with 'app' for example
-	  output: 'jsclient/models/models.js'
+	  input:  ['jsclient/src/schema.coffee','jsclient/src/listOperations.coffee','jsclient/src/post.coffee','jsclient/src/log.coffee', 'jsclient/src/simpleStorage.coffee', 'jsclient/src/signature.coffee', 'jsclient/src/keys.coffee', 'jsclient/src/views.coffee', 'jsclient/src/context.coffee'] # add folder with 'app' for example
+	  output: 'jsclient/src/models.js'
 	  _files: (dir) ->
 	    unless dir?
 	      while (settings._files(file) for file in @input when filesystem.lstatSync(file).isDirectory()).length > 0 then

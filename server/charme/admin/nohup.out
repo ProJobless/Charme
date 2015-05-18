@@ -230,3 +230,182 @@ Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg
 Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
 PHP Warning:  Module 'curl' already loaded in Unknown on line 0
 onpen USER ID ISms@charme.localonpen onpen USER ID ISms@charme.localonpen onpen SENT IT OUT!!SENT IT OUT!!SENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen SENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!onpen SENT IT OUT!![]SENT IT OUT!![]SENT IT OUT!![]SENT IT OUT!![]
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+onpen mongod --help for help and startup options
+Fri May  8 15:28:26.644 [initandlisten] MongoDB starting : pid=12891 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Fri May  8 15:28:26.644 [initandlisten] db version v2.4.13
+Fri May  8 15:28:26.644 [initandlisten] git version: nogitversion
+Fri May  8 15:28:26.644 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Fri May  8 15:28:26.644 [initandlisten] allocator: tcmalloc
+Fri May  8 15:28:26.644 [initandlisten] options: {}
+Fri May  8 15:28:26.645 [initandlisten] exception in initAndListen: 10309 Unable to create/open lock file: /data/db/mongod.lock errno:13 Permission denied Is a mongod instance already running?, terminating
+Fri May  8 15:28:26.645 dbexit: 
+Fri May  8 15:28:26.645 [initandlisten] shutdown: going to close listening sockets...
+Fri May  8 15:28:26.645 [initandlisten] shutdown: going to flush diaglog...
+Fri May  8 15:28:26.645 [initandlisten] shutdown: going to close sockets...
+Fri May  8 15:28:26.645 [initandlisten] shutdown: waiting for fs preallocator...
+Fri May  8 15:28:26.645 [initandlisten] shutdown: lock for final commit...
+Fri May  8 15:28:26.645 [initandlisten] shutdown: final commit...
+Fri May  8 15:28:26.645 [initandlisten] shutdown: closing all files...
+Fri May  8 15:28:26.645 [initandlisten] closeAllFiles() finished
+Fri May  8 15:28:26.645 [initandlisten] shutdown: removing fs lock...
+Fri May  8 15:28:26.645 [initandlisten] couldn't remove fs lock errno:9 Bad file descriptor
+Fri May  8 15:28:26.645 dbexit: really exiting now
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+[][]onpen USER ID ISms4@charme.local[][]onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen onpen USER ID IStest123@charme.localSENT IT OUT!!SENT IT OUT!!onpen USER ID IStest123@charme.localSENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!![]onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen onpen USER ID ISms4@charme.localonpen USER ID IStest123@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!![]SENT IT OUT!!SENT IT OUT!!SENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID IStest123@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localSENT IT OUT!!SENT IT OUT!![]onpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID IStest123@charme.localSENT IT OUT!!onpen USER ID IStest123@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localSENT IT OUT!!onpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localonpen USER ID ISms4@charme.localPHP Warning:  GearmanWorker::work(): flush(GEARMAN_COULD_NOT_CONNECT) Connection to 127.0.0.1:4730 failed -> libgearman/connection.cc:712: pid(6768) in /var/www/Charme/server/charme/bg_hydra.php on line 29
+mongod --help for help and startup options
+Mon May 18 17:11:47.482 [initandlisten] MongoDB starting : pid=11201 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Mon May 18 17:11:47.482 [initandlisten] db version v2.4.13
+Mon May 18 17:11:47.482 [initandlisten] git version: nogitversion
+Mon May 18 17:11:47.482 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Mon May 18 17:11:47.482 [initandlisten] allocator: tcmalloc
+Mon May 18 17:11:47.482 [initandlisten] options: {}
+Mon May 18 17:11:47.493 [initandlisten] journal dir=/data/db/journal
+Mon May 18 17:11:47.493 [initandlisten] recover : no journal files present, no recovery needed
+Mon May 18 17:11:47.563 [websvr] admin web console waiting for connections on port 28017
+Mon May 18 17:11:47.563 [initandlisten] waiting for connections on port 27017
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+Mon May 18 17:12:38.704 [signalProcessingThread] got signal 15 (Terminated), will terminate after current cmd ends
+Mon May 18 17:12:38.705 [signalProcessingThread] now exiting
+Mon May 18 17:12:38.705 dbexit: 
+Mon May 18 17:12:38.705 [signalProcessingThread] shutdown: going to close listening sockets...
+Mon May 18 17:12:38.705 [signalProcessingThread] closing listening socket: 9
+Mon May 18 17:12:38.705 [signalProcessingThread] closing listening socket: 10
+Mon May 18 17:12:38.705 [signalProcessingThread] closing listening socket: 11
+Mon May 18 17:12:38.705 [signalProcessingThread] removing socket file: /tmp/mongodb-27017.sock
+Mon May 18 17:12:38.705 [signalProcessingThread] shutdown: going to flush diaglog...
+Mon May 18 17:12:38.705 [signalProcessingThread] shutdown: going to close sockets...
+Mon May 18 17:12:38.705 [signalProcessingThread] shutdown: waiting for fs preallocator...
+Mon May 18 17:12:38.705 [signalProcessingThread] shutdown: lock for final commit...
+Mon May 18 17:12:38.705 [signalProcessingThread] shutdown: final commit...
+Mon May 18 17:12:38.707 [signalProcessingThread] shutdown: closing all files...
+Mon May 18 17:12:38.707 [signalProcessingThread] closeAllFiles() finished
+Mon May 18 17:12:38.707 [signalProcessingThread] journalCleanup...
+Mon May 18 17:12:38.707 [signalProcessingThread] removeJournalFiles
+Mon May 18 17:12:38.732 [signalProcessingThread] shutdown: removing fs lock...
+Mon May 18 17:12:38.732 dbexit: really exiting now
+mongod --help for help and startup options
+Mon May 18 17:16:40.729 [initandlisten] MongoDB starting : pid=11542 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Mon May 18 17:16:40.729 [initandlisten] db version v2.4.13
+Mon May 18 17:16:40.729 [initandlisten] git version: nogitversion
+Mon May 18 17:16:40.729 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Mon May 18 17:16:40.729 [initandlisten] allocator: tcmalloc
+Mon May 18 17:16:40.729 [initandlisten] options: {}
+Mon May 18 17:16:40.753 [initandlisten] journal dir=/data/db/journal
+Mon May 18 17:16:40.753 [initandlisten] recover : no journal files present, no recovery needed
+Mon May 18 17:16:40.787 [websvr] admin web console waiting for connections on port 28017
+Mon May 18 17:16:40.787 [initandlisten] waiting for connections on port 27017
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+Mon May 18 17:16:50.558 [signalProcessingThread] got signal 15 (Terminated), will terminate after current cmd ends
+Mon May 18 17:16:50.558 [signalProcessingThread] now exiting
+Mon May 18 17:16:50.558 dbexit: 
+Mon May 18 17:16:50.558 [signalProcessingThread] shutdown: going to close listening sockets...
+Mon May 18 17:16:50.558 [signalProcessingThread] closing listening socket: 9
+Mon May 18 17:16:50.558 [signalProcessingThread] closing listening socket: 10
+Mon May 18 17:16:50.558 [signalProcessingThread] closing listening socket: 11
+Mon May 18 17:16:50.558 [signalProcessingThread] removing socket file: /tmp/mongodb-27017.sock
+Mon May 18 17:16:50.558 [signalProcessingThread] shutdown: going to flush diaglog...
+Mon May 18 17:16:50.558 [signalProcessingThread] shutdown: going to close sockets...
+Mon May 18 17:16:50.558 [signalProcessingThread] shutdown: waiting for fs preallocator...
+Mon May 18 17:16:50.558 [signalProcessingThread] shutdown: lock for final commit...
+Mon May 18 17:16:50.558 [signalProcessingThread] shutdown: final commit...
+Mon May 18 17:16:50.568 [signalProcessingThread] shutdown: closing all files...
+Mon May 18 17:16:50.568 [signalProcessingThread] closeAllFiles() finished
+Mon May 18 17:16:50.568 [signalProcessingThread] journalCleanup...
+Mon May 18 17:16:50.568 [signalProcessingThread] removeJournalFiles
+Mon May 18 17:16:50.592 [signalProcessingThread] shutdown: removing fs lock...
+Mon May 18 17:16:50.592 dbexit: really exiting now
+mongod --help for help and startup options
+Mon May 18 17:18:37.110 [initandlisten] MongoDB starting : pid=11899 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Mon May 18 17:18:37.110 [initandlisten] db version v2.4.13
+Mon May 18 17:18:37.110 [initandlisten] git version: nogitversion
+Mon May 18 17:18:37.110 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Mon May 18 17:18:37.110 [initandlisten] allocator: tcmalloc
+Mon May 18 17:18:37.110 [initandlisten] options: {}
+Mon May 18 17:18:37.127 [initandlisten] journal dir=/data/db/journal
+Mon May 18 17:18:37.127 [initandlisten] recover : no journal files present, no recovery needed
+Mon May 18 17:18:37.157 [websvr] admin web console waiting for connections on port 28017
+Mon May 18 17:18:37.157 [initandlisten] waiting for connections on port 27017
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+Mon May 18 17:19:06.257 [signalProcessingThread] got signal 15 (Terminated), will terminate after current cmd ends
+Mon May 18 17:19:06.257 [signalProcessingThread] now exiting
+Mon May 18 17:19:06.257 dbexit: 
+Mon May 18 17:19:06.257 [signalProcessingThread] shutdown: going to close listening sockets...
+Mon May 18 17:19:06.257 [signalProcessingThread] closing listening socket: 9
+Mon May 18 17:19:06.257 [signalProcessingThread] closing listening socket: 10
+Mon May 18 17:19:06.257 [signalProcessingThread] closing listening socket: 11
+Mon May 18 17:19:06.257 [signalProcessingThread] removing socket file: /tmp/mongodb-27017.sock
+Mon May 18 17:19:06.257 [signalProcessingThread] shutdown: going to flush diaglog...
+Mon May 18 17:19:06.257 [signalProcessingThread] shutdown: going to close sockets...
+Mon May 18 17:19:06.257 [signalProcessingThread] shutdown: waiting for fs preallocator...
+Mon May 18 17:19:06.257 [signalProcessingThread] shutdown: lock for final commit...
+Mon May 18 17:19:06.257 [signalProcessingThread] shutdown: final commit...
+Mon May 18 17:19:06.273 [signalProcessingThread] shutdown: closing all files...
+Mon May 18 17:19:06.273 [signalProcessingThread] closeAllFiles() finished
+Mon May 18 17:19:06.273 [signalProcessingThread] journalCleanup...
+Mon May 18 17:19:06.273 [signalProcessingThread] removeJournalFiles
+Mon May 18 17:19:06.281 [signalProcessingThread] shutdown: removing fs lock...
+Mon May 18 17:19:06.281 dbexit: really exiting now
+mongod --help for help and startup options
+Mon May 18 17:21:00.777 [initandlisten] MongoDB starting : pid=12314 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Mon May 18 17:21:00.778 [initandlisten] db version v2.4.13
+Mon May 18 17:21:00.778 [initandlisten] git version: nogitversion
+Mon May 18 17:21:00.778 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Mon May 18 17:21:00.778 [initandlisten] allocator: tcmalloc
+Mon May 18 17:21:00.778 [initandlisten] options: {}
+Mon May 18 17:21:00.797 [initandlisten] journal dir=/data/db/journal
+Mon May 18 17:21:00.797 [initandlisten] recover : no journal files present, no recovery needed
+Mon May 18 17:21:00.838 [websvr] admin web console waiting for connections on port 28017
+Mon May 18 17:21:00.839 [initandlisten] waiting for connections on port 27017
+
+Fatal error: Class 'GearmanWorker' not found in /var/www/Charme/server/charme/bg_hydra.php on line 24
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+Mon May 18 17:21:38.314 [signalProcessingThread] got signal 15 (Terminated), will terminate after current cmd ends
+Mon May 18 17:21:38.314 [signalProcessingThread] now exiting
+Mon May 18 17:21:38.314 dbexit: 
+Mon May 18 17:21:38.314 [signalProcessingThread] shutdown: going to close listening sockets...
+Mon May 18 17:21:38.314 [signalProcessingThread] closing listening socket: 9
+Mon May 18 17:21:38.314 [signalProcessingThread] closing listening socket: 10
+Mon May 18 17:21:38.314 [signalProcessingThread] closing listening socket: 11
+Mon May 18 17:21:38.314 [signalProcessingThread] removing socket file: /tmp/mongodb-27017.sock
+Mon May 18 17:21:38.314 [signalProcessingThread] shutdown: going to flush diaglog...
+Mon May 18 17:21:38.314 [signalProcessingThread] shutdown: going to close sockets...
+Mon May 18 17:21:38.314 [signalProcessingThread] shutdown: waiting for fs preallocator...
+Mon May 18 17:21:38.314 [signalProcessingThread] shutdown: lock for final commit...
+Mon May 18 17:21:38.314 [signalProcessingThread] shutdown: final commit...
+Mon May 18 17:21:38.315 [signalProcessingThread] shutdown: closing all files...
+Mon May 18 17:21:38.316 [signalProcessingThread] closeAllFiles() finished
+Mon May 18 17:21:38.316 [signalProcessingThread] journalCleanup...
+Mon May 18 17:21:38.316 [signalProcessingThread] removeJournalFiles
+Mon May 18 17:21:38.341 [signalProcessingThread] shutdown: removing fs lock...
+Mon May 18 17:21:38.341 dbexit: really exiting now
+mongod --help for help and startup options
+Mon May 18 17:21:43.650 [initandlisten] MongoDB starting : pid=12542 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Mon May 18 17:21:43.650 [initandlisten] db version v2.4.13
+Mon May 18 17:21:43.650 [initandlisten] git version: nogitversion
+Mon May 18 17:21:43.650 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Mon May 18 17:21:43.651 [initandlisten] allocator: tcmalloc
+Mon May 18 17:21:43.651 [initandlisten] options: {}
+Mon May 18 17:21:43.662 [initandlisten] journal dir=/data/db/journal
+Mon May 18 17:21:43.662 [initandlisten] recover : no journal files present, no recovery needed
+Mon May 18 17:21:43.696 [websvr] admin web console waiting for connections on port 28017
+Mon May 18 17:21:43.696 [initandlisten] waiting for connections on port 27017
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+PHP Warning:  Module 'curl' already loaded in Unknown on line 0
+Mon May 18 17:55:23.842 [initandlisten] connection accepted from 127.0.0.1:59404 #1 (1 connection now open)
+Mon May 18 17:55:23.879 [initandlisten] connection accepted from 127.0.0.1:59406 #2 (2 connections now open)
+onpen USER ID ISms4@charme.localMon May 18 17:55:41.785 [initandlisten] connection accepted from 127.0.0.1:59420 #3 (3 connections now open)
+Mon May 18 17:55:41.795 [initandlisten] connection accepted from 127.0.0.1:59422 #4 (4 connections now open)
+Mon May 18 18:02:33.578 [conn1] end connection 127.0.0.1:59404 (3 connections now open)
+Mon May 18 18:02:33.580 [conn2] end connection 127.0.0.1:59406 (2 connections now open)
+Mon May 18 18:02:33.592 [conn3] end connection 127.0.0.1:59420 (1 connection now open)
+Mon May 18 18:02:33.597 [conn4] end connection 127.0.0.1:59422 (0 connections now open)

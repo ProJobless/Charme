@@ -823,6 +823,7 @@ TODO --&gt; TODO
 <ul>
 <li>talks.js - UI Logic</li>
 <li>req.php - The server component</li>
+<li>hydra.php - message distribution via Gearman</li>
 </ul>
 
 <p>The message answer action is triggered by <code>$('#but_instantsend').click</code>. First we get the key for the current conversation and define <code>msgKey</code> with it. The Message is encrypted with that key and send to the server with <code>message_distribute_answer</code>. The request is then parsed on the server in req.php with action <code>message_receive</code>.</p>
@@ -860,10 +861,16 @@ C --&gt; D[4. Encrypt message with messagekey]
 D --&gt; E[5. Sign message with private key]
 E --&gt; F[6. message_distribute request to server]
 
+</div><h2 id='el_36'>TEXT: P2P Search
 
+</h2><h3>Info</h3><p>When we think about search, it is obviously that we can not send a request to every server within the Charme network to search for a certain item. Therefore every server has to cache items of other server for the search index.</p>
 
+<p>Some links first</p>
 
-</div><div class='index'><ul><li><a href='#el_27'>    isLoggedIn
+<ul>
+<li>http://www.quora.com/Could-a-decentralized-P2P-search-engine-be-created</li>
+</ul>
+<div class='index'><ul><li><a href='#el_27'>    isLoggedIn
 
 </a></li><li><a href='#el_26'>    routes.js
 
@@ -920,6 +927,8 @@ E --&gt; F[6. message_distribute request to server]
 </a></li><li><a href='#el_35'>TEXT: Encrypting Messages
 
 </a></li><li><a href='#el_33'>TEXT: Login Process
+
+</a></li><li><a href='#el_36'>TEXT: P2P Search
 
 </a></li><li><a href='#el_34'>TEXT: Sending Messages
 

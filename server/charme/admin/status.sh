@@ -110,6 +110,10 @@ echo -e ""
 #
 
 echo -e "-------------------------------------------------------------------------------"
+
+echo -e "If there are errors, make sure all components are installed properly!"
+
+echo -e "-------------------------------------------------------------------------------"
 echo -e "Please see README to fix any problems marked red above\nAlso make sure you check the apache logs for errors. \nUsually the log is saved in /var/log/apache2/error.log"
 echo -e "If gearman is not running run 'gearmand'"
 echo -e ""
