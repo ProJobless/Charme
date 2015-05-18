@@ -1,0 +1,33 @@
+gearmand: Could not open log file "/var/log/gearmand.log", from "/var/www/Charme", switching to stderr. (Permission denied)
+mongod --help for help and startup options
+Fri May  8 15:29:13.943 [initandlisten] MongoDB starting : pid=13193 port=27017 dbpath=/data/db/ 64-bit host=localhost.localdomain
+Fri May  8 15:29:13.944 [initandlisten] db version v2.4.13
+Fri May  8 15:29:13.944 [initandlisten] git version: nogitversion
+Fri May  8 15:29:13.944 [initandlisten] build info: Linux buildvm-05.phx2.fedoraproject.org 3.18.5-201.fc21.x86_64 #1 SMP Mon Feb 2 21:00:58 UTC 2015 x86_64 BOOST_LIB_VERSION=1_55
+Fri May  8 15:29:13.944 [initandlisten] allocator: tcmalloc
+Fri May  8 15:29:13.944 [initandlisten] options: {}
+Fri May  8 15:29:13.955 [initandlisten] journal dir=/data/db/journal
+Fri May  8 15:29:13.955 [initandlisten] recover : no journal files present, no recovery needed
+Fri May  8 15:29:14.030 [websvr] admin web console waiting for connections on port 28017
+Fri May  8 15:29:14.030 [initandlisten] waiting for connections on port 27017
+Fri May  8 15:29:33.358 [initandlisten] connection accepted from 127.0.0.1:41699 #1 (1 connection now open)
+Fri May  8 15:29:37.120 [initandlisten] connection accepted from 127.0.0.1:41700 #2 (2 connections now open)
+Fri May  8 15:29:39.515 [initandlisten] connection accepted from 127.0.0.1:41703 #3 (3 connections now open)
+Fri May  8 15:30:20.532 [initandlisten] connection accepted from 127.0.0.1:41705 #4 (4 connections now open)
+Fri May  8 15:32:09.859 [initandlisten] connection accepted from 127.0.0.1:41748 #5 (5 connections now open)
+Fri May  8 15:32:09.868 [initandlisten] connection accepted from 127.0.0.1:41749 #6 (6 connections now open)
+Fri May  8 15:36:23.243 [initandlisten] connection accepted from 127.0.0.1:41757 #7 (7 connections now open)
+Fri May  8 15:41:57.956 [initandlisten] connection accepted from 127.0.0.1:41803 #8 (8 connections now open)
+Sat May  9 13:54:07.354 [PeriodicTask::Runner] task: WriteBackManager::cleaner took: 8ms
+Sat May  9 13:55:07.850 [TTLMonitor] query local.system.indexes query: { expireAfterSeconds: { $exists: true } } ntoreturn:0 ntoskip:0 nscanned:1 keyUpdates:0 locks(micros) r:151658 nreturned:0 reslen:20 151ms
+Sat May  9 13:58:07.478 [PeriodicTask::Runner] task: DBConnectionPool-cleaner took: 4ms
+Sat May  9 13:58:07.502 [PeriodicTask::Runner] task: WriteBackManager::cleaner took: 5ms
+Sun May 10 09:27:01.639 [conn4] end connection 127.0.0.1:41705 (7 connections now open)
+Sun May 10 09:27:01.639 [conn7] end connection 127.0.0.1:41757 (7 connections now open)
+Sun May 10 09:27:01.639 [conn3] end connection 127.0.0.1:41703 (7 connections now open)
+Sun May 10 09:27:01.639 [conn6] end connection 127.0.0.1:41749 (7 connections now open)
+Sun May 10 09:27:01.639 [conn2] end connection 127.0.0.1:41700 (7 connections now open)
+Sun May 10 09:27:01.639 [conn1] end connection 127.0.0.1:41699 (7 connections now open)
+Sun May 10 09:27:01.639 [conn5] end connection 127.0.0.1:41748 (7 connections now open)
+Sun May 10 09:27:01.639 [conn8] end connection 127.0.0.1:41803 (7 connections now open)
+Sun May 10 21:19:13.369 [PeriodicTask::Runner] task: WriteBackManager::cleaner took: 4ms
