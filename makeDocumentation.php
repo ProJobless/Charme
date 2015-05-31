@@ -12,7 +12,7 @@
 
 // Set directories to scan
 $docs = array(
-	array("input" => array("jsclient/functions", "jsclient/lib","jsclient/models", "jsclient/src", "doc/client"),
+	array("input" => array("jsclient/functions", "jsclient/lib","jsclient/src", "doc/client"),
 		"outputfile" => "doc/client.html", // The file the documentation will be written to
 		"extensions" => array("js", "coffee", "charmedoc"), // Only files ending with .js, .coffee etc.
 		"title" => "Charme Javascript Client Developer Documentation", // Documentation title

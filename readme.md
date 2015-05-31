@@ -47,6 +47,13 @@ Directories:
 
 ![Screenshot](https://raw.github.com/mschultheiss/charme/dev/demo/screen2.png "Screenshot")
 
+## How to Contribute?
+
+* Help testing or write code! You can also write code with having zero knowledge about the system architecture!
+* Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
+* Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
+
+
 ## Setup a client
   * Just copy the files in `/jsclient` on your server
 
@@ -79,11 +86,6 @@ When getting a `GearmanException` with message `Failed to set exception option` 
  * copy the files in the /client directory onto a (local) webserver and access via index.html
  * Please note that Firefox currently has some problems with the textbox for writing messages. Everything should work fine in Chromium/Chrome however.
 
-## How to Contribute?
-
-* Write code, write documentation, check security
-* Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
-* Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
 ## License
 Charme is a distributed social network with end-to-end encryption

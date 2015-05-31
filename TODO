@@ -1,12 +1,19 @@
-today:
-- disable encrypted context
+today till 12pm
+- make profile picture upload with nprogress etc. and refresh it on mainview
 - lists are not shown in other users profile
 
+monday
+- make key updates working
+
+ubahn
+- reponsive search etc.
 
 
-own key not added:
+if own key not added:
 - collections do not display own posts
 - no messages to myself etc.
+---> SOLUTION: Add own key at the start.
+
 
 
 responsive search etc.
@@ -51,7 +58,7 @@ misc:
 
 major changes:
  ☐  do not use fastkey1 for hash values (search fastkey1!)
- ☐ keymanager_checkRevCount 
+ ☐ keymanager_checkRevCount
        alternative: do not allow old public keys by receiver!
  ☐ recrypt: update of data needed before new recrypt!
     -> check current revision here
@@ -91,11 +98,11 @@ MEDIUM PRIORITY
 - images zip download: ignore failed request attempts
 - testing library
 - Make sure requests are delivered, repeat if failed to deliver
-- notify users on pub key update: hash public key A , send to user B encrypted with pub key B 
+- notify users on pub key update: hash public key A , send to user B encrypted with pub key B
 - key directory cache
 -keyupdate:
 	- notify message receiver that key is no longer valid
-	- recrypt with new fastkey: 
+	- recrypt with new fastkey:
 		- key directory
 		- buckets
 		- messages (?)
@@ -149,7 +156,7 @@ http://llllll.li/randomColor/
 ------------------------------------------------------------------
 Chrome Extension:
 
-Bypass Same Origin Policy with manifest.json 
+Bypass Same Origin Policy with manifest.json
 
 
 

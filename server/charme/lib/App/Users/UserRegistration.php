@@ -9,23 +9,23 @@ class UserRegistration implements \App\Models\Action
 	{
 		$this->data = ($d);
 
-	} 
+	}
 	function execute()
 	{
 		global $CHARME_SETTINGS;
 		// Access Attributes over $_GET[formname]
-	
+
 		$data = $this->data;
 
 		/*$m = new Mongo();
 		$db = $m->charme;
 		$collection = $db->users;
 
-	
+
 		$collection->insert($obj);
 		*/
 		$arr= array("test" => true);
-		
+
 
 
 	 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -73,7 +73,7 @@ class UserRegistration implements \App\Models\Action
 		{
 			// Insert user into database...
 			$arr["success"] = 1; // Registration was successful!
-	
+
 			$obj = array(
 			"username" => $data["username"],
 			"password"=>$data["hashpass"],
@@ -96,6 +96,9 @@ class UserRegistration implements \App\Models\Action
 					"revision" => 1,
 					"pemkey" => $data["pemkey"]
 					));
+
+			// Set session Id
+			$_SESSION["charme_userid"] =  $data["username"]."@".$data["server"];
 
 		}
 

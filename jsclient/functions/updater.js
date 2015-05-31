@@ -15,7 +15,8 @@
 */
 $(function(){
 
-
+		if (typeof charmeUser === 'undefined')
+			return;
 
 		if (CHARME_GLOBAL_SOCKETURL != "" && typeof CHARME_GLOBAL_SOCKETURL !== "undefined")
 		var host = "ws://" + charmeUser.getServer() + ":8085"; ///charme/events.php
@@ -39,7 +40,7 @@ $(function(){
 					{
 						apl_request(
 						    {"requests" : [
-						    {"id" : "updates_get"} 
+						    {"id" : "updates_get"}
 
 						    ]
 							}, function(data){
@@ -48,14 +49,14 @@ $(function(){
 							});
 					}
 					else if (typeof container_main.currentView.sub.refreshMessages !== "undefined")
-					{	
-			
+					{
+
 						container_main.currentView.sub.refreshMessages([data]);
 					}
 					else
 					{
 						var currentNum = 0;
-						
+
 						if (!$("#item_talks").parent().hasClass("active") && $("#item_talks .count").length == 0)
 							$("#item_talks").append('<span class="count">'+currentNum+'</span>');
 						if ($("#item_talks .count").length > 0)
@@ -77,9 +78,9 @@ $(function(){
 
 	/*
 	var host = "http://" + charmeUser.getServer() + "/charme/events.php";
-	
+
 		refresh = function () {
-		   
+
 		    $.ajax({
 		        url: host,
 		        type: 'POST',
@@ -108,11 +109,11 @@ $(function(){
 
 
 /*
-$.doTimeout( 'getnotify', 1000*20, function(state){	
+$.doTimeout( 'getnotify', 1000*20, function(state){
 
 apl_request(
     {"requests" : [
-    {"id" : "updates_get"} 
+    {"id" : "updates_get"}
 
     ]
 	}, function(data){
@@ -160,4 +161,3 @@ else
 }
 
 }
-

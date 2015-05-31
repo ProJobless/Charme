@@ -1,7 +1,7 @@
 <?php
 namespace MyApp;
 /*
-	TODO: ONLY ALLOW USERS TO SUBSCRIBE THEIR OWN MESSAGES!!!
+	TODO: ONLY ALLOW USERS TO SUBSCRIBE TO THEIR OWN MESSAGES!!!
     TODO: Return information to localhost  if a user is connected or not when calling on new message.
           If a user is not connected then increment talks counter
 */
@@ -35,34 +35,31 @@ class Pusher implements WampServerInterface {
          $topic->broadcast($entryData);
  
         }
-
-      //echo "onnewmessage";
     }
-
-
   
     public function onUnSubscribe(ConnectionInterface $conn, $topic) {
     }
+    
     public function onOpen(ConnectionInterface $conn) {
          echo "onpen ";
     }
+    
     public function onClose(ConnectionInterface $conn) {
     }
+    
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params) {
         // In this application if clients send data it's because the user hacked around in console
         $conn->callError($id, $topic, 'You are not allowed to make calls')->close();
     }
+    
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible) {
         // In this application if clients send data it's because the user hacked around in console
         $conn->close();
     }
+    
     public function onError(ConnectionInterface $conn, \Exception $e) {
     }
 }
-
-
-
-  
 
     $loop   = \React\EventLoop\Factory::create();
     $pusher = new Pusher;

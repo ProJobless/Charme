@@ -19,7 +19,7 @@
  
 \maketitle
 \textbf{Abstract}\\
-Basic cryptographic and networking concepts for the distributed social networks Charme are explained here.
+Basic cryptographic and network concepts for the distributed social networks Charme are explained here.
 
 \tableofcontents
  \newpage
@@ -27,12 +27,13 @@ Basic cryptographic and networking concepts for the distributed social networks 
 
 
 \section{Introduction}
-In contrast to classic social networks, distributed social networks with end to end encryption can provide self control for your data and kind of independence from big companies.  \textit{Distributed} means, that there is no central server hosting your data, but many small servers all around the world, which everyone can  setup. Just like email providers. With end-to-end encryption not even the server hosting your data can see your data. This is necessary for a distributed architecture as otherwise the server admin could read your messages for example .
+In contrast to classic social networks, distributed social networks with end-to-end encryption can provide self control for your data and kind of independence from big companies.  \textit{Distributed} means, that there is no central server hosting your data, but many small servers all around the world, which everyone can  setup. Just like email providers everyone has a unique address like \textit{yourname@yourserver.com}. With end-to-end encryption not even the server hosting your data can see your data. This is necessary for a distributed architecture as otherwise the server admin could read your messages for example.
 
  \section{Encryption and Security}
  \subsection{Existing work}
 With Diaspora one of the first popular distributed social networks was released. The messages are not end-to-end encrypted, however, which makes it possible for the server admin to read its users messages. 
-A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!).
+A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment, but such an encryption can be implemented later on.
+
 \subsection{Fundamental Concepts}
 \subsubsection{AES-CBC \label{AESCBC}}
 AES is a fast symmetric encryption algorithm that was standardized in 2001 and is still considered secure, although there exist some attacks on it.

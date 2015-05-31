@@ -34,10 +34,6 @@ session_start(); // Start PHP session
 require_once 'lib/App/ClassLoader/UniversalClassLoader.php'; // We are using Symphonys class loader here
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
-clog("SESSION USER IS ".$_SESSION["charme_userid"]." and id is ".session_id());
-clog2($data["requests"] );
-
-
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
@@ -49,25 +45,24 @@ else
 
 $returnArray = array(); // This array will contain the returned data
 
-
-// Requests is not a list
+// Iterate through requests
 foreach ($data["requests"] as $item)
 {
 	clog2($item);
 	$action = $item["id"];
 	// This array contains a list of requests Ids, that can be executed without a session Id
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive", 
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive",
 	 "key_update_notification", "post_delete_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getinfo", "edgekey_request",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 
 			clog("THIS WAS ERROR 1 WITH SESSIOn ".session_id()." and user".$_SESSION["charme_userid"]);
 				break; // echo error
 	}
-	
+
 	switch ($action)  // Here the different operations are processed
 	{
 		case "simpleStore" :
-			$col = \App\DB\Get::Collection(); 
+			$col = \App\DB\Get::Collection();
 			if ($item["action"]=="add")
 			{
 				$col = \App\DB\Get::Collection();
@@ -78,16 +73,16 @@ foreach ($data["requests"] as $item)
 			}
 			if ($item["action"]=="update")
 			{
-				
+
 			}
 			if ($item["action"]=="get")
 			{
 				$returnArray[$action] = iterator_to_array(
-				$col->simpleStorage->find(array("owner" =>   ($_SESSION["charme_userid"]), "class" => $item["class"])), false);			
+				$col->simpleStorage->find(array("owner" =>   ($_SESSION["charme_userid"]), "class" => $item["class"])), false);
 			}
 			if ($item["action"]=="delete")
 			{
-				
+
 			}
 		break;
 		case "profile_pubKey":
@@ -107,6 +102,7 @@ foreach ($data["requests"] as $item)
 			// Only allow if user not exists!
 			$numUsers = $col->users->count(array("userid" => $item["userid"]));
 
+			// Only allow to set reg salt if user does not exist!
 			if ($numUsers == 0)
 			{
 				 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -118,13 +114,13 @@ foreach ($data["requests"] as $item)
 				$col->saltvalues->update($cont, $cont, array("upsert" => true));
 				$returnArray[$action] = array("salt" => $randomString);
 			}
-			// Save 
-		
+			// Save
+
 		break;
 
 		case "reg_salt_get":
 
-		
+
 			clog("request salt for userid ".$item["userid"]);
 			$col = \App\DB\Get::Collection();
 		//	$salt = $CHARME_SETTINGS["passwordSalt"];
@@ -134,8 +130,8 @@ foreach ($data["requests"] as $item)
 
 			clog2($res);
 			$returnArray[$action] = array("salt" => $res["salt"]);
-			
-		
+
+
 		break;
 
 		// Parameters: oldPasswordHash, newPasswordHash
@@ -149,7 +145,7 @@ foreach ($data["requests"] as $item)
 			if ($cursor["password"] == $item["oldPasswordHash"])
 			{
 
-				$col->users->update(array("userid"=> $_SESSION["charme_userid"]), array('$set' => array("password" => $item["newPasswordHash"]))); 
+				$col->users->update(array("userid"=> $_SESSION["charme_userid"]), array('$set' => array("password" => $item["newPasswordHash"])));
 				$returnArray[$action] = array("STATUS" => "OK");
 			}
 			else
@@ -161,15 +157,15 @@ foreach ($data["requests"] as $item)
 
 
 
-		case "lists_getRegistred" : 
-		// 
+		case "lists_getRegistred" :
+		//
 			$col = \App\DB\Get::Collection();
 			$returnArray[$action] = iterator_to_array(
 					$col->listitems->find(array("owner" =>   ($_SESSION["charme_userid"]), "userId" =>  ($item["userId"])), array("list")));
 
 		break;
 
-		
+
 
 
 		case "messages_leave":
@@ -185,85 +181,85 @@ foreach ($data["requests"] as $item)
 		case "message_get_sub_updates" :
 
 			$col = \App\DB\Get::Collection();
-			
 
 
-				  
+
+
 				$sel = array("message.object.conversationId" =>  ($item["conversationId"]),  "_id" => array('$gt' => new MongoId($item["lastId"])));
 
 				{
 					$res = $col->messages->find($sel);
 
-					$returnArray[$action] = array("messages" => 
+					$returnArray[$action] = array("messages" =>
 					iterator_to_array(
-						
+
 						$res->sort(array("message.object.time" => 1))
-				
-						
+
+
 					, false));
 
-				
+
 				}
-		
-			
-		
+
+
+
 		break;
 
 		case "messages_get_sub":
-			
+
 
 			// Important: apply changes also to message_get_sub_updates
 			$startSet = false;
 			if (isset($item["start"]) && $item["start"] != "-1")
 				$startSet = true;
 
-		
+
 			$col = \App\DB\Get::Collection();
-		
+
 
 			// Set read=true
 
 			// Only need conversationId at the beginning
 
-			
+
 
 			if (isset($item["conversationId"]) && $item["conversationId"] != "")
 				$selector = array("messageData.conversationId" =>  $item["conversationId"], "owner" => $_SESSION["charme_userid"]);
 			else // TODO:load newest conversation here...
 			{
 
-			
+
 				 $mdbQuery = $col->messageGroups->find(array("owner" => $_SESSION["charme_userid"]))->limit(1)->sort(array("lastAction" => -1));
 
 				 foreach ($mdbQuery as $res2)
 				 {
-				$selector =  array("messageData.conversationId" =>  $res2["messageData"]["conversationId"], "owner" => $_SESSION["charme_userid"]); 
+				$selector =  array("messageData.conversationId" =>  $res2["messageData"]["conversationId"], "owner" => $_SESSION["charme_userid"]);
 				}
 				$item["conversationId"] = $res2["messageData"]["conversationId"];
-			
+
 			}
-			
-			$col->messageGroups->update($selector, array('$set' => array("read" => true, "counter" => 0))); 
+
+			$col->messageGroups->update($selector, array('$set' => array("read" => true, "counter" => 0)));
 			 $res = $col->messageGroups->findOne($selector);
 
 
 
 			// Total message count, -1 if no result provided
 			$count = -1; // (= undefined!)
-			
+
 			// How many messages do we turn back?
 
 			$msgCount = 10;
 
 			if (isset($item["beforeMessageId"]))
 			{
-		
+
 
 				if ($item["beforeMessageId"] == "NO_MESSAGES_LOCALLY")
 				{
 					$sel = array("message.object.conversationId" =>  ($item["conversationId"]));
 				}
-				else		
+				else
 					$sel = array("message.object.conversationId" =>  ($item["conversationId"]),  "_id" => array('$lt' => new MongoId($item["beforeMessageId"])));
 
 			}
@@ -277,7 +273,7 @@ foreach ($data["requests"] as $item)
 
 
 			$messageKeys23  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
-			
+
 
 			if ($item["limit"] > 0)
 				$limit = $item["limit"];
@@ -286,10 +282,10 @@ foreach ($data["requests"] as $item)
 
 			if (isset($item["beforeMessageId"])) // Get all messages before a message given a messageId of this message
 			{
-				
+
 				if ($item["beforeMessageId"] == "NO_MESSAGES_LOCALLY")
 				{
-				
+
 				$count = $col->messages->count($sel);
 				$query = array_reverse(iterator_to_array(
 					$col->messages->find($sel)
@@ -302,11 +298,11 @@ foreach ($data["requests"] as $item)
 					->sort(array("message.object.time" => -1))
 					->limit($limit),false));
 				}
-				$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" => 
-				
+				$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" =>
+
 					$query
 				, "count" => $count, "revision" =>  $res["revision"], "usernames" =>  $res["messageData"]["usernames"], "receivers" => ($res["messageData"]["receivers"]), "conversationId" => $item["conversationId"]);
-			
+
 				clog2("returned messages num: ".Count($returnArray[$action]));
 			}
 			else  // Get messages by index
@@ -323,30 +319,30 @@ foreach ($data["requests"] as $item)
 				if ($start <0)
 					$start = 0;
 
-				
-				$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" => 
+
+				$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys23, false), "messages" =>
 				iterator_to_array(
 					$col->messages->find($sel)
 					->sort(array("message.object.time" => 1))
 					->skip($start)->limit($limit)
-					
+
 				, false), "count" => $count, "revision" =>  $res["revision"], "usernames" =>  $res["messageData"]["usernames"], "receivers" => ($res["messageData"]["receivers"]), "conversationId" => $item["conversationId"]);
-				
+
 
 
 
 			}
 
-		
-			
+
+
 
 		break;
-		case "messages_get_keys" : 
+		case "messages_get_keys" :
 			clog("Session owner is:". $item["conversationId"]);
 			$col = \App\DB\Get::Collection();
 			$messageKeys  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
 			$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys, false));
-			
+
 
 
 
@@ -371,7 +367,7 @@ foreach ($data["requests"] as $item)
 
 
 			}
-		
+
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "talks", 0);
 			$messages = $col->messageGroups->find(array("owner" => $_SESSION["charme_userid"]))
 				->sort(array("lastAction" => -1))
@@ -394,22 +390,22 @@ foreach ($data["requests"] as $item)
 			iterator_to_array(
 				$messageKeys
 			, false));
-			
+
 
 		break;
 
-	
+
 		case "post_comment_receive_distribute":
-	
+
 			$col = \App\DB\Get::Collection();
 
-		
+
 			$item["commentId"] = new MongoId($item['_id']['$id']);
 
-	
+
 			unset($item["id"]);
 			unset($item["_id"]);
-		
+
 
 			// TODO: Performance! 1st $item can be reduced!
 			$col->streamcomments->update($item,$item, array("upsert" => true)); // TODO: Remove id in item
@@ -426,11 +422,11 @@ foreach ($data["requests"] as $item)
 			3. Send post to these followers
 		*/
 
-			// problem: 
+			// problem:
 		$col = \App\DB\Get::Collection();
 
 		$cursor2 = $col->posts->findOne(array("_id"=> new MongoId($item["commentData"]["object"]["postId"])), array("collectionId", "owner"));
-		
+
 
 
 		$cursor3 = $col->followers->find(array("collectionId" => new MongoId($cursor2["collectionId"]) ));
@@ -438,7 +434,7 @@ foreach ($data["requests"] as $item)
 
 		// insert in owners collection
 
-		
+
 
 		$itemdata= array("id" => "post_comment_receive_distribute",
 				"commentData" => $item["commentData"],
@@ -448,19 +444,19 @@ foreach ($data["requests"] as $item)
 				"itemTime"  => new MongoDate()
 				);
 
-				
+
 
 
 		 try {
-        
-          
-	
 
-		$notifyItem = 
+
+
+
+		$notifyItem =
 		array("type" => \App\Counter\Notify::notifyComment,
 			"name" => $item["sendername"], "userId" => $item["userId"],
 			"postId" => $item["postId"]
-	
+
 			);
 
 		//\App\Counter\Notify::addNotification(array());
@@ -477,15 +473,15 @@ foreach ($data["requests"] as $item)
 		// Insert local comment WARNING: This must happen before comments are sent to other servers, as the _id field is set afterwards
 		$col->comments->insert($itemdata);
 
-		$data = array("requests" => 
+		$data = array("requests" =>
 				array($itemdata)
 		); // $data must be defined after comments have been inserted and $itemdata contains the id
-	
+
 
 		// Send comment to other servers
 		foreach ($cursor3 as $receiver)
 		{
-		
+
 			$req21 = new \App\Requests\JSON(
 			$receiver["follower"],
 			$cursor2["owner"],
@@ -508,14 +504,14 @@ foreach ($data["requests"] as $item)
 			// Send to server owner
 			$col = \App\DB\Get::Collection();
 			$receiver = $item["commentData"]["object"]["userId"];
-			
+
 			// Get sender name
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
 
 
 			//clog("postcomment ....: postId: ".$item["postId"]);
-	
+
 
 			// Send request to post owner server. Comment is distributed by this server
 			$data = array("requests" => array(array(
@@ -536,18 +532,18 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("STATUS" => "OK", "username" => $sendername, "commentId" =>  $arr["post_comment_distribute"]["commentId"] );
 
 		break;
-		
 
-		case "post_like_receive_distribute" : 
+
+		case "post_like_receive_distribute" :
 		// Notify other people about the like...
 		$col = \App\DB\Get::Collection();
 		//clog($item["postId"]);
 		// "owner" => $item["owner"],
 		$col->streamitems->update(array( "postId" => new MongoId($item["postId"])) ,	array('$set' => array("likecount" => $item["count"])), array("multiple" => true));
 
-	
+
 		break;
-		case  "post_getLikes" : 
+		case  "post_getLikes" :
 			// Get all likes...
 			$col = \App\DB\Get::Collection();
 			$returnArray[$action]= array("items" => iterator_to_array($col->likes->find(array("postId" => $item["postId"]), array("liker",
@@ -556,45 +552,45 @@ foreach ($data["requests"] as $item)
 		break;
 
 
-		case "post_like_receive" : 
+		case "post_like_receive" :
 
 
-				
+
 			// Save like on post owners server...
 			// ! Has to work without sessionID
 			$col = \App\DB\Get::Collection();
 			// Verify sender ID!, userId must be in database!
-			
+
 
 			//"_id" => new MongoId($item["postId"])
 			$content = array("owner" => $item["userId"], "liker" =>  $item["liker"], "postId" => $item["postId"], "username" => $item["username"]);
-			
-		
+
+
 
 			if ($item["status"] != true)
 			{
 				$col->likes->remove(array("liker" => $item["liker"], "postId" => $item["postId"]));
-			
+
 
 
 			}
 			else
 			{
-				
+
 				$res = $col->likes->update(array("liker" => $item["liker"], "postId" => $item["postId"]), $content ,  array("upsert" => true));
 
 				// Insert notification
 					// Insert notification
-				$notifyItem = 
+				$notifyItem =
 				array("type" => \App\Counter\Notify::notifyLike,
 					"name" => $item["username"], "liker" => $item["liker"],
 					"postId" => $item["postId"]
-			
+
 					);
 				$item["userId"];
 				//\App\Counter\Notify::addNotification(array());
 				\App\Counter\Notify::addNotification($item["userId"], $notifyItem);
-				
+
 			//	$col->likes->insert($content);
 
 
@@ -603,7 +599,7 @@ foreach ($data["requests"] as $item)
 			// Get total likes
 			$count = $col->likes->count(array("postId" => $item["postId"], "owner" => $item["userId"]));
 
-		
+
 
 
 			// Multiple??
@@ -615,7 +611,7 @@ foreach ($data["requests"] as $item)
 
 			// Get collection followers and distribute like count!
 
-			
+
 			// TODO: Get collection id, then distribute
 			//$item["postId"]
 			$result = $col->posts->findOne(array("_id" => new MongoId($item["postId"])),
@@ -629,7 +625,7 @@ foreach ($data["requests"] as $item)
 			foreach ($res2 as $resItem)
 			{
 
-			
+
 			$data = array("requests" => array(array(
 
 				"id" => "post_like_receive_distribute",
@@ -646,7 +642,7 @@ foreach ($data["requests"] as $item)
 				$resItem["follower"],
 				$result["owner"],
 				$data
-				
+
 				);
 
 
@@ -657,10 +653,10 @@ foreach ($data["requests"] as $item)
 
 
 
-	
+
 		break;
 		case "post_archive":
-			
+
 			$col = \App\DB\Get::Collection();
 			$query = array('postId' => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]);
 
@@ -673,12 +669,12 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		case "post_like" : 
+		case "post_like" :
 			// Save like on my own server at stream items
 			$col = \App\DB\Get::Collection();
 
 
-			// "post.owner" => $item["userId"], 
+			// "post.owner" => $item["userId"],
 			$query = array('postId' => new MongoId($item["postId"]), "owner" => $_SESSION["charme_userid"]);
 
 
@@ -707,7 +703,7 @@ foreach ($data["requests"] as $item)
 
 					)));
 
-			
+
 
 
 			$req21 = new \App\Requests\JSON(
@@ -732,11 +728,11 @@ foreach ($data["requests"] as $item)
 			// If receiver-sender relation is already there -> append message!
 
 			//$item["localreceivers"][] = $item["sender"];
-			
-			
+
+
 			/*
 			// Warning! One message per server only!
-			
+
 
 			$blockWrite = false;
 		//	clog(print_r($item["localreceivers"], true));
@@ -752,19 +748,19 @@ foreach ($data["requests"] as $item)
 				$col = \App\DB\Get::Collection();
 
 				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
-				
+
 				// Check if CONVERATION (not message) already exists for THIS receiver (may exist on this server for another user!)
 				$numConvUser = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"]), "receiver" => $receiver));
 
 
-			
+
 
 				if ($numConvUser < 1) // Conversation does not Exist for THIS User
 				{
 					// Add new people
-				
 
-				
+
+
 
 					$content = array(
 					"people" => $item["people"], // is this important?
@@ -780,7 +776,7 @@ foreach ($data["requests"] as $item)
 					"pplCount" =>  Count($item["people"])
 					);
 
-			
+
 
 					$c = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"])));
 					if ($c > 0)
@@ -789,20 +785,20 @@ foreach ($data["requests"] as $item)
 						Set blockwrite to True,
 						It is true if the conversation already exists for some other user,
 						So we do not need to insert new messages!
-						
 
-						$blockWrite = true; 
+
+						$blockWrite = true;
 					}
 
-					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false, '$inc' => array('counter' => 1),  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); // 
-					\App\Counter\CounterUpdate::inc( $receiver, "talks"); // Increment notification counter (Showed right of talks in the navigation)				
+					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false, '$inc' => array('counter' => 1),  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); //
+					\App\Counter\CounterUpdate::inc( $receiver, "talks"); // Increment notification counter (Showed right of talks in the navigation)
 
 
 				}
 				else
 				{
 
-					
+
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
 					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false,   "time" => new MongoDate()
 						);
@@ -816,32 +812,32 @@ foreach ($data["requests"] as $item)
 						$newpeoplenames = array();
 
 						// Add existing receivers
-						foreach ($ppl["people"] as $item2) 
+						foreach ($ppl["people"] as $item2)
 						{
 
 							if (!in_array($item2, $newpeople))
-							{	
-								
+							{
+
 								$newpeople[] = $item2;
 								$newpeoplenames[] = $ppl["peoplenames"][$i];
 							}
-							$i++;	
+							$i++;
 
 						}
 
 						$i = 0; // Reset index counter
-						
+
 						// Add new receivers
-						foreach ($item["people"] as $item2) 
+						foreach ($item["people"] as $item2)
 						{
 
 							if (!in_array($item2, $newpeople))
-							{	
-								
+							{
+
 								$newpeople[] = $item2;
 								$newpeoplenames[] = $item["peoplenames"][$i];
 							}
-							$i++;	
+							$i++;
 
 						}
 
@@ -849,15 +845,15 @@ foreach ($data["requests"] as $item)
 						$setarray["peoplenames"] = $newpeoplenames;
 
 					}
-				
+
 					if (isset($item["messagePreview"])) // Please not $inc is not supported in $set array
-						$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray, '$inc' => array('counter' => 1)),array('multiple' => true)); 
-					
-							
+						$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray, '$inc' => array('counter' => 1)),array('multiple' => true));
+
+
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
-					
-		
-			
+
+
+
 
 					// Increment receivers Counters
 					foreach ($ppl["people"] as $val) {
@@ -865,17 +861,17 @@ foreach ($data["requests"] as $item)
 						if ( $item["sender"] !=  $val)
 						\App\Counter\CounterUpdate::inc($val, "talks");
 					}
-						
+
 
 				}
-				
-							
+
+
 
 
 				// Insert the actual message here
 				if (!$blockWrite) // Messages are only inserted once per server.
 				{
-				
+
 				$ins = array("sendername" => $item["sendername"],
 
 				 "time" => new MongoDate(), "fileId"=> $item["fileId"], "conversationId" =>   new MongoId($item["conversationId"]),
@@ -890,13 +886,13 @@ foreach ($data["requests"] as $item)
 
 
 
-		
+
 				$col->messages->insert($ins);
 
 				// Notify Android Devices via Google Cloud Messaging (GCM)
-			
 
-			
+
+
 
 			} // End foreach of receivers
 
@@ -905,7 +901,7 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		
+
 
 		// Get message from client
 		case "message_distribute_answer":
@@ -920,7 +916,7 @@ foreach ($data["requests"] as $item)
 			// Find receivers of this message by $item["conversationId"]
 			$res = $col->messageGroups->findOne(array("messageData.conversationId"=> ($convId->__toString())), array('messageData'));
 
-	
+
 
 			$clustered = \App\Requests\Cluster::ClusterPeople($res["messageData"]["receivers"]); // Cluster people to save bandwith
 
@@ -934,9 +930,9 @@ foreach ($data["requests"] as $item)
 				$grid = $col->getGridFS();
 				$fileId = (string)$grid->storeBytes($item["encFile"], array('type'=>"encMsg",'owner' => $_SESSION["charme_userid"]));
 				$ret2 = $grid->storeBytes($item["encFileThumb"], array('type'=>"encMsgThumb",'owner' => $_SESSION["charme_userid"], "orgId" => $fileId));
-				
 
-			} 
+
+			}
 
 			foreach ($clustered as $receiver)
 			{
@@ -947,9 +943,9 @@ foreach ($data["requests"] as $item)
 						"allreceivers" => $res["messageData"]["receivers"],
 						//"encMessage" => $item["encMessage"],
 						//"messagePreview" => $item["messagePreview"],
-						"message" => $item["message"], 
+						"message" => $item["message"],
 						"sender" => $_SESSION["charme_userid"],
-						
+
 						"sendername" => $sendername
 						//"conversationId" => $convId->__toString(),
 						//"aesEnc" => $receiver["aesEnc"], known already by receiver
@@ -965,11 +961,11 @@ foreach ($data["requests"] as $item)
 					$receiver,
 					$_SESSION["charme_userid"],
 					$data
-					
+
 					);
 
 
-			
+
 					$req21->givePostman(1);
 			}
 
@@ -983,7 +979,7 @@ foreach ($data["requests"] as $item)
 
 
 			$col = \App\DB\Get::Collection();
-		
+
 			// Problem: How to verify new message keys?
 
 			// Initiate a new conversation:
@@ -1003,9 +999,9 @@ foreach ($data["requests"] as $item)
 				{
 					clog("look for ".$item["messageData"]["conversationId"]. "with uid". $item["key"]["userId"]);
 					if ($col->messageGroups->count(array("messageData.conversationId" => ($item["messageData"]["conversationId"]), "owner" => $item["key"]["userId"]))> 0)
-					{	
+					{
 						$alreadyExists = true;
-				
+
 
 
 					}
@@ -1015,8 +1011,8 @@ foreach ($data["requests"] as $item)
 
 				if ($alreadyExists)
 				{
-				
-					
+
+
 					// set new people here....
 					$col->messageGroups->update(array("messageData.conversationId" => ($item["messageData"]["conversationId"]),
 						"owner" => $item["key"]["userId"]),
@@ -1040,7 +1036,7 @@ foreach ($data["requests"] as $item)
 				}
 				else
 				$col->messageGroups->insert(array("messageData" => $item["messageData"], "owner" =>  $item["key"]["userId"], "lastAction" => new MongoDate(), "sendername" => $item["messageData"]["sendername"]));
-			
+
 
 
 			}
@@ -1063,9 +1059,9 @@ foreach ($data["requests"] as $item)
 							if ($item["fileId"] != 0)
 						$messageInsertion["fileId"] = $item["fileId"];
 
-					
+
 						$col->messages->insert($messageInsertion);
-					 
+
 				}
 
 
@@ -1074,10 +1070,10 @@ foreach ($data["requests"] as $item)
                 $bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
                 $deviceIds = array();
                 foreach ($bucketCol as $citem)
-                {   
+                {
                     $deviceIds[] = $citem["regId"];
                 }
-            
+
                 $gcmcontent = array("messageEnc" =>  $item["message"]["object"]["content"], "conversationId" => $item["message"]["object"]["conversationId"], "sendername" => $item["sendername"]);
 
                // if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
@@ -1102,27 +1098,27 @@ foreach ($data["requests"] as $item)
 						$socket->connect("tcp://localhost:5555");
 						$socket->send(json_encode(array("message" => $item["message"], "owner" => $group["owner"], "sendername" => $item["sendername"], "_id" => $messageInsertion["_id"], "fileId" => $item["fileId"])));
 
-					} 
+					}
 				}
 				$res = $col->messageGroups->update(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])), array("multiple" => true));
-			
+
 			}
 
 		break;
 
 		case "message_distribute":
 			$col = \App\DB\Get::Collection();
-				
+
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
 
 			$item["messageData"]["sendername"] = $sendername;
 
-			
+
 			if ($item["messageData"]["action"] == "initConversation")
 			{
 				// Create a unique Id for each conversation
-				
+
 				if (!isset($item["messageData"]["conversationId"]) )
 				{
 					$mid =  new MongoId();
@@ -1130,7 +1126,7 @@ foreach ($data["requests"] as $item)
 
 				}
 
-				 
+
 				 for ($i = 0; $i<Count( $item["messageData"]["usernames"]); $i++)
 				 {
 				 	if ($item["messageData"]["usernames"][$i]["userId"] == $_SESSION["charme_userid"])
@@ -1139,7 +1135,7 @@ foreach ($data["requests"] as $item)
 
 
 				foreach ($item["messageData"]["receivers"] as  $receiverId) {
-						
+
 						$keyobj = array();
 						// Get the message key
 						foreach ($item["messageKeys"] as  $value)
@@ -1153,36 +1149,36 @@ foreach ($data["requests"] as $item)
 						$content = array(array(
 										"id" => "message_receive",
 										"messageData" => $item["messageData"],
-										"key" => $keyobj,	
-			
+										"key" => $keyobj,
+
 								));
 
 						// In this case People are added to an existing conversation
-						
-			
-						
+
+
+
 						$data = array("requests" => $content);
-						
+
 
 						$serverRequest = new \App\Requests\JSON(
 							$receiverId,
 							$_SESSION["charme_userid"],
 							$data
-							
+
 							);
-	
+
 						$serverRequest->send();
 				}
 				$returnArray[$action] = array("STATUS" => "OK", "messageId" => $item["messageData"]["conversationId"]);
 			}
-		
+
 
 			/*
 			// As this is a new message we generate a unique converation Id
 			if (!isset($item["conversationId"]))
 			$convId = new MongoId();
 			else // This is used if we add people to a conversation and the id is already known
-			$convId = new MongoId($item["conversationId"]);	
+			$convId = new MongoId($item["conversationId"]);
 
 			if (!isset($item["receivers2"])) // Does not exist usually
 				$item["receivers2"] = array();
@@ -1191,20 +1187,20 @@ foreach ($data["requests"] as $item)
 
 
 
-			
+
 			//	STEP 1: If we add people, add people who are alredy part of the conversation to the conversation FIRST.
-			
+
 
 			if (isset($item["status"]) && $item["status"] == "addPeople")
 			{
-				
+
 					// Add people who are already in the conversation to receivers!
 					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
 					$ind = 0;
 
 					foreach ($ppl["people"] as $p)
 					{
-						if (!in_array( $p, $item["receivers2"])) 
+						if (!in_array( $p, $item["receivers2"]))
 						{
 							$item["receivers2"][] = $p;
 							$item["receivers"][] = array("charmeId" => $p);
@@ -1215,7 +1211,7 @@ foreach ($data["requests"] as $item)
 			}
 
 			// STEP 2: Add new people to receivers
-			
+
 			// Add first time receivers, or newly added people here.
 			// Make sure, if it is not a new conversation, that people are only added once.
 
@@ -1228,7 +1224,7 @@ foreach ($data["requests"] as $item)
 			{
 				if (!in_array($value["charmeId"], $item["receivers2"])) // Do not add someone twice
 				{
-				
+
 					$countnew++;
 					$item["receivers2"][]  = $value["charmeId"];
 
@@ -1247,7 +1243,7 @@ foreach ($data["requests"] as $item)
 					}
 				}
 				else{
-					
+
 					//unset($item["receivers"][$ind]);
 					//clog(" IN ARRAY".$value["charmeId"]);
 				}
@@ -1270,40 +1266,40 @@ foreach ($data["requests"] as $item)
 
 					{
 						$content = array(array(
-					
+
 										"id" => "message_receive",
 										"localreceivers" => array($receiver["charmeId"]),
-										
+
 										"people" => $item["receivers2"],
 										"encMessage" => $item["encMessage"],
-										
+
 										"messagePreview" => $item["messagePreview"],
 										"sender" => $_SESSION["charme_userid"],
-										
+
 										"sendername" => $sendername,
 										"conversationId" => $convId->__toString(),
 										"peoplenames" => $peoplenames
-			
+
 								));
-			
+
 						if (isset( $receiver["aesEnc"]))
 						{
 							$content ["aesEnc"] = $receiver["aesEnc"];
 							$content ["revision"] = $receiver["revision"];
 						}
-	
+
 						if (isset($item["status"]))
 							$content["status"] = $item["status"];
-	
+
 						$data = array("requests" => $content);
-	
+
 						$req21 = new \App\Requests\JSON(
 							$receiver["charmeId"],
 							$_SESSION["charme_userid"],
 							$data
-							
+
 							);
-	
+
 						$req21->send();
 						$alreadySent[] = $receiver["charmeId"];
 					}
@@ -1314,7 +1310,7 @@ foreach ($data["requests"] as $item)
 
 
 
-			
+
 		break;
 
 		case "message_notify_newpeople":
@@ -1331,21 +1327,21 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 
 			$p1 = $item["p"];
-			
+
 			if (!isset($CHARME_SETTINGS["passwordSalt"]))
 				die("CHARME_SETTINGS NOT INCLUDED");
 
-	
+
 			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p1), array('userid', "rsa", "keyring"));
 			clog($cursor["userid"]."///");
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
-				
+
 				$_SESSION["charme_userid"] = $cursor["userid"];
 				clog("SET SESSION USER ID COMPLETE: ".$cursor["userid"]);
 				$sessionIdOfUser = session_id();
 				//echo $_SESSION["charme_userid"] ;
-			
+
 				$stat = "PASS";
 			}
 			else
@@ -1374,18 +1370,18 @@ foreach ($data["requests"] as $item)
 			// Return error if: Captcha is false, no name, invalid name/password/email
 			$user = new \App\Users\UserRegistration($item["data"]);
 			$returnArray[$action] = $user->execute();
-		
 
 
-		
+
+
 		break;
 
-		case "profile_imagechange": 
+		case "profile_imagechange":
 			//$_SESSION["charme_userid"], $item["data"]
 
 			include_once("3rdparty/wideimage/WideImage.php");
 
-			
+
 			$col = \App\DB\Get::Collection();
 			$image = WideImage::load($item["data"]);
 
@@ -1393,7 +1389,7 @@ foreach ($data["requests"] as $item)
 			$grid->remove(array("owner" => $_SESSION["charme_userid"], "type" => "profileimage"));
 
 			$grid->storeBytes($image->resize(150, null, 'fill')->crop(0, 0, 150, 67)->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 150));
-			
+
 			// 200 width
 			$grid->storeBytes($image->resize(200, null, 'fill')->output('jpg'), array('type'=>"profileimage",'owner' => $_SESSION["charme_userid"], 'size' => 200));
 
@@ -1412,7 +1408,7 @@ foreach ($data["requests"] as $item)
 		break;
 
 
-		case "post.spread": 
+		case "post.spread":
 
 			// Notify post owner when sharing a posting
 
@@ -1422,10 +1418,10 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-	
 
 
-		case "collection_posts_get" : 
+
+		case "collection_posts_get" :
 			$col = \App\DB\Get::Collection();
 
 
@@ -1446,28 +1442,28 @@ foreach ($data["requests"] as $item)
 			$postIds = array();
 			// Add comments
 			foreach ($array2["items"] as $key => $value) {
-				
+
 				$postId = $value["_id"]->__toString();
 				$postIds[] =  ($postId);
 
 				// TODO: If visibility feature implmented,
 				// check for access
-				
+
 				$iter = $col->comments->find(array("commentData.object.postId" => $postId))->sort(array('_id' => -1))->limit(3);
 
-	
 
 
 
-				$array2["items"][$key]["comments"] = 
+
+				$array2["items"][$key]["comments"] =
 				array_reverse(
 					iterator_to_array($iter, false))
 				;
 
 				if ($col->likes->count(array("liker" => $item["claimedUserId"], "postId" => $postId)) > 0)
-				$array2["items"][$key]["like"] = true; 
+				$array2["items"][$key]["like"] = true;
 					else
-				$array2["items"][$key]["like"] = false; 
+				$array2["items"][$key]["like"] = false;
 
 
 			$array2["items"][$key]["commentCount"] =  $col->comments->count(array("commentData.object.postId" => $postId));
@@ -1480,7 +1476,7 @@ foreach ($data["requests"] as $item)
 
 
 
-			
+
 
 			// Check if user likes post
 			//...Add like true/false
@@ -1490,14 +1486,14 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "collection_getinfo":
-		
+
 			$col = \App\DB\Get::Collection();
 			$cursor = $col->collections->findOne(array("_id"=> new MongoId($item["collectionId"])), array("name", "currentlist"));
 			$returnArray[$action] =   (array("info"=>$cursor));
 
 		break;
 
-	
+
 
 		case "notifications_get":
 			\App\Counter\Notify::set($_SESSION["charme_userid"],0);
@@ -1515,10 +1511,10 @@ foreach ($data["requests"] as $item)
 
 				if (in_array($key, $allowedFields))
 				{
-					// Insert into mongodb		
+					// Insert into mongodb
 					$col->pieces->update(
 						array("owner" => $_SESSION["charme_userid"], "key" => $key),
-					
+
 
 						array("owner" => $_SESSION["charme_userid"],
 							"key" => $key,
@@ -1537,10 +1533,10 @@ foreach ($data["requests"] as $item)
 				if (isset($item["fielddata"][$key]))
 				{
 
-				
 
 
-				$col->pieceBuckets->update(array("key" => $key, "owner" => $_SESSION["charme_userid"]), 
+
+				$col->pieceBuckets->update(array("key" => $key, "owner" => $_SESSION["charme_userid"]),
 
 
 					array('$set' => array("piecedata" => $item["fielddata"][$key]), '$inc' => array('version' => 1)
@@ -1550,17 +1546,17 @@ foreach ($data["requests"] as $item)
 					array("multiple" => false, "upsert" => true)
 					);
 			}
-		
+
 
 				//multiple=true!, upsert = true
-			
+
 			}
 
 
 
 			// Also update PieceBucket
 
-		break;	
+		break;
 
 		// returns encrypted piece storage data
 		case "piece_store_get":
@@ -1572,7 +1568,7 @@ foreach ($data["requests"] as $item)
 
 
 		break;
-		
+
 
 
 		case "piece_request_receive":
@@ -1582,13 +1578,13 @@ foreach ($data["requests"] as $item)
 
 			$col->pieceRequests->update
 			(
-				array("userId" => $item["userId"], 
-					"invader" =>  $item["invader"], 
+				array("userId" => $item["userId"],
+					"invader" =>  $item["invader"],
 					"key" =>  $item["key"]
 					),
-				
-				array("userId" => $item["userId"], 
-					"invader" =>  $item["invader"], 
+
+				array("userId" => $item["userId"],
+					"invader" =>  $item["invader"],
 					"key" =>  $item["key"]
 					),
 				array("upsert" => true)
@@ -1598,7 +1594,7 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "piece_request_list":
-			
+
 
 
 			$col = \App\DB\Get::Collection();
@@ -1637,7 +1633,7 @@ foreach ($data["requests"] as $item)
 		$col->pieceRequests->remove(array("userId" => $_SESSION["charme_userid"], "invader" => $item["userid"], "key" =>  $item["key"]));
 		// Count keys in this buckets and update counter and pieceData
 
-	
+
 		$count1 = $col->pieceBucketItems->count(array("bucket" => $item["bucket"]));
 
 				$cursor = $col->pieceBuckets->update(
@@ -1653,7 +1649,7 @@ foreach ($data["requests"] as $item)
 					)
 
 					), array("upsert" => true));
-			
+
 		//	$count1 =  $col->pieceBucketItems->count(array(""));
 
 
@@ -1682,15 +1678,15 @@ foreach ($data["requests"] as $item)
 
 		break;
 		case "piece_request_findbucket":
-			
+
 			// TODO: Add bucketcontent here!
 
 			$col = \App\DB\Get::Collection();
-			
+
 
 			$content = array();
 
-			// 
+			//
 			$content = $col->pieceBuckets->findOne(array("key" =>  $item["key"],  "itemcount" => array('$lt' => 10), "owner" => $_SESSION["charme_userid"]), array("_id", "bucketaes"));
 
 			if ($content == null) // New bucket
@@ -1701,38 +1697,38 @@ foreach ($data["requests"] as $item)
 					"itemcount" => 0,
 					"version" => 0,
 					"bucketaes" => $item["bucketaes"]);
-			// Create bucket 
-				$col->pieceBuckets->insert($content);	
+			// Create bucket
+				$col->pieceBuckets->insert($content);
 			}
-			
+
 
 		clog("BUCKET ID IS ".$content["_id"]->__toString()." aes is".$content["bucketaes"] );
 
 			// RETURN BUCKET ID and bucket AES
-			
-			$returnArray[$action] = 
+
+			$returnArray[$action] =
 			array("bucketid" => $content["_id"]->__toString(),
 				"bucketaes" => $content["bucketaes"]
 
 				);
 
 
-		
+
 		break;
 
 		case "piece_request":
-			
+
 			// Save request on own server
 
 			// Send request to external server
-	
+
 			$data = array("requests" => array(array(
 
 			"id" => "piece_request_receive",
 			"userId" => $item["userId"],
 			"invader" => $_SESSION["charme_userid"],
 			"key" => $item["key"],
-		
+
 
 			)));
 
@@ -1754,9 +1750,9 @@ foreach ($data["requests"] as $item)
 
 			// When decryption error apepars: was chace deleted?
 			$col = \App\DB\Get::Collection();
-			
+
 			/*
-				1. Look into pieceBucket to get enrypted piece 
+				1. Look into pieceBucket to get enrypted piece
 				2. Look into pieceBucketItems to get public key encrypted AES Key to decrypt piece
 			*/
 			//
@@ -1783,10 +1779,10 @@ foreach ($data["requests"] as $item)
 			$bucketCol = $col->pieceBuckets->find(array( '_id' => array('$in' => $bucketIDlist)));
 
 			foreach ($bucketCol as $citem)
-			{	
+			{
 				$keylist[] = $citem["key"];
 
-				$finallist[] = 
+				$finallist[] =
 				array(
 					"bucketrsa" => $rsaList[$citem["_id"]->__toString()],
 					"bucketaes" => $citem["bucketaes"] ,
@@ -1796,17 +1792,17 @@ foreach ($data["requests"] as $item)
 					);
 			}
 
-			
+
 
 			// Find requests
-			$cursor = ($col->pieceRequests->find(array("userId"=> $item["userId"], 
+			$cursor = ($col->pieceRequests->find(array("userId"=> $item["userId"],
 				"invader" => $item["invader"]
 
 				), array('key')));
 
 			foreach ($cursor as $citem)
 			{
-				
+
 				if (!in_array($citem["key"], $keylist))
 				{
 					// Remeber key
@@ -1827,7 +1823,7 @@ foreach ($data["requests"] as $item)
 			{
 				if (!in_array($citem["key"], $keylist))
 				{
-					
+
 
 					// Return with empty=true if no value specified
 					if ($citem["value"]["value"] == "")
@@ -1863,13 +1859,13 @@ foreach ($data["requests"] as $item)
 		case "key_getAllFromDir":
 
 	$col = \App\DB\Get::Collection();
-			
+
 
 
 			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('_id','key','value', 'fkrevision'));
-			
 
-			
+
+
 			$returnArray[$action] = array("value" => iterator_to_array($cursor, false));
 		break;
 
@@ -1878,13 +1874,13 @@ foreach ($data["requests"] as $item)
 
 			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
 			$col = \App\DB\Get::Collection();
-			
+
 
 
 			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"], "key" => array('$in' => $item["hashes"])), array('key','value'));
-			
 
-			
+
+
 			$returnArray[$action] = array("value" => iterator_to_array($cursor, false));
 
 
@@ -1896,11 +1892,11 @@ foreach ($data["requests"] as $item)
 
 			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
 					$col = \App\DB\Get::Collection();
-			
+
 
 			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key" => $item["key"]), array('value'));
-			
-			
+
+
 			$returnArray[$action] = array("value" => $cursor["value"]);
 
 
@@ -1920,42 +1916,42 @@ foreach ($data["requests"] as $item)
 				$diffarray[] = $key["userId"];
 
 				}
-				$returnArray[$action] = array("status" => "KEYS_NOT_FOUND", "users" => array_diff($item["userIdList"], $diffarray)); 
+				$returnArray[$action] = array("status" => "KEYS_NOT_FOUND", "users" => array_diff($item["userIdList"], $diffarray));
 			}
 			else // Everything is right
 			{
-				$returnArray[$action] = array("value" => $returnArray); 
-			}				
+				$returnArray[$action] = array("value" => $returnArray);
+			}
 		break;
 
 		case "edgekeys_bylist" :
 
-			
+
 			$col = \App\DB\Get::Collection();
 
 
 
 			$ar = iterator_to_array($col->listitems->find(array("list" => new MongoId($item["listId"]), "owner" => $_SESSION["charme_userid"])), false);
 			$finalList = array();
-	 
+
 		  	foreach ($ar  as $ritem)
 		  	{
-		  	 	if ($ritem["userId"] != "" && 
+		  	 	if ($ritem["userId"] != "" &&
 		  	 		isset($ritem["userId"]))
 		  	 	$finalList[] = $ritem["userId"];
 		  	}
 
 		  	if (isset($item["addSessionUser"]) && $item["addSessionUser"] = true)
 				$finalList[] =  $_SESSION["charme_userid"];
-			
 
-		 
+
+
 		  	$retList = $col->edgekeys->find(array("owner" => $_SESSION["charme_userid"],  'userId' => array('$in' => $finalList), "newest" => true));
 
-	
-		
+
+
 				$returnArray[$action] = array("test" => 1, "value" => iterator_to_array($retList  , false));
-		
+
 
 
 			// Make list of userIds, which are later requested from the key directory
@@ -1965,7 +1961,7 @@ foreach ($data["requests"] as $item)
 		case "key_storeInDir":
 
 			$col = \App\DB\Get::Collection();
-		
+
 			// Store key hash value in signature keydirectory which is used to verify signatures and contains all revisions
 			$cursor = $col->keydirectory_signatures->update(
 				array("owner" => $_SESSION["charme_userid"],
@@ -1975,13 +1971,12 @@ foreach ($data["requests"] as $item)
 				array("fkrevision" => $item["fkrevision"], "keyhash" => $item["keyhash"], "keyhash_revision" =>  $item["pubKeyRevision"])
 
 				, array("upsert" => true));
-			
+
 			// Store key in owner Directory which is used to get thew public key when writing a message
 			$cursor = $col->keydirectory->update(
 
 			array("owner" => $_SESSION["charme_userid"],
 					"key" => $item["key"])
-
 				, array(
 					"owner" => $_SESSION["charme_userid"],
 					"userId" => $item["userId"],
@@ -1994,34 +1989,42 @@ foreach ($data["requests"] as $item)
 					"pubKeyRevision" => $item["pubKeyRevision"]
 
 					), array("upsert" => true));
-			
+
 
 			$item["edgekey"]["owner"] = $_SESSION["charme_userid"];
 			$item["edgekey"]["newest"] = true;
 
-			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]))<1)
+			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"],
+			 "owner" => $_SESSION["charme_userid"],
+			"userId" => $item["edgekey"]["userId"]))<1)
 			{
-			$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), array('$set' => array("newest" => false)), array("multiple" => true));
+				$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"],
+				 "userId" => $item["edgekey"]["userId"]),
+				 array('$set' => array("newest" => false)), array("multiple" => true));
 
-			$col->edgekeys->update(array("revision" => $item["edgekey"]["revision"], "owner" => $_SESSION["charme_userid"], "userId" => $item["edgekey"]["userId"]), $item["edgekey"], array("upsert" => true));
+				$col->edgekeys->update(
+					array("revision" => $item["edgekey"]["revision"],
+					"owner" => $_SESSION["charme_userid"],
+					"userId" => $item["edgekey"]["userId"]),
+					$item["edgekey"], array("upsert" => true));
 			}
 
 			$returnArray[$action] = array("status" => "OK");
 
 
-			
+
 
 		break;
 
 
 			case "key_getAll":
 
-			
-		
+
+
 					$col = \App\DB\Get::Collection();
 			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('value')), false);
-			
-		
+
+
 
 			$returnArray[$action] = array("items" => $cursor);
 
@@ -2035,7 +2038,7 @@ foreach ($data["requests"] as $item)
 			// CORS is enabled here
 			case "key_get":
 
-			
+
 				clog2($item);
 				// Return public key and revision
 				$col = \App\DB\Get::Collection();
@@ -2070,7 +2073,7 @@ foreach ($data["requests"] as $item)
 			break;
 		// Returns encrypted private key for correct password
 		case "key_update_phase1":
-	
+
 			$p2 =$item["password"];
 
 
@@ -2082,7 +2085,7 @@ foreach ($data["requests"] as $item)
 				if (isset($cursor["keyring"]))
 				$returnArray[$action] =   (array("keyring"=>$cursor["keyring"]));
 				else
-				$returnArray[$action] =  array("keyring" => "");	
+				$returnArray[$action] =  array("keyring" => "");
 			}
 			else
 					$returnArray[$action] =  array("error" => true);
@@ -2093,12 +2096,12 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 
 			foreach ($item["recryptedData"] as $key => $value) {
-				
+
 				if ($key == "conversations")
 				{
 					foreach ($value as $key2 => $value2) {
 
-					
+
 						// got from JSON: id, aesEnc, revision
 						$col->conversations->update(array("receiver" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("aesEnc" => $value2["aesEnc"], "revision" => $value2["revision"])));
 
@@ -2133,7 +2136,7 @@ foreach ($data["requests"] as $item)
 						$col->pieceBucketItems->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("bucketkey" => array("data" => $value2["bucketkeyData"], "revision" => $value2["revision"]))));
 
 					}
-				}	
+				}
 
 			}
 			$returnArray[$action] =  array("SUCCESS" => true);
@@ -2141,7 +2144,7 @@ foreach ($data["requests"] as $item)
 		break;
 
 
-		case "key_update_recrypt_getData" : 
+		case "key_update_recrypt_getData" :
 
 		$col = \App\DB\Get::Collection();
 			$data = array();
@@ -2157,7 +2160,7 @@ foreach ($data["requests"] as $item)
 
 
 			// pieces.value.aesEnc, pieces.value.revision   -> MY DATA
-		
+
 			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $_SESSION["charme_userid"]), array('value', 'key', "_id")), false);
 			$data["pieces"] = $cursor;
 
@@ -2175,7 +2178,7 @@ foreach ($data["requests"] as $item)
 			// Recrypt key directory here!
 
 			$returnArray[$action] =  array("SUCCESS" => true, "data" => $data);
-			
+
 		break;
 
 
@@ -2195,14 +2198,14 @@ foreach ($data["requests"] as $item)
 			$collectionList = $col->collections->find(array("owner" =>$_SESSION["charme_userid"]));
 			 foreach ($collectionList  as $collection)
 			 {
-			 
+
 			 	// 2. Get my followers:
 			 	$followerList = $col->followers->find(array("collectionId" =>$collection["_id"]));
 				 foreach ($followerList  as $follower)
 				 {
 				 	// 2. Get my followers:
 				 	// notify owner........
-					$data=  array("requests" => 
+					$data=  array("requests" =>
 
 							array(
 								array("id" => "key_update_notification",
@@ -2211,7 +2214,7 @@ foreach ($data["requests"] as $item)
 							"notifiedUser" =>$follower["follower"]))
 
 						);
-				
+
 					$req21 = new \App\Requests\JSON(
 					$follower["follower"],  // receiver
 					$_SESSION["charme_userid"], // sender
@@ -2219,7 +2222,7 @@ foreach ($data["requests"] as $item)
 					$data);
 
 					$req21->send();
-				 	
+
 				 }
 			 }
 
@@ -2232,7 +2235,7 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "key_update_notification":
-	
+
 					// Add following notificaiton
 			$notifyItem = array("type" => \App\Counter\Notify::notifyNewKey,
 				"name" => $item["username"], "keyOwner" => $item["keyOwner"]);
@@ -2248,15 +2251,15 @@ foreach ($data["requests"] as $item)
 		break;
 
 
-		case "comments_get" : 
-			
+		case "comments_get" :
+
 			$col = \App\DB\Get::Collection();
 
 			if ($item["start"] == "-1" || !isset($item["start"]) )
 			{
 				// Get count of items < timestamp.
 				$count = $col->comments->count(array('itemTime' => array('$lt' =>  new MongoDate($item["itemStartTime"] )), "commentData.object.postId" => (string)$item["postId"], "postowner" => $item["postowner"]) );
-				
+
 				$returnArray[$action]["start"] = $count-6; // Return start position
 				$item["start"] = $count-3;
 			}
@@ -2264,7 +2267,7 @@ foreach ($data["requests"] as $item)
 
 			if ($item["start"] < 0)
 				$item["start"] = 0;
-			
+
 
 			if ($item["limit"] > 0)
 				$limit = $item["limit"];
@@ -2290,27 +2293,27 @@ foreach ($data["requests"] as $item)
 				$additionalConstraints = array("post.metaData.type" => array('$in' => $item["filter"]["context"]));
 			}
 			/*if ($item["list"] == "archive")
-			{	
+			{
 				unset($item["list"]);
 				$additionalConstraints = array("archived" => true);
 			}
 			else if ($item["list"] == "myevents")
-			{	
+			{
 				unset($item["list"]);
 				$additionalConstraints = array("post.metaData.type" => "publicevent");
 			}
 			else if ($item["list"] == "mymoves")
-			{	
+			{
 				unset($item["list"]);
 				$additionalConstraints = array("post.metaData.type" => "move");
 			}
 			else if ($item["list"] == "myoffers")
-			{	
+			{
 				unset($item["list"]);
 				$additionalConstraints = array("post.metaData.type" => "offer");
 			}
 			else if ($item["list"] == "myreviews")
-			{	
+			{
 				unset($item["list"]);
 				$additionalConstraints = array("post.metaData.type" => "review");
 			}*/
@@ -2319,14 +2322,14 @@ foreach ($data["requests"] as $item)
 			//if (!isset($item["list"]) ||$item["list"] == "")
 			{
 				// Get all stream items
-				
+
 			//	$col->streamitems->ensureIndex('owner');
 
 			$iter = $col->streamitems->find(array_merge(array("owner" => $_SESSION["charme_userid"]), $additionalConstraints))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 			$streamItems=  iterator_to_array($iter , false);
 
 
-		
+
 			}
 			/*else
 			{
@@ -2334,17 +2337,17 @@ foreach ($data["requests"] as $item)
 				$list = new MongoId($item["list"]);
 				$ar = iterator_to_array($col->listitems->find(array("list" => new MongoId($list))), true);
 				$finalList = array();
-  	 
+
 			  	 foreach ($ar  as $item) {
-			  	 	if ($item["userId"] != "" && 
+			  	 	if ($item["userId"] != "" &&
 			  	 		isset($item["userId"]))
 			  	 	$finalList[] = $item["userId"];
 			  	 }
-		
-				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)		
+
+				$iter = $col->streamitems->find(array("owner" => $_SESSION["charme_userid"],  'post.owner' => array('$in' => $finalList)))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 				$streamItems=  iterator_to_array($iter , false);
 
-			
+
 			}*/
 			// Append last 3 comments for each item.
 			foreach ($streamItems  as $key => $item2)
@@ -2361,11 +2364,11 @@ foreach ($data["requests"] as $item)
 
 				if ($startIndex<0)
 					$startIndex = 0;
-				
+
 				if (!isset($streamItems[$key ]["likecount"]))
 					$streamItems[$key ]["likecount"] = 0;
 
-				$streamItems[$key ]["comments"] = 
+				$streamItems[$key ]["comments"] =
 				iterator_to_array($col->streamcomments->find(array("commentData.object.postId" => (string)$item2["postId"], "postowner" => $item2["post"]["author"]) )->skip($startIndex)->limit($numberOfComments), false);
 			}
 
@@ -2373,10 +2376,10 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		case "edgekey_request" : 
+		case "edgekey_request" :
 
 			// TODO: check access here.
-	
+
 			$col = \App\DB\Get::Collection();
 
 			$query = array("owner" => $item["publicKeyOwner"], "userId" => $item["privateKeyOwner"]);
@@ -2384,32 +2387,32 @@ foreach ($data["requests"] as $item)
 			if ($item["revision"] != 0)
 				$query["revision"] = $item["revision"];
 
-			
+
 			$result = $col->edgekeys->find($query)->sort(array("revision" => -1))->limit(1);
-	
+
 
 			foreach ($result as $resItem)
 			{
 				$returnArray[$action] = array("data" => $resItem);
 			}
 
-			
-		break;		
 
-		case "edgekey_recrypt_setData" : 
+		break;
+
+		case "edgekey_recrypt_setData" :
 			// We need postId and userId to set a new postkey here.
-	
+
 			$col = \App\DB\Get::Collection();
 			foreach ($item["newPostKeys"] as $item)
 			{
-				
+
 				$col->postkeys->update(array("postOwner" => $_SESSION["charme_userid"], "postId" => $item["postId"]),	array('$set' => array("postKey" => $item["postKeyEnc"])));
 
 			}
 			$returnArray[$action] =  array("SUCCESS" => true);
 
 		break;
-		case "edgekey_recrypt_getData" : 
+		case "edgekey_recrypt_getData" :
 			// Return postkeys and messages for recryption here
 			$data = array();
 			$postIds = array();
@@ -2423,28 +2426,28 @@ foreach ($data["requests"] as $item)
 				$postIds[] = new MongoId($value["postId"]);
 				clog($value["postId"]);
 			}
-			
+
 			$query = $col->posts->find(array("_id" =>  array('$in' => $postIds)), array("_id", "fkEncPostKey", "postData.signature.keyRevision"));
 			//$bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
 
 			$cursor = iterator_to_array($query, false);
-	
+
 			$data["postKeys"] = $cursor;
 			// Get the postkeys encrypted for the postowner
 
 			$returnArray[$action] =  array("SUCCESS" => true, "data" => $data);
 
 		break;
-		/* 
-			Register a 
+		/*
+			Register a
 		*/
 		case "register_collection_post":
-			
+
 			//clog("COLLECTION ITEM!");
 			//clog2($item);
 			// TODO: check if user is subscribed to collection! (NEEDED FOR SPAM PROTECTION!)
 			$col = \App\DB\Get::Collection();
-			/* 
+			/*
 				Requst JSON Structure:
 
 				follower
@@ -2464,18 +2467,18 @@ foreach ($data["requests"] as $item)
 			// Check Signature Here!!
 
 			// IMPORTANT: $content must match with collection follow sub requests (3newest etc.)
-	
-			// Get the public key of the post author to check signature	
+
+			// Get the public key of the post author to check signature
 			$pemkey = \App\Security\PublicKeys::tryToGet($item["postData"]["object"]["author"],$item["postData"]["signature"]["keyRevision"]);
 
 			$receiverPublicKeyRevision = $col->users->findOne(array("userid"=> ($item["follower"])), array('publickey.revision'));
-		
+
 			clog2($item);
 			if ($item["revisionB"] < $receiverPublicKeyRevision["publickey"]["revision"] && $item["postData"]["object"]["isEncrypted"] == 1)
 			{
 				clog("IS ENCRYPTED");
 				// Key is not valid anymore :(
-				$data=  array("requests" => 
+				$data=  array("requests" =>
 
 							array(
 								array("id" => "key_update_notification",
@@ -2484,7 +2487,7 @@ foreach ($data["requests"] as $item)
 							"notifiedUser" =>$item["follower"]))
 
 						);
-				
+
 				$req21 = new \App\Requests\JSON(
 				$item["follower"],  // receiver
 				$item["postData"]["object"]['author'], // sender
@@ -2523,15 +2526,15 @@ foreach ($data["requests"] as $item)
 
 			}
 
-			
 
-			
+
+
 
 			//collection_post
 		break;
 
 
-		case "collection_post" : 
+		case "collection_post" :
 
 
 
@@ -2539,7 +2542,7 @@ foreach ($data["requests"] as $item)
 			$keys = array();
 			$revisions = array();
 			$edgeKeyRevisions = array();
-	
+
 			foreach ($item["keys"] as $key)
 			{
 				$keys[$key["userId"]] = $key["key"];
@@ -2586,7 +2589,7 @@ foreach ($data["requests"] as $item)
 			$username = $cursor2["firstname"]." ".$cursor2["lastname"];
 
 			$content = array("username"=> $username, "fkEncPostKey" => $item["fkEncPostKey"], "time"=> new MongoDate(), "likecount" => 0, "collectionId" => $item["postData"]["object"]["collectionId"], "postData"  => $item["postData"], "owner"  => $_SESSION["charme_userid"], "hasImage" => $hasImage);
-			
+
 
 
 			$res = $col->posts->insert($content);
@@ -2627,7 +2630,7 @@ foreach ($data["requests"] as $item)
 
 			$res2 = $col->followers->find(array("collectionId" => new MongoId($item["postData"]["object"]["collectionId"]) ));
 
-			
+
 			foreach ($item["keys"] as $userkey)
 			{
 				// Insert Keys into db.
@@ -2665,14 +2668,14 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 						"revisionB" => $revisions[$resItem["follower"]],
 						"edgeKeyRevision" => $edgeKeyRevisions[$resItem["follower"]]
 						);
-					
+
 						// Send decryption key if post is encrypted
 						if ($item["postData"]["object"]["isEncrypted"])
 						{
 							$dataArray["postKey"] = $keys[$resItem["follower"]];
-						
+
 							// Insert Keys into db.
-							
+
 							/*$col->postkeys->insert(array(
 								"postId" => $content["_id"]->__toString(),
 								"postKey" => $keys[$resItem["follower"]],
@@ -2683,19 +2686,19 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 							));*/
 
 						}
-					
+
 						$data = array("requests" => array($dataArray));
 
 						$req21 = new \App\Requests\JSON(
 						$resItem["follower"],
 						$_SESSION["charme_userid"],
 						$data
-						
+
 						);
 						$req21->send();
 				}
 			}
-			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString(), "hasImage" => $hasImage);	
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString(), "hasImage" => $hasImage);
 
 
 
@@ -2705,7 +2708,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		break;
 
 
-		
+
 
 
 		case "collection_getAll" :
@@ -2719,16 +2722,16 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			if ($item["collectionId"] == 0)
 			{
 				$returnArray[$action] =array( "lists" =>
-				iterator_to_array($col->lists->find(array("owner" => $_SESSION["charme_userid"])), false)) 
+				iterator_to_array($col->lists->find(array("owner" => $_SESSION["charme_userid"])), false))
 			;
 			}
 			else
 			{
 				$result2 = $col->collections->findOne(array("_id" => new MongoId($item["collectionId"])), array("name", "description", "currentlist"));
 
-				$returnArray[$action] =array("name" => $result2["name"], 
+				$returnArray[$action] =array("name" => $result2["name"],
 				"description" => $result2["description"], "currentlist" => $result2["currentlist"], "lists" =>
-				iterator_to_array($col->lists->find(array("owner" => $_SESSION["charme_userid"])), false)) 
+				iterator_to_array($col->lists->find(array("owner" => $_SESSION["charme_userid"])), false))
 			;
 			}
 		break;
@@ -2742,7 +2745,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			  			);
 
 			$col->collections->update(array("_id" => new MongoId($item["collectionId"]), "owner" => $_SESSION["charme_userid"]), array('$set' => $content));
-			
+
 			$returnArray[$action] = array("SUCCESS" => true);
 
 		break;
@@ -2759,7 +2762,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 			$col->collections->insert($content);
 
-			// Auto Subscribe to my own collections 
+			// Auto Subscribe to my own collections
 			$content3 = array("owner" => $_SESSION["charme_userid"], "collectionOwner" => $_SESSION["charme_userid"], "collectionId" => new MongoId($content["_id"]));
 			$col->following->insert($content3);
 			$content2 = array("follower" => $_SESSION["charme_userid"],
@@ -2783,7 +2786,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 			$ar = iterator_to_array($col->listitems->find($sel), true);
 			$keys = array();
-			$ar2 = array(); 
+			$ar2 = array();
 
 			// Filter out duplicates
 			foreach ($ar as $key => $value) {
@@ -2829,7 +2832,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 			$notify = false;
 			foreach ($allLists as $listitem)
-			{	
+			{
 				// First option. Item is not in old list, but in new list -> Add item
 				if (in_array($listitem["_id"], $newLists ) && !in_array($listitem["_id"], $oldLists))
 			  	{
@@ -2842,9 +2845,9 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			  		$notify = true;
 
 
-			  
-	
-			  	
+
+
+
 			  	}
 				// Second option. Item is  in old list, but not in new list -> Remove item
 			  	else if (!in_array($listitem["_id"], $newLists ) && in_array($listitem["_id"], $oldLists))//item has been removed
@@ -2862,13 +2865,13 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			{
 
 				// notify owner........
-				$data=  array("requests" => 
+				$data=  array("requests" =>
 
 					array("id" => "list_receive_notify",
 					"adder" => $_SESSION["charme_userid"],
 					"username" => $sendername,
 					"added" => $item["userId"]));
-				
+
 				$req21 = new \App\Requests\JSON(
 				$item["userId"],  // receiver
 				$_SESSION["charme_userid"], // sender
@@ -2877,19 +2880,19 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 				$req21->send();
 			}
 			$returnArray[$action] = array("SUCCESS" => true);
-		
+
 
 		break;
 
 
 		// Request future posts from this server.
 		case "list_receive_notify":
-			
-			$notifyItem = 
+
+			$notifyItem =
 			array("type" => \App\Counter\Notify::notifyListAdded,
 				"name" => $item["username"], "owner" => $item["added"],
 				"adder" => $item["adder"]
-				
+
 
 				);
 			//\App\Counter\Notify::addNotification(array());
@@ -2904,7 +2907,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 		break;
 
-		// Register follow on server of the person who user follows 
+		// Register follow on server of the person who user follows
 		case "register_collection_follow" :
 			$col = \App\DB\Get::Collection();
 
@@ -2930,7 +2933,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 
 				// Add following notificaiton
-			$notifyItem = 
+			$notifyItem =
 			array("type" => \App\Counter\Notify::notifyNewCollection,
 				"name" => $item["username"], "follower" => $item["follower"],
 				"collectionName" => $res1["name"],
@@ -2944,7 +2947,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 
 			$content = array("follower" => $item["follower"],
-			 //"collectionOwner" =>  $item["collectionOwner"], 
+			 //"collectionOwner" =>  $item["collectionOwner"],
 			 "collectionId" => new MongoId($item["collectionId"]));
 
 			if ($item["action"] == "follow")
@@ -2963,7 +2966,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		// return the 3 newest collection items. Useful when subscribing to a collection and adding the items to the newsstream.
 		case "collection_3newest":
 
-		
+
 
 			$col = \App\DB\Get::Collection();
 
@@ -2972,16 +2975,16 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			foreach ($items as $key => $value) {
 
 				$postkey =  $col->postkeys->findOne(array('userId' => $item["follower"],  'postId' => $value["_id"]->__toString()));
-			
+
 				$postkey = $postkey["postKey"];
-			
+
 
 
 				$count = $col->likes->count(array("commentData.object.postId" => $value["_id"]->__toString(), "liker" => $item["follower"]));
 
 
 				$items[$key]["postKey"] = $postkey;
-				
+
 				if ($count == 0)
 				$items[$key]["liketemp"] = false;
 					else
@@ -2991,7 +2994,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 				$iter = $col->comments->find(array("commentData.object.postId" => $value["_id"]->__toString()))->sort(array('_id' => -1))->limit(3);
 
-				$items[$key]["comments"] = 
+				$items[$key]["comments"] =
 				array_reverse(
 					iterator_to_array($iter, false))
 				;
@@ -3016,22 +3019,22 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		break;
 
 		case "collection_follow" :
-			
-		
+
+
 
 			$col = \App\DB\Get::Collection();
 
 			$action = $item["action"];
 			$content = array("owner" => $_SESSION["charme_userid"], "collectionOwner" =>  $item["collectionOwner"], "collectionId" => new MongoId($item["collectionId"]));
-			
+
 
 
 			if ($action == "follow")
 			{
-				
+
 
 				$col->following->update($content, $content ,  array("upsert" => true));
-				
+
 
 
 				$data = array("requests" => array(array(
@@ -3039,51 +3042,51 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 				"id" => "collection_3newest",
 				"collectionId" => ($item["collectionId"]),
 				"follower" => $_SESSION["charme_userid"], // used in 3newest
-	
+
 				)));
 
-				
+
 				$req21 = new \App\Requests\JSON(
 				$item["collectionOwner"],
 				$_SESSION["charme_userid"],
 				$data
-				
+
 				);
 
 				$dataReq = $req21->send();
 
-			
+
 
 				$col->streamitems->remove(array("owner" => $_SESSION["charme_userid"], "post.collectionId" => new MongoId($item["collectionId"] ), "post.author" => $item["collectionOwner"]));
 
 
-				
-					
+
+
 				foreach ($dataReq["collection_3newest"]["items"] as $post)
 				{
 					//clog("ITEM ID".print_r($post, true));
-				
-					
+
+
 					$like = $post["liketemp"];
 					$comments = $post["comments"];
 
 					unset($post["liketemp"]);
 					unset($post["comments"]);
 
-					/* 
+					/*
 						$content = array("post" => $item["postData"]["object"], "postId" => new MongoId($item["postId"]), "owner"  => $item["follower"], "meta"  => $item["meta"], "like" => false, "likecount" => 0);
 					*/
 
 					$ins = array(
 						"owner" => $_SESSION["charme_userid"],
-				
+
 						"like" => $like,
 						"likecount" => $item["likecount"],
 						 "postKey" => $post["postKey"],
 						"postId" => new MongoId($post["_id"]),
 					 	"post" => $post["postData"]["object"],
 					 	"meta" => array("hasImage" => $post["hasImage"],"time" => $post["time"], "username" => $post["username"])
-					 
+
 
 						);
 
@@ -3094,13 +3097,13 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 						unset($comment["_id"]);
 					$col->streamcomments->update($comment,$comment, array("upsert" => true));
 					}
-		
+
 					if (Count( $post) > 0)
 					$col->streamitems->insert($ins);
 
 
 				}
-	
+
 
 
 
@@ -3112,14 +3115,14 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 				$col->following->remove($content);
 
-		
-			
+
+
 				$col->streamitems->remove(array("owner" => $_SESSION["charme_userid"], "post.collectionId" => ($item["collectionId"] ), "post.author" => $item["collectionOwner"]));
 
 				// Remove stream items
 			}
 
-			
+
 			// Get sender name
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
 			$sendername = $cursor2["firstname"]." ".$cursor2["lastname"];
@@ -3150,10 +3153,10 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 				$item["collectionOwner"],
 				$_SESSION["charme_userid"],
 				$data
-				
+
 				);
 
-		
+
 				$req21->send();
 
 				$returnArray[$action] = array("STATUS" => "OK");
@@ -3164,7 +3167,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		// Get following state from followers server
 		case "register_isfollow":
 			$col = \App\DB\Get::Collection();
-		
+
 			$content = array(
 				"owner" => $item["userId"],
 				"collectionOwner" =>  $item["collectionOwner"],
@@ -3202,7 +3205,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		case "gcm_register" :
 			$col = \App\DB\Get::Collection();
 			$content = array("regId" => $item["regId"], "owner" => $_SESSION["charme_userid"], "timestamp" =>  new MongoDate(time()));
-			
+
 			// 1st argument in Update is date to be selected (=SELECT), second argeumnt is new data (=SET), upsert says to replace old data.
 			$col->gcmclients->update(array("regId" => $item["regId"], "owner" => $_SESSION["charme_userid"]),$content, array("upsert" => true));
 			$returnArray[$action] = array("SUCCESS" => true);
@@ -3235,7 +3238,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 				{
 					$col->streamitems->remove(array("postId" => new MongoId($item["postId"])));
 					$col = \App\DB\Get::Collection();
-				
+
 				}
 			}
 
@@ -3252,7 +3255,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 			// TODO: Make this more efficient. Only one request per server
 			$dbReturn2 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn["collectionId"])));
-		
+
 			foreach ($dbReturn2 as $m_item)
 			{
 
@@ -3271,27 +3274,27 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 			}
 			$col->posts->remove(array("_id" => new MongoId($dbReturn["_id"]), "owner" => $_SESSION["charme_userid"])); // Delete post local first
 			\App\Hydra\Distribute::start(); // Start server distribution
-			
+
 
 		break;
 
 		// Comments can either be deleted by post owner or by comment owner
 		case "comment_delete":
-			
+
 			$col = \App\DB\Get::Collection();
 
-	
+
 
 			// Find out the post and collection id respectivly to which the post belongs
 			$dbReturn1 = $col->comments->findOne(array("_id" => new MongoId($item["commentId"])), array("postId", "_id")); // has field owner
-		
+
 			$dbReturn2 = $col->posts->findOne(array("_id" => new MongoId($dbReturn1["postId"])),array("collectionId", "_id"));  // has field owner
 			$dbReturn3 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn2["collectionId"])));
-		
-			
+
+
 			foreach ($dbReturn3 as $item2)
 			{
-		
+
 
 				$data = array("requests" => array(array(
 				"id" => "comment_delete_receive",
@@ -3305,7 +3308,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 				$arr = $req21->givePostman(2);
 
-			
+
 			}
 			// TODO: later
 			$col->comments->remove(array("_id" => new MongoId($dbReturn2["_id"]), "owner" => $_SESSION["charme_userid"])); // Delete post local first
@@ -3333,9 +3336,9 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 		case "lists_delete" :
 			$col = \App\DB\Get::Collection();
-			
 
-		
+
+
 			$col->lists->remove(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($item["listId"])));
 
 			$returnArray[$action] = array("SUCCESS" => true);
@@ -3343,7 +3346,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		break;
 
 		case "lists_rename" :
-			
+
 			$col = \App\DB\Get::Collection();
 			$col->lists->update(
 			array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($item["listId"])),
@@ -3356,7 +3359,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 		case "lists_get" :
 			$col = \App\DB\Get::Collection();
 			$returnArray[$action] = iterator_to_array($col->lists->find(array("owner" => $_SESSION["charme_userid"])), false);
-			
+
 		break;
 
 		case "lists_getProfile" :
@@ -3367,7 +3370,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 			$ar = iterator_to_array($col->listitems->find($sel), true);
 			$keys = array();
-			$ar2 = array(); 
+			$ar2 = array();
 
 			// Filter out duplicates
 			foreach ($ar as $key => $value) {
@@ -3387,7 +3390,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 
 		case "profile_get":
-		
+
 			// Lookup visibility for this user.
 
 			// Always send public profile information
@@ -3401,7 +3404,7 @@ clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 
 
 		case "profile_get_name":
-		
+
 			$col = \App\DB\Get::Collection();
 			$cursor = $col->users->findOne(array("userid"=> urldecode($item["userId"])), array("firstname", "lastname"));
 			$returnArray[$action] =   (array("info"=>$cursor));
@@ -3468,9 +3471,9 @@ echo json_encode($returnArray);
 
 /*
 	You just found a train:
-    _______                _______     <>_<>      
-   (_______) |_|_|______| |[] [ ]| .---|'"`|---.  
-  `-oo---oo-'`-o---ooo-'`-o---o-'` \o=oo=oo==o=/ 
+    _______                _______     <>_<>
+   (_______) |_|_|______| |[] [ ]| .---|'"`|---.
+  `-oo---oo-'`-o---ooo-'`-o---o-'` \o++oo+++o=/
 */
 
 ?>

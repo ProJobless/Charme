@@ -131,6 +131,7 @@ a.category
 	color:inherit;
 	cursor: pointer;
 }
+
 .cont img
 {
 	max-width: 100%;
@@ -158,7 +159,9 @@ a.category
 }
 .contextItem:active
 {
-	-webkit-filter: brightness(0.5);}
+	filter: brightness(0.5);
+	-webkit-filter: brightness(0.5);
+	}
 
 .postoptions a, .postoptions
 {
@@ -166,8 +169,8 @@ a.category
 	color: gray;
 }
 /* custom scrollbars */
-:focus { 
-    outline: none; 
+:focus {
+    outline: none;
 }
 .profile_sidebar .profileImage
 {
@@ -182,25 +185,25 @@ a.category
     width: 8px;
      background-color: transparent;
 }
- 
+
 
 ::-webkit-scrollbar-track {
    background-color: #efefef;
 
 }
- 
-::-webkit-scrollbar-track-piece 
+
+::-webkit-scrollbar-track-piece
 {
 	   background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
 
 
-    background: rgba(0,0,0,0.2); 
+    background: rgba(0,0,0,0.2);
 
 }
 ::-webkit-scrollbar-thumb:window-inactive {
-	background: rgba(0,0,0,0.2); 
+	background: rgba(0,0,0,0.2);
 }
 
 
@@ -231,7 +234,7 @@ a.category
 	font-weight: normal;
 	padding:6px 8px 0px 8px;
 	position: relative;
-	
+
 }
 .likes img
 {
@@ -262,7 +265,7 @@ a.category
 
 .subCont li.dp-active
 {
-	
+
 	background-color: #ccc;
 }
 .subCont li.dp-hover
@@ -271,7 +274,7 @@ a.category
 }
 
 .delete:active
-{	
+{
 	background-position: 0 16px;
 }
 
@@ -304,7 +307,7 @@ padding: 8px 0;
 .collectionPost:hover .delete
 {
 
-	
+
 
 	 opacity: 1;
    transition: opacity .3s ease-in-out;
@@ -388,7 +391,7 @@ label { display: inline-block; width: 130px; float:left; }
 	background-color:#fff;
 	position:fixed;
 	border:1px #d7d7d7 solid;
-	
+
 	display:   none;
 	z-index:8000;
 
@@ -405,8 +408,8 @@ label { display: inline-block; width: 130px; float:left; }
 }
 .actionBar a.active
 {
-	
-	
+
+
 }
 .messageDetails
 {
@@ -440,7 +443,7 @@ label { display: inline-block; width: 130px; float:left; }
 
 .topHeader
 {
-	
+
 	z-index: 9001; /* must be higher than responsive heeader*/
 	border-bottom:1px silver solid;
 	background-color: #efefef;
@@ -479,9 +482,9 @@ float: left;
 
 	/* Prevent text selection */
 	-webkit-user-select: none;
-    -moz-user-select: none; 
-    -khtml-user-select: none; 
-	
+    -moz-user-select: none;
+    -khtml-user-select: none;
+
 }
 .actionBar
 {
@@ -508,7 +511,7 @@ float: left;
 
 }
 #colorbg
-{	
+{
 	height:100%;
 	width:150px;
 	margin:0px auto;
@@ -532,29 +535,29 @@ float: left;
 	z-index:-9994;
 	border-right:1px silver solid;
 
-	
+
 }
 
 
 .meta
 {
-	
+
 display:none;
 }
 .cb
 {
-	
+
 clear:both;}
 
 .sbBeta .active a:active
 {
-	
+
 color:#000;
 background-color:#efefef;
 }
 .containerAll
 {
-	
+
 width: 1000px;
 
 margin:0px auto;
@@ -565,7 +568,7 @@ margin:0px auto;
 width: 150px;
 float:left;
 }
-.sidebar ul 
+.sidebar ul
 	{
 	padding:0;
 	margin:0;
@@ -587,11 +590,11 @@ float:left;
 }
 .sidebar ul li a:hover
 {
-	
+
 }
-.sidebar span.count 
+.sidebar span.count
 {
-	
+
 float:right;
 display:inline-block;
 padding:2px 7px;
@@ -614,21 +617,21 @@ box-shadow:   inset 0 0 1px #000;
 }
 .sidebar ul li
 {
-	
-	
+
+
 	color:#fff;
 	margin-bottom:1px;
 }
 
 .sbBeta ul li a:active
 {
-	
+
 background-color:#fff;
 }
 
 .sbBeta ul li.active
 {
-	
+
 background-color:#fff;
 
 }
@@ -639,7 +642,7 @@ background-color:#fff;
 .sbBeta ul li.active .count
 {
 display:none;
-	
+
 }
 
 .sbBetaCont
@@ -667,7 +670,7 @@ border-right:1px silver solid;
 
 .sbAlpha
 {
-	
+
 
 position:fixed;
 margin-left:1px;
@@ -680,7 +683,7 @@ margin-left:1px;
 {
 	background-color:#E0E0E0;
 }
-.sbAlpha  ul 
+.sbAlpha  ul
 {
 
 margin-bottom: 8px;
@@ -688,7 +691,7 @@ margin-bottom: 8px;
 
 .page_content
 {
-	
+
 background-color:#fff;
 float:left;
 width:708px;
@@ -706,5 +709,5 @@ body
 
 	font-size:13px;
 
-	
+
 	}

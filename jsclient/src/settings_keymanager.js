@@ -19,7 +19,7 @@ function keymanager_checkRevCounter(callback)
 		_.templateSettings.variable = "rc";
 		var template = _.template(d, templateData);
 		ui_showBox(template, function() {
-			 
+
 			 $("#box_info_ok").click(function()
 			 	{
 			 		ui_closeBox();
@@ -37,7 +37,7 @@ function updateDataOK() {
 		"id": "key_update_recrypt_getData"
 		}]
 	}, function(d) {
-		
+
 		$("#upddatalog").html("Update Data...");
 
 		var rsaKeyNewest = getKeyByRevision(0);
@@ -57,10 +57,10 @@ function updateDataOK() {
 			//if (this.revision < rsaKeyNewest.revision)
 			{
 				var rsakey = getKeyByRevision(this.revision).rsa.rsa;
-				
+
 				var newAesTemp = crypto_rsaDecrypt(this.aesEnc, rsakey);
 				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
-			
+
 				recryptedData["conversations"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
 			}
 		});
@@ -72,9 +72,9 @@ function updateDataOK() {
 				var fastkey = getFastKey(this.value.revision, 1);
 
 
-				
+
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value.aesEnc);
-	
+
 
 
 				var newAesEnc = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
@@ -86,20 +86,20 @@ function updateDataOK() {
 		$.each(d.key_update_recrypt_getData.data.keydirectory, function(index, item) {
 
 			//if (this.fkrevision < rsaKeyNewest.revision)
-			{	
-				
+			{
+
 				var fastkey = getFastKey(this.fkrevision, 1);
 				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
 				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
 				var edgekeyTemp = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
 				var edgekeyNew =  aes_encrypt(rsaKeyNewest.fastkey1, edgekeyTemp);
-				
+
 				var rsaKey = $.parseJSON(newAesTemp);
 
 				rsa = new RSAKey();
 				rsa.setPublic(rsaKey.key.n, rsaKey.key.e);
 				rsaEncKey = rsa.encrypt(edgekeyTemp);
-				
+
 				//console.log(newAesTemp);
 				//var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
 				recryptedData["keydirectory"].push({rsaEncEdgekey: rsaEncKey, id: this._id.$id, fkEncEdgekey: edgekeyNew, value: newValue, revision: rsaKeyNewest.revision });
@@ -109,14 +109,14 @@ function updateDataOK() {
 		$.each(d.key_update_recrypt_getData.data.pieceBucketItems, function(index, item) {
 
 			//if (this.fkrevision < rsaKeyNewest.revision)
-			{	
+			{
 				/*
 
 					bucketkey: Object
 					data: "720cfafabced36" (rsa encrypted)
 					revision: 2
 				*/
-				
+
 
 				try
 				{
@@ -144,7 +144,7 @@ function updateDataOK() {
 		console.log(recryptedData);
 
 		NProgress.start();
-		
+
 		apl_request({
 			"requests": [{
 				"id": "key_update_recrypt_setData",
@@ -168,7 +168,7 @@ function updateDataOK() {
 
 
 
-	
+
 }
 
 function updateData() {
@@ -310,7 +310,7 @@ function makeNewKey(userId) {
 
 									var dec = aes_decrypt(passphrase, d.key_update_phase1.keyring);
 
-								
+
 
 									keyring = jQuery.parseJSON(dec);
 								} catch (err) {
@@ -442,14 +442,11 @@ function makeNewKey(userId) {
 }
 
 
-
+// This function shows a box prompting for verification of the public key belonging to a certain user
 function requestNewKey(userId) {
-
-
 
 	var user = userId.split("@")[0];
 	var server = userId.split("@")[1];
-
 
 	// Make request to users server to get Key and username
 	apl_request({
@@ -469,25 +466,25 @@ function requestNewKey(userId) {
 
 			var text = CryptoJS.SHA256(key.n).toString(CryptoJS.enc.Base64);
 
+			// Setup the popup html template
 			var templateData = {
 				key: text, // This is a SHA key!
 				userId: userId,
 				revision: d.key_get.revision
 			};
-
 			_.templateSettings.variable = "rc";
 			var template = _.template(d2, templateData);
-
-			// more info click handler
 
 			ui_showBox(template, function() {
 
 				// Make request to my server to check revision and get encrypted public key
 
+				// The keys are encrypted with fastkey1,
+				// This is one of Charmes symmetric key only known by the user, not by the server
 				var fastkey = getFastKey(0, 1);
 
 				// Build key hash
-				var e_key = CryptoJS.SHA256(fastkey.fastkey1 + userId).toString(CryptoJS.enc.Base64);
+				var e_key = CharmeModels.Keys.mapDirectoryKey(userId);
 
 				apl_request({
 					"requests": [{
@@ -496,68 +493,35 @@ function requestNewKey(userId) {
 					}, ]
 				}, function(d3) {
 
-
 					if (d3.key_getFromDir.value != null) {
-
-
-
-						//console.log(d3.key_getFromDir.value);
-
 						var oldValue = $.parseJSON(aes_decrypt(fastkey.fastkey1, d3.key_getFromDir.value));
-
-
 						if (oldValue.key.n != key.n)
 							$("#keyChanged").show();
 						else
-							$("#keySame").show();
-
-
+							$("#keySame").show(); // If the key has not changed we do not need to update it!
 					} else
 						$("#keyNew").show();
-					// Get public key if exists
-					// The key is AES encrypted with passphrase
-					// So 
-					// On click button
-					$('#but_box_save').click(function() {
 
-						// Build value hash
-						var e_value = aes_encrypt(fastkey.fastkey1, JSON.stringify({
-							key: key,
-							revision: d.key_get.revision,
-							userId: userId // Important to ensure server returns right key!
-						}));
-						
-				
-						var keypair = CharmeModels.Keys.makeRsaFkKeypair( d.key_get.publickey);
-						var username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
-						var keyhash =  aes_encrypt_json(fastkey.fastkey1, {revision: d.key_get.revision ,hash:CharmeModels.Keys.buildHash(key)});
+					$('#but_box_save').click(function() { // Register button event
 
-						
-						var edgekey = 
-						{
-							"revisionA": fastkey.revision,
-							"revisionB": d.key_get.revision,
-							"revision" :  fastkey.revision+d.key_get.revision,
-							"rsaEncEdgekey" : keypair.rsaEncKey,
-							"fkEncEdgekey" : keypair.randomKey,
-							"userId": userId
-						};
-					
+		
+
 						apl_request({
-							"requests": [{
-								"id": "key_storeInDir",
-								"key": e_key,
-								"userId" : userId,
-								"keyhash" : keyhash,
-								"username" : username,
-								"pubKeyRevision" : d.key_get.revision, // Revision of public key of user B!
-								"fkrevision": fastkey.revision, // Pubkey revision of user A
-								"rsaEncEdgekey" : keypair.rsaEncKey,
-								"fkEncEdgekey" : keypair.randomKey,
-								"value": e_value,
-								"edgekey" : edgekey
-							}, ]
+							// (publicKey, addedPublicKeyRevision,  currentUserId, username) -
+							"requests": [
+								CharmeModels.Keys.makeKeyStoreRequestObject(
+									key, // The public key
+									d.key_get.revision, // Revision of public key
+								  userId, // User id of currently logged in user
+									d.profile_get_name.info.firstname + ' ' + d.profile_get_name.info.lastname // The username
+									) ]
 },						function(d4) {
+
+							//
+							// All data previously which was
+							// encrypted with the old edgekey needs to be decrypted with the old edgekey
+							// and encrypted with the new one.
+							//
 
 							apl_request({
 								"requests": [{
@@ -567,16 +531,11 @@ function requestNewKey(userId) {
 								}, ]
 							}, function(d5) {
 
-								console.log("DATA TO RECRYPT IS:");
-								console.log(d5.edgekey_recrypt_getData.data.postKeys);
-
 								newpostkeys = [];
 								$.each(d5.edgekey_recrypt_getData.data.postKeys, function(index, item) {
 									var postkey = aes_decryptWithFastKey1(item.fkEncPostKey, item.postData.signature.keyRevision);
-							
 									newpostkeys.push({postId: this._id.$id, postKeyEnc: aes_encrypt(keypair.randomKeyRaw, postkey.message)});
 								});
-
 
 								apl_request({
 									"requests": [{
@@ -586,11 +545,8 @@ function requestNewKey(userId) {
 
 									}, ]
 								}, function(d5) {
-
 									// Sucess is here.,
 									ui_closeBox();
-
-									console.log(newpostkeys);
 
 									// Allow sending messages and adding to lists on profile
 									$(".but_sendMsg").show();
@@ -603,21 +559,12 @@ function requestNewKey(userId) {
 								});
 							});
 						});
-						// Encrypt new key with passphrase
-
-					});// End key_get from dir
-
+					});
 				});
-
-
-
 			});
 		});
 
 	}, "", server);
-
-
-
 }
 
 function acceptKey(userId) {

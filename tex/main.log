@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.23)  21 APR 2015 23:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.23)  23 MAY 2015 20:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -713,7 +713,7 @@ LaTeX Font Info:    Try loading font information for T1+lmtt on input line 35.
 (/usr/share/texlive/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [3]
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
 []$\T1/lmtt/m/n/10.95 http : / / www . emc . com / collateral / white -[] paper
 s / h11300 -[] pkcs -[] 1v2 -[] 2 -[] rsa -[]
  []
@@ -721,40 +721,40 @@ s / h11300 -[] pkcs -[] 1v2 -[] 2 -[] rsa -[]
 [4] <eds.pdf, id=200, 257.91585pt x 124.53975pt>
 File: eds.pdf Graphic file (type pdf)
  <use eds.pdf>
-Package pdftex.def Info: eds.pdf used on input line 101.
+Package pdftex.def Info: eds.pdf used on input line 102.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
  [5 <./eds.pdf>]
 <pubkey.pdf, id=268, 257.91585pt x 218.16658pt>
 File: pubkey.pdf Graphic file (type pdf)
  <use pubkey.pdf>
-Package pdftex.def Info: pubkey.pdf used on input line 144.
+Package pdftex.def Info: pubkey.pdf used on input line 145.
 (pdftex.def)             Requested size: 257.9152pt x 218.16605pt.
 
 <prvInfo.pdf, id=270, 257.91585pt x 124.53975pt>
 File: prvInfo.pdf Graphic file (type pdf)
  <use prvInfo.pdf>
-Package pdftex.def Info: prvInfo.pdf used on input line 153.
+Package pdftex.def Info: prvInfo.pdf used on input line 154.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
  [6 <./pubkey.pdf>] [7 <./prvInfo.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 190--194
+Underfull \hbox (badness 10000) in paragraph at lines 191--195
 
  []
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 210--214
+Underfull \hbox (badness 10000) in paragraph at lines 211--215
 
  []
 
 [9]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 242.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 243.
  [10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 242.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 243.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 242.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 242.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 243.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 243.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D13CCAD45D495B520CFC3C05102D643B;2037.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 242.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 243.
  ) 
 Here is how much of TeX's memory you used:
  9604 strings out of 495025
@@ -763,7 +763,7 @@ Here is how much of TeX's memory you used:
  12609 multiletter control sequences out of 15000+600000
  62402 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 36i,8n,38p,588b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,8n,38p,655b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/t
 exlive/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texlive/texmf-dist/f
 onts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
@@ -778,7 +778,7 @@ fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtt10.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
 >
-Output written on main.pdf (10 pages, 255907 bytes).
+Output written on main.pdf (10 pages, 256512 bytes).
 PDF statistics:
  398 PDF objects out of 1000 (max. 8388607)
  343 compressed objects within 4 object streams
