@@ -89,7 +89,7 @@ stepLast() {
 	sleep 1
 	echo -e "---------------------------"
 
-	echo -e "Installation nearly finished. Please add the following lines to your php.ini now:"
+	echo -e "Installation nearly finished. Please add the following lines to your php.ini (CLI and APACHE!!!) now:"
 	echo -e "extension=mongo.so"
 	echo -e "extension=curl.so"
 	echo -e "extension=gearman.so"

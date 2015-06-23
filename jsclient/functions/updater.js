@@ -18,11 +18,13 @@ $(function(){
 		if (typeof charmeUser === 'undefined')
 			return;
 
+			CHARME_GLOBAL_SOCKETURL = "ws://" + charmeUser.getServer() + ":8085";
+
 		if (CHARME_GLOBAL_SOCKETURL != "" && typeof CHARME_GLOBAL_SOCKETURL !== "undefined")
 		var host = "ws://" + charmeUser.getServer() + ":8085"; ///charme/events.php
 		else
 		{
-			AUTOBAHN_DEBUG = true;
+			AUTOBAHN_DEBUG = false;
 			console.warn("Charme is connecting to localhost for websocket connection. This should not happen in the released version.");
 			host = "ws://localhost:8085"; // Only for debugging
 		}
