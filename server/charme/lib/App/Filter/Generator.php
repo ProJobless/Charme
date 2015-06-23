@@ -7,7 +7,7 @@ class Generator
   // Generate Server list we connect to....
   public static function getServerList($filterObject, $dbCollection) {
 
-    $serverArray[] = array(); // Only needed on none remote servers!!
+    $serverArray = array(); // Only needed on none remote servers!!
     $returnedServers = array();
 
     if (isset($filterObject) && isset($filterObject["lists"])) {
@@ -44,8 +44,9 @@ class Generator
           $splitArray = explode ('@', $resItem["userId"]);
           $server = $splitArray[1];
           $serverArray[] = $server;
+
       }
-        $returnedServers =  array_slice($serverArray, 0, 5);
+      $returnedServers =  array_slice($serverArray, 0, 5);
 
     }
 

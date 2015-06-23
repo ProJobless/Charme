@@ -19,12 +19,14 @@ error_reporting(E_ALL);
 // Do not display erros in PHP File, check /var/log/apache2/error.log for errors
 ini_set('display_errors', 'Off');
 
+clog($_SERVER['HTTP_ORIGIN']);
 // Allow Origin is not set to allow all as otherwise every website on the world wide web could
 // query private session information for tracking by sending a request to your server.
 // Later on it could be changed in a way, so that the user can provide trusted client urls in his profile settings.
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $CHARME_SETTINGS["ACCEPTED_CLIENT_URL"]))
 header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 
+//header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPTIONS then $_POST will be empty.
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -2437,7 +2439,6 @@ foreach ($data["requests"] as $item)
 			// 3. remote queries for unencrypted posts
 			//
 			$serverList = \App\Filter\Generator::getServerList($item["filter"], $col);
-
 			//
 			// Build payload for multiserver request
 			//
@@ -2467,6 +2468,8 @@ foreach ($data["requests"] as $item)
 					// Get people in list
 			}
 
+
+
 			// Assume we do not use a collection filter (aka Return only results of subscribed collections)
 			// TODO: We do not use a collection filter when filtering for context items (Move, Sell, Review etc.)
 			// as these are not belonging to a collections
@@ -2490,6 +2493,7 @@ foreach ($data["requests"] as $item)
 			foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 			rtrim($fields_string, '&');
 
+
 			// Close sesion to avoid curl deadlock when queriing own server!
 			// DO NOT PERFORM ANY REQUEST THAT NEED SESSION AFTER a search request!!!
 			session_write_close();
@@ -2499,23 +2503,42 @@ foreach ($data["requests"] as $item)
 			//
 			$mh = curl_multi_init(); // Init the curl module for HTTP Requests
 			$ch = array();
-			for ($i = 0; $i<Count($serverList); $i++) {
-				$server = $serverList[$i];
-			//	clog2($server);
-				$ch[$i] = curl_init();
-				curl_setopt($ch[$i] , CURLOPT_URL, "http://".$server."/charme/req.php");
-				curl_setopt($ch[$i], CURLOPT_POST, count($fields));
-				curl_setopt($ch[$i], CURLOPT_POSTFIELDS, $fields_string);
-				curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER , TRUE );
-				curl_setopt($ch[$i], CURLOPT_TIMEOUT, 2); // 2 seconds timeout, servers have to respond fast!
+		//	clog2($serverList);
+		//	for ($i = 0; $i<Count($serverList); $i++) {
+			foreach ($serverList as $i => $server) {
 
-				curl_multi_add_handle($mh,$ch[$i]);
+				$ch[$i] = curl_init();
+				if ($server != "") {
+					curl_setopt($ch[$i] , CURLOPT_URL, "http://".$server."/charme/req.php");
+					curl_setopt($ch[$i], CURLOPT_POST, count($fields));
+					curl_setopt($ch[$i], CURLOPT_POSTFIELDS, $fields_string);
+					curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER , TRUE );
+					curl_setopt($ch[$i], CURLOPT_TIMEOUT, 12); // 2 seconds timeout, servers have to respond fast!
+
+					/*
+					can be used for debugging:
+
+					$result = curl_exec($ch[$i]);
+
+					if(curl_errno($ch[$i]))
+					{
+						clog("ERROR".curl_error($ch[$i]));
+					}
+					else {
+
+						clog("RESULT".$result);
+					}
+
+
+					curl_multi_add_handle($mh,$ch[$i]);
+*/
+				}
 			}
+
 
 
 		//	$streamItems = array(); // TODO: REMOVE!! THIS IS TO DEBUG WITHOUT LOCAL ENTRIES!
 		//	$postIds = array(); // TODO: REMOVE!! THIS IS TO DEBUG WITHOUT LOCAL ENTRIES!
-
 
 		if (!$showCollectionPostsOnly) {
 				$active = null;
@@ -2527,7 +2550,10 @@ foreach ($data["requests"] as $item)
 
 				 foreach ($ch as $key => $val) {
 					$content = curl_multi_getcontent($val);
+					//clog(curl_errno($ch[3]));
+				//	clog(	curl_eror($key, CURLINFO_EFFECTIVE_URL));
 
+					//clog("content".$content);
 					if ($content != "") {
 				        $json = json_decode($content, true);
 
@@ -2628,7 +2654,6 @@ foreach ($data["requests"] as $item)
 
 			$col = \App\DB\Get::Collection();
 
-
 			//
 			// 1. Get search parameters
 			//
@@ -2660,7 +2685,6 @@ foreach ($data["requests"] as $item)
 			if (isset($item["people"])) {
 				$additionalConstraints["audience"] = $item["searcher"];
 			}
-
 
 			//
 			// 3. Find
