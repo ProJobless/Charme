@@ -474,7 +474,6 @@ foreach ($data["requests"] as $item)
 			"noreply@".$receiver["server"],
 			"",
 			$data);
-			clog2(	$data, "comment distribute data");
 
 
 			$req21->send();
