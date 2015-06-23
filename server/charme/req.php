@@ -420,7 +420,6 @@ foreach ($data["requests"] as $item)
 			2. Get collection followers
 			3. Send post to these followers
 		*/
-
 		// problem:
 		$col = \App\DB\Get::Collection();
 		$cursor2 = $col->posts->findOne(array("_id"=> new MongoId($item["commentData"]["object"]["postId"])), array("collectionId", "owner"));
@@ -459,10 +458,12 @@ foreach ($data["requests"] as $item)
 		// Insert local comment WARNING: This must happen before comments are sent to other servers, as the _id field is set afterwards
 		$col->comments->insert($itemdata);
 
+
 		$itemdata["id"] = "post_comment_receive_distribute";
 		$data = array("requests" =>
 				array($itemdata)
 		); // $data must be defined after comments have been inserted and $itemdata contains the id
+
 
 		$cursor4 = $col->streamSubscribers->find(array("postId" => $item["commentData"]["object"]["postId"]) );
 
@@ -473,6 +474,9 @@ foreach ($data["requests"] as $item)
 			"noreply@".$receiver["server"],
 			"",
 			$data);
+			clog2(	$data, "comment distribute data");
+
+
 			$req21->send();
 		}
 
@@ -639,12 +643,14 @@ foreach ($data["requests"] as $item)
 
 		case "post_comment" :
 
+
 			// TODO: validate signature!
 
+		//clog2($item2, "postcomment");
 
 			// Send to server owner
 			$col = \App\DB\Get::Collection();
-			$receiver = $item["commentData"]["object"]["userId"];
+			$receiver = $item["commentData"]["object"]["postOwner"];
 
 			// Get sender name
 			$cursor2 = $col->users->findOne(array("userid"=> ($_SESSION["charme_userid"])), array("firstname", "lastname"));
@@ -662,6 +668,7 @@ foreach ($data["requests"] as $item)
 					"userId" => $receiver,
 					"sendername" => $sendername
 					)));
+
 
 			$req21 = new \App\Requests\JSON(
 			$receiver,
