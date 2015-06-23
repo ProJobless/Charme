@@ -28,8 +28,9 @@ function apl_setup2()
 	 	{
 			var keyring = localStorage.getItem("keyring");
 			charmeUser.keyring = jQuery.parseJSON(keyring);
+			alert("This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data and only use it in a local area network.\nYour data may get exposed otherwise!!!");
 		}
-		
+
 		catch(e)
 		{
 			console.log(e);
@@ -72,8 +73,8 @@ function apl_setup(callback, onLogin)
 		apl_request(
 	    {"requests" : [
 	    {"id" : "lists_get"},
-	    {"id" : "sessionId_get"}, 
-	    {"id" : "updates_get"} 
+	    {"id" : "sessionId_get"},
+	    {"id" : "updates_get"}
 
 	    ]
 		}, function(data){
@@ -81,19 +82,36 @@ function apl_setup(callback, onLogin)
 				CharmeModels.SimpleStorage.getItems("filter", false, function(loadedFilters){
 				apl_postloader_lists.items = data.lists_get;
 				apl_postloader_filters.filterReferences = {}
-			
-				
+
+
 				$.each(loadedFilters, function(index, item) {
+
 					apl_postloader_filters.filterReferences[index] = item.data;
 					apl_postloader_filters.items.push({
 						"_id" : { "$id" : "filter_"+index},
 						"name" : item.data.name,
+						"canDelete" : true,
+						"itemId" : item._id.$id
 					});
 				});
 
+				//
+				// Add Archive button to stream sidebar
+				//
+
+				apl_postloader_filters.items.push({
+					"_id" : { "$id" : "archive"},
+					"name" : "Archiv",
+					"icon" : "bookmark-o"
+				});
+
+				//
+				// remember session id
+				//
+
 				if (charmeUser != null)
 					charmeUser.sessionId = data.sessionId_get.sessionId
-				
+
 				container_main.tempCountData = data.updates_get;
 
 				// Call Callback...

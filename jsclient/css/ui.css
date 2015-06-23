@@ -9,7 +9,7 @@
 }
 .smiliebox
 {
-	height: 200px; 
+	height: 200px;
 	overflow: auto;
 }
 .smiliebox a:active
@@ -53,15 +53,15 @@ width:32px;
 {
 
 	display: block;
-	
+
 	padding:16px;
 	text-align: center;
 	box-shadow:   0 0 1px #ccc;
-	
+
 	color: #000;
 	-webkit-user-select: none;
-    -moz-user-select: none; 
-    -khtml-user-select: none; 
+    -moz-user-select: none;
+    -khtml-user-select: none;
     background-color: #fff;
 }
 .more:active
@@ -71,11 +71,11 @@ box-shadow:   0 0 1px #aaa;
 }
 
 .attachmentContainer div
-{ 
+{
 	padding:8px;
 	padding-right: 0;
 	border-bottom: 1px silver solid;
-	
+
 
 
 }
@@ -137,7 +137,7 @@ position: relative;
 }
 .switcher
 {
-	
+
 	display: inline-block;
 	height:30px;
 	background-color: #dedede;
@@ -154,7 +154,7 @@ position: relative;
 	background-color: #fff;
 	padding: 16px;
 		box-shadow:   0 0 3px #aaa;
-		
+
 }
 .actionIcon
 {
@@ -170,6 +170,7 @@ position: relative;
 	position:fixed;
 	width:100%;
 	height:100%;
+  overflow-y: auto;
 	display:none;
 	background-color:#efefef;
 	z-index:9998;
@@ -206,8 +207,8 @@ position: relative;
 
 .fixedBox
 {
-	position:fixed;
-	
+	position:relative;
+
 	background-color:#fff;
 	border:1px silver solid;
 	margin: 0 auto;
@@ -217,25 +218,25 @@ position: relative;
 
 	z-index:9999;
 	box-shadow: 0px 0px 3px rgb(170, 170, 170);
-	
-	
+
+
 }
 
 .collection .square
 {
-	
+
 	width:100px;
 	height:100px;
 	background-color:red;
 	margin: 8px;
 	float:left;
-	
+
 }
 
 
 .tdinfo
 {
-	
+
 width:120px;
 vertical-align:top;
 padding-top: 12px;
@@ -263,7 +264,7 @@ h1
 }
 h1:first-child
 {
-	
+
 margin-top:0;
 padding-top:0;
 }
@@ -273,11 +274,11 @@ padding-top:0;
 	list-style-type:none;
 
 	margin:0;
-	
+
 }
 .tabBar ul li A
 {
-	display:block;padding:8px; 
+	display:block;padding:8px;
 	color:#fff;
 	font-weight: normal;
 	letter-spacing: 1px;
@@ -310,11 +311,11 @@ box-shadow:  inset 0 0 3px #000;
 	overflow:auto;
 }
 .p16
-{	
+{
 	padding:16px;
 	overflow:auto;
 }.p24
-{	
+{
 	padding:24px;
 	overflow:auto;
 }
@@ -322,7 +323,7 @@ box-shadow:  inset 0 0 3px #000;
 
 .profilePic
 {
-	
+
 float:left;
 margin-right:16px;
 border-radius: 150px;
@@ -341,12 +342,12 @@ textarea
 }
 a:hover
 {
-	
+
 color:#000;
 }
-a 
+a
 {
-	
+
 	color:#1A3C87;
 
 	text-decoration:none;
@@ -406,18 +407,18 @@ Plugins
   top        : 0;
   bottom     : 0;
   visibility : hidden\9; /* Target only IE7 and IE8 with this hack */
-  opacity    : .01; 
+  opacity    : .01;
   -webkit-transition    : .2s;
   -moz-transition       : .2s;
   -o-transition         : .2s;
   transition            : .2s;
-  
+
 }
 .nano > .pane > .slider {
   background: rgba(255,255,255,.99);
   position              : relative;
   margin                : 1px 1px;
- 
+
 }
 .nano:hover > .pane, .pane.active, .pane.flashed {
   visibility : visible\9; /* Target only IE7 and IE8 with this hack */

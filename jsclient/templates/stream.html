@@ -4,8 +4,8 @@ Sidebar Items:
 <div title='submenu_items' class='meta'>
   <li id='nav_'><a  data-defaultDestination="true"  href='#stream'>All</a></li>
   <% _.each( rc.listitems, function(item2){ %>
-    <li id='nav_<%- item2._id.$id %>' >
-    	<a  <% if (item2._id.$id=="myevents" || item2._id.$id=="archive") { %>style='border-top:1px silver solid; padding-top:8px;'<% }; %>   href='#stream/<%- item2._id.$id %>'><% if (item2.icon) { %> <i class='fa fa-<%- item2.icon %>'></i><% }; %> <%- item2.name %></a>
+    <li id='nav_<%- item2._id.$id %>' >	<% if (item2.canDelete)  { %><a data-itemid="<%- item2.itemId %>" class="delList"><i class="fa fa-times"></i></a><% }; %>
+    	<a  class="link" <% if (item2._id.$id=="myevents" || item2._id.$id=="archive") { %>style='border-top:1px silver solid; padding-top:8px;'<% }; %>   href='#stream/<%- item2._id.$id %>'><% if (item2.icon) { %> <i class='fa fa-<%- item2.icon %>'></i><% }; %> <%- item2.name %></a>
     </li>
   <% }); %>
 </div>

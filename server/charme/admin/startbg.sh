@@ -48,7 +48,7 @@ then
 	echo -e  "mongo is already running"
 else
 	echo -e  "Starting mongo..."
-	nohup mongod & 
+	nohup mongod &
 fi
 
 echo -e  "Waiting some seconds..."
@@ -70,7 +70,7 @@ then
 	echo -e  "Hydra is already running"
 else
 	echo -e  "Starting hydra..."
-	nohup php ../bg_hydra.php --php-ini ${CLIPHPPATH}  & 
+	nohup php ../bg_hydra.php --php-ini ${CLIPHPPATH}  &
 fi
 
 
@@ -95,3 +95,5 @@ sleep 1
 echo -e  "Starting Charme Status now..."
 
 ./status.sh
+
+echo -e "Please make sure to delete /charme/log.txt fron time to time as this file may get big!"

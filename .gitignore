@@ -9,6 +9,7 @@
 /server/charme/config.php
 /server/charme/log.txt
 /server/charme/admin/log.txt
+/server/charme/admin/nohup.out
 /temp/*
 /old/*
 /doxygen/*

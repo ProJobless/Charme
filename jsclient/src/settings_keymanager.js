@@ -502,19 +502,21 @@ function requestNewKey(userId) {
 					} else
 						$("#keyNew").show();
 
+
 					$('#but_box_save').click(function() { // Register button event
 
-		
-
+						var requestObject = CharmeModels.Keys.makeKeyStoreRequestObject(
+								key, // The public key
+								d.key_get.revision, // Revision of public key
+								userId, // User id of currently logged in user
+								d.profile_get_name.info.firstname + ' ' + d.profile_get_name.info.lastname // The username
+							);
+							
 						apl_request({
 							// (publicKey, addedPublicKeyRevision,  currentUserId, username) -
-							"requests": [
-								CharmeModels.Keys.makeKeyStoreRequestObject(
-									key, // The public key
-									d.key_get.revision, // Revision of public key
-								  userId, // User id of currently logged in user
-									d.profile_get_name.info.firstname + ' ' + d.profile_get_name.info.lastname // The username
-									) ]
+
+
+							"requests": [requestObject]
 },						function(d4) {
 
 							//
@@ -531,10 +533,12 @@ function requestNewKey(userId) {
 								}, ]
 							}, function(d5) {
 
+
+
 								newpostkeys = [];
 								$.each(d5.edgekey_recrypt_getData.data.postKeys, function(index, item) {
 									var postkey = aes_decryptWithFastKey1(item.fkEncPostKey, item.postData.signature.keyRevision);
-									newpostkeys.push({postId: this._id.$id, postKeyEnc: aes_encrypt(keypair.randomKeyRaw, postkey.message)});
+									newpostkeys.push({postId: this._id.$id, postKeyEnc: aes_encrypt(requestObject.fkEncEdgekey, postkey.message)});
 								});
 
 								apl_request({

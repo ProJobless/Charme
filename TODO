@@ -1,23 +1,52 @@
-today till 12pm
-- make profile picture upload with nprogress etc. and refresh it on mainview
-- lists are not shown in other users profile
+TOP PRIORITY:
 
-monday
+- 3. improve audience limiter for context items with signature  60 MIN BIB!!!
+
+- complete filters!
+  - comments:
+    - if filter: cache stream for 3 days and register for comment updates druign that periode
+    - if post is archived then do not show comments!!!
+    - :
+  - Cron JOB: Delete Stream items older than...
+  - No Context in collections!!!!!!!!!!!!!!!!!!
+  ; kein filter darf nur subscribed anzeigen (und encrypted)
+  / Do collection ssubscriptio nwork afterwards??
+  - FILTERS CONTRAINTS:
+    - load all into box_filter
+      - build schema
+      - iterate schema, generate input fields
+    - hide/show on context change
+    -\
+  - Context Options: visible for all people, or lists only!
+
+- load more messages displaying duplicates
+- lists are not shown in other users profil FIXED?
 - make key updates working
-
-ubahn
 - reponsive search etc.
-
+- responsive message back button not wokring
+=================================================
 
 if own key not added:
 - collections do not display own posts
 - no messages to myself etc.
 ---> SOLUTION: Add own key at the start.
 
-
-
 responsive search etc.
    save image height
+
+-----------------
+MULTI USER Tests
+
+- no notificatoins for own actions
+- Key recrypt, public key update!!,
+  - public key update notification
+  -
+- maintain edgekey revision correctly
+-
+-----------------
+
+
+
 
 documentation
 
@@ -30,6 +59,7 @@ security:
 
 window.addEventListener("error", function(e) {
 before message all keys including own key is required to add!!!!!!!!!
+
 
 major bugs:
   stream updates not working

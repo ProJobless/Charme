@@ -21,6 +21,8 @@ $('.slider .item').css("height", d);
 $(document).ready(function() {
 
 
+
+
 xpos = 0;
  pos();
 
@@ -64,7 +66,7 @@ function showhome()
 }
 function showPage(id, title, href)
 {
-  
+
   timeout_clear();
   $(".infocontent").hide();
 
@@ -87,12 +89,12 @@ showhome();
 	$('.leftcont a').removeClass("sel");
 	$('.leftcont a:eq('+x+")").addClass("sel");
 
-	
+
   var w = $(document).width();
   x = -x*w;
 	$('.slider').animate({   left: x}, 320);
 
-	
+
 }
 function showInfo()
 {
@@ -101,17 +103,17 @@ $('.info').animate({   height: $(window).height() }, 320, function(){$('.info').
 </script>
     <style>
 
-    @font-face { font-family: Roboto; src: url('Roboto/Roboto-Medium.ttf'); 
-  } 
- @font-face { font-family: RobotoLight; src: url('Roboto/Roboto-Light.ttf'); 
-  } 
+    @font-face { font-family: Roboto; src: url('Roboto/Roboto-Medium.ttf');
+  }
+ @font-face { font-family: RobotoLight; src: url('Roboto/Roboto-Light.ttf');
+  }
 
 
 
 
     body
     {
-   
+
       font-family: 'Roboto', "Century Gothic", "Sans Serif";
       font-size: 12px;
     	margin:0;
@@ -279,7 +281,7 @@ img
         padding:8px;
         float:right;
         letter-spacing: 1px;
-     
+
 
       }
     </style>
@@ -287,7 +289,7 @@ img
   <body>
   	<div class='images'>
 <div class='slider'>
- 
+
 	<div class='item'><div class='pinfo'><h1>Hi there,</h1>Charme is a distributed social network with client side encryption. This means you can choose a server, where your data is stored or even set up your own, and the server can not read your messages.</div><img style=' margin-left:290px;' src='wel.png'></div>
 <div class='item'><div class='pinfo'><h1>Multiple Walls</h1>You are not interested in someones private life, but like the music she or he produces?<br><br>Charme allows you to create different walls, so called collections,  which can be subscribed separately. So in this case you would only subscribe to the Music Collection.</div><img style=' margin-left:320px;' src='walls.png'></div>
 <div class='item'><div class='pinfo'><h1>Mobility</h1>We will release Apps for smartphones and talbets.</div><img src='mob.png'></div>
@@ -308,17 +310,17 @@ img
 <a class='bigButton' href='http://client.charmeproject.com' style='margin-right:8px;'>Client</a>
 
     <div class='leftcont'>
- 
+
  <a class='button sel' href='javascript:animate(0)'></a><a href='javascript:animate(1)' class='button'></a><a href='javascript:animate(2)' class='button'></a><a href='javascript:animate(3)' class='button'></a><a href='javascript:animate(4)' class='button'></a><a href='javascript:animate(5)' class='button'></a>
-    
+
      <br>
       <a href='javascript:showhome()'><img style='margin:16px 0;' src='logo.png'></a>
       <br>
       <div class='navi'>
-       
+
       <a target="_blank" href='http://mschultheiss.com/text'>Blog</a>
 <!--  - <a href='javascript:showPage(0, "Beta", "beta")'>Beta</a> -->
-       - <a target="_blank"  href='https://github.com/mschultheiss/charme/wiki'>Wiki</a>  - <a href='javascript:showPage(0, "About", "aboutcharme")'>About</a> 
+       - <a target="_blank"  href='https://github.com/mschultheiss/charme/wiki'>Wiki</a>  - <a href='javascript:showPage(0, "About", "aboutcharme")'>About</a>
     </div></div>
   </div>
   <br style='clear:both'>
@@ -337,7 +339,7 @@ img
   <div class='beta infocontent'>
 <div class='betaform'>
   <h1>Sign up for Charme Beta</h1>
-From time to time we are looking for some beta testers. You can register here and receive an email if we have choosen you. This may take a while. We can not accept every beta request. 
+From time to time we are looking for some beta testers. You can register here and receive an email if we have choosen you. This may take a while. We can not accept every beta request.
 
 If you know how, you can also grab the source code from GitHub and setup a test server. Installation instructions can be found <a href='https://github.com/mschultheiss/Charme/wiki/Installation' target='_blank'>here.</a>
 <div style='color:#fff; border:3px #00B2C9 solid; margin:8px 0; padding:8px;'><b>WARNING:</b> FOR CHARME BETA DO NOT PROVIDE ANY PERSONAL INFORMATION IN YOUR ACCOUNT! We have not implemented privacy control yet. However, your mail address and password is secure :)</div>

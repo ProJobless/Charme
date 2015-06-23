@@ -120,7 +120,7 @@ page_authenticated = Backbone.View.extend({
     {
     	// Load homepage and append to [sharecontainer]
 alert("share");
-		
+
 	}
     ,
 	/*getPathItem: function(path, number)
@@ -140,7 +140,7 @@ alert("share");
 
 	/*	sidebarClickHandler: function(ev)
     {
-    
+
 		var d = $(ev.target).data("destination");
 
 
@@ -190,7 +190,7 @@ console.log("sidebar load=true");
 
 
 				var templateData = {globaldata : []	};
-		
+
 				if (id == "user")
 				{
 
@@ -213,7 +213,7 @@ console.log("sidebar load=true");
 				}
 
 				_.templateSettings.variable = "rc";
-				var template = _.template(d, templateData); 
+				var template = _.template(d, templateData);
 
 				// if click form profile tabs
 				if ($("#page3").length > 0 && (par.sidebarLoad == true))
@@ -222,7 +222,7 @@ console.log("sidebar load=true");
 					par.sidebarLoad = false;
 					//TODO: remove sidebar from template
 					$("#page3").html(template);
-			
+
 				}
 				else
 					$("#page").html(template);
@@ -231,7 +231,7 @@ console.log("sidebar load=true");
 				$('textarea:not(.noAutoHeight)').autosize();
 
 				// Check for page specific sidebar items
-				
+
 
 				// Adapt layout depending on sidebar existence
 			    if ($('div[title=layout]').text() == "sidebar") // Use left sidebar
@@ -239,7 +239,7 @@ console.log("sidebar load=true");
 					$('.page_content').css("width", "700px");
 					$('.page_content').css("margin-left", "150px");
 					$('.sbBeta').show();
-				
+
 					//if (level == 0) TODO!
 					{
 						$('.sbBeta .actionBar').html(""); // Remove existing buttons
@@ -260,7 +260,7 @@ console.log("sidebar load=true");
 				$(".sbBeta ul li").removeClass("active");
 
 				var t = par.getPathLength(location.href); //6: /user/userid 7: /user/userid/subribrs
-				
+
 
 			/*	if ($(".profileTabs").length > 0)
 				{
@@ -304,7 +304,7 @@ console.log("sidebar load=true");
 
 		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  id="button_settings" style="background-position:-30px 0; " class="actionButton"></a></div> \
-		<div style="height:67px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
+		<div style="height:64px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img id="profileImage" src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
 		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \

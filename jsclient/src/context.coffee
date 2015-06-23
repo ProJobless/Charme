@@ -1,10 +1,24 @@
 class CharmeModels.Context
+	@setupLocationSelector: () ->
+
+		updateDataTag = ->
+		  # This function updates the data-xyz attributes which are stored in database later
+		  $('.locationContainer option:selected').each ->
+		    $(this).parent().data 'storage', $(this).data('json')
+		    return
+		  return
+
+		updateDataTag()
+		$('.locationContainer').change ->
+		  updateDataTag()
+		  return
+
 
 	@getTimeHours: () ->
 		str = ""
 		for k in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
 			str += "<option>"+k+"</option>"
-		return str 
+		return str
 
 	@getTimeMinutes: () ->
 		str = ""
@@ -24,10 +38,65 @@ class CharmeModels.Context
 			str += "<option vale='"+k+"'>"+k+"</option>"
 		return str
 
+	@getContextChoices:() ->
+		all = []
+		for k,schema of charme_schema.global
+			all.push  {id: k, name: schema.name}
+
+		return all
+
+	@getFilters: (filterId) ->
+
+		all = []
+		for k,schema of charme_schema.global
+		 	for attribute in schema.attributes
+				 if attribute.filter?
+					 all.push {contextId: k, attribute: attribute}
+
+		return all
+
+	@getContextFloats: (type) ->
+
+    all = []
+    for attribute in charme_schema.global[type].attributes
+       if attribute.type=="moneyamount"
+         all.push attribute.id
+
+    return all
+
+	@getContextIntegers: (type) ->
+
+    all = []
+    for attribute in charme_schema.global[type].attributes
+       if attribute.type=="int"
+         all.push attribute.id
+
+    return all
+
 	@getServices: () ->
 		str = ""
-		for k in ["Software Engineer", "Electronic Repair", "Room Cleaner", "Musican"]
+		for v in charme_schema_services
+			str += "<option value='"+v+"'>"+charme_schema_services_names[v]+"</option>"
+		return str
+
+	@getDateSelector: (name) ->
+		str = ""
+		str += "<select  name='"+name+"_day'>"
+		for k in [1...31] by 1
+			# TODO: Make today selected
 			str += "<option vale='"+k+"'>"+k+"</option>"
+		str += "</select>"
+
+		str += "<select  name='"+name+"_month'>"
+		for k in [1...12] by 1
+			str += "<option vale='"+k+"'>"+k+"</option>"
+		str += "</select>"
+
+		str += "<select name='"+name+"_year'>"
+		for k in ["2014", "2015", "2016"]
+			str += "<option vale='"+k+"'>"+k+"</option>"
+		str += "</select>"
+
 		return str
 
 
@@ -44,26 +113,20 @@ class CharmeModels.Context
 		return str
 
 	@searchRecursiveId: (node, parentId, level=0) ->
-		console.log("LOOKUP LEVEL"+level);
 		for subnode in node
-			console.log "iterate el"+subnode.name
 			if subnode.id == parentId
-				console.log "RETURN"
-				console.log subnode
 				return subnode.sub
 			else if subnode.sub? # ? checks if variable exists
-				console.log "	RECURSIVE CALL"
 				retval =  this.searchRecursiveId(subnode.sub, parentId, (level+1))
-				
+
 				return retval if retval?
 
 	@searchRecursiveText: (node, query) ->
 		retArray = []
 		for subnode in node
 
-	
+
 			if subnode.name.toLowerCase().indexOf(query.toLowerCase()) >= 0
-				console.log("PSUH"+subnode.name)
 				retArray.push(subnode)
 
 			if subnode.sub?
@@ -84,13 +147,13 @@ class CharmeModels.Context
 		if searchQuery!="" and searchQuery?
 			parent = CharmeModels.Context.searchRecursiveText(charme_schema_categories,  searchQuery)
 		else
-			
+
 			if not parentId? #parent does not exist?
 				parent = charme_schema_categories
 			else
 				parent = CharmeModels.Context.searchRecursiveId(charme_schema_categories, parentId)
-		
-		console.log(parent);
+
+
 
 		for item in parent
 			if str != ""
@@ -102,12 +165,56 @@ class CharmeModels.Context
 
 		return str
 
+ 	#
+	# Called  after selecting a product category
+	#
 
+	@registerEventProductClick: (elementHelp) ->
+		$(elementHelp).parent().find('.productidentifierHelp a').unbind('click').click ->
+			if $(this).data('cat')?
+				elementSearch = $(elementHelp).prev().prev()
+				$(elementHelp).html CharmeModels.Context.renderCateogries($(this).data('cat'))
+				CharmeModels.Context.registerEventProductClick(elementHelp)
+			else
+				elementSearch = $(elementHelp).prev().prev()
+				# No subcateogies exist anymore, so save selection!
+				$(elementHelp).html '<b>' + $(this).text() + '</b> - <a class=\'resetProduct\'>Select another Category</a>'
+				$(elementSearch).next().val $(this).data('final')
+
+				$(elementHelp).find('.resetProduct').click ->
+					$(elementSearch).show().focus().select()
+					$(elementHelp).html CharmeModels.Context.renderCateogries(null)
+					CharmeModels.Context.registerEventProductClick(elementHelp)
+					return
+
+		  $(elementSearch).hide()
+		  return
+		return
+
+ 	#
+	# Called for setting up the product category selector
+	#
+
+	@initProductSelector: () ->
+
+		$(".productidentifierHelp").each ->
+			CharmeModels.Context.registerEventProductClick(this)
+			return
+
+		$('.productidentifierSearch').bind 'propertychange onkeydown click keyup input paste', ->
+			elementHelp = $(this).next().next()
+			$(elementHelp).html CharmeModels.Context.renderCateogries(null, $(this).val())
+			CharmeModels.Context.registerEventProductClick(elementHelp)
+			return
+		return
+
+	@getProductSelector: (name) ->
+		return '<input placeholder="Search..." class="productidentifierSearch box" type="text" style="margin-bottom:8px;"><input style="clear:both" data-type="exact" type="hidden" name="'+name+'" class="productSelector"><div  class="productidentifierHelp">'+CharmeModels.Context.renderCateogries()+'</div>'
 	#@getTopCategories: () ->
 	#	str = ""
 	#	for k in ["EUR", "USD", "BTC", "YEN"]
 	#		str += "<option>"+k+"</option>"
-	#	return str		
+	#	return str
 	@getForm: (fieldId) ->
 	# the event handlers are set in page_modules.js, function addContext
 		html = ""
@@ -121,7 +228,7 @@ class CharmeModels.Context
 				html += "<select name='"+v["id"]+"' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a>"
 			else if v["type"] == "optionallocation"
 				html += "<select name='"+v["id"]+"' class='locationContainer'><option value='0' class='nolocation'>No location</option></select> <a class='but_addLocation'>Add Location</a>"
-			
+
 			else if v["type"] == "string"
 				html += "<input  name='"+v["id"]+"' type='text' class='box'>"
 			else if v["type"] == "entity"
@@ -129,22 +236,22 @@ class CharmeModels.Context
 			else if v["type"] == "rating"
 				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getRating()+'</select> (5 is best)'
 			else if v["type"] == "datetime"
-				html += '<input  name="'+v["id"]+'" class="box" type="date"> <select name="'+v["id"]+'_hour">'+CharmeModels.Context.getTimeHours()+'</select>:<select  name="'+v["id"]+'_minute">'+CharmeModels.Context.getTimeMinutes()+'</select>'
+				html += CharmeModels.Context.getDateSelector(v["id"])+' <select name="'+v["id"]+'_hour">'+CharmeModels.Context.getTimeHours()+'</select>:<select  name="'+v["id"]+'_minute">'+CharmeModels.Context.getTimeMinutes()+'</select>'
 
 			else if v["type"] == "int"
 				html += "<input name='"+v["id"]+"' type='text' class='box'>"
 			else if v["type"] == "moneyamount"
-				html += "<input name='"+v["id"]+"' type='text' class='box'>"
+				html += "<input data-typed='float' name='"+v["id"]+"' type='text' class='box'>"
 			else if v["type"] == "currency"
 				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getCurrencies()+'</select>'
 			else if v["type"] == "activity"
 				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getActivities()+'</select>'
-			
+
 			else if v["type"] == "service"
 				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getServices()+'</select>'
-			
+
 			else if v["type"] == "productcategory"
-				html += '<input placeholder="Search..." id="productidentifierSearch" class="box" type="text" style="margin-bottom:8px;"><input style="clear:both" type="hidden" name="'+v["id"]+'" id="productSelector"><div  id="productidentifierHelp">'+CharmeModels.Context.renderCateogries()+'</div>'
+				html += CharmeModels.Context.getProductSelector(v["id"])
 
 			html += "<br>"
 		return html

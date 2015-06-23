@@ -1,13 +1,6 @@
 <div title='title' class='meta'>Search</div>
 
-
-
-
-
-
-
 <div class='p32'>
-
 <div class="onlyResponsive">You can search for UserIDs or Usernames:
 <div style="margin-top:8px; margin-bottom:24px;">
 <input class="box" style="margin-bottom:8px;"> <a style='top:0px;margin-bottom:8px;' class='button' id='btn_search_query'>Search</a></div>
@@ -15,45 +8,31 @@
 
 <div id='fnd_results'>
 <h1>Results for <span id='fld_q'></span></h1>
-<% if (rc.direct == true) { %>
+  <div >
+    <div class='searchresults'>
+      <% _.each( rc.results, function(item2){ %>
 
-<div style='margin-top:8px;'>
-<a href="#/user/<%- encodeURIComponent(rc.userId) %>">
-
-<img style='float:left; margin-right:8px; ' src="http://<%- rc.userId.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(rc.userId) %>&amp;s=64">
-
-<%- rc.info.firstname %> <%- rc.info.lastname %>
-</a>
-</div>
+        <% if (item2.type=="user")  { %>
 
 
-</div>
+        <div class="result">
+      		<a href="#/user/<%- encodeURIComponent(item2.id) %>">
+      			<img src="http://<%- item2.id.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.id) %>&amp;s=64">
+      		<%- item2.name %>
+          <br style="clear:both">
+      		</a>
+      	</div>
+        <% } %>
 
+        <% if (item2.type=="post")  { %>
+        <!-- post results -->
+        <a class="result post" href="<%- item2.url %>">
+          <b>  <%- item2.name %> wrote</b><br>
+          <%- item2.description %>
+        </a>
+        <% } %>
 
- <% } else { %>
-
-<div class="p16" id="friendItemContainer">
-<div class='usergrid'>
-
-
-	 <% _.each( rc, function(item2){ %>
-
-
-
-
-		<div class="item ui-draggable" data-userid="schuldie@localhost">
-
-			<a href="#/user/<%- encodeURIComponent(item2.id) %>">
-				<img src="http://<%- item2.id.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.id) %>&amp;s=64">
-			<%- item2.name %>
-			</a>
-		</div>
-
-	  <% }); %>
-
-
-</div>
-</div>
-
- <% } %>
+      <% }); %>
+    </div>
+  </div>
 </div>

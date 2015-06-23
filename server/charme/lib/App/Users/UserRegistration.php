@@ -81,6 +81,7 @@ class UserRegistration implements \App\Models\Action
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],
 			"lastname" =>$data["lastname"],
+			"name" => $data["firstname"]." ".$data["lastname"],
 			"salt" => $randomString,
 			"publickey" => json_decode($data["pubkey"], true), // Unencrypted public key
 			"keyring" => $data["rsa"] // Encrypted AES keyring

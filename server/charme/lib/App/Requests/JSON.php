@@ -28,7 +28,7 @@ class JSON
 		//$this->data = json_decode($d);
 		$this->destination=$a_destination;
 		$this->source=$a_source;
-		$this->payload= ($a_payload); 
+		$this->payload= ($a_payload);
 	}
 	function givePostman($priority, $errorcode=0, $tries=0)
 	{
@@ -46,9 +46,9 @@ class JSON
 
 		$server = $dest[1];
 		$url = $server."/charme/req.php";
-	                 
 
-		$data_string = (json_encode($this->payload));    
+
+		$data_string = (json_encode($this->payload));
 		//clog("DATA STRING IS");
 		//clog($data_string);
 
@@ -58,22 +58,22 @@ class JSON
 								'receiver' => urlencode($dest[0]),
 								'sender' => urlencode($this->source),
 						);
-		$fields_string ="";  
+		$fields_string ="";
 		foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 		rtrim($fields_string, '&');
 
 		$ch = curl_init();
-	
+
 
 		curl_setopt($ch,CURLOPT_URL, $url);
 		curl_setopt($ch,CURLOPT_POST, count($fields));
 		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 2); // 2 seconds timeout, servers have to respond fast! 
+		curl_setopt($ch, CURLOPT_TIMEOUT, 2); // 2 seconds timeout, servers have to respond fast!
 
 		// Return result and not status code for curl_exec. This is very important
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE );
 
-				
+
 		$result = curl_exec($ch);
 
 		if(curl_errno($ch))
@@ -83,7 +83,7 @@ class JSON
 		    	$cha = $ch;
 
 		   $this->givePostman($priority, $cha, (intval($tries)+1));
-		    
+
 		}
 
 

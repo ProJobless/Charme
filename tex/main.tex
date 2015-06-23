@@ -147,6 +147,9 @@ This information is also signed using the senders private key.
 	\label{fig2}
 \end{figure}
 
+
+\textbf{The current implementation misses some fundamental security stuff. An attacker could initiate a conversation with the identity of client A and start a MITM attack. Therefore the next step of the implementation is to sign the initial message and each following message.}
+
   \subsection{Distributing private information}
   When giving private information like telephone number or email to other people, this is working slightly different to message distribution for performance reasons. See figure \ref{fig3}.
    \begin{figure}[ht]

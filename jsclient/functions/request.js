@@ -44,7 +44,7 @@ function apl_posttest(requests) {
   Make a request to a charme Server
 
   Params:
-  requestData:json:Data in json format 
+  requestData:json:Data in json format
   callback:function:Callback function
   SessionId:string:Not used currently, Write "null" in here
   Server:string:Server to which the request is send to. If its null, we will use the host of the logged in user.
@@ -87,7 +87,7 @@ function apl_request(requests, callback, ses,srv)
 		xhrFields: {
     withCredentials: true
   },
-	
+
         /*     xhrFields: {// important: send session cookies!
        withCredentials: true
     },*/
@@ -96,17 +96,17 @@ function apl_request(requests, callback, ses,srv)
 
 		error: function (xhr, status, thrownError) {
 		 //console.log(thrownError);
-		
+
 		console.log(thrownError);
 		console.log(status);
-	
+
 		console.log(xhr)
 		// console.log(xhr);
 		},
 		success: function(data) {
 
 
-		if(callback != undefined && typeof callback == 'function') 
+		if(callback != undefined && typeof callback == 'function')
 		{
 			if (data.ERROR == 1 && srv == charmeUser.server)
 			{
@@ -141,22 +141,27 @@ $.fn.serializeObject = function()
     var o = {};
     var form = this;
     var a = this.serializeArray();
+		console.log(a);
     $.each(a, function() {
-    	
+
         if (o[this.name] !== undefined) {
             if (!o[this.name].push) {
                 o[this.name] = [o[this.name]];
             }
             o[this.name].push(this.value || '');
         } else {
+
+					if ($(this).attr("data-typed") == "float")
+						this.value == parseFloat(this.value);
+
             o[this.name] = this.value || '';
-           
+
             if (true) {
             	var d = $(form).find("[name="+this.name+"]").data("storage");
             	if (typeof d !== "undefined")
             	{
             		o[this.name+"_data"] = d;
-   
+
             	}
     	 	}
         }

@@ -17,7 +17,7 @@ $data = array("requests" => array(
 "id" => "post_comment_distribute",
 "content" => $item["content"],
 "userId" => $receiver,
-"postId" => $item["postId"],
+"asd" => $item["asd"],
 "sender" => $_SESSION["charme_userid"],
 "sendername" => $sendername
 

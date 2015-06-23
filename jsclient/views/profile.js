@@ -32,7 +32,7 @@ var view_profilepage = view_page.extend({
 	viewId: 'profileView', // important f
 
 
-	
+
 	postRender: function() {
 		// ,  name: container_main.currentView.username
 		var that = this
@@ -40,7 +40,7 @@ var view_profilepage = view_page.extend({
 		if (typeof this.username === 'undefined') {
 
 			var hashes = crypto_buildHashKeyDir([container_main.currentView.options.userId]);
-		
+
 
 		apl_request({
 				"requests": [
@@ -60,9 +60,6 @@ var view_profilepage = view_page.extend({
 				]
 			}, function(d) {
 
-				console.log("LALA:");
-				console.log(d3);
-
 				if (d3.key_getMultipleFromDir.value.length < 1) {
 					container_main.currentView.verified = false;
 					// Hide init conversation button
@@ -71,11 +68,11 @@ var view_profilepage = view_page.extend({
 					container_main.currentView.verified = true;
 
 					console.log(d3.key_getMultipleFromDir.value);
-					
+
 					var keyval = decryptKeyDirValue(d3.key_getMultipleFromDir.value[0].value);
 
-					container_main.currentView.pubkey = keyval; 
-			
+					container_main.currentView.pubkey = keyval;
+
 
 				}
 				checkVerified();
@@ -85,21 +82,35 @@ var view_profilepage = view_page.extend({
 				container_main.currentView.username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
 				$(".profile_name").text(container_main.currentView.username);
 
+				$(".but_verifyKey2, .but_verifyKey").unbind("click").click(function() {
+					requestNewKey(container_main.currentView.options.userId);
+				});
+
+				$(".but_sendMsg").unbind("click").click(function(){
+					sendMessageForm([{
+							id:container_main.currentView.options.userId,
+							name: container_main.currentView.username
+						}
+					]);
+				});
+
+
 			}, "", that.options.userId.split("@")[1]);  // End  profile_get_name
 
 			}); // End key_getMultipleFromDir
 
 
-			
+
 		}
-		
+
 	},
 
 	getData: function() {
 
 		return {
 			uid: this.options.userIdRaw,
-			server: this.options.userId.split("@")[1]
+			server: this.options.userId.split("@")[1],
+			appendix:  charme_global_pictureAppendix // Always make sure xss attacks like  "');\" onclick=\"alert()\" data-a=\""  are handled by template engine!
 		};
 
 	}
@@ -251,6 +262,11 @@ view_profilepage_collection_show = view_subpage.extend({
 		if (container_main.currentView.options.userId != charmeUser.userId)
 			$("#but_editCollection").hide();
 
+		if (that.options.collectionId=="context") {
+			$("#but_followCollection").hide();
+			$("#but_editCollection").hide();
+
+		}
 		$("#but_editCollection").click(function() {
 
 			// Get current collection information
@@ -263,7 +279,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 				console.log("cpl prp");
 				var currentListId = d2.collection_editPrepare.currentlist;
-				
+
 
 
 				$.get("templates/box_collectionEdit.html", function(d) {
@@ -275,9 +291,9 @@ view_profilepage_collection_show = view_subpage.extend({
 						$("#inp_box_name").focus().val(d2.collection_editPrepare.name);
 						$('#inp_box_description').val(d2.collection_editPrepare.description);
 
-					
+
 						$('#but_box_save').click(function() {
-								
+
 							apl_request({
 								"requests": [{
 									"id": "collection_edit",
@@ -288,7 +304,7 @@ view_profilepage_collection_show = view_subpage.extend({
 								}, ]
 							}, function(d) {
 
-								
+
 								$("#colName").text($("#inp_box_name").val());
 								ui_closeBox();
 
@@ -314,7 +330,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 
 		// Add post field, if userId = charmeUser.userID
-		
+
 
 		apl_request({
 			"requests": [
@@ -347,15 +363,15 @@ view_profilepage_collection_show = view_subpage.extend({
 					"revision": 0,
 					"privateKeyOwner": charmeUser.userId, // This is me
 				}
-			
+
 
 			]
 		}, function(d) {
 
 			console.log("DIS");
 			console.log(d);
-			
-			if (container_main.currentView.options.userId == charmeUser.userId) {
+
+			if (container_main.currentView.options.userId == charmeUser.userId && that.options.collectionId!="context") {
 
 			var t = new control_postField({
 				el: $("#postFieldContainer"),
@@ -363,6 +379,10 @@ view_profilepage_collection_show = view_subpage.extend({
 				forceCurrentList: d.collection_getinfo.info.currentlist
 			});
 			t.render();
+			}
+			else {
+
+				$("#postFieldContainer").hide();
 			}
 
 
@@ -372,15 +392,19 @@ view_profilepage_collection_show = view_subpage.extend({
 				$('#but_followCollection').data("bgpos", "-96");
 			}
 
+			if (that.options.collectionId=="context")
+				$("#colName").text("Context");
 
+			else
 			$("#colName").text(d.collection_getinfo.info.name);
 
 			fk1 = getFastKey(0, 1);
 			//var pubkey = $.parseJSON(aes_decrypt(fk1.fastkey1, d.edgekey_request.data.value));
 			//var edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey, pubkey.revision));
-			
 
-			var edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey, d.edgekey_request.data.revisionB));
+			var edgeKey;
+			if (typeof d.edgekey_request !== 'undefined')
+			 edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey, d.edgekey_request.data.revisionB));
 
 
 			$.each(d.collection_posts_get.items, function() {
@@ -389,17 +413,26 @@ view_profilepage_collection_show = view_subpage.extend({
 
 				var postKey = "";
 
+
+
 				if (this.postData.object.isEncrypted == 1)
 				{
-				$.each(d.collection_posts_get.postkeys, function() {
-					if (postId == this.postId)
-						postKey = this.postKey;
 
-				});
+					$.each(d.collection_posts_get.postkeys, function() {
+
+					//	if (typeof this.postId === "undefined")
+					//		this.postId = this._id.$id;
+
+						if (postId == this.postId)
+							postKey = this.postKey;
+
+
+
+					});
 				}
 				if (postKey != "")
 				{
-				
+
 				postKey = aes_decrypt(edgeKey, postKey);
 			}
 
@@ -421,7 +454,7 @@ view_profilepage_collection_show = view_subpage.extend({
 					hasImage:  this.meta.hasImage
 				});
 				*/
-	
+
 
 				var p2 = new control_postItem({
 					isCollectionView: true,
@@ -430,7 +463,7 @@ view_profilepage_collection_show = view_subpage.extend({
 					postObj: {
 						post: this.postData.object,
 						meta: {hasImage:this.hasImage},
-						postId: this._id,
+						postId: this._id.$id,
 						comments: this.comments,
 						commentCount: this.commentCount,
 						like: this.like,
@@ -450,7 +483,7 @@ view_profilepage_collection_show = view_subpage.extend({
 					time: this.time.sec * 1000,
 					*/
 					el: $(".collectionPostbox"),
-					
+
 				});
 				p2.render();
 
@@ -480,7 +513,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 			}
 
-		
+
 			apl_request({
 				"requests": [{
 						"id": "collection_follow",
@@ -532,29 +565,29 @@ var view_profilepage_posts = view_subpage.extend({
 					"keyRevision": 0,
 					"privateKeyOwner": charmeUser.userId, // This is me
 				}
-			
+
 			]
 		}, function(d) {
 
-			console.log("VALUE");
-			console.log(d.edgekey_request);
+			var hasEdgeKey = false;
 
-			
-			fk1 = getFastKey(0, 1);
+			if (typeof d.edgekey_request  === 'undefined')
+				console.log("Warning: Could not retrieve edgekey!");
+			else
+			{
+				console.log("Edgekey is: ");
+				console.log(d.edgekey_request);
+				hasEdgeKey = true;
+			}
+			fk1 = getFastKey(0, 1); // Neeeded to decrypt edgekeys
 
-			//var pubkey = $.parseJSON(aes_decrypt(fk1.fastkey1, d.edgekey_request.data[0]));
-			var edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey,  d.edgekey_request.data.revisionB));
-			
-console.log(d);
+			var edgeKey;
+			if (hasEdgeKey)
+				edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey,  d.edgekey_request.data.revisionB));
+
 			jQuery.each(d.collection_posts_get.items, function(index, item) {
 
-
-				// Is this overwritten?
-				console.log("THIS IS2");
-				console.log(this);
 				var postId = item._id.$id;
-				
-
 				var postKey = "";
 
 				if (this.postData.object.isEncrypted == 1)
@@ -568,26 +601,6 @@ console.log(d);
 				if (postKey != "")
 				postKey = aes_decrypt(edgeKey, postKey);
 
-				/*
-						var p2 = new control_postItem({
-					commentCount: this.commentCount,
-					comments: this.comments,
-					like: this.like,
-					counter: this.likecount,
-					repost: this.post.repost,
-					postId: this.postId.$id,
-					username: this.meta.username,
-					userId: this.post.author,
-					layout: "stream",
-					content: this.post.content,
-					time: this.meta.time.sec * 1000,
-					el: $("#streamContainer"),
-					prepend: false,
-					hasImage:  this.meta.hasImage
-				});
-				*/
-	
-
 				var p2 = new control_postItem({
 					isCollectionView: true,
 					postKeyTemp: postKey,
@@ -595,7 +608,7 @@ console.log(d);
 					postObj: {
 						post: this.postData.object,
 						meta: {hasImage:this.hasImage},
-						postId: this._id,
+						postId: this._id.$id,
 						comments: this.comments,
 						commentCount: this.commentCount,
 						like: this.like,
@@ -615,7 +628,7 @@ console.log(d);
 					time: this.time.sec * 1000,
 					*/
 					el: $(".collectionPostbox"),
-					
+
 				});
 				p2.render();
 
@@ -679,6 +692,17 @@ var view_profilepage_collection = view_subpage.extend({
 
 			});
 
+		  // Context Collection
+			var search_view = new control_collectionItem({
+				el: $("#collection_list"),
+				data: {
+					'_id': { '$id' : 'context'},
+					'name' :"Context"
+				}
+			});
+			search_view.render();
+
+
 			// TODO: Add collection control...
 
 		}, "", container_main.currentView.options.userId.split("@")[1]);
@@ -698,7 +722,7 @@ var view_profilepage_collection = view_subpage.extend({
 						$.get("templates/box_collectionEdit.html", function(d) {
 								_.templateSettings.variable = "rc";
 								var template = _.template(d, d2);
-							
+
 							ui_showBox(template, function() {
 								$("#inp_box_name").focus();
 								$('#but_box_save').click(function() {
@@ -802,17 +826,8 @@ var view_profilepage_info = view_subpage.extend({
 
 				$.get("templates/user__.html", function(d) {
 
-					$(".but_verifyKey2, .but_verifyKey").unbind("click").click(function() {
-						requestNewKey(container_main.currentView.options.userId);
-					});
 
-					$(".but_sendMsg").unbind("click").click(function(){
-						sendMessageForm([{
-								id:container_main.currentView.options.userId,
-								name: container_main.currentView.username
-							}
-						]); 
-					});
+
 
 					// Mark lists which contain the user
 					var userlistsRegistred = new Array();
@@ -848,7 +863,7 @@ var view_profilepage_info = view_subpage.extend({
 						console.log(d2);
 					var tmpl = _.template(d, d2);
 
-		
+
 					$("#userinfo_container").html(tmpl);
 
 
@@ -874,7 +889,7 @@ var view_profilepage_info = view_subpage.extend({
 
 						} else if (this.bucketaes != undefined) {
 							// bucketaes, bucketrsa, piecedata
-						
+
 							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
 
 
@@ -884,13 +899,13 @@ var view_profilepage_info = view_subpage.extend({
 							// Our unique key consits of revision, userid and piece key:
 							var key = charmeUser.userId+"--," + container_main.currentView.options.userId + "," + that2.version + "," + this.key;
 							var aes = checkCache(key);
-							
+
 							if (aes == null) {
 
 								key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
 								aes = key1.decrypt(that2.bucketrsa.data); // get aes key for decrypting piecedata
-						
-							
+
+
 							}
 
 
@@ -899,7 +914,7 @@ var view_profilepage_info = view_subpage.extend({
 							} else {
 
 								try{
-							
+
 								var t = aes_decrypt(aes, that2.piecedata);
 
 								if (t != "")
@@ -913,9 +928,9 @@ var view_profilepage_info = view_subpage.extend({
 							console.log(e);
 
 							rq = "<span style='color:red'>Error at decryption. Try to clean your cache.</span>"; // This may be caused by cached keys if pieces collection has been deleted on server!
-							
+
 							}
-								
+
 							}
 						} else {
 							// Can not request if empty fields:
@@ -981,7 +996,7 @@ var view_profilepage_info = view_subpage.extend({
 						}).get();
 
 						// container_main.currentView.pubkey
-						
+
 
 
 						$.doTimeout('listsave', 1000, function(state) {

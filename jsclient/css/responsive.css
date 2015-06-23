@@ -55,6 +55,12 @@
 
 @media (max-width: 1000px)
 	{
+		.receiversinstant {
+			margin-top: 56px;
+		}
+		.sbBeta {
+			display: none;
+		}
 		.respColumn
 		{
  				width:100% !important;

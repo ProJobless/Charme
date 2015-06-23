@@ -1,13 +1,16 @@
 <?php
 function clog($str)
 {
-	$fd = fopen("./log.txt", "a");
-	fwrite($fd, $str."\r\n");
-	fclose($fd);
+	global $CHARME_SETTINGS;
+	if (isset($CHARME_SETTINGS) && $CHARME_SETTINGS["DEBUG"]) {
+		$fd = fopen("./log.txt", "a");
+		fwrite($fd, $str."\r\n");
+		fclose($fd);
+	}
 }
 
-function clog2($ar)
+function clog2($ar, $prefix="")
 {
-	clog(print_r($ar, true));
+	clog($prefix." ".print_r($ar, true));
 }
 ?>

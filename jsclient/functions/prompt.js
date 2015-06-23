@@ -7,13 +7,15 @@ function ui_block(content)
 {
 	if (!$("body .uiBlock").length)
 	$("body").prepend("<div class='uiBlock'></div>");
-	
+
 	$("body .uiBlock").fadeIn(400);
-	
+	$("body").addClass("noscroll");
+
 }
 function ui_unblock(content)
 {
 	$("body .uiBlock").fadeOut(400);
+	$("body").removeClass("noscroll");
 
 }
 function ui_showImgBox(src, callback)
@@ -32,6 +34,40 @@ function ui_showImgBox(src, callback)
 							});
 
 
+
+}
+
+function ui_mapSelector(element, callback) {
+
+		var randomId = "map"+String(Math.floor( Math.random()*99999 ));
+
+		$(".mapSelector").remove();
+		$('<div/>', {
+    id: randomId,
+		style: "height: 200px; margin-top:8px",
+		class: "mapSelector mapOsm fixedBoxInner"
+	}).insertAfter(element);
+
+		var map = L.map(randomId).setView([48, 11], 4);
+
+		function onMapClick(e) {
+			$(".mapSelector").remove();
+		   callback(e.latlng.lng, e.latlng.lat);
+
+			// Alert: Location was added...
+		}
+
+		map.on('click', onMapClick);
+
+		// add an OpenStreetMap tile layer
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+
+		// add a marker in the given location, attach some popup content to it and open the popup
+		//L.marker([latitude, longitude]).addTo(map)
+	//	L.bindPopup(name)
+		//.openPopup();
 
 }
 
@@ -56,7 +92,7 @@ function ui_showMap(latitude, longitude, name)
 
 		}, 800);
 
-	
+
 
 
 
@@ -89,44 +125,44 @@ function ui_showBox(content, callback, a_width)
 		a_width = 400;
 	ui_block();
 
-	if (!$("body .fixedBox").length)
-	$("body").prepend("<div class='fixedBox'></div>");
+	if (!$(".uiBlock .fixedBox").length)
+	$(".uiBlock").prepend("<div class='fixedBox'></div>");
 
 	$('.fixedBox').css("max-width", a_width+"px");
-	
-	
-	$("body .fixedBox").html(content);
+
+
+	$(".uiBlock .fixedBox").html(content);
 
 	var h = $("body .fixedBox").height()+100;
 
-	 $("body .fixedBox").css("top", -h);
-
-	 
- 	 $("body .fixedBox").css("margin-left", -$("body .fixedBox").width() / 2);
+	 $(".uiBlock .fixedBox").css("top", -h);
 
 
-	$("body .fixedBox").animate({
+ 	 $(".uiBlock .fixedBox").css("margin-left", -$("body .fixedBox").width() / 2);
+
+
+	$(".uiBlock .fixedBox").animate({
     top: '150px',
   }, 200, function() {
 
- 
+
 
 //$("body .fixedBox input:first").focus();
   if(callback != undefined && typeof callback == 'function') callback();
- 
-  	
- 
+
+
+
 
   });
-	
+
 }
 function ui_closeBoxButton()
 {
-	return "<a class='button' href='javascript:ui_closeBox();'>Close</a>";	
+	return "<a class='button' href='javascript:ui_closeBox();'>Close</a>";
 }
 function ui_Button(name, func)
 {
-	return "<a class='button' href='javascript:"+func+";'>"+name+"</a>";	
+	return "<a class='button' href='javascript:"+func+";'>"+name+"</a>";
 }
 
 /***
@@ -144,17 +180,17 @@ function ui_Button(name, func)
 */
 function ui_closeBox()
 {
-	$("body").focus();//Because if not then problem when auto complete focused 
+	$("body").focus();//Because if not then problem when auto complete focused
 	ui_unblock();
 	var h = $("body .fixedBox").height()+100;
 
 	$("body .fixedBox").animate({
     top: '-'+h+'px',
   }, 200, function() {
-	  
+
 	 $("body .fixedBox"). html("");
-	  
+
   });
-	
-	
+
+
 }

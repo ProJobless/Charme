@@ -1,3 +1,5 @@
+var charme_global_pictureAppendix = ""; // This is appended to profile image src to avoid reloading
+
 var view_settings_pwchange = view_subpage.extend({
 
 
@@ -12,7 +14,7 @@ var view_settings_pwchange = view_subpage.extend({
 			var oldpass = $("input[name=inp_oldpassword]").val();
 			var newpass = $("input[name=inp_newpassword]").val();
 
-	
+
 			if (newpass != $("input[name=inp_newpassword2]").val()) {
 				alert("New passwords do not match...");
 				return;
@@ -35,7 +37,7 @@ var view_settings_pwchange = view_subpage.extend({
 
 				var hashpassNew = CryptoJS.SHA256(newpass + d2.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
 
-		
+
 
 
 				apl_request({
@@ -46,9 +48,9 @@ var view_settings_pwchange = view_subpage.extend({
 						}
 
 					]
-				}, function(d) {		
+				}, function(d) {
 					if (d.reg_changepassword.STATUS == "WRONG_PASSWORD")
-					{	
+					{
 						alert("Old password is incorrect.");
 						$("input[name=inp_oldpassword]").focus();
 					}
@@ -109,7 +111,7 @@ var view_settings_keymanager = view_subpage.extend({
 
 			var aesobj = $.parseJSON(aesstr);
 
-		
+
 			//var obj = aes_decrypt(passphrase, item.value);
 
 			var text = CryptoJS.SHA256(aesobj.key.n).toString(CryptoJS.enc.Base64);
@@ -160,7 +162,7 @@ var view_settings_sub = view_subpage.extend({
 	},
 	saveImage: function() {
 
-		alert($('#profileImgFileUp').data("filecontent").result.length);
+		NProgress.start();
 		apl_request({
 			"requests": [{
 					"id": "profile_imagechange",
@@ -171,16 +173,12 @@ var view_settings_sub = view_subpage.extend({
 		}, function(d) {
 
 
-			alert("IMAGE SAVED");
-			console.log(d);
-
-
+		 var src = 'http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '&'+d.profile_imagechange.random;
+		charme_global_pictureAppendix = d.profile_imagechange.random;
+			$("#profileImage").attr("src", src);
+			NProgress.done();
 
 		});
-
-
-
-		//console.log();
 
 	},
 	fileChanged: function(h) {
@@ -241,4 +239,3 @@ var view_settings_sub = view_subpage.extend({
 
 
 });
-

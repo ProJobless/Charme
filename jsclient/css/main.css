@@ -11,6 +11,14 @@ cursor: pointer;
 	display: block;
 
 }
+body.noscroll {
+    overflow: hidden;
+}
+
+#profileImage
+{
+
+}
 .filter_remove
 {
 	float: right;
@@ -107,6 +115,14 @@ a.category
 .metaData.meta_meal .point
 {
 	background-color: #1fad92;
+}
+.metaData.meta_review .point
+{
+	background-color: #a72520;
+}
+.metaData.meta_service .point
+{
+	background-color: #1f87ad;
 }
 .metaData.meta_activity .point
 {
@@ -313,6 +329,27 @@ padding: 8px 0;
    transition: opacity .3s ease-in-out;
    -moz-transition: opacity .3s ease-in-out;
    -webkit-transition: opacity .3s ease-in-out;
+}
+
+.searchresults
+{
+
+}
+
+.result {
+	clear:both;
+	margin-bottom: 8px;
+}
+.result img
+{
+	float:left;
+	margin-right: 8px;
+}
+.result.post {
+	color: #000;
+	text-decoration: none;
+	font-weight: normal;
+	display: block;
 }
 .usergrid .item
 {
@@ -534,10 +571,7 @@ float: left;
 	position:fixed;
 	z-index:-9994;
 	border-right:1px silver solid;
-
-
 }
-
 
 .meta
 {
@@ -568,6 +602,29 @@ margin:0px auto;
 width: 150px;
 float:left;
 }
+.sidebar ul li a.delList {
+	display: block;
+	width: auto;
+	float:right;
+	visibility: hidden;
+	top:5px;
+	padding: 0px;
+	margin:4px;
+	position: relative;
+	color: #aaa;
+
+}
+.sidebar ul li:hover a.delList {
+	visibility: visible;
+}
+.sidebar ul li:hover a.delList:active {
+	background-color: transparent;
+
+}
+.sidebar ul li:hover  a.delList:active i {
+	color: #000;
+
+}
 .sidebar ul
 	{
 	padding:0;
@@ -581,6 +638,7 @@ float:left;
 	padding:9px 8px 7px 8px;
 	color:#000;
 	cursor:default;
+	word-break: break-all;
 	font-family: "fira_sans_otlight";
 	line-height: 16px;
 	text-decoration:none;

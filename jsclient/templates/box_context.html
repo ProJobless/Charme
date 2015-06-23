@@ -18,11 +18,27 @@
 			<a  href='javascript:void(0);' data-type="meal" title="Meal" class="acb contextItem" style="background-position:-420px 0px;">Meal</a>
 	</div>
 
-	<div style="float:left; left:400px; width:384px;padding:8px;">
+	<div style="float:left; left:400px; width:384px;padding:32px;">
 
-		<form style="padding:24px;" id='contextDetails'>
-			
+		<form id='contextDetails'>
+
+
 		</form>
+
+			<div style='padding:8px 0px; font-weight:bold;'>Audience</div>
+			<select id="audienceSelector">
+					<option value="0">World (Everybody on the planet)</option>
+				<% _.each( rc.userlists, function(item2){ %>
+					<option name="audience" value="<%- item2._id.$id  %>"><%- item2.name %></option>
+				<% }); %>
+			</select>
+			<% if ( rc.userlists.length == 0)  { %>
+				<div style="margin-top: 8px;">
+				<b>Hint:</b> Create lists to limit the audience.
+				</div>
+			<% } %>
+
+
 	</div>
 	<br style="clear:both;">
 </div>

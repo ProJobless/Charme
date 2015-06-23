@@ -14,7 +14,7 @@ var charmeUser;
 
 	Params:
 	revision: the revision
-	
+
 	Location:
 	apl/user.js
 
@@ -35,12 +35,12 @@ function getKeyByRevision(revision)
 	var itemtemp = null;
 	// Key by revision
 	$.each(charmeUser.keyring, function(index, item) {
-		
+
 		if (item.revision == revision)
-			{	
+			{
 				itemtemp = item;
 			}
-	
+
 
 	});
 
@@ -58,7 +58,7 @@ function getKeyByRevision(revision)
 
 	Params:
 	uid:String:The user id, "me@myserver.com" for example.
-	
+
 	Properties:
 	sessionId:String:Server Session Id, do not set!
 	sessionPassphrase:String:Passphrase encoded with sessionId
@@ -81,18 +81,13 @@ function apl_user(uid)
 	this.server = uid.split("@")[1];
 	this.username = uid.split("@")[0];
 
-	
+
 	this.getServer = function()
 	{
 		return this.server;
 	}
 	this.getImageURL = function(size)
 	{
-		return "http://"+this.server+"/charme/fs.php?u="+this.userIdURL+"&s="+size;
+		return "http://"+this.server+"/charme/fs.php?u="+this.userIdURL+"&s="+size+"&"+charme_global_pictureAppendix;
 	}
 }
-
-
-
-
-

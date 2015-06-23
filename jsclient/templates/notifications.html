@@ -15,7 +15,7 @@ See server/charme/Lib/Counter/Notify.php
 
 
 <div class='item'>
-<a href='#user/<%- encodeURIComponent(item.adder) %>'><%- item.name %></a> 
+<a href='#user/<%- encodeURIComponent(item.adder) %>'><%- item.name %></a>
 added you to the lists.
 </div>
 
@@ -31,20 +31,20 @@ added you to the lists.
 
 <div class='item'>
 <a href='#user/<%- encodeURIComponent(item.follower) %>'><%- item.name %></a>
-follows your  
+follows your
 <a href='#user/<%- encodeURIComponent(item.owner) %>/collections/<%- item.collectionId %>'><%- item.collectionName %> collection.</a>
 </div>
 
 
   <% } %>
 
- 
+
  <% if (item.type == 5)  { %>
 
 
 <div class='item'>
 <a href='#user/<%- encodeURIComponent(item.liker) %>'><%- item.name %></a>
-likes your 
+likes your
 <a href='#user/<%- encodeURIComponent(item.owner) %>/post/<%- item.postId %>'>status</a>
 </div>
 
@@ -71,7 +71,7 @@ likes your
 <div class='item'>
 <a href='#user/<%- encodeURIComponent(item.userId) %>'><%- item.name %></a>
 commented your
-<a href='#user/<%- encodeURIComponent(item.owner) %>/post/<%- item.postId %>'>status</a>
+<a href='#user/<%- encodeURIComponent(item.postowner) %>/post/<%- item.postId %>'>status</a>
 </div>
 
 
@@ -86,4 +86,3 @@ commented your
 
 
   <% }); %>
-

@@ -189,6 +189,7 @@ var view_talks_subpage = view_subpage.extend({
 	options: {
 		template: 'talks_',
 		el: '#page3',
+		isResponsiveMode: false, // Must be defined in postrender!
 		messageKeys : []
 	},
 
@@ -207,7 +208,7 @@ var view_talks_subpage = view_subpage.extend({
 			$.each(returnedServerData, function() {
 				var msgKey = that.getMessageKey(this.message.object.msgKeyRevision, this.message.object.conversationId);
 				that.options.lastid = this._id.$id;
-		
+
 				try {
 
 					if (typeof this.message.object.content != 'undefined') // Check if it is not an image
@@ -218,7 +219,7 @@ var view_talks_subpage = view_subpage.extend({
 				}
 			});
 
-	
+
 			if (returnedServerData[returnedServerData.length-1].message.object.conversationId == that.options.conversationId) // Only append to messages if conversation is active
 			{
 				$.get("templates/control_messageview.html", function(d) {
@@ -230,7 +231,7 @@ var view_talks_subpage = view_subpage.extend({
 					$(".talkmessages").append(tmpl);
 
 					that.decodeImages();
-					
+
 
 					if (messageData.length > 0)
 						$(window).scrollTop(999999);
@@ -360,7 +361,6 @@ var view_talks_subpage = view_subpage.extend({
 				};
 			};
 		}
-
 		reader.readAsDataURL(reader.file);
 	},
 
@@ -368,6 +368,20 @@ var view_talks_subpage = view_subpage.extend({
 		var that = this;
 		$('#theFile').on("change", function(e) {
 			that.fileChanged(e);
+		});
+		that.isResponsiveMode  = isResponsive();
+
+		$(window).resize(function () {
+			if (that.isResponsive != isResponsive()) {
+				// Responsive Mode has changed -> Update the view, but do not reload the messages
+				if (!isResponsive() || this.options.conversationId != "") {
+					$(".messageDetails").addClass("active");
+					$(".talkbar").addClass("inactive");
+				} else {
+					$(".messageDetails").removeClass("active");
+					$(".talkbar").removeClass("inactive");
+				}
+			}
 		});
 
 		// Do not load messages of a conversation if in responsive mode. Here the user has
@@ -381,7 +395,7 @@ var view_talks_subpage = view_subpage.extend({
 			$(".talkbar").removeClass("inactive");
 		}
 	},
-	
+
 	uploadFile: function() {
 		$("#theFile").trigger('click');
 	},
@@ -418,9 +432,11 @@ var view_talks_subpage = view_subpage.extend({
 
 		});
 	},
+
 	leaveConversation: function() {
 		alert("Not implmenented yet.");
 	},
+
 	loadMedia: function(start) {
 		var that = this;
 		var limit = -1;
@@ -486,7 +502,6 @@ var view_talks_subpage = view_subpage.extend({
 
 
 								var allimagescount = fileidlist.length;
-								console.log("COUNT IS" + allimagescount);
 								var imgnow = 0;
 
 								// Now start download of files. But only only download and decrypt one file after another.
@@ -588,7 +603,7 @@ var view_talks_subpage = view_subpage.extend({
 
 					var worker2 = new Worker("lib/crypto/thread_decrypt.js");
 					var el = $('<a class="imgThumb"></a>');
-					
+
 					$(par).append(el);
 
 					worker2.onmessage = function(e) {
@@ -650,7 +665,7 @@ var view_talks_subpage = view_subpage.extend({
 
 		var maxRevision = -1;
 		var bestKey;
-		
+
 		$.each(this.options.messageKeys[conversationId], function(i) {
 
 
@@ -742,11 +757,11 @@ var view_talks_subpage = view_subpage.extend({
 					console.log(d2.messages_get_sub.usernames);
 					try
 					{jQuery.each(d2.messages_get_sub.usernames, function(i) {
-					
+
 											if (i != 0)
 												$("#inp_receiversinstant").append(", ");
-					
-					
+
+
 											// {userid, name}
 											{
 												$("#inp_receiversinstant").append("<a href='#user/" +
@@ -756,10 +771,10 @@ var view_talks_subpage = view_subpage.extend({
 					catch(e){console.log("WARNING: Usernames of Conversation are NULL")}
 				}
 
-			
+
 				that.decodeImages();
 
-		
+
 				$(".talkmessages").css("margin-bottom", ($(".instantanswer").height() + 48) + "px");
 
 				if (start == -1) {
@@ -993,7 +1008,7 @@ var view_talks = view_page.extend({
 				jQuery.each(d2.messages_get.messages, function(index, item) {
 
 					// Decode AES Key with private RSA Key
-				
+
 					msgKeys = [];
 
 
@@ -1015,7 +1030,7 @@ var view_talks = view_page.extend({
 						});
 
 					} catch (e) {}
-	
+
 
 				});
 

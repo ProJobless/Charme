@@ -53,7 +53,7 @@ var container_main;
 
 $(function() {
 
-   
+
    /* try{
     Object.defineProperty(console, '_commandLineAPI',
    { get : function() { throw '!!!WARNING!!! The developer console is for developers ONLY. If someone gave you some code to insert here DO NOT DO IT. The encryption of you Charme account may be seriously affected otherwise!' } })
@@ -71,7 +71,7 @@ $(function() {
 
 
 
-    
+
     // get apl data, like lists, friends etc. from server
     apl_setup(function() {
 
@@ -139,15 +139,15 @@ $(function() {
         app_router.on('route:getTalks', function(id) {
 
             if (typeof id == 'undefined')
-           {   
+           {
 
              id = "";
-            
+
 
 
    }
 
- 
+
             if (container_main.currentViewId != "talks") {
                 var pa = new view_talks({
                     template: "talks",
@@ -197,7 +197,7 @@ $(function() {
                             "id": "key_getAll"
                         },
 
-                        /* Unused, we get the keyring already at login 
+                        /* Unused, we get the keyring already at login
                         {
                             "id" : "key_getPrivateKeyring"
                         }*/
@@ -218,14 +218,14 @@ $(function() {
 
 
                 });
-            } 
+            }
             else  if (id == "password") {
                 apl_request({
                     "requests": [{
                           //  "id": "key_getAll"
                         },
 
-                        /* Unused, we get the keyring already at login 
+                        /* Unused, we get the keyring already at login
                         {
                             "id" : "key_getPrivateKeyring"
                         }*/
@@ -246,7 +246,7 @@ $(function() {
 
 
                 });
-            } 
+            }
 
              else if (id == "privateinfo_requests") {
 
@@ -265,7 +265,7 @@ $(function() {
                         data: d2
                     });
 
-                 
+
                     container_main.currentView.setSub(vsd);
                     container_main.currentView.render();
 
@@ -294,16 +294,9 @@ $(function() {
                     d2.prvInfo.currentcity = "";
                     d2.prvInfo.mail = "";
 
-            
                     // Do decrypt
                     $.each(d2.piece_store_get.items, function() {
-                            
-                        
-
                         var key = getFastKey(this.value.revision, 1);
-                        
-                        
-                     
                         var original = "";
                         try{
                         var aes = aes_decrypt(key.fastkey1, this.value.aesEnc);
@@ -322,7 +315,7 @@ $(function() {
                         data: d2
                     });
 
-                 
+
                     container_main.currentView.setSub(vsd);
                     container_main.currentView.render();
 
@@ -359,7 +352,7 @@ $(function() {
             }
 
         });
-        
+
            app_router.on('route:getNotifications', function(id) {
             var pa = new view_notifications({
                 forceNewRender: true,
@@ -370,91 +363,38 @@ $(function() {
             });
             container_main.setCurrent(pa);
             pa.render();
-
-
-
            });
 
         app_router.on('route:getFind', function(id) {
 
-
-
-            // JSON...
-
-            // if contains a @ char -> direct display user:
-
-
-            var realId = decodeURIComponent(id);
-
-            if (realId.indexOf("@") !== -1) {
-                apl_request({
-                        "requests": [
-
-                            {
-                                "id": "profile_get_name",
-                                "userId": realId
-                            },
-
-                        ]
-                    }, function(d) {
-
-                        alert("..");
-                        var pa = new view_find({
-                            q: decodeURIComponent(id),
-                            forceNewRender: true,
-                            navMatch:"find",
-                            data: {
-                                info: d.profile_get_name.info,
-                                direct: true,
-                                userId: realId
-                            }
-                        });
-                        container_main.setCurrent(pa);
-                        pa.render();
-
+            var query = decodeURIComponent(id);
+            NProgress.start();
+            apl_request({
+                "requests": [{
+                        "id": "search_start",
+                        "q": query
                     },
-                    "", realId.split("@")[1]);
+                ]
+            }, function(d2) {
 
-            } else {
+              var pa = new view_find({
+                  q: decodeURIComponent(id),
+                  forceNewRender: true,
+                  navMatch:"find",
+                  data: {
+                    //  info: d2.profile_get_name.info
+                    results: d2.search_start.results
+                  }
+              });
 
+              container_main.setCurrent(pa);
+              pa.render();
+              NProgress.done();
 
-                $.ajax("http://" + charmeUser.getServer() + "/charme/auto.php?q=" + id,
-
-                    {
-                        crossDomain: true,
-                        dataType: "jsonp",
-                        xhrFields: {
-                            withCredentials: true
-                        },
-
-                        success: function(data) {
-                        
-
-                            var pa = new view_find({
-                                q: decodeURIComponent(id),
-                                forceNewRender: true,
-                                data: data,
-                                navMatch:"find"
-                            });
-                            container_main.setCurrent(pa);
-                            pa.render();
-
-
-
-                        }
-                    });
-            }
-
-
-
-            //console.log("navMatch1:"+pa.options.navMatch);
-
+            });
         });
 
-
         app_router.on('route:getRegister', function(id) {
-
-
 
             var pa = new view_register({
                 noLogin: true
@@ -464,8 +404,6 @@ $(function() {
             //console.log("navMatch1:"+pa.options.navMatch);
 
         });
-
-
 
         app_router.on('route:getPage', function(id) {
 
@@ -538,8 +476,10 @@ $(function() {
                 var filterIndex = id.substr(7);
                 options.filter = apl_postloader_filters.filterReferences[filterIndex];
 
-                console.log(options.filter);
 
+            }
+            if (strStartsWith(id, "archive")) {
+              options.filter = {"archived": true};
             }
 
             var vsd = new view_stream_display(options);
@@ -557,8 +497,7 @@ $(function() {
 
             if (container_main.currentViewId != "profile_" + id) {
 
-                console.log("CREATE NEW PARENT VIEW");
-                console.log("Instantiate ParentView : User");
+
                 container_main.setCurrent(new view_profilepage({
                     expViewId: "profile_" + id,
                     userIdRaw: id,
@@ -602,7 +541,7 @@ $(function() {
             } else if (id2 == "post") {
 
 
-
+      
                 var vsd = new view_profilepage_posts({
                     postId: id3,
                     template: "user_postview",
@@ -682,15 +621,15 @@ var charme_private_rsakey = null;
     * Get sessionId
     * Looking up for password encrypted passphrase in localStorage (`localStorage.getItem("PassPassphrase");`):
     * If===null: Show input field, and store encrypted with password
-    
-    Decrypt with password and 
+
+    Decrypt with password and
     Enrypt with session id
 
     Location:
     apl/routes.js
 
-  
- 
+
+
 */
 
 function login() {
@@ -743,7 +682,7 @@ function login() {
         "requests": [{
                 "id": "reg_salt_get",
                 "userid": u,
-               
+
             }
 
         ]
@@ -751,7 +690,7 @@ function login() {
     {
     var hashpass = CryptoJS.SHA256(p+data1.reg_salt_get.salt).toString(CryptoJS.enc.Base64);
 
-  
+
     apl_request({
         "requests": [{
                 "id": "user_login",
@@ -795,7 +734,7 @@ function login() {
 
 
 
-                    // The keyring contains a list of 
+                    // The keyring contains a list of
                     // Keypairs, where the last item is the newest key
                     var keyringAES = data.user_login.ret.keyring;
 
@@ -839,7 +778,7 @@ function login() {
         /*
          *  ON SUCCESS
          *
-         
+
          */
 
 
@@ -849,13 +788,8 @@ function login() {
 
 }
 
-function LoadSimplePage(pageName) {
-
-}
-
 function logout() {
-
-
+    ui_closeBox();
     container_guest.render();
     main_container = null;
     charmeUser = null;
@@ -867,9 +801,6 @@ function logout() {
     container_guest.render();
 
     location.href = "#welcome";
-
-
-
 }
 
 function delTemp() {
@@ -897,7 +828,7 @@ function resendPassword() {
     Info:
     Checks if the user id logged in.
     Returns true or false.
-    
+
     No certificate => Logout
     No passphrase => Logout
 
