@@ -18,8 +18,7 @@ $CHARME_SETTINGS["serverURL"] ="localhost";
 //See license_charme.txt for more information
 //If you want to create a private network leave this empty
 $CHARME_SETTINGS["NETWORK_ID"] ="CHARME_BETA_1";
-
-$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] = array("http://mschultheiss.com", "http://client.local", "http://s17839906.onlinehome-server.info", "localhost");
+$CHARME_SETTINGS["ACCEPTED_CLIENT_URL"] = array("http://mschultheiss.com","http://wwww.mschultheiss.com", "http://client.local", "http://s17839906.onlinehome-server.info", "localhost");
 // http://client.local
 $CHARME_SETTINGS["DEBUG"] =true;
 

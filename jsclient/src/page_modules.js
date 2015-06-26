@@ -1266,7 +1266,7 @@ control_postItem = Backbone.View.extend({
         content: this.commentData.object.text,
         commentId: commentId,
         "username": this.sendername,
-        userId: this.userId,
+        userId: this.commentData.object.userId,
         prepend: prepend,
         el: $('#postComments' + parentId)
       });
@@ -1413,7 +1413,7 @@ control_postItem = Backbone.View.extend({
 
         $("#post_" + that.options.postObj.postId + " .cont").append(metaDataStr);
         $("#loc_" + uniIdCounter + "_start").click(function() {
-          ui_showMap(metaData.location_data.position.coordinates[1], metaData.location_data.position.coordinates[1], metaData.location_data.name);
+          ui_showMap(metaData.location_data.position.coordinates[1], metaData.location_data.position.coordinates[0], metaData.location_data.name);
         });
 
 

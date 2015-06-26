@@ -2445,6 +2445,7 @@ foreach ($data["requests"] as $item)
 			// 3. remote queries for unencrypted posts
 			//
 			$serverList = \App\Filter\Generator::getServerList($item["filter"], $col);
+
 			//
 			// Build payload for multiserver request
 			//
@@ -2452,8 +2453,6 @@ foreach ($data["requests"] as $item)
 			$item2["id"] = "stream_respond";
 			$item2["searcher"] = $_SESSION["charme_userid"];
 			$item2["requestServer"] = $_SERVER['SERVER_NAME'];
-
-
 
 			$showCollectionPostsOnly = false;
 			if (Count($additionalConstraints) == 0)
@@ -2463,18 +2462,13 @@ foreach ($data["requests"] as $item)
 				  $people = array();
 
 					foreach ($item["filter"]["lists"] as $list) {
-
-					 $selector = 	$col->listitems->find(array("list" => new MongoId($list), "owner" => $_SESSION["charme_userid"])); // TODO: use $in instead for better performance
-					foreach ($selector as $person) {
-						$people[] = $person["userId"];
-
+						$selector = 	$col->listitems->find(array("list" => new MongoId($list), "owner" => $_SESSION["charme_userid"])); // TODO: use $in instead for better performance
+						foreach ($selector as $person) {
+							$people[] = $person["userId"];
+						}
 					}
-
-			}
 					// Get people in list
 			}
-
-
 
 			// Assume we do not use a collection filter (aka Return only results of subscribed collections)
 			// TODO: We do not use a collection filter when filtering for context items (Move, Sell, Review etc.)
@@ -2521,9 +2515,9 @@ foreach ($data["requests"] as $item)
 					curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER , TRUE );
 					curl_setopt($ch[$i], CURLOPT_TIMEOUT, 12); // 2 seconds timeout, servers have to respond fast!
 
-					/*
-					can be used for debugging:
 
+				//	can be used for debugging:
+/*
 					$result = curl_exec($ch[$i]);
 
 					if(curl_errno($ch[$i]))
@@ -2533,11 +2527,11 @@ foreach ($data["requests"] as $item)
 					else {
 
 						clog("RESULT".$result);
-					}
+					}*/
 
 
 					curl_multi_add_handle($mh,$ch[$i]);
-*/
+
 				}
 			}
 
@@ -2556,14 +2550,16 @@ foreach ($data["requests"] as $item)
 
 				 foreach ($ch as $key => $val) {
 					$content = curl_multi_getcontent($val);
+
 					//clog(curl_errno($ch[3]));
 				//	clog(	curl_eror($key, CURLINFO_EFFECTIVE_URL));
 
 					//clog("content".$content);
 					if ($content != "") {
 				        $json = json_decode($content, true);
-
 								foreach ($json["stream_respond"] as $item3) {
+
+									clog("got respond|".$_SESSION["charme_userid"]);
 
 									if (!in_array($item3["postId"], $postIds)) {
 
@@ -2572,7 +2568,8 @@ foreach ($data["requests"] as $item)
 										unset( $item3["_id"]); // Post Id must be mongoID! TODO: what does this comment mean???
 
 										if ($col->streamitems->count(array("postId" => $item3["postId"],
-													"post.author" =>  $item3["post"]["author"]
+													"post.author" =>  $item3["post"]["author"],
+														"owner" => $_SESSION["charme_userid"]
 												)) <= 0) // Needed as sometimes upsert is not wokrign and deletes archived=true is newly inserted
 												{
 
@@ -2586,7 +2583,8 @@ foreach ($data["requests"] as $item)
 
 												$resultCode = $col->streamitems->update(
 													array("postId" => $item3["postId"],
-																"post.author" =>  $item3["post"]["author"]
+																"post.author" =>  $item3["post"]["author"],
+																"owner" => $_SESSION["charme_userid"]
 																)
 												, $item3, array("upsert" => true)); // TODO: Check PEM Key
 
@@ -2605,13 +2603,14 @@ foreach ($data["requests"] as $item)
 			$additionalConstraints["post.author"] = array('$in' => $people);
 		}
 
-
+		//clog2($additionalConstraints, "add contraints");
 			$iter = $col->streamitems->find(array_merge(array("owner" => $_SESSION["charme_userid"]), $additionalConstraints))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 			$streamItems=  iterator_to_array($iter , false);
 
 			// Append last 3 comments for each item.
 			foreach ($streamItems  as $key => $item2)
 			{
+				clog("iterate 1");
 				// Save postIds to avoid duplicates provides from other servers later on...
 				$postIds[] = $item2["postId"];
 

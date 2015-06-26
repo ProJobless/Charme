@@ -117,10 +117,12 @@ for example. The data is signed to prevent forgery of information.
  \subsection{Verifying private keys}
  When we want to write an encrypted message to user B, we need the public key of user B first. However, as the server or someone else can provide a wrong public key, it is necessary to check the public key for correctness. If done so, we encrypt the public key of user B with our passphrase and store it in the encrypted data storage.
  
+  \subsection{Preventing List and Message MITM Attacks}
+  Lists can be used to restrict access to certain information. Each list contains some people defined by the users. When a server behaves evil, we must ensure, that he can not manipulate the list and add new people for example, we will later send our message to. Furthermore we must ensure, that the autocomplete only returns 
 
-
-
-
+ \subsection{Post encryption}
+A new post is encrypted, when it is restricted to a list of people. 
+First we generate a postkey $k$, which encrypts the content of the post. Next we need to distribute $k_1$ to other people. We can use the symmetric edgekeys $e_1, e_2, ...$ of these people. We encrypt the post key with each edgekey ( $Enc_{e_1} (k)$) and distribute them to the receivers. An edgekey is a asymmetric key, that is established after public key verification and send via public key to the other party. This is because asymmetric cryptography is a lot of slower than symmetric cryptography.
  \subsection{Message encryption}
  
 
@@ -210,6 +212,7 @@ Usually, the guid $i$ is initialized by a boot peer. However, as we want to keep
 \end{enumerate}
 * I am very sorry for everytime I did not follow these guidelines.
   \section{Technical Documentation}
+  Please note that technical documentation has moved to the code itself. The following may be out of date:
 \subsection{Login}
 \textbf{ 1st step:} Get password salt value via \textit{reg\_salt\_get}\\
 \textbf{2nd step:} Login with \textit{user\_login} and parameters u (username) and p (salt hashed password). Status PASS is returned if successful.

@@ -1,7 +1,7 @@
 TOP PRIORITY:
 
 - 3. improve audience limiter for context items with signature  60 MIN BIB!!!
-
+- lmit collection audience when displaying collection.
 - complete filters!
   - comments:
     - if filter: cache stream for 3 days and register for comment updates druign that periode
