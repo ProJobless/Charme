@@ -46,7 +46,7 @@ public class RSAObj {
 	}
 	public Cipher getPrivateChipher()
 	{
-		try{
+		try{//
 			
 			PrivateKey privKey = getPrivateKey();
 			Cipher cipher2 = Cipher.getInstance("RSA/NONE/PKCS1Padding"); // , "BC"

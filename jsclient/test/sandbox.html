@@ -9,19 +9,20 @@
 <script src='lib/underscore.js'></script>
 <script src='lib/backbone.js'></script>
 
-
-
-
-
-
-
+<script src='../lib/crypto/sha256.js'></script>
+<script src='../lib/crypto/hmac-sha256.js'></script>
 
 <script src='lib/crypto.js'></script>
 <script src='lib/models.js'></script>
 
-
-
 <script type="text/javascript">
+
+function aestest() {
+	console.log(aes_encrypt("asd", "testdata"));
+	console.log(aes_decrypt("asd", aes_encrypt("asd", "testdata")));
+}
+console.log(aestest);
+
 
 function doencrypt(msg)
 {
@@ -83,7 +84,7 @@ FriendView = Backbone.View.extend({
 
 
         _.bindAll(this, 'render');
-    }, 
+    },
 
     getFriend: function() {
         var friend_name = $('#input').val();
@@ -104,7 +105,7 @@ PostView = Backbone.View.extend({
  },
     render: function( model ) {
         $("body").append("POSTVIEW");
-     
+
     },
  });
 
@@ -138,7 +139,7 @@ post.render();
 </ul>
 
 
-  
+
 
 </body>
 </html>

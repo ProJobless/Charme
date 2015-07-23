@@ -307,7 +307,7 @@ console.log("sidebar load=true");
 		<div style="height:64px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img id="profileImage" src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
-		     <input id="searchField" style="width:132px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
+		     <input id="searchField" style="width:148px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
 		<a href="#about">About</a> - <a href="#help">Help</a><div style="color:gray; font-size:10px; padding-top:6px;">For testing purposes only. Charme is NOT secure yet!</div></div> \
 		    <div class="sbBetaCont"> \
@@ -417,7 +417,7 @@ page_login = Backbone.View.extend({
 
 	render: function() {
 
-		$("#layout").html('<div style="width:600px; margin:0px auto;"><div id="page"></div></div>');
+		$("#layout").html('<div style="max-width:600px; margin:0px auto;"><div id="page"></div></div>');
 
 
 	}

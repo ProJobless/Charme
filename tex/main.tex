@@ -13,7 +13,7 @@
 
 
  \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref} %make url break
-\title{Charme - A distributed social network with end-to-end encryption}
+\title{Charme - A distributed social network with end-to-end encryption and contextual information}
 \author{Manuel Schultheiß\\manuel.schultheiss@tum.de}
 \begin{document}  \sloppy % sloppy is used for making url{} break
  
@@ -27,12 +27,25 @@ Basic cryptographic and network concepts for the distributed social networks Cha
 
 
 \section{Introduction}
-In contrast to classic social networks, distributed social networks with end-to-end encryption can provide self control for your data and kind of independence from big companies.  \textit{Distributed} means, that there is no central server hosting your data, but many small servers all around the world, which everyone can  setup. Just like email providers everyone has a unique address like \textit{yourname@yourserver.com}. With end-to-end encryption not even the server hosting your data can see your data. This is necessary for a distributed architecture as otherwise the server admin could read your messages for example.
+In contrast to classic social networks, distributed social networks with end-to-end encryption can provide self control of your data and  independence from big companies.  \textit{Distributed} means, that there is no central server hosting your data, but many small servers all around the world, which everyone can  setup. Just like email providers everyone has a unique address like \textit{yourname@yourserver.com}. With end-to-end encryption not even the server hosting your data can see your data. This is necessary for a distributed architecture as otherwise the server admin could read your messages for example.\\
+
+Another innovation of Charme is the so called \textit{Context}, every post can have optionally. A context contains semantic, computer-readable information about the post.
+ An algorithm can later aggregate all users moving by car from point A to point B tomorrow, with having 3 seats free with a tolerance of 20 kilometers for example. Or you can look up for friends making pizza for lunch and want to share their food today. Figure \ref{figContext} shows the creation of a context and the creation of a filter to search for existing context of other users. 
+ Websites already providing share-economy services can also add their data to the Charme network, using the Charme Schema JSON Syntax, as defined in the file schema.coffee. The context system introduces elements of the\textit{Web of Data}, formerly known as the semantic web to social networks.
+
+\begin{figure}[ht]
+	\centering
+  \includegraphics[width=120mm]{illustrations/context.jpg}
+	\caption{Context dialogues. Finding existing context on the left; Adding context on the right. After a user has selected a context on the right, the user can add parameters like Location or time for the context.}
+	\label{figContext}
+\end{figure}
+
+
 
  \section{Encryption and Security}
  \subsection{Existing work}
 With Diaspora one of the first popular distributed social networks was released. The messages are not end-to-end encrypted, however, which makes it possible for the server admin to read its users messages. 
-A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment, but such an encryption can be implemented later on.
+A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment, but such an encryption can be implemented later on using techniques like onion routing for example.
 
 \subsection{Fundamental Concepts}
 \subsubsection{AES-CBC \label{AESCBC}}
@@ -52,7 +65,19 @@ and the same thing reversed for decryption:
 $$
 p_i = c_{i-1} \oplus Dec_K(K, c_i)
 $$
-It is important that the IV is shipped with integrity protection, otherwise an attacker could modify the first 256 bits in order to set the first decrypted plaintext block to a custom value. The other blocks can not be influenced however.
+It is important that the IV is shipped with integrity protection, otherwise an attacker could modify the first 256 bits in order to set the first decrypted plaintext block to a custom value. The other blocks can not be influenced however. 
+There are several techniques to add it (
+\url{https://en.wikipedia.org/wiki/Authenticated_encryption}).
+ Integrity protection can be achieved using the following steps which mach the encrypt-then-mac Scheme:
+\begin{enumerate}
+\item Encrypt Message using AES-CBC
+\item Get SHA-256 hash value of encrypted message and salt with key k and crypto algorithm version a.
+\item JSON Result is: \{ a: 1, m: $Enc_{k||v}(text)$, h: sha256HMac($Enc_{k||v}$(text), k||v) \}. The algorithm version a is added as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
+
+For example: The current implementation supports Non-HMAC AES when the information was encrypted without a HMAC. An attacker could remove the HMAC key and just send the plain AES encrypted content to the client and the client would still decrypt it correctly.
+
+\end{enumerate}
+
 
 \subsubsection{RSA}
 In RSA there are two different keys. The public key is visible to everyone, while the private key is only visible to the generator of both keys.  Asymmetric encryption is a lot of slower than symmetric encryption. So usually we generate an AES key, encrypt the text with the AES key and encrypt the AES key with the RSA key, rather than encrypting the whole text with the RSA key.
@@ -86,21 +111,26 @@ with $p_1$ being r and $p_2$ being $q$.
 \subsubsection{Further reading}
 \begin{enumerate}
 \item PKCS\#1 v2.2 RSA Cryptography Standard\\\url{http://www.emc.com/collateral/white-papers/h11300-pkcs-1v2-2-rsa-cryptography-standard-wp.pdf} 
+\item Lessons learned and misconceptions regarding encryption and cryptology \\\url{
+http://security.stackexchange.com/questions/2202/lessons-learned-and-misconceptions-regarding-encryption-and-cryptology/2206#2206}
+\item HMAC versus raw SHA hash functions \\\url{
+http://dev.ionous.net/2009/03/hmac-vs-raw-sha-1.html}
 \end{enumerate}
 
 \subsection{Diffie-Hellman Key Exchange}
 In order to provide forward secrecy the users A and B have to generate a common session key, which if it is getting compromised does not reveal the long term key.
 
-\subsubsection{Implementation}
-There are a Javascript library called Gibberish AES for Javascript and Tom Wu's RSA Library for RSA providing the main functionality. Google wrote with its E2E project a better implementation of cryptographic algorithms which should replace the above ones as soon as possible. The long term goal is to use the W3C web crypo API however, if supported in all major browsers, as this one is more secure regarding key deletion from memory and random number generation. 
+\subsection{Crypto Implementation}
+There are a Javascript library called Gibberish AES for Javascript and Tom Wu's RSA Library for RSA providing the main functionality. Google wrote with its E2E project a better implementation of cryptographic algorithms which should replace the above ones as soon as possible. The long term goal is to use the W3C web crypo API however, if supported in all major browsers, as this one is more secure regarding key deletion from memory (RAM) and random number generation. 
 
+\subsection{Implementation}
  \subsection{Client server seperation}
 In contrast to classic social networks, we seperate client and server in two seperate projects first. This is necessary, as otherwise a server could return malicious javascript to the user. In a perfect word, the user has to download and install the client locally and verify the file hash, For testing purposes, he can also use a web hosted version of the client. Although they are hosted on different domains, client and server can still connect to each other via cross origin resource sharing (CORS).
 
 \begin{figure}[ht]
 	\centering
   \includegraphics[]{eds.pdf}
-	\caption{Client and Server code is strictly separated}
+	\caption{Client and Server code is strictly separated. The client loads the Charme application from a local webserver, a browser plugin or a trusted server. This application connects to the server hosting the data via JSON.}
 	\label{fig1}
 \end{figure}
 
@@ -114,11 +144,46 @@ Charme basically uses an \textit{encrypted data storage}. This means critical da
 \end{enumerate}
 for example. The data is signed to prevent forgery of information.
 
- \subsection{Verifying private keys}
- When we want to write an encrypted message to user B, we need the public key of user B first. However, as the server or someone else can provide a wrong public key, it is necessary to check the public key for correctness. If done so, we encrypt the public key of user B with our passphrase and store it in the encrypted data storage.
+\subsection{Verifying private keys}
+When we want to write an encrypted message to user B, we need the public key of user B first. However, as the server or someone else can provide a wrong public key, it is necessary to check the public key for correctness. If done so, we encrypt the public key of user B with our passphrase and store it in the encrypted data storage.
  
-  \subsection{Preventing List and Message MITM Attacks}
-  Lists can be used to restrict access to certain information. Each list contains some people defined by the users. When a server behaves evil, we must ensure, that he can not manipulate the list and add new people for example, we will later send our message to. Furthermore we must ensure, that the autocomplete only returns 
+\subsubsection{Generating Fingerprints}
+   Currently the fingerprint $f$ is generated by applying a SHA-256 Hash function on n (modulus) and e (exponent) concatenated:
+   $$
+   F = Sha256(n || e)
+   $$
+   The function in the code is called \textit{buildHash} and is located in \textit{keys.coffee}. For a better user experience, the fingerprint can be truncated and : seperated later on, so the result looks something like:
+  
+   \begin{center}
+   12 : 3f : 3e : 2f: 12 : 3f : 3e : 2f: 12 : 3f : 3e : 2f (...)
+   \end{center}
+  
+  instead of 
+  
+  \begin{center}
+  123f3e3f123f3e2f123f3e2f (...)
+  \end{center}
+  
+  
+  Figure \ref{figFP} show the dialog to validate fingerprints.
+  \begin{figure}[ht]
+	\centering
+  \includegraphics[width=90mm]{illustrations/fingerprint.png}
+	\caption{Fingerprint Validation Dialog}
+	\label{figFP}
+\end{figure}
+
+
+
+  
+\subsection{Preventing List and Message MITM Attacks}
+Lists can be used to restrict access to certain information. Each list contains some people defined by the users. When a server behaves evil, we must ensure, that he can not manipulate the list and add new people for example, we will later send our message to.\\
+  
+ Furthermore we must ensure, that the autocomplete only returns name/address pairs that have been added by the user. Imagine the following case: Alice adds Bob with his CharmeId bob@somewhere.com to her key directory. Now she wants to send a message to Bob and opens the auto complete. She types Bob, and the server returns a modified CharmeId, probably on the same server (eve@somewhere.com). The Charme client would now encrypt the message with the other key and send it to Eve. So Eve could be able to get some sensitive information as Alice thinks she is communicating with Bob.\\
+
+Now how can we ensure, that this can not happen?
+\\
+The second case is that a list contains additional people added by an evil server.
 
  \subsection{Post encryption}
 A new post is encrypted, when it is restricted to a list of people. 
@@ -153,14 +218,20 @@ This information is also signed using the senders private key.
 \textbf{The current implementation misses some fundamental security stuff. An attacker could initiate a conversation with the identity of client A and start a MITM attack. Therefore the next step of the implementation is to sign the initial message and each following message.}
 
   \subsection{Distributing private information}
-  When giving private information like telephone number or email to other people, this is working slightly different to message distribution for performance reasons. See figure \ref{fig3}.
+  When giving private information like telephone number or email to other people, this is working slightly different to message distribution for performance reasons. See figure \ref{fig3} for a illustration of the process. This may look kind of complicated first and you may wonder why the encryption is not done like for messages. The answer if the access to a certain person is revoked, it would be inefficient to send the newly encrypted information to all users. Instead we creates called \textit{buckets}, each containing a maximum of k users. When a new piece of information is encrypted, we generate a random key $K$, and encrypt it with each bucket key $B_i$. As every user who has access to the information has the bucket key, the user can decrypt it with
+  $$
+  plaintext = Dec_{B_i}{Dec_K(chyphertext)}
+  $$
+  When access is revoked for a user, we simply generate a new bucket key for the bucket, the user was in and do not distribute the bucket key to the user. With this system we are able to revoke access to information and release new information to a user with doing $\mathcal O(k) = \mathcal O(1)$ requests. For Charme we set $k = 10$. The code is located in \textit{settings\_privateinfo.js}.
+  
+  
    \begin{figure}[ht]
 	\centering
   \includegraphics[]{prvInfo.pdf}
 	\caption{Encryption of personal information}
 	\label{fig3}
 \end{figure}
-  
+
     \subsection{Key Updates}
     When a private key or passphrase is compromised  it is necessary to recrypt the encryped data storage. In this case, all information are transmitted to the client, decryped with the current passphrase and encrypted with the new passhprase. The revision number for the public key increases afterwards.
 
@@ -183,7 +254,7 @@ Attackers can flood small servers with a lot of requests.
        \subsubsection{Replay attacks}
           Server can provide old public/private keys for the user which have been compromised earlier.
       \subsubsection{Malformed data}
-      Attackers can send malformed data to clients which results in the client to producing an exception and therefore make Charme unusable for the user.
+      Attackers can send malformed data to clients which results in the client to producing an exception and therefore make Charme unusable for the user. Therefore malformed requests should be filtered by the client by checking for missing and correct typed values.
       
       \subsubsection{Spam}
       
@@ -193,11 +264,7 @@ On server side, PHP is used as an interpreter. The reason for PHP is that it has
 Administrations scripts are written for GNU Bash to provide ssh access.
 
   \section{Search}
-  When it comes to search, we face some problems. Of course, it is not efficient to query hundreds or even more server from one client in the charme network. Filesharing applications typically use Kademlia  or Chord to index data within peer-to-peer networks. Such concepts may also be useful for search, as YaCy for example has shown.
-\\\\
-When looking at the network $C$ as a graph, every server $s_i  \in N$ with $i  \in \mathbb{N}$ has a domain name $tld(s_i)$.
-Usually, the guid $i$ is initialized by a boot peer. However, as we want to keep the network as decentralized as possible, and we have the advantage of knowing the social relationships between the server, we should use another system. This system will be described soon here. You are free to make proposals and join the discussion.
-
+  When it comes to search, we face some problems. Of course, it is not efficient to query hundreds or even more server from one client in the charme network. Filesharing applications typically use Kademlia  or Chord to index data within peer-to-peer networks. Such concepts may also be useful for search, as YaCy for example has shown. Thorsten Schütt et al. have proposed a technique which can be used for multidimensional parameter search in their paper \textit{Range queries on structured overlay networks}. A search in social networks could also use the social graph to rank results of near people higher than from people more far away.
 
 \subsection{Further reading}
 \begin{enumerate}
@@ -241,7 +308,7 @@ When the private key is updated, it is required to recrypt the data in the encry
 
 
 \section{Sources}
-As this is not some kind of scientific work I was to lazy to quote every sentence and install BibTex. Instead here are all the used sources at once: 
+As this is not some kind of scientific work I was to lazy to quote every sentence and install BibTex (I will do this if there is some time left...). Instead here are all the used sources at once: 
 \begin{enumerate}
 \item Network Security Lecture @ Munich Technical University, Carle et al,  \url{http://www.net.in.tum.de/de/lehre/ws1415/vorlesungen/network-security/}
 \end{enumerate}

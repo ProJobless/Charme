@@ -11,10 +11,19 @@ cursor: pointer;
 	display: block;
 
 }
+.signupfield {
+	width: 150px;
+
+}
 body.noscroll {
     overflow: hidden;
 }
-
+.captialHeadline
+{
+	text-transform: uppercase;
+	color:gray;
+	line-height: normal;
+}
 #profileImage
 {
 
@@ -401,11 +410,14 @@ font-size: 60%;
 	text-align: center;
 	line-height: 18px;
 }
+.lightLink {
+	text-align:right; padding:16px 0px;
+}
 .formDiv div
 {
 	padding:8px 0;
 }
-label { display: inline-block; width: 130px; float:left; }
+label { display: inline-block; width: 130px; float:left; padding-top: 8px; text-align: right; padding-right: 16px; color:gray;}
 
 .actionMargin
 {

@@ -11,6 +11,14 @@
 {
 	display: none;
 }
+.onlyNoResponsive
+{
+	display: block;
+}
+label.onlyNoResponsive, img.onlyNoResponsive
+{
+	display: inline-block;
+}
 .responsive.sbBeta
 {
 	display: none;
@@ -52,9 +60,36 @@
 	padding-top: 8px;
 	padding-right: 8px;
 }
+#welcome_main {
+	margin-top:200px
+}
+#loginfield {
+	float:right; width:264px;
+}
+input {
+	box-sizing: border-box;
+}
+
+
+@media (max-width: 632px)
+	{
+		.lightLink {
+			text-align:right; padding:16px;
+		}
+	}
 
 @media (max-width: 1000px)
 	{
+
+
+		#welcome_main {
+			float:none !important;
+			width: auto !important;
+				margin-top:0px
+		}
+		#loginfield {
+		 width:100%;
+		}
 		.receiversinstant {
 			margin-top: 56px;
 		}
@@ -154,6 +189,21 @@
 		.onlyResponsive
 		{
 			display: block;
+		}
+		.onlyNoResponsive
+		{
+			display: none !important;
+		}
+		#form_signup .signupfield {
+			width: 100%;
+		}
+		#form_signup label {
+			display: block;
+			width: 100%;
+			color: gray;
+			text-align: left;
+			text-transform: uppercase;
+			margin-bottom: 8px;
 		}
 		.talkbarbg
 		{

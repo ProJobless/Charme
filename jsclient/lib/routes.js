@@ -541,7 +541,7 @@ $(function() {
             } else if (id2 == "post") {
 
 
-      
+
                 var vsd = new view_profilepage_posts({
                     postId: id3,
                     template: "user_postview",
@@ -787,16 +787,19 @@ function login() {
     }, "", serverurl);
 
 }
+function silentLogout() {
+  main_container = null;
+  charmeUser = null;
 
+  localStorage.removeItem("user");
+  localStorage.removeItem("passphrase");
+  localStorage.removeItem("sessionPassphrase"); // important!
+
+}
 function logout() {
     ui_closeBox();
+    silentLogout();
     container_guest.render();
-    main_container = null;
-    charmeUser = null;
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("passphrase");
-    localStorage.removeItem("sessionPassphrase"); // important!
 
     container_guest.render();
 

@@ -26,61 +26,36 @@ public class ActivityLogin extends Activity {
 		System.out.println("dbTEST");
 		sqLiteHelper db = new sqLiteHelper(this);
 
-       /* db.addMessage("mesaag01", "conversationId", 1, "irgendwer", "ada");
-
-        db.addMessage("mesaag04", "conversationId", 4, "irgendwer", "bbb");
-
-        db.getAllMessages("conversationId",Double.valueOf("2"));
-*/
-		
 	}
 
     SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       
+
+		GibberishAESCrypto a = new GibberishAESCrypto();
+		try {
+
+			a.encrypt("meinedaten", "test".toCharArray());
+			System.out.println("cdebug2");
+
+			System.out.println("cdebug" + a.decrypt(a.encrypt("meinedaten", "test".toCharArray()), "test".toCharArray()));
+		}
+		catch(Exception ea) {
+			System.out.println("cdebug"+ea.toString());
+			ea.printStackTrace();
+		}
+
     	// If user is already logged in open Messages Overview
-    	
-
     	sharedPref =  PreferenceManager.getDefaultSharedPreferences(this);
-
         Intent intent = getIntent();
-    	
-    	
+
     	if (!sharedPref.getString("user_rsaN", "").equals("") && intent.getBooleanExtra("autoLogin", true)) // login already exist and allow autologin
     	{
-    		
-    	
-    		
     		super.onCreate(savedInstanceState);
-    		
-    		
-    		
-    		
-    		dbTest();
-    	
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		// oKuPCeiB9STehwBguYyF, Passphrase can be empty here as we already own the keyring!
     		tryLogin(sharedPref.getString("user_id", ""),sharedPref.getString("user_passwordhash", ""),"KEYRINGALREADYEXISTS", true);
-    		//StartLogin();
-    		
-    		
     	}
     	else
     	{
-
 	    	// Else open login window (=this activity)
 	    	super.onCreate(savedInstanceState);
 	        setContentView(R.layout.activity_activity_login);
@@ -89,53 +64,32 @@ public class ActivityLogin extends Activity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-
-
             Button buttonLogin = (Button) findViewById(R.id.button1);
 	    	buttonLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
 
-					tryLogin(
-							((EditText)findViewById(R.id.editTextUserid)).getText().toString(), 
-							((EditText)findViewById(R.id.EditTextPassword)).getText().toString(),
-							((EditText)findViewById(R.id.editTextPassphrase)).getText().toString(), false
-							
-							);
+			tryLogin(
+					((EditText)findViewById(R.id.editTextUserid)).getText().toString(),
+					((EditText)findViewById(R.id.EditTextPassword)).getText().toString(),
+					((EditText)findViewById(R.id.editTextPassphrase)).getText().toString(), false
+					);
 				}
 			});
     	}
-    	
-    	
-    	
-    
-		
-		
-    	
     }
 
     public void StartLogin()
     {
-
-
     	global_rsakey = new RSAObj();
     	global_rsakey.n = sharedPref.getString("user_rsaN", "");
     	global_rsakey.e =  sharedPref.getString("user_rsaE",  "");
     	global_rsakey.d = sharedPref.getString("user_rsaD",  "");
-    	
-
-    	
-    	
 
     	if (!global_rsakey.n.equals( ""))
     	{
     	try
     	{
-
-
-		// object contains fastkey1, fastkey2, revision, rsa.n, rsa.e, rsa.d, rsa.p, rsa.q
-	
 
     	}
     	catch(Exception ea){
@@ -210,11 +164,7 @@ public class ActivityLogin extends Activity {
     	catch(Exception ee){ }
     	return oo2;
     }
-    
-  
 
-    
-    
     public void tryLogin(final String userid, final String password, final String passphrase, final boolean isPasswordHash)
     {
     	final ActivityLogin that = this;
@@ -228,39 +178,28 @@ public class ActivityLogin extends Activity {
     	
 		try 
 		{
-
-			
 			// Get salt value
 			JSONObject objectSalt = new JSONObject();
-
 			JSONArray listSalt = new JSONArray();
-
 			JSONObject jsonSaltRequest = new JSONObject();
 			jsonSaltRequest.put("userid", userid);
-
 			jsonSaltRequest.put("id", "reg_salt_get");
-
 			listSalt.put(jsonSaltRequest);
-
 			objectSalt.put("requests", listSalt);
-			
-			
 
-			
-			
+			final String server = userid.split("@")[1];
+
 			new AsyncHTTP(){
-				
+
 				 String hashpass = "";
-				
+
 				@Override
 				protected void onPostExecute(String result2) {
 					
 					try{
-					
-						
+
+
 					System.out.println("result2  "+result2);
-						
-						
 					JSONObject jo2 = new JSONObject(result2);
 					String saltvalue = jo2.getJSONObject("reg_salt_get").getString("salt");
 					System.out.println("saltvalue 1: "+saltvalue+" saltvalue");
@@ -268,17 +207,9 @@ public class ActivityLogin extends Activity {
 					 hashpass = Crypto.makeSha256(password+saltvalue, true);
 					else
 						hashpass = password;
-					
-					
-					System.out.println("hashpass 1: "+hashpass);
-						
-		
-					
-			
+
 					JSONObject object = new JSONObject();
-		
 					JSONArray list = new JSONArray();
-		
 					JSONObject r1 = new JSONObject();
 					r1.put("u", userid);
 					r1.put("p", hashpass); // TODO: Challenge respond
@@ -287,8 +218,6 @@ public class ActivityLogin extends Activity {
 					list.put(r1);
 		
 					object.put("requests", list);
-					//System.out.println("CHARME 1: STEP HASHPASS IS"+mypassword+saltvalue);
-					
 					
 			new AsyncHTTP(){
 				
@@ -333,24 +262,24 @@ public class ActivityLogin extends Activity {
 								{
 									// Only use 16 bytes of passphrase
 									try{
+
 										GibberishAESCrypto gib = new GibberishAESCrypto();
-									String userKeyRing = gib.decrypt(rsaStr,  passphrase.toCharArray()); // userKeyRing contains all public and private keys of the current user
-									
+										String userKeyRing = gib.decrypt(rsaStr,  passphrase.toCharArray()); // userKeyRing contains all public and private keys of the current user
 
-                                        // Setup keyring first
-                                        System.out.println("user_keyring is "+sharedPref.getString("user_keyring", ""));
+										// Setup keyring first
+										System.out.println("user_keyring is "+sharedPref.getString("user_keyring", ""));
 
-                                    SharedPreferences.Editor editor2 = sharedPref.edit();
+										SharedPreferences.Editor editor2 = sharedPref.edit();
+										editor2.putString("server", server);
 
-                                    editor2.putString("user_keyring",   userKeyRing);
+										editor2.putString("user_keyring",   userKeyRing);
+										editor2.putString("user_rsaN",  findKey(0, that,  userKeyRing).getJSONObject("rsa").getJSONObject("rsa").getString("n"));
+										editor2.putString("user_rsaE",  findKey(0, that,  userKeyRing).getJSONObject("rsa").getJSONObject("rsa").getString("e"));
+										editor2.putString("user_rsaD",  findKey(0, that,  userKeyRing).getJSONObject("rsa").getJSONObject("rsa").getString("d"));
+										editor2.putString("user_id",  userid.replace("localhost:9000", "charme.local")); //localhost 9000 can be used for debug
+										editor2.putString("user_passwordhash",  hashpass);
+										editor2.commit();
 
-                                    editor2.putString("user_rsaN",  findKey(0, that,  userKeyRing).getJSONObject("rsa").getJSONObject("rsa").getString("n"));
-                                    editor2.putString("user_rsaE",  findKey(0, that,  userKeyRing).getJSONObject("rsa").getJSONObject("rsa").getString("e"));
-                                    editor2.putString("user_rsaD",  findKey(0, that,  userKeyRing).getJSONObject("rsa").getJSONObject("rsa").getString("d"));
-                                    editor2.putString("user_id",  userid.replace("localhost:9000", "charme.local"));
-                                    editor2.putString("user_passwordhash",  hashpass);
-
-                                    editor2.commit();
 									}
 							    	catch(Exception ee){
 										System.out.println("error10:"+ee.toString());
@@ -359,14 +288,9 @@ public class ActivityLogin extends Activity {
 												"Wrong passphrase",
 												Toast.LENGTH_SHORT).show();
 									}
-						    	
 								}
-								
 
 						    	StartLogin();
-						    	
-
-								
 							}
 							else if (jo.getJSONObject("user_login").getString("status").equals("FAIL")) {
 								
@@ -391,19 +315,17 @@ public class ActivityLogin extends Activity {
 					button.setEnabled(true);
 
 				}
-			}.execute(new AsyncHTTPParams(object.toString(), that, ""));
+			}.execute(new AsyncHTTPParams(object.toString(), that, "", server));
 			
 			}
 			catch(Exception ee){
-				
 				System.out.println("CHARME ERROR 1: Not connected to server?");
 				ee.printStackTrace();
 				StartLogin();
-				
 			}
 			}
 			
-			}.execute(new AsyncHTTPParams(objectSalt.toString(), this, ""));
+			}.execute(new AsyncHTTPParams(objectSalt.toString(), this, "", server));
 			// com.mschultheiss.charme.HTTP.ConnectionTask.getJSON(object);
 	
 		} catch (Exception ef) {

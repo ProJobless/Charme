@@ -2,286 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b498c350-fa38-40f3-b1f2-1c30f04dee82" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/build.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/build.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/gen/com/orm/dsl/BuildConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/project.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/res/values/strings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/SchemaGenerator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/SugarApp.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/SugarContext.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/SugarDb.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/SugarRecord.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/SugarTransactionHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/dsl/Column.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/dsl/Ignore.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/dsl/NotNull.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/dsl/Table.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/dsl/Unique.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/query/Condition.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/query/Select.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/Collection.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/ManifestHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/NamingHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/NumberComparator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/QueryBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/ReflectionUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/SugarConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/src/com/orm/util/SugarCursorFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/test/com/orm/NamingHelperTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/test/com/orm/query/DummyContext.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/test/com/orm/query/SelectTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AndroidSugarORM/test/com/orm/query/TestRecord.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/gen/com/google/android/gms/R.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/gen/com/mschultheiss/charmeapp/BuildConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/gen/com/mschultheiss/charmeapp/Manifest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/gen/com/mschultheiss/charmeapp/R.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/ic_launcher-web.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/libs/android-support-v4.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/notes.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/proguard-project.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/project.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/drawable-hdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/drawable-mdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/drawable-xhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/drawable-xxhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/drawable/border.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/drawable/smilies.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_about_page.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_activity_login.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_conversation.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_image_viewer.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_talks.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_talks_listitem.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_talks_messages.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/activity_user_list.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/talks_messages_row_images.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/talks_messages_row_message.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/layout/talks_messages_row_more.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/about_page.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/activity_login.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/conversation.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/image_viewer.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/talks.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/talks_messages.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/menu/user_list.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values-sw600dp/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values-sw720dp-land/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values-v11/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values-v14/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values/strings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/res/values/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/AboutPage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/ActivityLogin.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/AsyncCrypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/AsyncCryptoArgs.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/AsyncHTTP.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/AsyncHTTPParams.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/Conversation.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/Crypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/GcmBroadcastReceiver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/GcmIntentService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/GcmTools.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/GibberishAESCrypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/ImageViewer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/ORM/CharmeMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/ORM/CharmeRequest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/RSAObj.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/StringFormatter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/TalkItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/Talks.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/TalksMessages.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/Tools.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/UserList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/VersionInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/com/mschultheiss/charmeapp/sqLiteHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeApp/src/models/Message.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.gradle/2.2.1/taskArtifacts/cache.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.gradle/2.2.1/taskArtifacts/cache.properties.lock" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.gradle/2.2.1/taskArtifacts/fileHashes.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/.name" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/compiler.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/copyright/profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/encodings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/gradle.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/libraries/library_1_2_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/libraries/play_services_6_5_87.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/libraries/sugar_1_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/libraries/support_annotations_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/libraries/support_v4_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/scopes/scope_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/vcs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/CharmeAppGradle.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/charmeApp.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/AboutPage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/ActivityLogin.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/AsyncCrypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/AsyncCryptoArgs.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/AsyncHTTP.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/AsyncHTTPParams.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/Conversation.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/Crypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/GcmBroadcastReceiver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/GcmIntentService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/GcmTools.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/GibberishAESCrypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/ImageViewer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/ORM/CharmeMessage.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/ORM/CharmeRequest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/RSAObj.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/StringFormatter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/TalkItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/Talks.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/TalksMessages.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/Tools.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/UserList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/VersionInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/com/mschultheiss/charmeapp/sqLiteHelper.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/java/models/Message.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/drawable-hdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/drawable-mdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/drawable-xhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/drawable-xxhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/drawable/border.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/drawable/smilies.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_about_page.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_activity_login.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_conversation.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_image_viewer.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_talks.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_talks_listitem.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_talks_messages.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/activity_user_list.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/talks_messages_row_images.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/talks_messages_row_message.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/layout/talks_messages_row_more.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/about_page.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/activity_login.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/conversation.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/image_viewer.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/talks.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/talks_messages.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/menu/user_list.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values-sw600dp/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values-sw720dp-land/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values-v11/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values-v14/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values/strings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/charmeApp/src/main/res/values/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/gradle/wrapper/gradle-wrapper.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/gradle/wrapper/gradle-wrapper.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/gradlew" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/gradlew.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/import-summary.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CharmeAppGradle/settings.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/gen/com/mschultheiss/charme/BuildConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/gen/com/mschultheiss/charme/R.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/ic_launcher-web.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/libs/android-support-v4.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/lint.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/proguard-project.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/project.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/drawable-hdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/drawable-hdpi/smilies.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/drawable-mdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/drawable-xhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/drawable-xxhdpi/ic_launcher.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/activity_message_select.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/activity_message_view.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/activity_messages.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/fragement_message.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/fragment_message_select_dummy.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/fragment_message_view_dummy.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/message_item.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/smilie_grid.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/smilie_item.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/layout/text_editbox.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/menu/message_select.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/menu/message_view.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/menu/messages.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values-sw600dp/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values-sw720dp-land/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values-v11/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values-v14/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values/dimens.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values/strings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values/strings_activity_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/values/styles.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/xml/pref_data_sync.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/xml/pref_general.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/xml/pref_headers.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/res/xml/pref_notification.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/CharmeCrypto.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/ChatListAdapter.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/HTTP/ConnectionTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/HTTP/ConnectionTaskParams.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/HTTP/OnConnectionTaskCompleted.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/MessageFramgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/MessageSelect.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/MessageView.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/MessagesActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/Charme/src/com/mschultheiss/charme/SettingsActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/.travis.yml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/header_graphic.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/project.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/Compat.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/IPhotoView.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/PhotoView.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/PhotoViewAttacher.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/gestures/CupcakeGestureDetector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/gestures/EclairGestureDetector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/gestures/FroyoGestureDetector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/gestures/GestureDetector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/gestures/OnGestureListener.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/gestures/VersionedGestureDetector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/log/LogManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/log/Logger.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/log/LoggerDefault.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/scrollerproxy/GingerScroller.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/scrollerproxy/IcsScroller.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/scrollerproxy/PreGingerScroller.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/library/src/uk/co/senab/photoview/scrollerproxy/ScrollerProxy.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/Charme/PhotoView-master/settings.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/build.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/lib/bcpkix-jdk15on-148.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/lib/bcprov-jdk15on-148.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/manifest.mf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/nbproject/build-impl.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/nbproject/genfiles.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/nbproject/private/private.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/nbproject/private/private.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/nbproject/project.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/nbproject/project.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/cryptoTest/cryptoTest/src/cryptotest/CryptoTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/android/launcher.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/charme/admin/nohup.out" afterPath="$PROJECT_DIR$/server/charme/admin/nohup.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.pdf" afterPath="$PROJECT_DIR$/tex/main.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.synctex.gz" afterPath="$PROJECT_DIR$/tex/main.synctex.gz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.aux" afterPath="$PROJECT_DIR$/tex/main.aux" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.log" afterPath="$PROJECT_DIR$/tex/main.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.out" afterPath="$PROJECT_DIR$/tex/main.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.tex" afterPath="$PROJECT_DIR$/tex/main.tex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tex/main.toc" afterPath="$PROJECT_DIR$/tex/main.toc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsclient/templates/notifications.html" afterPath="$PROJECT_DIR$/jsclient/templates/notifications.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsclient/src/page_modules.js" afterPath="$PROJECT_DIR$/jsclient/src/page_modules.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/charme/req.php" afterPath="$PROJECT_DIR$/server/charme/req.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jsclient/lib/routes.js" afterPath="$PROJECT_DIR$/jsclient/lib/routes.js" />
     </list>
     <ignored path="Charme.iws" />
     <ignored path=".idea/workspace.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,19 +27,26 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DaemonCodeAnalyzer">
-    <disable_hints />
-  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="Charme" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="NamedScopeManager">
+    <order />
+  </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="-1" />
     <option name="y" value="27" />
-    <option name="width" value="1600" />
-    <option name="height" value="873" />
+    <option name="width" value="1922" />
+    <option name="height" value="1054" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -332,12 +74,13 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane" />
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane />
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -352,8 +95,45 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -363,6 +143,7 @@
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -389,41 +170,6 @@
       <listeners />
       <method />
     </configuration>
-    <configuration default="true" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <list size="0" />
     <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
       <option name="MAIN_CLASS_NAME" />
       <option name="HTML_FILE_NAME" />
@@ -446,37 +192,38 @@
     <task active="true" id="Default" summary="Default task">
       <changelist id="b498c350-fa38-40f3-b1f2-1c30f04dee82" name="Default" comment="" />
       <created>1429188364553</created>
+      <option name="number" value="Default" />
       <updated>1429188364553</updated>
     </task>
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1600" height="873" extended-state="0" />
+    <frame x="-1" y="27" width="1922" height="1054" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24935733" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24920128" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -490,13 +237,8 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <option name="myTodoPanelSettings">
-      <TodoPanelSettings />
-    </option>
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
+    <watches-manager />
   </component>
 </project>
-

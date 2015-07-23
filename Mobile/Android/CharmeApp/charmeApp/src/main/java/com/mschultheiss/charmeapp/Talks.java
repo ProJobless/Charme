@@ -194,7 +194,7 @@ public class Talks extends Activity {
 
                 }
 
-            }.execute(new AsyncHTTPParams(object.toString(), this, ""));
+            }.execute(new AsyncHTTPParams(object.toString(), this, "", server));
         } catch (Exception ex) {
             System.out.println("GCM4 CHARME1234 ERROR" + ex.toString());
         }
@@ -314,6 +314,7 @@ public class Talks extends Activity {
     public ArrayList<TalkItem> list2;
     Talks.StableArrayAdapter adapter;
 
+    String server = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -324,6 +325,8 @@ public class Talks extends Activity {
         super.onCreate(savedInstanceState);
 
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        server = sharedPref.getString("server", "");
 
 
         setContentView(R.layout.activity_talks);
@@ -528,7 +531,7 @@ public class Talks extends Activity {
                         }
                     }
                 }
-            }.execute(new AsyncHTTPParams(object.toString(), this, cacheId));
+            }.execute(new AsyncHTTPParams(object.toString(), this, cacheId, server));
         } catch (Exception ex) {
             System.out.println("CHARME ERROR3211 " + ex.toString());
         }

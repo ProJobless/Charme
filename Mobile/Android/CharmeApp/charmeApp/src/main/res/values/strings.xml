@@ -3,7 +3,11 @@
 
     <string name="app_name">Charme</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="abouttext">Charme for Android\nCopyright (c) 2015 Manuel Schultheiss\nwww.mschultheiss.com/charme\n\nLicensed under GNU General Public License Version 3
+    </string>
+    <string name="libscharme">Libraries used: \nAndroid Sugar ORM</string>
+
+
     <string name="title_activity_user_list">UserList</string>
     <string name="title_activity_conversation">Conversation</string>
     <string name="title_activity_talks">Talks</string>

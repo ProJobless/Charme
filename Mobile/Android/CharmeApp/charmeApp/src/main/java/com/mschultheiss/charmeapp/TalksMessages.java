@@ -165,7 +165,7 @@ public class TalksMessages extends Activity {
                     }
                 }
 			}
-		}.execute(new AsyncHTTPParams(object.toString(), this, ""));
+		}.execute(new AsyncHTTPParams(object.toString(), this, "", server));
 
 		/*
 		 * 
@@ -191,8 +191,9 @@ public class TalksMessages extends Activity {
 
 			// Set up RSA decryption
 			RSAObj rsa = new RSAObj();
-			JSONObject oo5 = ActivityLogin.findKey(rsaRevision, this, sharedPref.getString("user_keyring",  ""))
-					.getJSONObject("rsa").getJSONObject("rsa");
+            String s = 	 ActivityLogin.findKey(rsaRevision, this, sharedPref.getString("user_keyring", "")).toString();
+            JSONObject oo5 = ActivityLogin.findKey(rsaRevision, this, sharedPref.getString("user_keyring", ""))
+                    .getJSONObject("rsa").getJSONObject("rsa");
 
 			rsa.n = oo5.getString("n");
 			rsa.d = oo5.getString("d");
@@ -200,11 +201,13 @@ public class TalksMessages extends Activity {
 
 			// Decrypt the message key with RSA
 			String edgekey = rsa.decryptText(rsaEncEdgeKey);
+            System.out.println("cryp edgekey  is "+edgekey);
 
 			String newestMessageKey = gib.decrypt(
 					messageKey.getJSONObject("key").getString("messageKey"),
 					edgekey.toCharArray());
 
+            System.out.println("cryp newest is "+edgekey);
 			return newestMessageKey;
 
 		} catch (Exception e) {
@@ -269,12 +272,12 @@ public class TalksMessages extends Activity {
             if (msg2.hasFile == 1)
             {
                 String fileBlob = db.getFileBlob(msg2.messageId);
-                msgitem = new MessageItem("DB: " + msg2.content, msg2.author, msg2.userId, 2, msg2.messageId, msg2.timestamp);
+                msgitem = new MessageItem( msg2.content, msg2.author, msg2.userId, 2, msg2.messageId, msg2.timestamp);
                 msgitem.fileId = msg2.fileId;
                 msgitem.image = bmpFromBase64(fileBlob);
             }
             else {
-                 msgitem = new MessageItem("DB: " + msg2.content, msg2.author, msg2.userId, 0, msg2.messageId, msg2.timestamp);
+                 msgitem = new MessageItem(msg2.content, msg2.author, msg2.userId, 0, msg2.messageId, msg2.timestamp);
             }
 
             this.updateOldestMessageId(msg2.timestamp, msg2.messageId);
@@ -452,7 +455,7 @@ public class TalksMessages extends Activity {
 
                     }
                 }
-            }.execute(new AsyncHTTPParams(object.toString(), this, ""));
+            }.execute(new AsyncHTTPParams(object.toString(), this, "", server));
         } catch (Exception ex) {
             System.out.println("CHARME ERROR before HTTP request of messages_get_sub " + ex.toString());
         }
@@ -531,6 +534,8 @@ public class TalksMessages extends Activity {
 
     private static final int CAMERA_REQUEST = 1888;
     sqLiteHelper db; // Database Helper
+    String server = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -541,9 +546,9 @@ public class TalksMessages extends Activity {
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        sharedPref =  PreferenceManager.getDefaultSharedPreferences(this);
+        server = sharedPref.getString("server", "");
 
-
-         sharedPref=  PreferenceManager.getDefaultSharedPreferences(this);
 		Intent intent = getIntent();
 
 		this.conversationId = intent.getStringExtra("conversationId");
@@ -761,7 +766,7 @@ public class TalksMessages extends Activity {
 								}
 
 							}
-						}.execute(new AsyncHTTPParams(object.toString(), that, ""));
+						}.execute(new AsyncHTTPParams(object.toString(), that, "", server));
 
 					} catch (Exception ee) {
 					}
@@ -851,8 +856,8 @@ public class TalksMessages extends Activity {
             // if its an image, load the image!
 
 			JSONObject object = new JSONObject();
-			AsyncHTTPParams param = new AsyncHTTPParams(object.toString(), this, "");
-			param.Url = "http://localhost:9000/charme/fs.php?enc=1&id="
+			AsyncHTTPParams param = new AsyncHTTPParams(object.toString(), this, "", server);
+			param.Url = "http://"+server+"/charme/fs.php?enc=1&id="
 					+ oo.getString("fileId"); // The url of the image
 
 
@@ -1347,7 +1352,7 @@ public class TalksMessages extends Activity {
 								}
 
 							}
-						}.execute(new AsyncHTTPParams(object.toString(), that, ""));
+						}.execute(new AsyncHTTPParams(object.toString(), that, "", server));
 
 					} catch (Exception ee) {
 					}
@@ -1454,7 +1459,7 @@ public class TalksMessages extends Activity {
 					}
 
 				}
-			}.execute(new AsyncHTTPParams(object.toString(), that, ""));
+			}.execute(new AsyncHTTPParams(object.toString(), that, "", server));
 		} catch (Exception ex) {
 			System.out.println("CHARME ERROR" + ex.toString());
 		}

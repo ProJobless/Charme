@@ -51,12 +51,14 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
 
         URL url;
         try {
-
-            if (data2[0].Url.equals(""))
+            if (data2[0].Url != null && !data2[0].Url.equals(""))
+                url = new URL(data2[0].Url);
+            else if (data2[0].Server.equals(""))
                 url = new URL("http://localhost:9000/charme/req.php");
             else
-                url = new URL(data2[0].Url);
+                url = new URL("http://"+data2[0].Server+"/charme/req.php");
 
+            System.out.println("URL IS "+url.toString());
 
             HttpURLConnection urlConnection = (HttpURLConnection) url
                     .openConnection();

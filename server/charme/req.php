@@ -2696,8 +2696,14 @@ foreach ($data["requests"] as $item)
 			//
 			// TODO: Skip must work better on multiserver requests. For example if one server does not repsond, we miss items etc.
 			$iter = $col->posts->find(
-			array_merge(array('postData.object.isEncrypted' => array('$ne' => 1)), $additionalConstraints)
-
+				array_merge
+				(
+						array(
+							'postData.object.isEncrypted' => array('$ne' => 1),
+							"postData.object.metaData" => array('$exists' => true) // Only return posts with context
+						),
+						$additionalConstraints
+				)
 			)
 			->sort(array('time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 			$streamItems= [];
@@ -3012,7 +3018,7 @@ foreach ($data["requests"] as $item)
 					)
 				);
 
-				// Add to my own stream...
+				// Add to my own servers stream...
 				$col->streamSubscribers->update(
 				array("postId" => $content["_id"]->__toString(),
 							"server" => $_SERVER['SERVER_NAME']
@@ -3029,7 +3035,6 @@ foreach ($data["requests"] as $item)
 					{
 						/*clog("REVISION ARE");
 		clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
-		clog("distribute to".$resItem["follower"]);
 						//if (isset($revisions[$resItem["follower"]]))
 						{
 								$dataArray = array(

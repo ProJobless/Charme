@@ -75,11 +75,11 @@ color:gray;
 	font-size: 14px;
 border:1px transparent solid;
 	color:silver;
-	
+
 	border-radius: 2px;
 	padding: 9px 7px 6px 7px;
 	position: relative;
-	
+
 }
 .cui_imgbutton:active
  {
@@ -122,9 +122,10 @@ input, textarea, .selectable {
 input[type=text], .box
 {
 	border:1px #ccc solid;
+
 	border-radius: 2px;
 	padding: 7px;
-margin:0px;	
+margin:0px;
 
 }
 .button.gray:active,.button.light:active
@@ -164,7 +165,7 @@ select
     outline:none;
     background-color: #efefef;
     display: inline-block;
-  
+
     cursor:pointer;
 }
 

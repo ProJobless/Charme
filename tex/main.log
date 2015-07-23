@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.5.3)  24 JUN 2015 23:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.5.3)  30 JUN 2015 18:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -708,80 +708,108 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \openout4 = `main.toc'.
 
  [2]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 35.
+Underfull \hbox (badness 10000) in paragraph at lines 30--31
+
+ []
+
+<illustrations/context.jpg, id=200, 855.195pt x 633.36626pt>
+File: illustrations/context.jpg Graphic file (type jpg)
+
+<use illustrations/context.jpg>
+Package pdftex.def Info: illustrations/context.jpg used on input line 38.
+(pdftex.def)             Requested size: 341.43306pt x 252.86845pt.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 48.
 
 (/usr/share/texlive/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [3]
-Underfull \hbox (badness 10000) in paragraph at lines 88--89
+) [3] [4 <./illustrations/context.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 113--114
 []$\T1/lmtt/m/n/10.95 http : / / www . emc . com / collateral / white -[] paper
 s / h11300 -[] pkcs -[] 1v2 -[] 2 -[] rsa -[]
  []
 
-[4] <eds.pdf, id=210, 257.91585pt x 124.53975pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 114--116
+[]$\T1/lmtt/m/n/10.95 http : / / security . stackexchange . com / questions / 2
+202 / lessons -[] learned -[]
+ []
+
+[5] <eds.pdf, id=233, 257.91585pt x 124.53975pt>
 File: eds.pdf Graphic file (type pdf)
  <use eds.pdf>
-Package pdftex.def Info: eds.pdf used on input line 102.
+Package pdftex.def Info: eds.pdf used on input line 132.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
- [5 <./eds.pdf>]
-<pubkey.pdf, id=278, 257.91585pt x 218.16658pt>
+ [6 <./eds.pdf>]
+<illustrations/fingerprint.png, id=301, 440.64626pt x 286.06876pt>
+File: illustrations/fingerprint.png Graphic file (type png)
+
+<use illustrations/fingerprint.png>
+Package pdftex.def Info: illustrations/fingerprint.png used on input line 171.
+(pdftex.def)             Requested size: 256.0748pt x 166.25172pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 180--181
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--183
+
+ []
+
+[7] [8 <./illustrations/fingerprint.png>]
+<pubkey.pdf, id=320, 257.91585pt x 218.16658pt>
 File: pubkey.pdf Graphic file (type pdf)
  <use pubkey.pdf>
-Package pdftex.def Info: pubkey.pdf used on input line 147.
+Package pdftex.def Info: pubkey.pdf used on input line 212.
 (pdftex.def)             Requested size: 257.9152pt x 218.16605pt.
-
-<prvInfo.pdf, id=280, 257.91585pt x 124.53975pt>
+ [9 <./pubkey.pdf>] <prvInfo.pdf, id=339, 257.91585pt x 124.53975pt>
 File: prvInfo.pdf Graphic file (type pdf)
  <use prvInfo.pdf>
-Package pdftex.def Info: prvInfo.pdf used on input line 159.
+Package pdftex.def Info: prvInfo.pdf used on input line 230.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
- [6] [7 <./pubkey.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 196--200
+
+[10 <./prvInfo.pdf>] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 284--288
 
  []
 
-[8 <./prvInfo.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 217--221
-
- []
-
-[9]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 249.
- [10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 249.
+[12]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 316.
+ [13]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 316.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 249.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 249.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 316.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 316.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 52422F3ED30C8B6FB89447256EE86865;2194.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 249.
+(rerunfilecheck)             Checksum: 77202DE1911A81DEFEA1C0E97843DB31;2340.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 316.
  ) 
 Here is how much of TeX's memory you used:
- 9608 strings out of 495025
- 139277 string characters out of 6181516
- 257554 words of memory out of 5000000
- 12611 multiletter control sequences out of 15000+600000
+ 9637 strings out of 495025
+ 139734 string characters out of 6181516
+ 258025 words of memory out of 5000000
+ 12623 multiletter control sequences out of 15000+600000
  62402 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 36i,8n,38p,655b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texli
-ve/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texlive/texmf-dist/f
-onts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
+ 36i,8n,38p,794b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/t
+exlive/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texlive/texmf-dist/f
+onts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
 lm/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/lm/lmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr6.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/lm/lmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (10 pages, 274824 bytes).
+ve/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr12.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/l
+m/lmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on main.pdf (13 pages, 433527 bytes).
 PDF statistics:
- 412 PDF objects out of 1000 (max. 8388607)
- 356 compressed objects within 4 object streams
- 77 named destinations out of 1000 (max. 500000)
- 288 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 460 PDF objects out of 1000 (max. 8388607)
+ 396 compressed objects within 4 object streams
+ 89 named destinations out of 1000 (max. 500000)
+ 314 words of extra memory for PDF output out of 10000 (max. 10000000)
 

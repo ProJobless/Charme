@@ -5,7 +5,12 @@ See server/charme/Lib/Counter/Notify.php
 
 #: not implemented yet
 -->
+ <% if (rc.notifications_get.length == 0)  { %>
+<div class='item'>
+  No notifications there yet...
+  </div>
 
+     <% } %>
 
   <% _.each( rc.notifications_get, function(item){ %>
 

@@ -163,15 +163,72 @@ function aes_decrypt_json(pass, obj)
 	enctext= aes_encrypt("myaeskey", "mytext");
 */
 
+var AES_ALGORITHM_VERSION = 1;
+
+
 function aes_encrypt(pass, text)
 {
-	// .replace does a linebreak cleanup
-	return GibberishAES.enc(text, pass).replace(/(\r\n|\n|\r)/gm,"\n");
+	if (AES_ALGORITHM_VERSION == 0)
+		return GibberishAES.enc(text, pass).replace(/(\r\n|\n|\r)/gm,"\n");
 
-	// TODO: better return a json array with aes encryption version to provide backwards compatibility later
+		else if (AES_ALGORITHM_VERSION == 1) {
+		var password = pass+AES_ALGORITHM_VERSION; // Append algorithm version to avoid backward compatibility attacks
+		var chypertext = GibberishAES.enc(text, password).replace(/(\r\n|\n|\r)/gm,"\n"); 	// .replace does a linebreak cleanup
+		var hmac = CryptoJS.HmacSHA256(chypertext, password).toString(CryptoJS.enc.Base64);
+
+		return JSON.stringify({
+			a: 1,
+			m: chypertext,
+			h: hmac
+		});
+	}
 }
 
 
+/***
+	Name:
+	aes_decryypt
+
+	Info:
+	Decrypts String with AES Key, returns string
+
+
+	Location:
+	crypto.js
+
+	Code:JS:
+	enctext= aes_decrypt("myaeskey", "mytext");
+*/
+
+function aes_decrypt(pass, encText)
+{
+	try
+	{
+	   var json = JSON.parse(encText);
+
+		 if (json.a == 1) {
+				var password = pass+json.a;
+				var chypertext = json.m.replace(/(\r\n|\n|\r)/gm,"\n");
+
+				var plaintext = GibberishAES.dec(chypertext, password); 	// .replace does a linebreak cleanup
+				var hmacNew = CryptoJS.HmacSHA256(chypertext, password).toString(CryptoJS.enc.Base64);
+
+				if (json.h == hmacNew)
+				return plaintext;
+				else {
+					alert("HMAC ERROR");
+				}
+			}
+			else {
+				alert("AES Cryptoversion not supportet. maybe you need to upgrade Charme");
+			}
+	}
+	catch(e)
+	{
+
+		 return GibberishAES.dec(encText.replace(/(\r\n|\n|\r)/gm,"\n"), pass); // .replace does a linebreak cleanup
+	}
+}
 
 /***
 	Name:
@@ -250,35 +307,6 @@ function storeCache(key2, value)
 
  	localStorage.setItem(charmeUser.userId+key2, txt);
 }
-
-
-
-
-
-
-/***
-	Name:
-	aes_decryypt
-
-	Info:
-	Decrypts String with AES Key, returns string
-
-
-	Location:
-	crypto.js
-
-	Code:JS:
-	enctext= aes_decrypt("myaeskey", "mytext");
-*/
-
-
-function aes_decrypt(pass, encText)
-{
-	// .replace does a linebreak cleanup
-	return GibberishAES.dec(encText.replace(/(\r\n|\n|\r)/gm,"\n"), pass);
-}
-
-
 
 /***
 	Name:

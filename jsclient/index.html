@@ -7,10 +7,7 @@
 <link rel="stylesheet" href="lib/vendor/leaflet/leaflet.css" />
 <script src="lib/vendor/leaflet/leaflet.js"></script>
 
-
-
 <script src='clientinfo.js'></script>
-
 <script src='lib/jq.js'></script>
 <script src='lib/jqui.js'></script>
 <script src='lib/underscore.js'></script>
@@ -30,6 +27,7 @@
 <script src='lib/crypto.js'></script>
 <script src='lib/colors.js'></script>
 <script src='lib/crypto/sha256.js'></script>
+<script src='lib/crypto/hmac-sha256.js'></script>
 <script src='language/en.js'></script>
 
 <script src='src/pages.js'></script>
@@ -66,7 +64,6 @@
 <script src='views/lists.js'></script>
 <script src='src/models.js'></script> <!-- Must be loaded after PageModuls-->
 
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <link rel="stylesheet" type="text/css" href="css/ui.css">
@@ -78,17 +75,31 @@
 <link rel="stylesheet" type="text/css" href="css/nprogress.css">
  <link rel="stylesheet" href="css/uitk/lib/fontawe/css/font-awesome.min.css">
  <link rel="stylesheet" type="text/css" href="css/responsive.css">
-<script type="text/javascript">
-
-</script>
-
-
-
 
 <script src='testbench.js'></script>
+
+  <!-- Used for Cordova only -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="css/index.css">
+  <!-- End Cordova Only Block -->
+
 </head>
 
 <body>
-	<div id="layout"></div>
+
+  <div class="app">
+      <h1>Apache Cordova</h1>
+      <div id="deviceready" class="blink">
+        	<div id="layout"></div>
+      </div>
+  </div>
+
+  <!-- Used for Cordova only -->
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <!-- End Cordova Only Block -->
 </body>
 </html>

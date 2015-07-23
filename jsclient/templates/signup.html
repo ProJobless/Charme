@@ -4,53 +4,54 @@ and make sure it matches with server Validation
 -->
 
 <div style='padding:32px;border-bottom:1px silver solid; background-color:#fff' >
-	
+
 <a href='#welcome'>&laquo; Home</a>
 </div>
 
 <div style='background-color:#fff; padding:32px'>
-	
+
 		<div class='infobox' style='margin: 0; margin-top:0px; margin-bottom:32px'>
 WARNING: This is Charme Beta. Do not provide any personal or private data. This is for testing purposes only!
 		</div>
 <form id='form_signup'>
 	<div class='formDiv'><div>
-	<label for="vorn">Username:</label> <input  id ='inp_username' name='username' style='width:150px'  placeholder="username" class='box'> @ <input  name='server'  style='width:150px' value='' id='inp_server' placeholder="yourserver.com" class='box'> 
+	<label for="vorn">Username:</label>
+	 <input  id ='inp_username' name='username' style='width:150px'  placeholder="username" class='box'> @ <div class="onlyResponsive" style="height:8px; padding:0px;"></div><input  name='server'  style='width:150px' value='' id='inp_server' placeholder="yourserver.com" class='box'>
 
 	</div>
 
 
 
 	<div>
-	<label for="vorn">Registration Code:</label><input  style='width:150px; margin-bottom:8px;' name='regcode'  placeholder="XXXXXXXXXXX" class='box'>
+	<label for="vorn">Registration Code:</label><input  class='signupfield box' name='regcode'  placeholder="XXXXXXXXXXX" >
 	</div>
 	</div>
-	<label for="vorn">Certificate:</label> 
-	<div  style='padding-bottom:16px; display:inline-block; width:300px; float:left'>
+
+	<label for="vorn">Certificate:</label>
+	<div  style='padding-bottom:16px; display:inline-block; max-width:300px;'>
 
 
 
 
-	<div id='template_certhint'>
-	Certificates are needed for encrypted communication. Certificate Creation may take a while. If the certificate generation takes too much time, try the  
-	Chrome Browser.<br><br>
+	<div id='template_certhint' style=" padding-top:8px;">
+	A keypair is needed for encrypted communication. Click on create Keypair to create a keypair.<br><br>
 
 
-	<a id='but_makecert' class='button'>Create certificate</a>
+	<a id='but_makecert' class='button'>Create Keypair</a>
 	</div>
 
-	<div style='display: none' id='template_certok'>
+	<div style='display: none; padding-top:8px;' id='template_certok'>
 
 
-	Your certificate Key is: 
+	Your certificate Key is:
 
 	<!-- Do not change this div to an input field as it should be ignored by jQuerys form serializer. The certificate key is not allowed to be submitted to the server!!!!!!! -->
-	<div class="selectable" style='padding:16px; margin:16px 0; border:2px maroon solid; font-family: Consolas;' id='template_certkey'>Error creating key
+	<div class="selectable" style='padding:16px; margin:16px 0; background:#515151; color:#fff; text-align:center; border-radius:2px; ' id='template_certkey'>Error creating key
 	</div>
 
 
 
-	<b>Warning: The Certificate Key can not be restored. Write it down on paper somewhere and make sure nobody but you can find it. If you loose the Certificate Key you loose your account forever!</b>
+	<b>Warning: The keypair can not be restored if you loose the passphrase. Save it somewhere where nobody but you can find it.</b>
 
 
 	<input name='rsa' id='rsa' type='hidden' value=''>
@@ -59,20 +60,20 @@ WARNING: This is Charme Beta. Do not provide any personal or private data. This 
 
 	</div></div>
 
-
+<br style="clear: both"/>
 	<div class='formDiv'><div>
-	<label for="vorn">First Name:</label> <input placeholder="" name='firstname' class='box'>
+	<label for="vorn">First Name:</label> <input placeholder="" name='firstname' class='box signupfield'>
 	</div><div>
-	<label for="vorn">Last Name: </label> <input placeholder="" class='box' name='lastname'>
+	<label for="vorn">Last Name: </label> <input placeholder="" class='box signupfield' name='lastname'>
 	</div><div>
-	<label for="vorn">Email:</label>  <input placeholder="" class='box' disabled="disabled" value="emailIsDisabled@forSecurityReasonsInPreviewVersion.de" name='email'>
+	<label for="vorn">Email:</label>  <input placeholder="" class='box signupfield' disabled="disabled" value="EMAIL NOT NEEDED" name='email'>
 	</div><div>
-	<label for="vorn">Password: </label> <input placeholder="" id="inp_pass" type='password' class='box' name='password'>
+	<label for="vorn">Password: </label> <input placeholder="" id="inp_pass" type='password' class='box signupfield' name='password'>
 	</div><div>
-	<label for="vorn">Repeat Password:</label>  <input placeholder=""   id="inp_pass2"  type='password'  class='box' name='password2'>
+	<label for="vorn">Repeat Password:</label>  <input placeholder=""   id="inp_pass2"  type='password'  class='box signupfield' name='password2'>
 	</div>
 	<div>
-		<label for="vorn">&nbsp;</label><a id='but_signupok' class='button'>Submit</a>
+		<label for="vorn" class="onlyNoResponsive">&nbsp;</label><a id='but_signupok' class='button'>Submit</a>
 	</div>
 
 	</div>
@@ -103,3 +104,5 @@ WARNING: This is Charme Beta. Do not provide any personal or private data. This 
 
 	</form>
 </div>
+</div>
+<div class="lightLink"><a href="#about">About</a> </div>

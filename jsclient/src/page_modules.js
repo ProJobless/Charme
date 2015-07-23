@@ -637,9 +637,11 @@ var view_register = view_page.extend({
       // Save to a temporary keyring object because we need the fastkey for our own key directory!
       // Make sure we can not override an alreay exsiting keyring
       if (typeof charmeUser !== "undefined") {
-        alert("Fatal Error: charmeUser object already exists. Maybe refreshing the browser or logout solves the problem.");
+        // Logout here!
+        silentLogout();
+    
       }
-      else {
+
         charmeUser = {
           keyring: [
             {
@@ -648,7 +650,6 @@ var view_register = view_page.extend({
             }
           ]
         };
-      }
 
       $('#template_certok').show();
       $('#template_certhint').hide();
