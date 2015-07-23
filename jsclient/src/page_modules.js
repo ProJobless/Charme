@@ -210,9 +210,11 @@ view_page = Backbone.View.extend({
 
       $('.page_content').css("width", "700px");
       $('.page_content').css("margin-left", "150px");
-      $('.sbBeta').show();
-      $('#barmenu').show();
 
+      if (!isResponsive())
+      $('.sbBeta').show(); // TODO: If live swithcing to repsonsive mode then show sidebar!
+
+      $('#barmenu').show();
 
 
       // Do this after sidebar items were initialised:
@@ -381,6 +383,9 @@ view_subpage = Backbone.View.extend({
 
       }
 
+      if (isResponsive()) // Hide sidebar ("Hamburger Menu" in repsonsive mode) in repsonsive mode after click
+        $('.sbBeta').hide();
+
 
     });
     // Set sb beta
@@ -415,6 +420,10 @@ function setSCHeight() {
 
 $(window).resize(function() {
   setSCHeight();
+
+  if (!isResponsive())
+  $('.sbBeta').show();
+
 });
 
 
@@ -639,7 +648,7 @@ var view_register = view_page.extend({
       if (typeof charmeUser !== "undefined") {
         // Logout here!
         silentLogout();
-    
+
       }
 
         charmeUser = {

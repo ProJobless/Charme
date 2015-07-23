@@ -10,7 +10,7 @@
 /server/charme/log.txt
 /server/charme/admin/log.txt
 /server/charme/admin/nohup.out
-/cordova/charmesocial/www
+/cordova/charmesocial/www/*
 /temp/*
 /old/*
 /doxygen/*

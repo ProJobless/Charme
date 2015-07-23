@@ -733,14 +733,11 @@ function login() {
                     localStorage.setItem("sessionPassphrase", (aes_encrypt(charmeUser.sessionId, passphrase)));
 
 
-
                     // The keyring contains a list of
                     // Keypairs, where the last item is the newest key
                     var keyringAES = data.user_login.ret.keyring;
-
                     // each item has format {revision, rsa}
                     var keyring = aes_decrypt(passphrase, keyringAES);
-
 
                     // Store encoded certificate
                     localStorage.setItem("keyring", keyring);
@@ -756,7 +753,8 @@ function login() {
                     });
 
                 } catch (e) {
-                    alert("Can not decrypt RSA Key (Wrong passphrase?)");
+                    console.log(e);
+                    alert("Can not decrypt RSA Key (Wrong passphrase?) Error Message: "+String(e));
                     localStorage.removeItem("sessionPassphrase");
                     localStorage.removeItem("keyring");
                     localStorage.removeItem("passPassphrase");

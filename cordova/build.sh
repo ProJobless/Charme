@@ -7,15 +7,16 @@ if [ -d /home/ms/Android/Sdk ]
   export ANDROID_PLATFORM_TOOLS="/home/ms/Android/Sdk/platform-tools"
 
   echo "Copying Charme Folder..."
-  cp ../wwwTemp ./www
-  cp ../jsclient ./www
+  rm -R  ./www
+  cp -avr ./wwwTemp ./www
+  cp -avr ../../jsclient/. ./www
 
 
 
   PATH=$PATH:$ANDROID_HOME:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS
   cordova build
 
-  read -r -p "Do you want to start the Android emulator? (y/n)" response
+  read -r -p "Do you want to start the Android app? (y/n)" response
   if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
   then
       cordova run android
