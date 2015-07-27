@@ -6,8 +6,10 @@
 *﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted.
 
 Furthermore you can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
+
 ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/tex/illustrations/context.jpg "Screenshot")
 
+![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/screen3.png "Screenshot")
 
 **Warning:** This is for preview puposes only. This preview version is neither stable nor secure. It is in development.
 
