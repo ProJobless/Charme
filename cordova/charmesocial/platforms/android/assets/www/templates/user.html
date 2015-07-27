@@ -1,0 +1,41 @@
+<div title='submenu_items' class='meta'>
+  <li class='nav_profile_info'><a  data-defaultDestination="true"  href='#user/<%- rc.uid %>'>Info</a></li>
+  <li class='nav_profile_collections' ><a  href='#user/<%- rc.uid %>/collections'>Collections</a></li>
+  <li class='nav_profile_lists' ><a  href='#user/<%- rc.uid %>/lists'>Lists</a></li>
+
+
+</div>
+
+
+
+<div id='greybg'></div>
+
+<div style="overflow:auto; background-color:#EFEFEF; position:relative">
+
+	<div class='profile_sidebar'>
+
+	<div class='profileImage' style="width:200px; background-image: url('http://<%- rc.server %>/charme/fs.php?u=<%- rc.uid %>&amp;s=200&amp;<%- rc.appendix %>');  background-color:#ccc"></div>
+
+	<div class="tabBar profileTabs">
+	<ul>
+		<li class='nav_profile_info'><a  href='#user/<%- rc.uid %>'>Info</a></li>
+		<li class='nav_profile_collections'><a href='#user/<%- rc.uid %>/collections'>Collections</a></li>
+		<li class='nav_profile_lists'><a href='#user/<%- rc.uid %>/lists'>Lists</a></li>
+
+	</ul>
+	<br style="clear:both;">
+	<a class='but_sendMsg button' style='margin-top:16px;'>New Conversation</a>
+
+		<a class='but_verifyKey button'  style='margin-top:16px;'>Verify Key to send Messages</a>
+			<a class='but_verifyKey2 button'  style='margin-top:16px;'>Verify Key</a>
+
+
+	</div>
+	</div>
+
+	<div id="page3" style='margin-right:232px; '>
+
+
+	</div>
+
+</div>

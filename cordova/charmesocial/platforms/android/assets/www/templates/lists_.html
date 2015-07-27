@@ -1,0 +1,39 @@
+
+
+
+<div class="p32" style="padding-bottom:0px">
+
+
+
+
+
+	<div style="font-size: 16px">All lists</div><div style="padding: 8px 0 0px 0;"><%- rc.list_getItems.number %> People
+
+<span id='listOptions' > - 
+<a id='but_renameList'>Edit list</a> - 
+<a id='but_deleteList'>Delete list</a>
+</span>
+
+</div></div>
+
+
+<div class="p16" id="friendItemContainer">
+<div class='usergrid'>
+
+ <% _.each( rc.list_getItems.items, function(item2){ %>
+
+
+
+
+	<div class="item ui-draggable" data-userid="schuldie@localhost">
+
+		<a href="#/user/<%- encodeURIComponent(item2.userId) %>">
+			<img src="http://<%- item2.userId.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.userId) %>&amp;s=64">
+		<%- item2.username %>
+		</a>
+	</div>
+
+  <% }); %>
+
+
+</div></div>

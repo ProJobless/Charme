@@ -1,0 +1,14 @@
+<div style='width:400px'>
+<div style='padding:16px;'>
+		
+The following keys are not valid anymore. Please validate them before starting the conversation in the keymanager.
+<div style='padding:16px; border:1px silver solid; margin-top:16px; background-color: #efefef' id='keycontainer'>
+<% _.each( rc.problems, function(item2){ %>
+	<%- (item2) %> <br>
+<% }); %>
+</div>
+
+</div>
+<div class='boxMargin'>
+<a href='javascript:ui_closeBox();' class='button gray' style='margin-right:8px;'>Cancel</a><a href='javascript:alert("open keymanager...");' class='button'>Open Keymanager</a>
+</div></div>

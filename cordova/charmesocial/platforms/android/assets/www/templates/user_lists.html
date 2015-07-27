@@ -1,0 +1,27 @@
+<div class='profile_header'>
+<div class="profile_name">USERNAME</div>
+<%- rc.lists_getProfile.number %>	People in Lists<br class='cb'>
+</div>
+
+
+
+<div class="p16" id="friendItemContainer">
+<div class='usergrid'>
+
+ <% _.each( rc.lists_getProfile.items, function(item2){ %>
+
+
+
+
+	<div class="item ui-draggable" data-userid="schuldie@localhost">
+
+		<a href="#/user/<%- encodeURIComponent(item2.userId) %>">
+			<img src="http://<%- item2.userId.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.userId) %>&amp;s=64">
+		<%- item2.username %>
+		</a>
+	</div>
+
+  <% }); %>
+
+
+</div></div>

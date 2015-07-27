@@ -1,4 +1,6 @@
-![Screenshot](https://raw.github.com/mschultheiss/charme/dev/demo/screen2.png "Screenshot")
+![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/screen2.png "Screenshot")
+![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/screen2.png "Screenshot")
+
 
 *﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted.
 

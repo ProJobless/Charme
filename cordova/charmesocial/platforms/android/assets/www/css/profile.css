@@ -1,0 +1,258 @@
+#photoDescriptionEdit
+{
+	display:  none;
+}
+#photoDescriptionView
+{
+	padding: 8px;
+	background-color: #efefef;
+	color: #000;
+	font-weight: normal;
+	display: block;
+}
+ul.featuredCollections 
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+ul.featuredCollections li .recbox
+{float:left;
+	width: 16px;
+	height: 16px;
+	
+	margin-right: 8px;
+	border:0;
+	display: inline-block;
+
+
+
+}
+ul.featuredCollections li a:active
+{background-color: #efefef;}
+ul.featuredCollections li a
+{
+ padding:8px;
+ border-bottom: 1px silver solid;
+ display: block;
+ color:#666;
+ font-weight: normal;
+}
+ul.featuredCollections li a:hover
+{
+ color:#000;
+}
+#photoDescriptionView .hint
+{
+	color:grey;
+	font-style: italic;
+}
+.photobox
+{
+
+	width:100%;
+	position: fixed;
+	background-color: #000;
+	height: 100%;
+	z-index: 999;
+
+}
+.photobox .photoContainer
+{
+
+	margin-right: 350px;
+	height: 100%;
+	position: relative;
+}
+.photobox .photo
+{
+
+	background-color: #222;
+
+	margin:auto auto;
+	position: relative;
+}
+.photoboxComments
+{
+
+	float:right;
+	background-color:#fff;
+	width:350px;
+	height: 100%;
+
+}
+.profile_sidebar
+{
+	 width:200px; float:right; position:fixed; margin-left:585px;height:100%;padding:32px;
+}
+
+.aboutBox
+{
+	background-color: #fff;
+	box-shadow:   0 0 3px #aaa;
+	margin-bottom: 32px;
+}
+.aboutBox label
+{padding:4px; clear:both; display:inline-block;}
+
+.aboutBox table tr:first-child td
+{border:0;
+}
+.aboutBox .title
+{
+padding:8px;
+background-color: #efefef;
+border-bottom: 1px silver solid;
+text-align: center;
+text-transform: uppercase;;
+letter-spacing: 1px;
+
+position:relative;
+    z-index: 100;
+
+}
+
+
+
+.aboutBox table td
+{
+
+	padding:8px;
+	border-top:1px silver solid;
+	vertical-align: top;
+
+}
+.aboutBox table{
+border-spacing: 0px;
+width:100%;
+}
+.aboutContainer
+{
+
+	width:260px;
+	float:left;
+	overflow: visible;
+}
+.aboutBox table td.info
+{
+color:gray;
+width:75px;
+
+}
+
+ 
+.collectionPostbox .collectionPost .top
+{
+	font-weight:bold;
+	margin-bottom:8px;
+}
+
+.time
+{
+
+color:grey;
+}
+
+.collectionPost
+{
+
+	
+	padding:16px;
+	border-top:1px silver solid;
+
+}
+.collectionPost:first-child
+{
+	border-top:0px silver solid;
+
+}
+.collectionPostbox
+{
+
+
+	box-shadow:   0 0 3px #aaa;
+	margin-bottom:16px;
+	margin:32px;
+	background-color: #fff;
+}
+.collectionImgbox
+{
+	box-shadow:   0 0 3px #aaa;
+	margin-bottom:16px;
+	margin:32px;
+	padding:8px;
+background-color: #fff;
+
+}
+.collectionImgbox img
+{
+width:118px ;
+height:118px;
+float:left;
+margin:8px;
+
+}
+
+.collectionBg
+{
+
+
+}
+
+.profile_name
+{
+
+
+font-size: 16px;
+padding-bottom: 8px;
+}
+.profile_header
+{
+
+ /* 19px (Username) +  8 (margin)*/
+
+margin: 0 32px;
+margin-top:  32px;
+
+}
+.photodrop
+{
+
+	padding:32px;
+
+
+}
+
+.collection:active
+{
+	
+background-color: #efefef;
+}
+.collection:hover
+{
+
+}
+.collection
+{
+	width:82px; 
+	height:82px;
+	color:gray;
+	
+	background-color: #fff;
+	margin:8px;
+	display:block;
+	font-weight:  normal;
+	word-wrap: break-word;
+
+	padding: 8px;
+	float:left;
+	overflow: hidden;
+	text-transform: uppercase;
+
+	  box-shadow:    inset      0 0 2px #aaa;
+
+
+
+	  
+}
+

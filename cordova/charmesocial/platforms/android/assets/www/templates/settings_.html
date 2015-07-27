@@ -1,0 +1,55 @@
+<div class='p32'>
+	<form id='settingsform'>
+		<h1>Personal Information</h1>
+	<table cellspacing="0" cellpadding="0">
+
+		<tbody>
+
+		<tr><td class="tdinfo">Hometown:</td><td>
+			<input class="box" type="text" name="hometown" value="<%- rc.profile_get.info.hometown %>">
+		</td></tr>
+
+		<tr><td class="tdinfo">About me:</td><td><textarea class="box" name="about" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 42px;"><%- rc.profile_get.info.about %></textarea></td></tr>
+
+		<tr><td class="tdinfo">Gender:</td><td><select name="gender">
+			<option selected="selected" value="0">I dont tell</option>
+			<option <% if (rc.profile_get.info.gender == "1") { %> selected="selected" <% } %> value="1">Male</option>
+			<option <% if (rc.profile_get.info.gender == "2") { %> selected="selected" <% } %> value="2">Female</option>
+		</select>
+		</td></tr>
+
+
+		
+
+
+
+
+	</tbody></table>
+
+
+<h1>Interests</h1>
+<table cellspacing="0" cellpadding="0">
+
+		<tbody>
+
+	
+
+		<tr><td class="tdinfo">Literature:</td><td><textarea class="box" name="literature" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 42px;"><%- rc.profile_get.info.literature %></textarea></td></tr>
+
+			<tr><td class="tdinfo">Music:</td><td><textarea class="box" name="music" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 42px;"><%- rc.profile_get.info.music %></textarea></td></tr>
+
+				<tr><td class="tdinfo">Movies:</td><td><textarea class="box" name="movies" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 42px;"><%- rc.profile_get.info.movies %></textarea></td></tr>
+
+					<tr><td class="tdinfo">Hobbies:</td><td><textarea class="box" name="hobbies" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 42px;"><%- rc.profile_get.info.hobbies %></textarea></td></tr>
+
+	<tr><td class="tdinfo">&nbsp;</td><td><a style='margin-top:16px;' class='button' id='but_saveProfile'>Save Profile</a></td></tr>
+
+
+
+	</tbody></table>
+
+
+
+
+	</form>
+</div>

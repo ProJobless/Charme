@@ -1,0 +1,109 @@
+
+.commentBox{padding-top: 8px;}
+.commentBox .morecomments:active
+{
+	background-color: #efefef;
+
+}
+.commentBox .morecomments
+{
+
+	padding:8px;
+	text-align: center;
+	
+	display: block;
+	font-weight: normal;
+	text-transform: uppercase;
+	text-align: center;
+	border:1px #efefef solid;
+
+	color:gray;
+	max-width: 242px;
+}
+.postcomments .comment:first-child
+{
+	border-top:0px silver dotted;
+}
+
+
+.postcomments .comment
+{
+
+	padding:8px;
+	border-top:1px #efefef solid;
+	
+	max-width:244px;
+
+	  word-wrap: break-word;
+
+	
+}
+.postcomments .comment a
+{
+	font-weight: normal;
+}
+.postcomments .comment .head
+{
+
+	padding-bottom:8px;
+
+}
+
+
+
+.stream .collectionPost
+{
+	border-top:1px #efefef solid;
+	padding:32px;
+	overflow:auto;
+
+}
+.stream .post .top
+{
+	font-weight:bold;
+	margin-bottom:8px;
+}
+.subDiv
+{
+		margin-left:80px;
+
+}
+.repost
+{
+	padding: 8px;
+color:gray;
+	margin-top: 8px; 
+	border-left: 2px silver solid;
+}
+
+.postContent
+{
+
+		padding-bottom:8px;
+	
+}
+
+
+.attach img
+{
+	margin-top:8px;
+	padding:8px;
+	border:1px silver solid;
+	background-color:#fff;
+	width:100px;
+	display: inline-block;
+	margin-right:8px;
+	
+}
+.attach
+{
+	
+
+
+	box-shadow:  inset 0 0 3px #aaa;
+color:#eded;
+padding:8px;
+background-color: #ddd;
+margin-bottom: 8px;
+
+}

@@ -1,0 +1,77 @@
+<div style='width:400px'>
+<div style='padding:16px;'>
+
+Filters help you to find relevant information in your stream. You can show only Events from your friends in a 10km radius for example.
+<br>
+<br>
+<input placeholder="Filter Name" name="filter_name" type="text" class=""><br>
+
+<br>
+
+<a class="filter_addnew"><i class="fa fa-plus"></i> People</a><div  id="filter_people"  class="filter_expanded">
+<a class="filter_remove"><i class="fa fa-times"></i></a>
+
+	<div id="filter_lists">
+	<a  class="hotCheckbox" id="cb_onlyMyLists" >Only people from my lists</a><br>
+
+	<div id="filter_list_detail" style="display:none;">
+	 <% _.each( rc.userlists, function(item2){ %>
+
+
+						<a  class="hotCheckbox" data-listid="<%- item2._id.$id  %>"><%- item2.name %></a><br>
+
+
+						  <% }); %>
+
+						</div></div>
+
+</div>
+<a class="filter_addnew addContext"><i class="fa fa-plus"></i> Context</a><div id="filter_context" class="filter_expanded">
+<a class="filter_remove removeContext"><i class="fa fa-times"></i></a>
+
+
+
+<div id="contextChoices">
+
+
+	 <% _.each( rc.contextChoices, function(item2){ %>
+						<label><input <% if (item2.id == "move") { %> checked="checked" <% } %> type="radio"  name="rb_context" value="<%- item2.id  %>"><%- item2.name %></label><br style="clear:both"/>
+	 <% }); %>
+</div>
+
+
+</div>
+
+<!--
+<a class="filter_addnew"><i class="fa fa-plus"></i> Location</a>
+<div  id="filter_location"  class="filter_expanded">
+<a class="filter_remove"><i class="fa fa-times"></i></a>
+
+<select name='filter_location' class='locationContainer'></select>  <a class='but_addLocation'>Add Location</a><br> with a maximum radius of <select name="filter_location_radius"></select>.
+</div>-->
+
+<% _.each( rc.contextConstraints, function(item2){ %>
+	<div style="display:none;" class="constraint constraint_<%- item2.contextId %>">
+	<a class="filter_addnew"><i class="fa fa-plus"></i> <%- item2.attribute.name %></a>
+	<div  id="filter_location"  class="filter_expanded constraintBox">
+	<a class="filter_remove"><i class="fa fa-times"></i></a>
+
+	<% if (item2.attribute.filter=="range")  { %>
+		Between <input data-type="range" name="<%- item2.attribute.id %>" type="text" style="width:50px;"> and <input  data-type="additional" name="<%- item2.attribute.id %>_end" style="width:50px;" type="text">
+	<% } else if (item2.attribute.filter=="exact" && item2.attribute.type=="int" )  { %>
+		 <input type="text" style="width:50px;" name="<%- item2.attribute.id %>">
+		<% } else if (item2.attribute.filter=="exact" && item2.attribute.type=="productcategory" )  { %>
+		 <div data-name="<%- item2.attribute.id %>" class="productCategoryHolder"></div>
+	<% } else if (item2.attribute.filter=="location")  { %>
+			<select data-type="location"  name="<%- item2.attribute.id %>" class='locationContainer'></select>  <a class='but_addLocation'>Add Location</a><br> with a maximum radius of <select class="locationRadiusSelect" data-type="additional" name="<%- item2.attribute.id %>_radius"></select>.
+
+	<% } %>
+	</div>
+</div>
+	<% }); %>
+
+
+</div>
+<div class='boxMargin'>
+<a href='javascript:ui_closeBox();' class='button gray' style='margin-right:8px;'>Cancel</a><a id="but_addFilterOk" class='button'>Add Filter</a>
+</div></div>

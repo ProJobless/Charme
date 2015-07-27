@@ -1,0 +1,98 @@
+<!-- RSA Test Environment, used for porting RSA Functionality to Android -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Charme</title>
+
+
+<!-- jQuery, just for the gui -->
+<script src='lib/jq.js'></script>
+<script src='lib/jqui.js'></script>
+
+
+<!-- Stanford Crypto Library, for AES -->
+<script src='lib/crypto/sjcl.js'></script>
+
+<!-- RSA Crypto Library-->
+<script src='lib/crypto/jsbn.js'></script>
+<script src='lib/crypto/jsbn2.js'></script>
+<script src='lib/crypto/prng.js'></script>
+<script src='lib/crypto/rng.js'></script>
+<script src='lib/crypto/rsa.js'></script>
+<script src='lib/crypto/rsa2.js'></script>
+
+
+<script>
+$(function(){
+
+
+// Test Account: Passphrase: ccPzv43tE3advympvabb, User: test, Pass: test
+
+/*
+coeff: "3bba8693d73e2fdeac3546dc336d196f4116a5dd6f73794ab1c9a68ffc4bcec8fd9a843c82a0e131e84f877ff19caea905065d5f6b8afa48895fd5ba128bef5b"
+d: "91eb16c7384cde0417e63fd41aa7e27048481e6ecd92a8b81cb767d1dd4a544387172313f0510140e6d0afd40c43e2f59aa4b7084e4188ddae4131fb34d61921af3e65aadf51a4f91f0ea240a05798eab694d7ad06de1959dfa5bee7be1239b49c38e7c86834ef69d5adac2766c5b770457820dd81c6565111b3608cb36928f1"
+dmp1: "8fc7c967cd375083e6787222772ec1998a7b1e5deca3312c726c10a1cb523a6714c54bd35d3f7af063bbb96a333328ac4168d3078a2984d13a826f439c0c3e21"
+dmq1: "29be46b2b81cac0b4357c03a8fd3ef932ce1537e9752764b103731c578b17d431814b220fee68aa19db630c6086b196925ef8b24ae9495ea15638a6666ff318d"
+e: "10001"
+n: "b112e5d5e231a6873ce765a1c1e259b460c732586ef742ab86d67cdcfe797d54a0f3cf1877533c725f492c495c28afb2c7b011a84b0e486864f1389c0ad059eaf9ce0d54e7a5953efb0210a742520ad1a4748d4f85eec26df07c06c40c7b2e709c9d345bcb2265c6867e47ae7282301321729eaa13120fed31b61d9dc564b693"
+p: "e90e718fb195696ddc1d54f6a336272817a23f2bbb8637697b71c92e118d27c556b1e59d2ed242f65e16aca9aa7b296e2eefd1b49c525af07ef5a09bad6f4c5f"
+q: "c2819071d858c07eab5406f563c5170b74f3af4207d87f127bc5dd775a91893ac27e89e30189e6ebee28c78fe6f9ca4f99a6245ec01e5e5e03c76d42c4ee024d"
+*/
+
+	var rsa = new RSAKey();
+	var charmeUser = {certificate: {rsa: {
+		n: "b112e5d5e231a6873ce765a1c1e259b460c732586ef742ab86d67cdcfe797d54a0f3cf1877533c725f492c495c28afb2c7b011a84b0e486864f1389c0ad059eaf9ce0d54e7a5953efb0210a742520ad1a4748d4f85eec26df07c06c40c7b2e709c9d345bcb2265c6867e47ae7282301321729eaa13120fed31b61d9dc564b693",
+		e: "10001",
+		d: "91eb16c7384cde0417e63fd41aa7e27048481e6ecd92a8b81cb767d1dd4a544387172313f0510140e6d0afd40c43e2f59aa4b7084e4188ddae4131fb34d61921af3e65aadf51a4f91f0ea240a05798eab694d7ad06de1959dfa5bee7be1239b49c38e7c86834ef69d5adac2766c5b770457820dd81c6565111b3608cb36928f1",
+		p: "e90e718fb195696ddc1d54f6a336272817a23f2bbb8637697b71c92e118d27c556b1e59d2ed242f65e16aca9aa7b296e2eefd1b49c525af07ef5a09bad6f4c5f",
+		q: "c2819071d858c07eab5406f563c5170b74f3af4207d87f127bc5dd775a91893ac27e89e30189e6ebee28c78fe6f9ca4f99a6245ec01e5e5e03c76d42c4ee024d",
+		dmp1: "8fc7c967cd375083e6787222772ec1998a7b1e5deca3312c726c10a1cb523a6714c54bd35d3f7af063bbb96a333328ac4168d3078a2984d13a826f439c0c3e21",
+		dmq1: "29be46b2b81cac0b4357c03a8fd3ef932ce1537e9752764b103731c578b17d431814b220fee68aa19db630c6086b196925ef8b24ae9495ea15638a6666ff318d",
+		coeff: "3bba8693d73e2fdeac3546dc336d196f4116a5dd6f73794ab1c9a68ffc4bcec8fd9a843c82a0e131e84f877ff19caea905065d5f6b8afa48895fd5ba128bef5b"
+
+
+	}}};
+	rsa.setPrivateEx(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d,
+	 charmeUser.certificate.rsa.p, charmeUser.certificate.rsa.q, charmeUser.certificate.rsa.dmp1, 
+	 charmeUser.certificate.rsa.dmq1, charmeUser.certificate.rsa.coeff);
+
+// This does also work:
+//rsa.setPrivate(charmeUser.certificate.rsa.n, charmeUser.certificate.rsa.e, charmeUser.certificate.rsa.d);
+
+
+	rsa.setPublic(charmeUser.certificate.rsa.n,charmeUser.certificate.rsa.e);
+
+	var enc = rsa.encrypt("Hello World");
+
+$("#layout").append("Encrypted is:<br>" + enc);
+
+
+$("#layout").append("<br>Decrpyted is:<br>" + rsa.decrypt(enc));
+
+
+	var someEncrypted = "102540CB79E79ECCA57914E09C4D66A666C0DBEBABD96BCF0F54A12C8A6D8D2C63DE791942477E9767F59FCA5B8BE129854A4EAC03D6EC1AFC4260B4E8B3423EA3E5E699DE1D483EB03A914674E2D76E930BD69EDEB0FCA3040F625A227B4E388F01F21A642BE80908208077ECA989B0083F6D3289E3CAE1DD991C2A47E99249"; // encrypted by Java, decrypt it
+
+
+$("#layout").append("<br>Decrpyted form Java is:<br>" + rsa.decrypt(someEncrypted));
+
+
+var aesJSON = sjcl.encrypt("hello world", "key");
+$("#layout").append("Enc AES: "+JSON.stringify(aesJSON));
+
+
+});
+</script>
+
+
+</head>
+
+<body>
+<div id="layout">
+
+
+  </div>
+
+</body>
+</html>

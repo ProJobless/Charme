@@ -1,0 +1,9 @@
+<!--
+Sidebar Items:
+-->
+<div title='submenu_items' class='meta'>
+  <li id='nav_'><a  data-defaultDestination="true"  href='#lists'>All</a></li>
+  <% _.each( rc.listitems.items, function(item2){ %>
+    <li id='nav_<%- item2._id.$id %>' ><a  href='#lists/<%- item2._id.$id %>'><%- item2.name %></a></li>
+  <% }); %>
+</div>

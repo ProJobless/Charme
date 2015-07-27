@@ -1,0 +1,57 @@
+<div class="onlyResponsive topHeader">
+<a  href="#talks">&laquo; All Messages</a>
+</div>
+<div class="instantanswer"><form>
+	<div id='msg_smiliecontainer' style='margin-bottom:8px;'></div>
+	<input type="hidden" name="col_to" value="">
+	<input type="hidden" name="col_type" value="instant">
+	<div class='box'>
+ <!-- contenteditable = plaintext only is just working in chrome, not in firefox :( -->
+	<div id="inp_newmsginstant" class='smiliearea'  contenteditable="true" style="width:100%; min-height:30px; overflow: auto; outline: 0; "></div>
+	</div>
+
+	<div style="margin-top:8px;">
+
+		<span style='float:right; display:inline-block;' class='button32'>
+
+
+		
+
+		<a  id='but_addPeople'></a><!--<a  style='background-position: 128px 0;' id='but_leaveConversation'></a>--><a  style='background-position: -32px 0;' id='but_file'></a><a  style='background-position: -96px 0;' id='but_smilies'></a><a id='but_showMedia' style='background-position: -64px 0;'></a><a id='but_showMessages' style='display:none;background-position: -160px 0;'></a>
+
+		<input style='display:none' type="file" id="theFile"  />
+
+
+</span>
+		<a class="button" id='but_instantsend' >Send</a>
+	</form></div></div>
+
+	
+<div id='mediaDisplayOff'>
+	
+	<div class='receiversinstant'><span id='inp_receiversinstant'>
+
+
+
+
+	</span></div>
+
+<!-- --".implode(", ", $ppl["people"])."-->
+
+
+	<div class='talkmessages'>
+
+
+
+
+	</div>
+</div>
+<div id='mediaDisplayOn' class='p16' style='display:none'>
+Images..
+</div>
+
+
+	<img id='uploadPreview'>
+<!--
+<div class='infobox'>You do not have any conversation yet. Click the plus button to start a new conversation.</div>
+-->

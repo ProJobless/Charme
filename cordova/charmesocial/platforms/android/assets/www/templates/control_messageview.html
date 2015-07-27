@@ -1,0 +1,46 @@
+
+<% if (rc.conversationId) { %>
+<a class='more' id='moremsg2' style='margin:16px;'>
+ More...
+  </a>
+  <div class='meta' id='msg_aeskey' data-val="<%- rc.aesEnc %>"></div>
+    <div class='meta' id='msg_conversationId' data-val="<%- rc.conversationId.$id %>"></div>
+  <% } %>
+
+ <% _.each( rc.messages, function(item){ %>
+
+
+ <% if (item.message.status == "addPeople")  { %>
+
+<div class="message <%- item.class %>" style='background-color:#fff; border-top:1px silver dotted;border-bottom:1px silver dotted;'>
+<a href='#user/<%- item.sender %>'><%- item.sendername %></a> added new people.
+</div>
+ <% } else { %>
+
+
+    <div class="message <% if (item.tag) { %> <%- item.tag %>  <% } %>">
+<div class="top">
+	 <span class='time' style='float:right'><%- formatDate(item.message.object.time.sec*1000) %></span>
+	<a href='#user/<%- item.message.object.sender %>'><%- item.sendername %></a>
+</div>
+
+
+
+
+
+
+ <% if (item.fileId)  { %>
+ <div>
+<span class='imageid' data-revision='<%- item.message.object.msgKeyRevision %>' style='height:100px; display:inline-block; width:100px;' data-location='http://<%- item.message.object.sender.split("@")[1] %>/charme/fs.php?enc=1&id=<%- item.fileId %>'></span>
+</div>
+ <% } %>
+
+
+<%= $.charmeMl(xssText(item.message.object.content)) %>
+
+
+
+</div>
+
+ <% } %>
+  <% }); %>

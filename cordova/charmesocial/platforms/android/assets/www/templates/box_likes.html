@@ -1,0 +1,29 @@
+
+<div style='width:400px'>
+<div style='padding:16px;'>
+ 
+
+
+ <% _.each( rc.post_getLikes.items, function(item2){ %>
+
+
+
+
+	<div class="item" >
+
+		<a  href="#user/<%- encodeURIComponent(item2.liker) %>">
+			<img style='float:left; margin-right:8px' src="http://<%- item2.liker.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.liker) %>&amp;s=64">
+		  <%- item2.username %>
+		</a>
+
+
+	</div>
+	<br class='cb'>
+
+  <% }); %>
+
+
+</div>
+<div class='boxMargin'>
+<a href='javascript:ui_closeBox();' class='button gray' style='margin-right:8px;'>Close</a>
+</div></div>

@@ -1,0 +1,32 @@
+<div style='width:400px'>
+  <div style='padding:16px;'>
+  This operation will generate a new private key and a new passphrase.
+  <b>Only recrypt your key when it is necessary and you suspect your old key has been leaked or is not secure anymore.</b>
+  <br>
+  <br>
+  As Charme has to recrypt your key directory and your information directory, this operation may take a while.
+  <br><br>
+  <b>New passphrase:</b>
+  <div id='template_certkey' class="selectable" style='maring:8px 0l; font-weight: bold;'>
+  Generating RSA key...
+
+  </div>
+  <span style="color:red">
+  Please note down the passphrase above. If you loose it your account is gone for ever.</span>
+  <input type='hidden' id='rsa'>
+  <br>
+  <b>Server Password:</b>
+  <br>(The one you usually enter on the login screen)
+  <br>
+  <input class='box' type="password" id='inp_password' style='margin:8px 0;'>
+  <br>
+  <b>Your current passphrase:</b><br>
+  <input class='box' type='text' autocomplete="off" id='inp_passphrase' style='margin:8px 0;'>
+  </div>
+
+
+
+  <div class='boxMargin'>
+  <a href='javascript:ui_closeBox();' class='button gray' style='margin-right:8px;'>Cancel</a><a id='but_box_save' class='button'>Continue</a>
+  </div>
+</div>

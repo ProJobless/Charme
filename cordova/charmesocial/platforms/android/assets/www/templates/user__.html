@@ -1,0 +1,75 @@
+<div title='title' class='meta'><%- rc.profile_get.info.firstname %>'s Profile</div>
+
+<div class='p32'>
+			<div class='aboutContainer' style='margin-right:32px'>
+				<div class='aboutBox'>
+					<div class='title'>Account</div>
+					<table class="selectable">
+						<tr><td class='info'>Name:</td><td id='fld_username'><%- rc.profile_get.info.firstname %> <%- rc.profile_get.info.lastname %></td></tr>
+<tr><td class='info'>Hometown:</td><td><%- rc.profile_get.info.hometown %></td></tr>
+<tr><td class='info'>Charme ID:</td><td><%- rc.profile_get.info.userid %></td></tr>
+					</table>
+				</div>
+
+				<div class='aboutBox' style='margin-top:32px;' id='profileListBox'>
+					<div class='title'>Lists</div>
+
+					<div style="padding:6px;" id='select_lists'>
+
+
+
+
+
+					<% _.each( rc.userlists, function(item2){ %>
+						<% if  (typeof(item2) !== 'undefined') { %>
+							<% if (item2.isActive) { %>
+							<a  class="hotCheckbox active" data-listid="<%- item2.id %>"><%- item2.name %></a><br>
+							<% } %>
+
+							<% if (!item2.isActive) { %>
+							<a class="hotCheckbox" data-listid="<%- item2.id  %>"><%- item2.name %></a><br>
+							<% } %>
+
+						
+						<% } %>
+					<% }); %>
+					</div>
+
+				</div>
+
+
+
+			</div>
+
+			<div class='aboutContainer'>
+				<div class='aboutBox'>
+					<div class='title'>Public Information</div>
+					<table  class="selectable">
+						<tr><td class='info'>About:</td><td><%- rc.profile_get.info.about %></td></tr>
+						<tr><td class='info'>Hobbies:</td><td><%- rc.profile_get.info.hobbies %></td></tr>
+<tr><td class='info'>Literature:</td><td><%- rc.profile_get.info.literature %></td></tr>
+<tr><td class='info'>Music:</td><td><%- rc.profile_get.info.music %></td></tr>
+<tr><td class='info'>Movies:</td><td><%- rc.profile_get.info.movies %></td></tr>
+					</table>
+			
+
+
+				</div>
+
+
+
+
+					<div class='aboutBox' style='margin-top:32px;' id='profileListBox'>
+					<div class='title'>Private Information</div>
+						<table  class="selectable" id='table_prvInfo'>
+						</table>
+				
+
+				</div>
+
+
+
+
+			</div>
+
+		</div>
