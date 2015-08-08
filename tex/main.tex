@@ -136,7 +136,7 @@ In contrast to classic social networks, we seperate client and server in two sep
 
 
 \subsection{Passphrase}
-Charme basically uses an \textit{encrypted data storage}. This means critical data is encryped with a passhprase using AES-CBC (Section \ref{AESCBC}) and hosted on the server  (Figure \ref{fig1}). Consequently the server can not read the user data. Such data includes
+Charmet uses an \textit{encrypted data storage}. This means critical data is encryped with a passhprase using AES-CBC (Section \ref{AESCBC}) and hosted on the server  (Figure \ref{fig1}). Consequently the server can not read the user data. Such data includes
 \begin{enumerate}
 \item \textbf{Personal information} like phone number. This information can later be decrypted and encrypted with a public key to distribute it to other people.
 \item \textbf{The private RSA key} used to decrypt everything from other users.
@@ -266,10 +266,19 @@ Administrations scripts are written for GNU Bash to provide ssh access.
   \section{Search}
   When it comes to search, we face some problems. Of course, it is not efficient to query hundreds or even more server from one client in the charme network. Filesharing applications typically use Kademlia  or Chord to index data within peer-to-peer networks. Such concepts may also be useful for search, as YaCy for example has shown. Thorsten Schütt et al. have proposed a technique which can be used for multidimensional parameter search in their paper \textit{Range queries on structured overlay networks}. A search in social networks could also use the social graph to rank results of near people higher than from people more far away.
 
+
 \subsection{Further reading}
 \begin{enumerate}
 \item Peer-to-peer (P2P) Networks - Basic Algorithms \\\url{https://www.youtube.com/watch?v=kXyVqk3EbwE} % Minute 18:07 Boot up peer to peer net
 \end{enumerate}
+
+  \section{Token Generation and API}
+  In the future Charme will be able to be used by other applications as data storage. Therefore, we create a key $A_i$ and a token $T_i$ for each application i.
+All keys and tokens are generated randomly and encrypted with a passphrase derived key A'. When the passphrase is updated, we need to recrypt A'.
+An application can now save data to the Charme server, once the triplet $A_i$, $T_i$ and Charme userId was added to the application.
+To perform an action A, the charme server sends a random value R to the application. The application generates the hash value $H(A|R|T_i)$ and sends it back to the server, where the hash is validated to maintain authenticity. Actions can be  STORE(key, value) and GET(key). Possible applications could be a note taking app or a calendar, saving data encrypted on the server for example.
+
+  
 \section{Coding Guidelines}
 \begin{enumerate}
 \item camelCase for function names

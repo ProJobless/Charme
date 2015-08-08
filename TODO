@@ -1,4 +1,8 @@
 TOP PRIORITY:
+- better logout, see request.js, loggin out
+- test debian setup script
+- image upload in message not wokring
+- key updates!
 
 - 3. improve audience limiter for context items with signature  60 MIN BIB!!!
 - lmit collection audience when displaying collection.

@@ -27,10 +27,11 @@
 \BOOKMARK [2][-]{subsection.3.1}{Technology Stack}{section.3}% 27
 \BOOKMARK [1][-]{section.4}{Search}{}% 28
 \BOOKMARK [2][-]{subsection.4.1}{Further reading}{section.4}% 29
-\BOOKMARK [1][-]{section.5}{Coding Guidelines}{}% 30
-\BOOKMARK [1][-]{section.6}{Technical Documentation}{}% 31
-\BOOKMARK [2][-]{subsection.6.1}{Login}{section.6}% 32
-\BOOKMARK [2][-]{subsection.6.2}{Messages}{section.6}% 33
-\BOOKMARK [2][-]{subsection.6.3}{Edgekeys}{section.6}% 34
-\BOOKMARK [2][-]{subsection.6.4}{Recryption of data}{section.6}% 35
-\BOOKMARK [1][-]{section.7}{Sources}{}% 36
+\BOOKMARK [1][-]{section.5}{Token Generation and API}{}% 30
+\BOOKMARK [1][-]{section.6}{Coding Guidelines}{}% 31
+\BOOKMARK [1][-]{section.7}{Technical Documentation}{}% 32
+\BOOKMARK [2][-]{subsection.7.1}{Login}{section.7}% 33
+\BOOKMARK [2][-]{subsection.7.2}{Messages}{section.7}% 34
+\BOOKMARK [2][-]{subsection.7.3}{Edgekeys}{section.7}% 35
+\BOOKMARK [2][-]{subsection.7.4}{Recryption of data}{section.7}% 36
+\BOOKMARK [1][-]{section.8}{Sources}{}% 37

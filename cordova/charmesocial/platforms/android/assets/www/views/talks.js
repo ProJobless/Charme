@@ -593,6 +593,8 @@ var view_talks_subpage = view_subpage.extend({
 		$(".imageid").each(function(index) {
 
 
+
+
 			try {
 				var that = this;
 				var loc = $(this).data("location");
@@ -644,6 +646,8 @@ var view_talks_subpage = view_subpage.extend({
 							}).html($(i))
 						);
 					}
+
+
 
 					worker2.postMessage({
 						key: that2.getMessageKey(msgKeyRevision).key,
@@ -701,7 +705,7 @@ var view_talks_subpage = view_subpage.extend({
 				"conversationId": this.options.conversationId
 			}]
 		}, function(d2) {
-
+			$(".instantanswer").show();
 			that.options.conversationId = d2.messages_get_sub.conversationId;
 			that.options.receivers = d2.messages_get_sub.receivers;
 			that.options.usernames = d2.messages_get_sub.usernames;

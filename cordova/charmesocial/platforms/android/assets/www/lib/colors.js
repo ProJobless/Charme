@@ -8,7 +8,6 @@ function setColor(light, dark)
 	$(".sbBetaCont").css("background-color", " #cdcdcd");
 	$("#colorbg").css("background-color", " #cdcdcd");
 	$(".infobox").css("border-color", light);
-	$(".fixedBox").css("border-color", light);
 	$(".actionBar").css("border-color", "#cdcdcd");
 
 }

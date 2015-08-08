@@ -11,6 +11,9 @@
 /server/charme/admin/log.txt
 /server/charme/admin/nohup.out
 /cordova/charmesocial/www/*
+/cordova/charmesocial/*
+/cordova/platforms/*
+
 /temp/*
 /old/*
 /doxygen/*

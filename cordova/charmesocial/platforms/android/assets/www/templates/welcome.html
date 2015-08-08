@@ -5,7 +5,16 @@
         <img src="css/media/welcome.png" class="onlyResponsive" style="margin:0px auto; width: 200px; margin-bottom:32px;" />
 
       <div id="login_error" style="background-color:#F7D2D2; padding:16px; display:none;  border-radius:8px; margin-bottom:16px;color:#C30; text-align:center;">Login failed. Please check your login data.</div>
+
+
+      <% if ( rc.loginStatusCode=="tokenExpired")  { %>
+        <div style="background-color:#F7D2D2; padding:16px; border-radius:8px; margin-bottom:16px;color:#C30; text-align:center;">
+        Your session has expired. Please login again.
+      </div>
+      <% } %>
+
       <div>
+
       <div class="captialHeadline">Username</div>
       <input placeholder="you@yourserver.com" value='<%- rc.username %>' id="login_user" class="box" style="margin:8px 0; width:100%;" />
     </div>  <div>

@@ -11,6 +11,9 @@ cursor: pointer;
 	display: block;
 
 }
+#but_addImg {
+	float:right;
+}
 .signupfield {
 	width: 150px;
 

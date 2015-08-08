@@ -15,8 +15,8 @@
 */
 $(function(){
 
-		if (typeof charmeUser === 'undefined')
-			return;
+		if (typeof charmeUser !== 'undefined' && charmeUser != null) {
+
 
 			CHARME_GLOBAL_SOCKETURL = "ws://" + charmeUser.getServer() + ":8085";
 
@@ -50,7 +50,7 @@ $(function(){
 							}, function(data){
 
 								apl_update_apply(data.updates_get);
-							});
+							}, null, null, true);
 					}
 					else if (typeof container_main.currentView.sub.refreshMessages !== "undefined")
 					{
@@ -129,7 +129,7 @@ return true;
 
 
 });*/
-
+}
 });
 
 

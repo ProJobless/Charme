@@ -7,20 +7,17 @@
 
 var view_lists = view_page.extend({
 
-
 	options: {
 		template: 'profile',
 		optionbar: '<a style="background-position: -60px 0px;" data-bgpos="-60" id="addListButton" class="actionButton"></a>'
 	},
 	viewId: 'listView',
 
-
 	getData: function() {
 		var templateData = {
 			globaldata: []
 		};
 		templateData["listitems"] = apl_postloader_getLists();
-		console.log(templateData);
 		return templateData;
 	},
 	postRender: function() {

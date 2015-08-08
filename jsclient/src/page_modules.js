@@ -74,14 +74,9 @@ function sendMessageForm(receivers) {
     _.templateSettings.variable = "rc";
     var template = _.template(d, templateData);
 
-
     ui_showBox(template, function() {
-
-
       $("#token-input-inp_receivers").focus();
-
     });
-
 
     //alert("http://"+charmeUser.server+"/charme/auto.php");
 
@@ -99,7 +94,6 @@ function sendMessageForm(receivers) {
 
 	Info:
 	Default page class. Build new pages on this model. `postRender` is called after rendering is complete.
-
 
 	Properties:
 	options.template:string:Which template from templates folder do we us?
@@ -188,16 +182,12 @@ view_page = Backbone.View.extend({
 
 
   finishRender: function(d, d2) {
-
     if (container_main.currentViewId != "find")
       $("#searchField").val(""); // Reset search box
-
-    //alert("find"+this.options.useSidebar);
 
     if (this.options.navMatch != '') {
 
       $(".sbAlpha ul li, .header.responsive .row1 a").removeClass("active");
-
       $(".sbAlpha ul li a[data-topic='" + this.options.navMatch + "']").parent().addClass("active");
       $(".header .row1 a[data-topic='" + this.options.navMatch + "']").addClass("active");
     }
@@ -207,26 +197,14 @@ view_page = Backbone.View.extend({
     if (this.options.useSidebar) {
 
       $('.sbBeta').removeClass("responsive");
-
       $('.page_content').css("width", "700px");
       $('.page_content').css("margin-left", "150px");
 
       if (!isResponsive())
-      $('.sbBeta').show(); // TODO: If live swithcing to repsonsive mode then show sidebar!
+        $('.sbBeta').show();
 
       $('#barmenu').show();
-
-
-      // Do this after sidebar items were initialised:
       $(".subCont").append('<div id="colorbg"></div>');
-      // call init sidebar function
-
-      // init action bar (TODO!)
-      /*
-			$('.sbBeta .actionBar').html(""); // Remove existing buttons
-			$('.subCont').html($('div[title=submenu_items]').html());
-			$('.sbBeta .actionBar').html($('div[title=action_bar]').html());*/
-
 
     } else {
       $('.page_content').css("width", "850px");
@@ -241,9 +219,6 @@ view_page = Backbone.View.extend({
       }
     }
 
-    //if (isResponsive())
-    //  $(".sbBeta").hide();
-
     if (charmeUser == undefined)
       $(".loggedOutOnly").show();
 
@@ -251,9 +226,6 @@ view_page = Backbone.View.extend({
       this.postRender();
 
     }
-
-
-
   },
 
   render: function() {
@@ -261,18 +233,14 @@ view_page = Backbone.View.extend({
     if (this.options.expViewId == undefined)
       this.options.expViewId = this.options.template;
 
-
     if (this.options.noLogin != true && !isLoggedIn()) {
 
       logout();
       return;
-
     }
-    //alert("render");
 
     // Page has changed not changed. Only subpage. -> Just render subpage
     if (container_main.currentViewId == this.options.expViewId && !this.options.forceNewRender) {
-
       // Just update SubView, we are allowed to render it here as parent view is already rendered
       this.sub.render();
 
@@ -289,33 +257,23 @@ view_page = Backbone.View.extend({
 
       $.get("templates/" + this.options.template + ".html", function(d) {
 
-        var templateData = that.getData();
-
         _.templateSettings.variable = "rc";
+        var templateData = that.getData();
+        console.log(templateData);
         var template = _.template(d, templateData);
 
         $(that.$el).html(template);
 
         that.finishRender(d);
-
-        //else
-        {
-
-          that.delegateEvents();
-        }
-        //console.log("delegateEvents() in view");
+        that.delegateEvents();
 
         // Render SubView if exists
         if (that.sub != undefined)
           that.sub.render();
-
-
       });
     }
   },
-
 });
-
 
 
 view_subpage = Backbone.View.extend({
@@ -406,7 +364,6 @@ function updateTitle() {
   if (title == "")
     title = "&nbsp;";
 
-
   $("#responsiveTitle").html(title);
 
 }
@@ -420,12 +377,12 @@ function setSCHeight() {
 
 $(window).resize(function() {
   setSCHeight();
-
-  if (!isResponsive())
-  $('.sbBeta').show();
-
+  if (!isResponsive() &&  typeof container_main.currentView !== "undefined" && container_main.currentView.options.useSidebar) // Show or hid eSidebar on resize
+      $('.sbBeta').show();
+  else {
+      $('.sbBeta').hide();
+  }
 });
-
 
 var view_notifications = view_page.extend({
   options: {
@@ -464,32 +421,43 @@ var view_notifications = view_page.extend({
 
 
   },
-  getData: function()
-
-  {
-
-
-  }
+  getData: function() { }
 });
-
-
 
 var view_find = view_page.extend({
   options: {
     template: 'find'
-  }
+  },
 
-  ,
+  events: {
+    "click  #but_startsearch": "startsearch",
+       'keydown #responsiveSearchInput': 'keyDownInput'
+  },
+
+  startsearch: function() {
+    app_router.navigate("/find/"+$("#responsiveSearchInput").val(), {trigger: true, replace: false});
+
+  },
+
+  keyDownInput: function(e) {
+    var code = e.keyCode || e.which;
+       if(code == 13) {
+        this.startsearch();
+       }
+  },
+
   postRender: function() {
     //
-    $("#fld_q").text(this.options.q);;
+    $("#fld_q").text(this.options.q);
+    if (this.options.q != "undefined")
+        $("#responsiveSearchInput").val(this.options.q).focus().select();
     updateTitle();
   },
+
   getData: function()
   {
     console.log(this.options.data);
     return this.options.data;
-
   }
 });
 
@@ -504,12 +472,35 @@ var view_register = view_page.extend({
   },
 
 	events: {
-
     "click  #but_makecert": "makecert",
-    "click  #but_signupok": "signup"
+    "click  #but_signupok": "signup",
+    "click  #but_hostok": "proceedToPage2"
   },
 
 	initialize: function() {
+
+  },
+
+  proceedToPage2:function() {
+
+
+    var server = $("#input_hostserver").val();
+
+
+    apl_request({
+      "requests":   [
+        {
+          "id": "ping"
+        } ]
+    },
+    function(d) {
+      if (d.ping.pong) {
+      $("#form_signup").show();
+      $("#prompt_server").hide();
+          $("#inp_server").val(server);
+      }
+    }, "", server);
+
 
   },
 
@@ -564,10 +555,11 @@ var view_register = view_page.extend({
       ]
     }, function(d2) {
 
-			var hashpass = CryptoJS.SHA256(pass + d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64);
-      var s = $("#form_signup").serializeObject();
+			var hashpass = CryptoJS.SHA256(pass + d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64); // Generate a hashed password
+      var disabled = $("#form_signup").find(':input:disabled').removeAttr('disabled'); // Remove disabled property temporary as serializeArray does not take disabled inputs into account
+      var formData = $("#form_signup").serializeObject();  // Convert signup form data to JSON object
 
-		  s.hashpass = hashpass;
+		  formData.hashpass = hashpass; // Add hashed password to form data
 
       var publicKey = $.parseJSON($("#pubkey").val());
       var  requests =
@@ -575,7 +567,7 @@ var view_register = view_page.extend({
         // user_register must be the first request to set session Id on the server!!!!
         {
           "id": "user_register",
-          "data": s
+          "data": formData
         },
 
         // The second request adds our own public key to the key directory
@@ -595,9 +587,12 @@ var view_register = view_page.extend({
         console.log(data);
         if (data.error != null) {
           that.showError(data.error);
+          disabled.attr('disabled','disabled'); // Enable previously disabled fields again
           $(window).scrollTop(999999);
         }
         else if (data.success == 1) {
+              localStorage.setItem("userAutoComplete",userid);
+          disabled.attr('disabled','disabled');  // Enable previously disabled fields again
           location.replace('#signup_success');
         }
       }, "", serverurl);
@@ -889,9 +884,6 @@ control_postField = Backbone.View.extend({
     if ($('#repostContainer').is(':visible'))
       repostdata = $('#repostContainer').data("postdata");
 
-
-
-
     console.log(that.metaData);console.log(that.metaData);console.log(that.metaData);
     completePost = function(images) {
       var signature = new CharmeModels.Signature(postText + imgFileContent);
@@ -1004,7 +996,11 @@ control_postField = Backbone.View.extend({
         srcimg.onload = function() {
           images = imageManipulate_multiscale(srcimg, [200, 900]);
           // Encrypt Images:
+          if (typeof postKey !== "undefined")
           imgFileContent = aes_encrypt(postKey, imgFileContent.result);
+          else {
+            imgFileContent = imgFileContent.result;
+          }
           console.log(images);
           completePost(images);
         }
@@ -1067,12 +1063,14 @@ control_postField = Backbone.View.extend({
 
       that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' style='margin-right:8px;' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
 
-      $('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a style='float:right' class='cui_imgbutton' id='but_addImg'><i class='fa fa-image'></i></a>");
+        $('#postOptions2').append("<div style='height:16px' class='onlyResponsive'></div>");
+      $('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-image'></i> <span class='onlyResponsive'>Add Image</span></a>");
 
       if (that.options.collectionId == "")
-      $('#postOptions2').append("<span id='spanContext'>or <a title='Add Meta' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i> Add Context</a></span>");
+      $('#postOptions2').append("<span id='spanContext'><a title='Add Meta' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i> Add Context</a></span>");
 
-      $('#postOptions2').append("<a style='display:none' id='but_remImg'>Remove Image</a> <span style='display:none' id='metaIndicator'> <a  id='but_remMeta'>Remove Context</a> <i class='fa fa-warning'></i> Posts are not encrypted when containing Context.</span>");
+
+      $('#postOptions2').append("<a style='display:none' id='but_remImg'>Remove Image</a> <span style='display:none' id='metaIndicator'><a  class='cui_imgbutton' id='but_remMeta'><i class='fa fa-times'></i>  Remove Context</a><div style='height:16px' class='onlyResponsive'></div><i class='fa fa-warning'></i> Posts are neither encrypted nor part of a collection when containing Context.</span>");
 
       $("#but_remMeta").click(function() {
         that.metaData = undefined;
@@ -2046,25 +2044,13 @@ var view_stream = view_page.extend({
 
   },
   getData: function() {
+    _.templateSettings.variable = "rc";
     var templateData = {
       globaldata: [],
-      test: "test"
     };
-    //templateData["streamitems"] = apl_postloader_getAll();
 
-
-    //		CharmeModels.simpleStorage.getItems("filter", false, function(){	ui_closeBox();});
-
-
-
-    templateData["listitems"] = apl_postloader_getFilters().items; //.items.concat(apl_postloader_getListsExtended());
-    // apl_postloader_getLists().items.concat
-
-
-
-
+    templateData["listitems"] = apl_postloader_getFilters(); //.items.concat(apl_postloader_getListsExtended());
     return templateData;
-
   },
 
   events: {
@@ -2112,8 +2098,6 @@ var view_stream = view_page.extend({
           "id": "lists_get"
         }]
       }, function(d22) {
-
-        console.log(d22.lists_get);;
 
         $.get("templates/box_filter.html", function(d) { // box_filter.html is the template. We will perform most jQuery operations in this function on its html
 
@@ -2259,20 +2243,12 @@ var view_stream = view_page.extend({
                   }
                 });
 
-              //  console.log(filterAsJson.constraints);
-              //  return;
-
-
-                // 	@storeItem: (className, data, encrypt=false, callbackFunction) -> 	apl_request { 'requests': [ {
                 CharmeModels.SimpleStorage.storeItem("filter", filterAsJson, false, function() {
                   alert("TODO: reload filters without page reload");
                   location.reload();
                   ui_closeBox();
                 });
-
-
               }
-
             });
           });
         });

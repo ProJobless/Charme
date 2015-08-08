@@ -48,13 +48,17 @@ else
 $returnArray = array(); // This array will contain the returned data
 
 
+//session_destroy();
+
 // Iterate through requests
 foreach ($data["requests"] as $item)
 {
+
+
 	$action = $item["id"];
 	// This array contains a list of requests Ids, that can be executed without a session Id
 	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive",
-	 "key_update_notification", "search_respond", "stream_respond", "post_delete_receive", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getinfo", "edgekey_request",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
+	 "key_update_notification", "search_respond", "stream_respond", "post_delete_receive", "ping", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getinfo", "edgekey_request",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 
 			clog("THIS WAS ERROR 1 WITH SESSIOn ".session_id()." and user".$_SESSION["charme_userid"]);
@@ -122,6 +126,10 @@ foreach ($data["requests"] as $item)
 			}
 			// Save
 
+		break;
+
+		case "ping":
+				$returnArray[$action] = array("pong" => true);
 		break;
 
 		case "reg_salt_get":

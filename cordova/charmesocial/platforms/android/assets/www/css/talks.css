@@ -77,7 +77,7 @@ position: fixed;
 
 .msgItems li a div
 {
-	
+
 
 	font-weight: normal;
 	padding-top: 4px;
@@ -91,7 +91,7 @@ position: fixed;
 .msgScrollContainer
 {
 width:300px;
-	
+
 
 
 }
@@ -122,6 +122,7 @@ width:300px;
 .instantanswer
 {
 width:518px;
+display: none;
 position: fixed;
 bottom:0;
 

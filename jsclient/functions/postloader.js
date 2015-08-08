@@ -28,7 +28,7 @@ function apl_setup2()
 	 	{
 			var keyring = localStorage.getItem("keyring");
 			charmeUser.keyring = jQuery.parseJSON(keyring);
-			alert("This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data and only use it in a local area network.\nYour data may get exposed otherwise!!!");
+			alert("This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data.\nYour data may get exposed otherwise!!!");
 		}
 
 		catch(e)
@@ -67,8 +67,6 @@ function apl_setup(callback, onLogin)
 	}
 	else
 	{
-		var cert1 = getCert();
-		charme_private_rsakey = $.parseJSON(cert1);
 
 		apl_request(
 	    {"requests" : [
@@ -79,10 +77,13 @@ function apl_setup(callback, onLogin)
 	    ]
 		}, function(data){
 
+				apl_postloader_filters =  {"items": [ ]	};
+				apl_postloader_lists =  {"items": [ ]	};
+
 				CharmeModels.SimpleStorage.getItems("filter", false, function(loadedFilters){
 				apl_postloader_lists.items = data.lists_get;
-				apl_postloader_filters.filterReferences = {}
 
+				apl_postloader_filters.filterReferences = {};
 
 				$.each(loadedFilters, function(index, item) {
 

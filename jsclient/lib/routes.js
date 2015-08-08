@@ -111,8 +111,6 @@ $(function() {
                         "id": "list_getItems",
                         "listId": id
                     },
-
-
                 ]
             }, function(d2) {
 
@@ -435,15 +433,13 @@ $(function() {
                 template: "welcome",
                 noLogin: true
             });
-
             pa.getData = function() {
-
                 return {
-                    username: localStorage.getItem("userAutoComplete")
+                    username: localStorage.getItem("userAutoComplete"),
+                    loginStatusCode: localStorage.getItem("loginStatusCode")
                 };
             }
-
-
+            localStorage.removeItem("loginStatus");
 
             container_main.setCurrent(pa);
             pa.render();
@@ -605,8 +601,6 @@ $(function() {
 
 
 });
-
-var charme_private_rsakey = null;
 
 /*
 
@@ -794,14 +788,12 @@ function silentLogout() {
   localStorage.removeItem("sessionPassphrase"); // important!
 
 }
-function logout() {
+function logout(loginStatusCode) {
     ui_closeBox();
     silentLogout();
     container_guest.render();
-
-    container_guest.render();
-
-    location.href = "#welcome";
+    localStorage.setItem("loginStatusCode", loginStatusCode);
+    app_router.navigate("welcome", {trigger: true, replace: false});
 }
 
 function delTemp() {

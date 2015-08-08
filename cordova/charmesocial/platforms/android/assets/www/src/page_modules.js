@@ -74,14 +74,9 @@ function sendMessageForm(receivers) {
     _.templateSettings.variable = "rc";
     var template = _.template(d, templateData);
 
-
     ui_showBox(template, function() {
-
-
       $("#token-input-inp_receivers").focus();
-
     });
-
 
     //alert("http://"+charmeUser.server+"/charme/auto.php");
 
@@ -506,10 +501,34 @@ var view_register = view_page.extend({
 	events: {
 
     "click  #but_makecert": "makecert",
-    "click  #but_signupok": "signup"
+    "click  #but_signupok": "signup",
+    "click  #but_hostok": "proceedToPage2"
   },
 
 	initialize: function() {
+
+  },
+
+  proceedToPage2:function() {
+
+
+    var server = $("#input_hostserver").val();
+
+
+    apl_request({
+      "requests":   [
+        {
+          "id": "ping"
+        } ]
+    },
+    function(d) {
+      if (d.ping.pong) {
+      $("#form_signup").show();
+      $("#prompt_server").hide();
+          $("#inp_server").val(server);
+      }
+    }, "", server);
+
 
   },
 
@@ -564,10 +583,11 @@ var view_register = view_page.extend({
       ]
     }, function(d2) {
 
-			var hashpass = CryptoJS.SHA256(pass + d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64);
-      var s = $("#form_signup").serializeObject();
+			var hashpass = CryptoJS.SHA256(pass + d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64); // Generate a hashed password
+      var disabled = $("#form_signup").find(':input:disabled').removeAttr('disabled'); // Remove disabled property temporary as serializeArray does not take disabled inputs into account
+      var formData = $("#form_signup").serializeObject();  // Convert signup form data to JSON object
 
-		  s.hashpass = hashpass;
+		  formData.hashpass = hashpass; // Add hashed password to form data
 
       var publicKey = $.parseJSON($("#pubkey").val());
       var  requests =
@@ -575,7 +595,7 @@ var view_register = view_page.extend({
         // user_register must be the first request to set session Id on the server!!!!
         {
           "id": "user_register",
-          "data": s
+          "data": formData
         },
 
         // The second request adds our own public key to the key directory
@@ -595,9 +615,12 @@ var view_register = view_page.extend({
         console.log(data);
         if (data.error != null) {
           that.showError(data.error);
+          disabled.attr('disabled','disabled'); // Enable previously disabled fields again
           $(window).scrollTop(999999);
         }
         else if (data.success == 1) {
+              localStorage.setItem("userAutoComplete",userid);
+          disabled.attr('disabled','disabled');  // Enable previously disabled fields again
           location.replace('#signup_success');
         }
       }, "", serverurl);
@@ -1067,12 +1090,14 @@ control_postField = Backbone.View.extend({
 
       that.$el.append("<textarea class='box' id='textfield' style=' width:100%;'></textarea><div  style='margin-top:8px; display:none;' id='imgPreview'></div><div style='margin-top:8px;'><a type='button' id='mypostbutton' class='button but_postCol' style='margin-right:8px;' value='Post'>Post</a><span id='postOptions'></span><span id='postOptions2'></span></div>");
 
-      $('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a style='float:right' class='cui_imgbutton' id='but_addImg'><i class='fa fa-image'></i></a>");
+        $('#postOptions2').append("<div style='height:16px' class='onlyResponsive'></div>");
+      $('#postOptions2').append("<input id='inp_postImg' type='file' style='display:none'><a class='cui_imgbutton' id='but_addImg'><i class='fa fa-image'></i> <span class='onlyResponsive'>Add Image</span></a>");
 
       if (that.options.collectionId == "")
-      $('#postOptions2').append("<span id='spanContext'>or <a title='Add Meta' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i> Add Context</a></span>");
+      $('#postOptions2').append("<span id='spanContext'><a title='Add Meta' class='cui_imgbutton' id='btn_addContext'><i class='fa fa-eye'></i> Add Context</a></span>");
 
-      $('#postOptions2').append("<a style='display:none' id='but_remImg'>Remove Image</a> <span style='display:none' id='metaIndicator'> <a  id='but_remMeta'>Remove Context</a> <i class='fa fa-warning'></i> Posts are not encrypted when containing Context.</span>");
+
+      $('#postOptions2').append("<a style='display:none' id='but_remImg'>Remove Image</a> <span style='display:none' id='metaIndicator'><a  class='cui_imgbutton' id='but_remMeta'><i class='fa fa-times'></i>  Remove Context</a><div style='height:16px' class='onlyResponsive'></div><i class='fa fa-warning'></i> Posts are neither encrypted nor part of a collection when containing Context.</span>");
 
       $("#but_remMeta").click(function() {
         that.metaData = undefined;

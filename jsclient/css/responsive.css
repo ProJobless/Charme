@@ -79,7 +79,11 @@ input {
 	}
 
 @media (max-width: 1000px)
-	{
+	{#but_addImg {
+		float: none;
+		position: relative;
+		left:-8px;
+	}
 
 
 		#welcome_main {
@@ -189,6 +193,9 @@ input {
 		.onlyResponsive
 		{
 			display: block;
+		}
+		span.onlyResponsive {
+			display: inline;
 		}
 		.onlyNoResponsive
 		{
