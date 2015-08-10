@@ -320,6 +320,8 @@ var view_talks_subpage = view_subpage.extend({
 
 				var msgKeyRevision = that.getMessageKey(-1).revision;
 				var thumbEnc = aes_encrypt(that.getMessageKey(-1).key, thumb);
+
+
 				var fileEnc = aes_encrypt(that.getMessageKey(-1).key, file);
 				var conversationId = ($('#msg_conversationId').data("val"));
 
@@ -345,7 +347,7 @@ var view_talks_subpage = view_subpage.extend({
 
 					]
 				}, function(d2) {
-					location.reload();
+				location.reload();
 					NProgress.done();
 				});
 			};
@@ -599,6 +601,7 @@ var view_talks_subpage = view_subpage.extend({
 				var msgKeyRevision = $(this).data("revision");
 				var par = $(that).parent();
 
+
 				$.get(loc, function(d) {
 
 					var worker2 = new Worker("lib/crypto/thread_decrypt.js");
@@ -635,7 +638,6 @@ var view_talks_subpage = view_subpage.extend({
 											worker.terminate();
 										}));
 
-
 									worker.postMessage({
 										key: that2.getMessageKey(msgKeyRevision).key,
 										encData: d2
@@ -644,6 +646,9 @@ var view_talks_subpage = view_subpage.extend({
 							}).html($(i))
 						);
 					}
+
+
+					console.log( "1...."+CryptoJS.HmacSHA256("chypertext", "password").toString(CryptoJS.enc.Base64));
 
 					worker2.postMessage({
 						key: that2.getMessageKey(msgKeyRevision).key,

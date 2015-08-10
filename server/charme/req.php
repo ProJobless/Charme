@@ -129,7 +129,7 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "ping":
-				$returnArray[$action] = array("pong" => true);
+				$returnArray[$action] = array("pong" => true); // Used in sign up to check if the server is a valid Charme server.
 		break;
 
 		case "reg_salt_get":
