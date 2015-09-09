@@ -64,6 +64,7 @@ function apl_posttest(requests) {
 function apl_request(requests, callback, ses, srv, showNoErrors) {
   //apl_posttest(requests);
 
+
   if (srv == null && charmeUser != null)
     srv = charmeUser.server;
   if (ses == null && charmeUser != null)
@@ -92,7 +93,7 @@ function apl_request(requests, callback, ses, srv, showNoErrors) {
       console.log(status);
       console.log(xhr)
 
-      if (showNoErrors) {
+      if (!showNoErrors) {
         $.get("templates/box_error.html", function(d) {
 
           var simpleMessage = "Uuuups, something went wrong...";

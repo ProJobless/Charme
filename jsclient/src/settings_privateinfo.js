@@ -18,7 +18,7 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 							$(that).parent().parent().remove();
 						});
 
-			
+
 			});
 
 
@@ -32,14 +32,10 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 			// Generate Random AES, this key will ONLY be used if a new Bucket is created.
 			var mykey  = randomAesKey(32);
 
+
 			// Encrypt AES Key with fastkey1
 			var fastkey = getFastKey(0, 1);
-
-
-
-			var aesEnc = aes_encrypt(fastkey.fastkey1, mykey);
-
-
+			var aesEnc = crypto_encryptFK1(mykey).message;
 
 			/// APL GET AES HERE!
 
@@ -61,67 +57,64 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 
 				{
 					"id": "key_getFromDir",
-					"key": e_key, // This is the public key, this is not the piece key!
-					
+					"userId": userId, // This is the public key, this is not the piece key!
+
 				},
 
 				// Get all piece to encrypt bucketcontent with bucketaes
 				{
 					"id": "piece_request_single",
 					"key": key,
-					
+
 				}
 
 				 ]
 			}, function(d) {
 
-				// Encode aes to decrypt information with 
+				// Encode aes to decrypt information with
 				// public key
-				if (d.key_getFromDir.value == null)
+				if (d.key_getFromDir.key == null)
 				{
 					alert("Key not found in key directory. Please add user to key directory.");
 				}
 				else
 				{
-					// Decrypt public key
-					var aesstrPK = aes_decrypt(fastkey.fastkey1, d.key_getFromDir.value);
-					var aesobjPK = $.parseJSON(aesstrPK);
+					console.warn(d.key_getFromDir);
+					if (!crypto_hmac_check(d.key_getFromDir.key)) {
+						alert("Error: HMAC verification failed.");
+						return;
+					}
+					var mainObj = d.key_getFromDir.key.obj;
+					var edgekeyWithFK = crypto_decryptFK1(mainObj.edgekeyWithFK); // TODO!
 
-					if (aesobjPK.userId != userId)
+					if (mainObj.publicKeyUserId != userId)
 					{
 						alert("Userid does not match. Your server returned public key of another user.");
 					}
 					else
 					{
 						// Now we encrypt the bucket AES with the RSA Key
-
-
 						// Make RSA Object
 
-						var rsa = mkRSAPublic(aesobjPK.key);
+						var rsa = mkRSAPublic(mainObj.publicKey);
 
-
-						
+						console.warn(d.piece_request_findbucket);
 						// Get the real bucket AES and decrypt with fastkey. DO NOT USE aesENC as we do not know if it was accepted
-						var bucketaes= aes_decrypt(fastkey.fastkey1, d.piece_request_findbucket.bucketaes);
-
+						var bucketaes= crypto_decryptFK1(d.piece_request_findbucket.bucketaes).message;
 
 						// Rsa encrypted key to decrypt private information for users
-						var rsabucketkey = {data: rsa.encrypt(bucketaes), revision :aesobjPK.revision };
-
-
+						var rsabucketkey = {data: rsa.encrypt(bucketaes), revision :mainObj.publicKeyRevision }; // TODO: HMAC needed?
 						var piecedata = "";
+
 
 						if (d.piece_request_single.value != null)
 						{
 							var piecedataRAW = decryptField(d.piece_request_single.value);
 							// Encrypt piece data
-							
 							var piecedata = aes_encrypt(bucketaes, piecedataRAW);
 						}
 
-						
-						// Now we have a key bucket. Now 
+						// Now we have a key bucket. Now
 						apl_request({
 						"requests": [{
 							"key" : key ,// Information Key, like "phone" or "hometown"
@@ -137,12 +130,7 @@ var view_settings_privateinfo_requests = view_subpage.extend({
 						});
 					}
 				}
-
-
-				
 			});
-
-
 		});
 	},
 	getData: function()
@@ -171,18 +159,14 @@ var view_settings_privateinfo = view_subpage.extend({
 		// Attach SaveButton click event.
 		$("#but_savePrivateProfile").click(function() {
 
+
 			NProgress.start();
-	
-
-
 			var fields =
-
 			{
 				phone: encryptField($("input[name=phone]").val()),
 				currentcity: encryptField($("input[name=currentcity]").val()),
 				mail: encryptField($("input[name=mail]").val()),
 			};
-
 
 			// First we need to get our buckets
 			apl_request({
@@ -201,25 +185,22 @@ var view_settings_privateinfo = view_subpage.extend({
 
 					var fastkey = getFastKey(0, 1);
 
-							
 					// Get aes key to encrypt information
-					var bucketaes = aes_decrypt(fastkey.fastkey1, this.bucketaes);
-					
+					var bucketaes = crypto_decryptFK1(this.bucketaes).message;
 
 					var tz = ""; // Empty value if empty field!
 
 					if ( $("input[name="+this.key+"]").val() != "")
-					tz =  aes_encrypt(bucketaes, $("input[name="+this.key+"]").val());
+					tz =  aes_encrypt(bucketaes, $("input[name="+this.key+"]").val()); // Encrypt the item (phone etc.) with bucket aes key
 
 					console.log("BUCKETAES IS "+bucketaes);
-					// Encrypt field for buckets here 
+					// Encrypt field for buckets here
 					// Add to array
 					bucketaesdir[this.key] = tz;
-				
+
 				});
 
-
-console.log("fields");
+				console.log("fields");
 				console.log(bucketaesdir);
 
 				apl_request({
@@ -240,35 +221,16 @@ console.log("fields");
 });
 function decryptField(encfield) {
 
-	if (encfield.value == "")
+	if (encfield== "")
 		return "";
 
+		return crypto_decryptFK1(encfield).message;
 
-	var aesEnc =  aes_decrypt(getFastKey(encfield.revision, 1).fastkey1, encfield.aesEnc);
-	return aes_decrypt(aesEnc, encfield.value);
 }
 function encryptField(fieldvalue) {
 
+	if (fieldvalue == "")
+		return "";
 
-
-	var aes = randomAesKey(32);
-
-
-	var value = "";
-
-	if (fieldvalue != "")
-	value = aes_encrypt(aes, fieldvalue);
-
-	var fkey = getCurrentFastKey(1);
-
-	var aesEnc = aes_encrypt(fkey.fastkey1, aes);
-
-	//alert("ENCRYPT "+ fieldvalue + " AES "+aes + " AESENC " + aesEnc + " VALUE q" + value + " fkey" + fkey );
-
-
-	return {
-		aesEnc: aesEnc,
-		value: value,
-		revision: fkey.revision
-	};
+	return crypto_encryptFK1(fieldvalue).message;
 }

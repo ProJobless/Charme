@@ -19,7 +19,7 @@
  
 \maketitle
 \textbf{Abstract}\\
-Basic cryptographic and network concepts for the distributed social networks Charme are explained here.
+Basic cryptographic procedures and other stuff for the distributed social networks Charme are explained here.
 
 \tableofcontents
  \newpage
@@ -117,8 +117,6 @@ http://security.stackexchange.com/questions/2202/lessons-learned-and-misconcepti
 http://dev.ionous.net/2009/03/hmac-vs-raw-sha-1.html}
 \end{enumerate}
 
-\subsection{Diffie-Hellman Key Exchange}
-In order to provide forward secrecy the users A and B have to generate a common session key, which if it is getting compromised does not reveal the long term key.
 
 \subsection{Crypto Implementation}
 There are a Javascript library called Gibberish AES for Javascript and Tom Wu's RSA Library for RSA providing the main functionality. Google wrote with its E2E project a better implementation of cryptographic algorithms which should replace the above ones as soon as possible. The long term goal is to use the W3C web crypo API however, if supported in all major browsers, as this one is more secure regarding key deletion from memory (RAM) and random number generation. 
@@ -252,12 +250,12 @@ This information is also signed using the senders private key.
 \subsubsection{DOS}
 Attackers can flood small servers with a lot of requests.
        \subsubsection{Replay attacks}
-          Server can provide old public/private keys for the user which have been compromised earlier.
+          Server can provide old public/private keys which have been compromised earlier for the user .
       \subsubsection{Malformed data}
       Attackers can send malformed data to clients which results in the client to producing an exception and therefore make Charme unusable for the user. Therefore malformed requests should be filtered by the client by checking for missing and correct typed values.
       
       \subsubsection{Spam}
-      
+      All posts from non-friends should be blocked. An exception are posts containing semantic information which should be searchable all over the web. Here we can either expand the search to friends server (efficient but may contain more spam) or even check friend of friend posts only (more computational power, but less spam).
  \section{Backend}
 \subsection{Technology Stack}
 On server side, PHP is used as an interpreter. The reason for PHP is that it has a wide community supporting it, as it is used by many other big websites like Facebook or Wordpress for example. \textit{ZeroMQ} is used to send socket messages and communicate between different PHP threads. \textit{Gearman} is necessary to execute background tasks like sending messages in the asynchronously. As a database, \textit{MongoDB} is used, as it is scalable and has the ability to directly store JSON object to the database.
@@ -278,6 +276,24 @@ All keys and tokens are generated randomly and encrypted with a passphrase deriv
 An application can now save data to the Charme server, once the triplet $A_i$, $T_i$ and Charme userId was added to the application.
 To perform an action A, the charme server sends a random value R to the application. The application generates the hash value $H(A|R|T_i)$ and sends it back to the server, where the hash is validated to maintain authenticity. Actions can be  STORE(key, value) and GET(key). Possible applications could be a note taking app or a calendar, saving data encrypted on the server for example.
 
+  \section{Data Sharing for the Internet of Things}
+  For Internet of Things (IoT) devices, it may be helpful to allow services or institutions to access your devices. Charme could handle the key management with using the already existing symmetric edgekeys $E$ (See section \ref{edge} for details) derived from the public key for the communication between service and device. (Figure \ref{iot})
+Of course, we can not use the edgekey e directly, as a evil device could 
+otherwise intercept all communication between the service and the user.
+Therefore we drive the key $K\_A$ in the following manner:
+$$
+R = Random 256bit key
+$$
+$$
+K\_A = Sha256(R || e)
+$$
+Afterwards we send $R$ to the service provider and $K\_A $ to the device.
+\begin{figure}[ht]
+	\centering
+  \includegraphics[width=120mm]{illustrations/iot.pdf}
+	\caption{K\_a, K\_b are keys shared between some service and the device. The data is encrypted so that only the user, the service and the device can see the data, but not the Charme server. Please note that for K\_b there must be some security mechanism  like timestamps to avoid replay attacks when the door is opened for example. \label{iot} }
+	\label{figContext}
+\end{figure}
   
 \section{Coding Guidelines}
 \begin{enumerate}
@@ -286,7 +302,7 @@ To perform an action A, the charme server sends a random value R to the applicat
 \item Not more than 1 blank line
 \item Properties on top, functions on bottom
 \end{enumerate}
-* I am very sorry for everytime I did not follow these guidelines.
+* I am very sorry that I did not follow these guidelines.
   \section{Technical Documentation}
   Please note that technical documentation has moved to the code itself. The following may be out of date:
 \subsection{Login}
@@ -298,20 +314,8 @@ To perform an action A, the charme server sends a random value R to the applicat
 To load the conversation preview list, \textit{messages\_get} is called. Each message has a message key. If a new message Key is generated, it is encrypted with the edgekey of the receiving users (Section \ref{edge}).
 
 \subsection{Edgekeys\label{edge}}
-For every kind of communication between two users we generate a symmetric edgekey, to increase performance as asymmetric encryption for every kind of message would require to much computational power.
-The edgekeys should change after a certain timespan. (1 week?). Currently the edgekey is generated after a key was added to a key directory in \textit{settings\_keymanager.js}, with come code looking like:
-\begin{lstlisting}
-var edgekey = 
-{
-	"revisionA": fastkey.revision,
-	"revisionB": d.key_get.revision,
-	"revision" :  fastkey.revision+d.key_get.revision,
-	"rsaEncEdgekey" : keypair.rsaEncKey,
-	"fkEncEdgekey" : keypair.randomKey,
-	"userId": userId
-};
-\end{lstlisting}
-The edgekeys are requested to decrypt from user B. Later they will be cached in local storage of user B to even gain the performance we have planned to gain.
+For every kind of communication between two users we generate a directed edgekey, to increase performance as asymmetric encryption for every kind of message would require to much computational power.
+The edgekeys should change after a certain timespan. (1 week?). Currently the edgekey is generated after a key was added to a key directory in \textit{settings\_keymanager.js}. The edgekeys are requested to decrypt from user B. Later they will be cached in local storage of user B to even gain the performance we have planned to gain.
 \subsection{Recryption of data}
 When the private key is updated, it is required to recrypt the data in the encrypted data storage. This is done in the function \textit{updateDataOK()} in \textit{settings\_keymanager.js}.
 

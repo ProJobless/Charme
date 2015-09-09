@@ -31,6 +31,22 @@ function keymanager_checkRevCounter(callback)
 
 
 function updateDataOK() {
+	/*
+		This is the function responsible for decryption with the old passphrase and encryption with the new passphrase after a key was
+		compromised. When this function is executed, the connection between
+		client and server must be safe (No Man in the middle!) and the server must
+		be trusted! The idea is that if a key is compromised, but the corresponding data on the server
+		has not been leaked yet, there is time to reencrypt the data with a new passphrase,
+		so the old passphrase becomes useless.
+
+		Basically we can recrypt all data encrypted with fastkey1 and fastkey2.
+		Such data includes:
+		- Profile Info (pieceBucketItems and pieces)
+		- Conversations
+		- Keydirectory containing the public keys of other users
+		- TODO: enrypted SimpleStorage
+		- TODO: messageKeys
+	*/
 
 	apl_request({
 	"requests": [{
@@ -45,42 +61,60 @@ function updateDataOK() {
 		var currentFastKey2 =  rsaKeyNewest.fastkey2;
 
 		var recryptedData = {
-			"conversations" : [],
+			"messageKeys" : [],
 			"keydirectory" : [],
 			"pieces" : [],
-			"piecebuckets" : []
+			"pieceBuckets" : [],
+			"pieceBucketItems": []
 		};
 
+		console.log("OLD:");
+		console.log(d.key_update_recrypt_getData.data);
+
+
 		// d.key_update_recrypt_getData.data.conversations
-		$.each(d.key_update_recrypt_getData.data.conversations, function(index, item) {
+		$.each(d.key_update_recrypt_getData.data.messageKeys, function(index, item) {
 
 			//if (this.revision < rsaKeyNewest.revision)
+
+			if (this.key.userId==this.owner)
 			{
-				var rsakey = getKeyByRevision(this.revision).rsa.rsa;
 
-				var newAesTemp = crypto_rsaDecrypt(this.aesEnc, rsakey);
-				var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
+				var rsakey = getKeyByRevision(this.key.revisionB).rsa.rsa;
+				var edgekey = crypto_rsaDecrypt(this.key.rsaEncEdgekey, rsakey);
 
-				recryptedData["conversations"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
+				if (edgekey == null)
+					console.warn("Edgekey is null with revision "+this.key.revisionB+" and key "+ this.key.rsaEncEdgekey);
+				else {
+					console.log("Edgekey is not null");
+					var edgekeyNew = crypto_rsaEncrypt(edgekey, rsaKeyNewest.rsa.rsa);
+					recryptedData["messageKeys"].push({id: this._id.$id, rsaEncEdgekey: edgekeyNew, revisionB: rsaKeyNewest.revision });
+				}
 			}
 		});
 
 		$.each(d.key_update_recrypt_getData.data.pieces, function(index, item) {
 
 			//if (this.value.revision < rsaKeyNewest.revision)
+			if (item.value != "")
 			{
-				var fastkey = getFastKey(this.value.revision, 1);
-
-
-
-				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value.aesEnc);
-
-
-
-				var newAesEnc = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
-				recryptedData["pieces"].push({id: this._id.$id, aesEnc: newAesEnc, revision: rsaKeyNewest.revision });
+				var msgObj = crypto_decryptFK1(item["value"]);
+				var msgObjNew = crypto_encryptFK1(msgObj.message, 0);
+				recryptedData["pieces"].push({id: item._id.$id, value: msgObjNew.message});
 			}
 		});
+
+		$.each(d.key_update_recrypt_getData.data.pieceBuckets, function(index, item) {
+
+			//if (this.value.revision < rsaKeyNewest.revision)
+			if (item.value != "")
+			{
+				console.log(item.bucketaes);
+				var bucketaes = crypto_recryptFK1(item.bucketaes).message;
+				recryptedData["pieceBuckets"].push({id: item._id.$id, bucketaes: bucketaes});
+			}
+		});
+
 
 
 		$.each(d.key_update_recrypt_getData.data.keydirectory, function(index, item) {
@@ -88,21 +122,19 @@ function updateDataOK() {
 			//if (this.fkrevision < rsaKeyNewest.revision)
 			{
 
-				var fastkey = getFastKey(this.fkrevision, 1);
-				var newAesTemp = aes_decrypt(fastkey.fastkey1, this.value);
-				var newValue = aes_encrypt(rsaKeyNewest.fastkey1, newAesTemp);
-				var edgekeyTemp = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
-				var edgekeyNew =  aes_encrypt(rsaKeyNewest.fastkey1, edgekeyTemp);
-
-				var rsaKey = $.parseJSON(newAesTemp);
-
+				// Two  things  to update here:
+				// 1. edgekey with fk1
+				// 2. hmac
+				var obj = item.key.obj;
+				var edgeKeyPlain = crypto_decryptFK1(obj.edgekeyWithFK).message;
 				rsa = new RSAKey();
-				rsa.setPublic(rsaKey.key.n, rsaKey.key.e);
-				rsaEncKey = rsa.encrypt(edgekeyTemp);
+				rsa.setPublic(obj.publicKey.n, obj.publicKey.e);
 
-				//console.log(newAesTemp);
-				//var newAesEnc = crypto_rsaEncrypt(newAesTemp, rsaKeyNewest.rsa.rsa);
-				recryptedData["keydirectory"].push({rsaEncEdgekey: rsaEncKey, id: this._id.$id, fkEncEdgekey: edgekeyNew, value: newValue, revision: rsaKeyNewest.revision });
+				item.key.obj.edgekeyWithFK = crypto_recryptFK1(obj.edgekeyWithFK).message;
+				item.key.obj.edgekeyWithPublicKey =  rsa.encrypt(edgeKeyPlain);
+				item.key =  crypto_hmac_make(item.key.obj);
+
+				recryptedData["keydirectory"].push({key: item.key, id: this._id.$id });
 			}
 		});
 
@@ -131,7 +163,7 @@ function updateDataOK() {
 				console.log("UPDATED dir DATA:");
 				console.log({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
 
-				recryptedData["piecebuckets"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
+				recryptedData["pieceBucketItems"].push({id: this._id.$id, bucketkeyData: newAesEnc, revision: rsaKeyNewest.revision });
 				}
 				catch(exeption){
 					console.log("CRITICAL WARNING: ID "+this._id.$id+ "could not be recrypted: "+exeption);
@@ -140,8 +172,12 @@ function updateDataOK() {
 			}
 		});
 
+
+
+
 		console.log("RECRYPTED DATA IS");
 		console.log(recryptedData);
+
 
 		NProgress.start();
 
@@ -182,7 +218,7 @@ function updateData() {
 		var template = _.template(d, templateData);
 		apl_request({
 			"requests": [{
-					"id": "key_getAllFromDir"
+					"id": "key_getAllFromDir" // TODO: request can be deleted ,not needed anymore
 
 				}
 
@@ -195,14 +231,14 @@ function updateData() {
 				// Get fastkey1 of revision used here.
 
 				// This is the object we will send to the server later on
-				var updData = {
-					keys: [],
-					buckets: [],
-					messages: []
-				};
 
 				// Iterate to all keys and recrypt them.
-				$.each(d1.key_getAllFromDir.value, function(index, item) {
+				/*	var updData = {
+						keys: [],
+						buckets: [],
+						messages: []
+					};
+$.each(d1.key_getAllFromDir.value, function(index, item) {
 
 
 					var fastkey = getFastKey(item.fkrevision, 1);
@@ -224,9 +260,9 @@ function updateData() {
 							newval: newval
 						});
 					}
-				});
+				});*/
 
-				console.log(updData);
+			//	console.log(updData);
 
 				// Register OK click event
 
@@ -383,7 +419,8 @@ function makeNewKey(userId) {
 										"pemkey":newpublickeyPEM
 									}, ]
 								}, function(d) {
-									alert("Update sucessful, will now logout. Next you should recrypt your data from this page on.");
+									alert("Update successful, will now logout. Next Step is to recrypt your data.");
+									ui_closeBox();
 								});
 							}
 						}
@@ -460,11 +497,11 @@ function requestNewKey(userId) {
 	}, function(d) {
 
 		// Get template
-		var key = d.key_get.publickey;
+		var publicKeyObject = d.key_get.publickey;
 
 		$.get("templates/box_requestkey.html", function(d2) {
-
-			var text = CryptoJS.SHA256(key.n).toString(CryptoJS.enc.Base64);
+			console.log(publicKeyObject);
+			var text = CharmeModels.Keys.buildFingerprint(publicKeyObject);
 
 			// Setup the popup html template
 			var templateData = {
@@ -483,19 +520,16 @@ function requestNewKey(userId) {
 				// This is one of Charmes symmetric key only known by the user, not by the server
 				var fastkey = getFastKey(0, 1);
 
-				// Build key hash
-				var e_key = CharmeModels.Keys.mapDirectoryKey(userId);
-
 				apl_request({
 					"requests": [{
 						"id": "key_getFromDir",
-						"key": e_key
+						"userId": userId
 					}, ]
 				}, function(d3) {
 
-					if (d3.key_getFromDir.value != null) {
-						var oldValue = $.parseJSON(aes_decrypt(fastkey.fastkey1, d3.key_getFromDir.value));
-						if (oldValue.key.n != key.n)
+						if (d3.key_getFromDir.key != null) {
+						var oldValue = d3.key_getFromDir.key.obj.publicKey; // TODO: check hmac!!
+						if (oldValue.n != publicKeyObject.n)
 							$("#keyChanged").show();
 						else
 							$("#keySame").show(); // If the key has not changed we do not need to update it!
@@ -503,18 +537,17 @@ function requestNewKey(userId) {
 						$("#keyNew").show();
 
 
+
 					$('#but_box_save').click(function() { // Register button event
 
 						var requestObject = CharmeModels.Keys.makeKeyStoreRequestObject(
-								key, // The public key
+								publicKeyObject, // The public key
 								d.key_get.revision, // Revision of public key
 								userId, // User id of currently logged in user
 								d.profile_get_name.info.firstname + ' ' + d.profile_get_name.info.lastname // The username
 							);
-							
-						apl_request({
-							// (publicKey, addedPublicKeyRevision,  currentUserId, username) -
 
+						apl_request({
 
 							"requests": [requestObject]
 },						function(d4) {
@@ -537,6 +570,7 @@ function requestNewKey(userId) {
 
 								newpostkeys = [];
 								$.each(d5.edgekey_recrypt_getData.data.postKeys, function(index, item) {
+									// TODO: aes_decryptWithFastKey1 is deprecated!!!
 									var postkey = aes_decryptWithFastKey1(item.fkEncPostKey, item.postData.signature.keyRevision);
 									newpostkeys.push({postId: this._id.$id, postKeyEnc: aes_encrypt(requestObject.fkEncEdgekey, postkey.message)});
 								});

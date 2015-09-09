@@ -39,14 +39,14 @@ var view_profilepage = view_page.extend({
 
 		if (typeof this.username === 'undefined') {
 
-			var hashes = crypto_buildHashKeyDir([container_main.currentView.options.userId]);
+
 
 
 		apl_request({
 				"requests": [
 					{
 						"id": "key_getMultipleFromDir", // To my server
-						"hashes": hashes
+						"users": [container_main.currentView.options.userId]
 					}]
 			}, function(d3) {
 
@@ -69,9 +69,9 @@ var view_profilepage = view_page.extend({
 
 					console.log(d3.key_getMultipleFromDir.value);
 
-					var keyval = decryptKeyDirValue(d3.key_getMultipleFromDir.value[0].value);
+				//	var keyval = decryptKeyDirValue(d3.key_getMultipleFromDir.value[0].key.obj.publicKey);
 
-					container_main.currentView.pubkey = keyval;
+					//container_main.currentView.pubkey = keyval;
 
 
 				}
@@ -368,8 +368,7 @@ view_profilepage_collection_show = view_subpage.extend({
 			]
 		}, function(d) {
 
-			console.log("DIS");
-			console.log(d);
+
 
 			if (container_main.currentView.options.userId == charmeUser.userId && that.options.collectionId!="context") {
 
@@ -403,9 +402,10 @@ view_profilepage_collection_show = view_subpage.extend({
 			//var edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey, pubkey.revision));
 
 			var edgeKey;
-			if (typeof d.edgekey_request !== 'undefined')
-			 edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey, d.edgekey_request.data.revisionB));
-
+			if (typeof d.edgekey_request !== 'undefined') {
+				console.warn(d.edgekey_request.data);
+			 edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.key.obj.edgekeyWithPublicKey, d.edgekey_request.data.key.obj.publicKeyRevision));
+}
 
 			$.each(d.collection_posts_get.items, function() {
 
@@ -414,26 +414,43 @@ view_profilepage_collection_show = view_subpage.extend({
 				var postKey = "";
 
 
-
 				if (this.postData.object.isEncrypted == 1)
 				{
-
 					$.each(d.collection_posts_get.postkeys, function() {
-
-					//	if (typeof this.postId === "undefined")
-					//		this.postId = this._id.$id;
-
 						if (postId == this.postId)
 							postKey = this.postKey;
-
-
-
 					});
+					postKey = aes_decrypt(edgeKey, postKey);
+
 				}
-				if (postKey != "")
+
+				if (postKey != "" || this.postData.object.isEncrypted != 1)
 				{
 
-				postKey = aes_decrypt(edgeKey, postKey);
+
+				var p2 = new control_postItem({
+					isCollectionView: true,
+					postKeyTemp: postKey,
+					postKey: postKey,
+					postObj: {
+						post: this.postData.object,
+						meta: {hasImage:this.hasImage},
+						postId: this._id.$id,
+						comments: this.comments,
+						commentCount: this.commentCount,
+						like: this.like,
+						likecount: this.likecount
+
+					},
+					el: $(".collectionPostbox"),
+
+				});
+				p2.render();
+
+
+			}
+			else {
+				console.warn("No post key found for post" +	this._id.$id+". Maybe the user has not checked your public key yet...");
 			}
 
 				/*
@@ -456,36 +473,7 @@ view_profilepage_collection_show = view_subpage.extend({
 				*/
 
 
-				var p2 = new control_postItem({
-					isCollectionView: true,
-					postKeyTemp: postKey,
-					postKey: postKey,
-					postObj: {
-						post: this.postData.object,
-						meta: {hasImage:this.hasImage},
-						postId: this._id.$id,
-						comments: this.comments,
-						commentCount: this.commentCount,
-						like: this.like,
-						likecount: this.likecount
 
-					},
-					/*counter: this.likecount,
-					comments: this.comments,
-					hasImage: this.hasImage
-					commentCount: this.commentCount,
-					like: this.likeit,
-					repost: this.repost,
-					postId: this._id.$id,
-					content: this.postData.object.content,
-					username: this.username,
-					userId: this.owner,
-					time: this.time.sec * 1000,
-					*/
-					el: $(".collectionPostbox"),
-
-				});
-				p2.render();
 
 
 
@@ -669,7 +657,9 @@ var view_profilepage_collection = view_subpage.extend({
 
 	postRender: function() {
 
-
+		// Only allow to create new collections on own profile
+		if (container_main.currentView.options.userId != charmeUser.userId)
+			$('#but_addNewCollection').hide();
 
 		$(".profile_name").text(container_main.currentView.username);
 
@@ -890,6 +880,7 @@ var view_profilepage_info = view_subpage.extend({
 						} else if (this.bucketaes != undefined) {
 							// bucketaes, bucketrsa, piecedata
 
+
 							var key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
 
 
@@ -901,11 +892,12 @@ var view_profilepage_info = view_subpage.extend({
 							var aes = checkCache(key);
 
 							if (aes == null) {
-
-								key1 = mkRSA(getKeyByRevision(that2.bucketrsa.revision).rsa.rsa);
-								aes = key1.decrypt(that2.bucketrsa.data); // get aes key for decrypting piecedata
-
-
+								try {
+									aes = key1.decrypt(that2.bucketrsa.data); // get aes key for decrypting piecedata
+								}
+								catch(err) {
+									console.warn("Could not decrypt bucket key with RSA: "+err +"\n\n CHIPERTEXT DATA WAS: "+that2.bucketrsa.data);
+								}
 							}
 
 

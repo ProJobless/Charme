@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.7.9)  5 AUG 2015 16:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.7.9)  8 SEP 2015 22:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -578,7 +578,11 @@ File: lstmisc.sty 2014/03/04 1.5c (Carsten Heinz)
 File: listings.cfg 2014/03/04 1.5c listings configuration
 ))
 Package: listings 2014/03/04 1.5c (Carsten Heinz)
- (./main.aux)
+ (./main.aux
+
+LaTeX Warning: Label `figContext' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
@@ -596,8 +600,7 @@ LaTeX Font Info:    ... okay on input line 18.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 18.
-
-(/usr/share/texlive/texmf-dist/tex/latex/lm/t1lmr.fd
+ (/usr/share/texlive/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 \AtBeginShipoutBox=\box31
@@ -734,61 +737,72 @@ Underfull \hbox (badness 10000) in paragraph at lines 114--116
 202 / lessons -[] learned -[]
  []
 
-[5] <eds.pdf, id=238, 257.91585pt x 124.53975pt>
+[5] <eds.pdf, id=239, 257.91585pt x 124.53975pt>
 File: eds.pdf Graphic file (type pdf)
  <use eds.pdf>
-Package pdftex.def Info: eds.pdf used on input line 132.
+Package pdftex.def Info: eds.pdf used on input line 130.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
  [6 <./eds.pdf>]
-<illustrations/fingerprint.png, id=306, 440.64626pt x 286.06876pt>
+<illustrations/fingerprint.png, id=307, 440.64626pt x 286.06876pt>
 File: illustrations/fingerprint.png Graphic file (type png)
 
 <use illustrations/fingerprint.png>
-Package pdftex.def Info: illustrations/fingerprint.png used on input line 171.
+Package pdftex.def Info: illustrations/fingerprint.png used on input line 169.
 (pdftex.def)             Requested size: 256.0748pt x 166.25172pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--179
+
+ []
+
 
 Underfull \hbox (badness 10000) in paragraph at lines 180--181
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 182--183
-
- []
-
 [7] [8 <./illustrations/fingerprint.png>]
-<pubkey.pdf, id=325, 257.91585pt x 218.16658pt>
+<pubkey.pdf, id=327, 257.91585pt x 218.16658pt>
 File: pubkey.pdf Graphic file (type pdf)
  <use pubkey.pdf>
-Package pdftex.def Info: pubkey.pdf used on input line 212.
+Package pdftex.def Info: pubkey.pdf used on input line 210.
 (pdftex.def)             Requested size: 257.9152pt x 218.16605pt.
- [9 <./pubkey.pdf>] <prvInfo.pdf, id=344, 257.91585pt x 124.53975pt>
+ [9 <./pubkey.pdf>] <prvInfo.pdf, id=346, 257.91585pt x 124.53975pt>
 File: prvInfo.pdf Graphic file (type pdf)
  <use prvInfo.pdf>
-Package pdftex.def Info: prvInfo.pdf used on input line 230.
+Package pdftex.def Info: prvInfo.pdf used on input line 228.
 (pdftex.def)             Requested size: 257.9152pt x 124.53943pt.
 
 [10 <./prvInfo.pdf>] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 293--297
+<illustrations/iot.pdf, id=371, 511.31165pt x 448.89359pt>
+File: illustrations/iot.pdf Graphic file (type pdf)
+
+<use illustrations/iot.pdf>
+Package pdftex.def Info: illustrations/iot.pdf used on input line 293.
+(pdftex.def)             Requested size: 341.43306pt x 299.76395pt.
+ [12]
+Underfull \hbox (badness 10000) in paragraph at lines 309--313
 
  []
 
-[12]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 325.
- [13]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 325.
+[13 <./illustrations/iot.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 329.
+ [14]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 329.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 325.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 325.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 329.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 329.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 1150076D8C3591BA41818248B6DB0860;2400.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 325.
+(rerunfilecheck)             Checksum: 80B34766E51C7C3B089FDBAFC45FA4DF;2397.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 329.
  ) 
 Here is how much of TeX's memory you used:
- 9639 strings out of 495025
- 139754 string characters out of 6181516
- 259025 words of memory out of 5000000
- 12624 multiletter control sequences out of 15000+600000
+ 9637 strings out of 495025
+ 139733 string characters out of 6181516
+ 257521 words of memory out of 5000000
+ 12629 multiletter control sequences out of 15000+600000
  62402 words of font info for 59 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  36i,8n,38p,794b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -806,10 +820,10 @@ usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/share/texlive
 m/lmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (13 pages, 435890 bytes).
+Output written on main.pdf (14 pages, 453607 bytes).
 PDF statistics:
- 466 PDF objects out of 1000 (max. 8388607)
- 401 compressed objects within 5 object streams
- 90 named destinations out of 1000 (max. 500000)
- 322 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 479 PDF objects out of 1000 (max. 8388607)
+ 408 compressed objects within 5 object streams
+ 82 named destinations out of 1000 (max. 500000)
+ 327 words of extra memory for PDF output out of 10000 (max. 10000000)
 

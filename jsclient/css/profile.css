@@ -10,7 +10,7 @@
 	font-weight: normal;
 	display: block;
 }
-ul.featuredCollections 
+ul.featuredCollections
 {
 	list-style-type: none;
 	padding: 0;
@@ -20,7 +20,7 @@ ul.featuredCollections li .recbox
 {float:left;
 	width: 16px;
 	height: 16px;
-	
+
 	margin-right: 8px;
 	border:0;
 	display: inline-block;
@@ -121,6 +121,7 @@ position:relative;
 	border-top:1px silver solid;
 	vertical-align: top;
 
+
 }
 .aboutBox table{
 border-spacing: 0px;
@@ -135,12 +136,13 @@ width:100%;
 }
 .aboutBox table td.info
 {
+		 word-wrap: break-word;
 color:gray;
 width:75px;
 
 }
 
- 
+
 .collectionPostbox .collectionPost .top
 {
 	font-weight:bold;
@@ -156,7 +158,7 @@ color:grey;
 .collectionPost
 {
 
-	
+
 	padding:16px;
 	border-top:1px silver solid;
 
@@ -225,7 +227,7 @@ margin-top:  32px;
 
 .collection:active
 {
-	
+
 background-color: #efefef;
 }
 .collection:hover
@@ -234,10 +236,10 @@ background-color: #efefef;
 }
 .collection
 {
-	width:82px; 
+	width:82px;
 	height:82px;
 	color:gray;
-	
+
 	background-color: #fff;
 	margin:8px;
 	display:block;
@@ -249,10 +251,9 @@ background-color: #efefef;
 	overflow: hidden;
 	text-transform: uppercase;
 
-	  box-shadow:    inset      0 0 2px #aaa;
+	  box-shadow:          0 0 2px #aaa;
 
 
 
-	  
+
 }
-

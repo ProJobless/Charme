@@ -102,24 +102,18 @@ var view_settings_keymanager = view_subpage.extend({
 		jQuery.each(this.options.data.key_getAll.items, function(index, item) {
 			elementId++;
 
-			// Descrypt key directory value here
+
+			var text = item.key.obj.fingerprint;
 
 
+			var username =item.key.obj.username;
+			var userId = item.key.obj.publicKeyUserId;
 
-			// alert(passphrase);
-			var aesstr = aes_decrypt(fastkey.fastkey1, item.value);
+			hmac = " <span style='color:red'>HMAC Verification failed!</span>";
+			if (crypto_hmac_check(item.key))
+			hmac = "";
 
-			var aesobj = $.parseJSON(aesstr);
-
-
-			//var obj = aes_decrypt(passphrase, item.value);
-
-			var text = CryptoJS.SHA256(aesobj.key.n).toString(CryptoJS.enc.Base64);
-
-
-			var username = "test";
-			var userId = aesobj.userId;
-			var key = " - REVISION " + aesobj.revision + "<br>" + text;
+			var key = " - REVISION: " + item.key.obj.publicKeyRevision + "  "+hmac+ "<br>" + text;
 
 			$("#keys").append("<div id='key_" + elementId + "'><b>" + userId + "</b><span style='word-wrap: break-word;'>" + key + "</span></div><br>");
 

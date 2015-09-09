@@ -1,8 +1,17 @@
 TOP PRIORITY:
+- key updates!
+   - NOTIFY OTHERS!!!!
+   - where is fastkey1 used:
+   - MAKE SURE KEY REVSION ALSO SAVED WITH INTEGRITY PROTECTION!!!
+      -> make new edgekey for myself
+      -> adapt to crypto_encryptFK11: edgekeys ,keydirectory,  pieces, , piechebucketitems, postkeys!!
+      -> make recrypt
+      => re hmac  key directory sha256
+
 - better logout, see request.js, loggin out
 - test debian setup script
-- image upload in message not wokring
-- key updates!
+- smoother logout
+
 
 - 3. improve audience limiter for context items with signature  60 MIN BIB!!!
 - lmit collection audience when displaying collection.

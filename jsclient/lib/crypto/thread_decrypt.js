@@ -1,6 +1,5 @@
 /*
- 	decrypt aes asyncrounous
-
+ 	decrypts content asyncrounous
 */
 
 if((typeof alert) === 'undefined') {
@@ -16,11 +15,6 @@ importScripts("crypto-1.1.js");
 importScripts("hmac-sha256.js");
 importScripts("enc-base64-min.js");
 
-
 self.addEventListener('message', function(e) {
-
-console.log( "...."+ CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256("chypertext", "password")));
-self.postMessage(aes_decrypt(e.data.key, e.data.encData));
-
-
+  self.postMessage(aes_decrypt(e.data.key, e.data.encData)); // Send result back to main thread
 }, false);

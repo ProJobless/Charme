@@ -221,48 +221,31 @@ foreach ($data["requests"] as $item)
 
 		case "messages_get_sub":
 
-
 			// Important: apply changes also to message_get_sub_updates
 			$startSet = false;
 			if (isset($item["start"]) && $item["start"] != "-1")
 				$startSet = true;
 
-
 			$col = \App\DB\Get::Collection();
 
-
-			// Set read=true
-
-			// Only need conversationId at the beginning
-
-
-
-			if (isset($item["conversationId"]) && $item["conversationId"] != "")
+			if (isset($item["conversationId"]) && $item["conversationId"] != "") 	// Only need conversationId at the beginning
 				$selector = array("messageData.conversationId" =>  $item["conversationId"], "owner" => $_SESSION["charme_userid"]);
 			else // TODO:load newest conversation here...
 			{
-
-
-				 $mdbQuery = $col->messageGroups->find(array("owner" => $_SESSION["charme_userid"]))->limit(1)->sort(array("lastAction" => -1));
-
-				 foreach ($mdbQuery as $res2)
-				 {
-				$selector =  array("messageData.conversationId" =>  $res2["messageData"]["conversationId"], "owner" => $_SESSION["charme_userid"]);
+				$mdbQuery = $col->messageGroups->find(array("owner" => $_SESSION["charme_userid"]))->limit(1)->sort(array("lastAction" => -1));
+				foreach ($mdbQuery as $res2)
+				{
+						$selector =  array("messageData.conversationId" =>  $res2["messageData"]["conversationId"], "owner" => $_SESSION["charme_userid"]);
 				}
 				$item["conversationId"] = $res2["messageData"]["conversationId"];
-
 			}
 
 			$col->messageGroups->update($selector, array('$set' => array("read" => true, "counter" => 0)));
-			 $res = $col->messageGroups->findOne($selector);
-
-
+			$res = $col->messageGroups->findOne($selector);
 
 			// Total message count, -1 if no result provided
 			$count = -1; // (= undefined!)
-
 			// How many messages do we turn back?
-
 			$msgCount = 10;
 
 			if (isset($item["beforeMessageId"]))
@@ -291,14 +274,11 @@ foreach ($data["requests"] as $item)
 
 			if (isset($item["beforeMessageId"])) // Get all messages before a message given a messageId of this message
 			{
-
 				if ($item["beforeMessageId"] == "NO_MESSAGES_LOCALLY")
 				{
-
 				$count = $col->messages->count($sel);
 				$query = array_reverse(iterator_to_array(
-					$col->messages->find($sel)
-					->sort(array("message.object.time" => -1))->limit($limit), false));   //->skip($count-$limit)
+				$col->messages->find($sel)->sort(array("message.object.time" => -1))->limit($limit), false));   //->skip($count-$limit)
 				}
 				else
 				{
@@ -336,26 +316,17 @@ foreach ($data["requests"] as $item)
 					->skip($start)->limit($limit)
 
 				, false), "count" => $count, "revision" =>  $res["revision"], "usernames" =>  $res["messageData"]["usernames"], "receivers" => ($res["messageData"]["receivers"]), "conversationId" => $item["conversationId"]);
-
-
-
-
-			}
-
-
-
+		}
 
 		break;
+
 		case "messages_get_keys" :
 			clog("Session owner is:". $item["conversationId"]);
 			$col = \App\DB\Get::Collection();
 			$messageKeys  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
 			$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys, false));
-
-
-
-
 		break;
+
 		case "messages_get":
 
 				$col = \App\DB\Get::Collection();
@@ -1966,22 +1937,15 @@ foreach ($data["requests"] as $item)
 				if (!in_array($citem["key"], $keylist))
 				{
 
-
 					// Return with empty=true if no value specified
-					if ($citem["value"]["value"] == "")
+					if ($citem["value"] == "")
 						$finallist[] = array("key" => $citem["key"], "empty" => true);
 					else
 					$finallist[] = array("key" => $citem["key"]);
 				}
 			}
 
-
-
-
-
 			// Add if not in final list
-
-
 
 			$returnArray[$action] = array("items" => $finallist);
 
@@ -2019,7 +1983,7 @@ foreach ($data["requests"] as $item)
 
 
 
-			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"], "key" => array('$in' => $item["hashes"])), array('key','value'));
+			$cursor = $col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"], "key.obj.publicKeyUserId" => array('$in' => $item["users"])));
 
 
 
@@ -2033,16 +1997,9 @@ foreach ($data["requests"] as $item)
 		case "key_getFromDir":
 
 			// keydirectory contains fastkey1 encrypted public keys in form key [ n, e], userId, revision
-					$col = \App\DB\Get::Collection();
-
-
-			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key" => $item["key"]), array('value'));
-
-
-			$returnArray[$action] = array("value" => $cursor["value"]);
-
-
-
+			$col = \App\DB\Get::Collection();
+			$cursor = $col->keydirectory->findOne(array("owner"=> $_SESSION["charme_userid"], "key.obj.publicKeyUserId" => $item["userId"]));
+			$returnArray[$action] = array("key" => $cursor["key"]);
 
 		break;
 
@@ -2050,12 +2007,12 @@ foreach ($data["requests"] as $item)
 		case "edgekeys_byUserIds" :
 			$item["userIdList"] = array_unique($item["userIdList"]);
 			$col = \App\DB\Get::Collection();
-			$returnArray = iterator_to_array($col->edgekeys->find(array("owner" => $_SESSION["charme_userid"], 'newest' => true, 'userId' => array('$in' => $item["userIdList"]))), false);
+			$returnArray = iterator_to_array($col->keydirectory->find(array("owner" => $_SESSION["charme_userid"], 'newest' => true, 'key.obj.publicKeyUserId' => array('$in' => $item["userIdList"]))), false);
 			if (Count($item["userIdList"]) != Count($returnArray)) // Some keys were not found, array_uniqu removes duplicates in array
 			{
 				$diffarray = []; // Contains the userIds where a key was found
 				foreach ($returnArray as $key) {
-				$diffarray[] = $key["userId"];
+				$diffarray[] = $key["key"]["obj"]["publicKeyUserId"];
 
 				}
 				$returnArray[$action] = array("status" => "KEYS_NOT_FOUND", "users" => array_diff($item["userIdList"], $diffarray));
@@ -2088,7 +2045,7 @@ foreach ($data["requests"] as $item)
 
 
 
-		  	$retList = $col->edgekeys->find(array("owner" => $_SESSION["charme_userid"],  'userId' => array('$in' => $finalList), "newest" => true));
+		  	$retList = $col->keydirectory->find(array("owner" => $_SESSION["charme_userid"],  'key.obj.publicKeyUserId' => array('$in' => $finalList), "newest" => true));
 
 
 
@@ -2105,7 +2062,7 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 
 			// Store key hash value in signature keydirectory which is used to verify signatures and contains all revisions
-			$cursor = $col->keydirectory_signatures->update(
+		/*	$cursor = $col->keydirectory_signatures->update(
 				array("owner" => $_SESSION["charme_userid"],
 					"key" => $item["key"]),
 
@@ -2113,47 +2070,32 @@ foreach ($data["requests"] as $item)
 				array("fkrevision" => $item["fkrevision"], "keyhash" => $item["keyhash"], "keyhash_revision" =>  $item["pubKeyRevision"])
 
 				, array("upsert" => true));
-
+*/
 			// Store key in owner Directory which is used to get thew public key when writing a message
+			if ($col->keydirectory->count(array("owner" => $_SESSION["charme_userid"],
+			 "key.obj.publicKeyUserId" => $item["key"]["obj"]["publicKeyUserId"],"key.obj.revisionSum" => $item["key"]["obj"]["revisionSum"] )) == 0) {
+
+
+			$col->keydirectory->update(array("owner" => $_SESSION["charme_userid"],
+			 "key.obj.publicKeyUserId" => $item["key"]["obj"]["publicKeyUserId"]),
+			 array('$set' => array("newest" => false)), array("multiple" => true));
+
 			$cursor = $col->keydirectory->update(
 
 			array("owner" => $_SESSION["charme_userid"],
-					"key" => $item["key"])
+					"key.obj.revisionSum" => $item["key"]["obj"]["revisionSum"],
+ "key.obj.publicKeyUserId" => $item["key"]["obj"]["publicKeyUserId"])
 				, array(
 					"owner" => $_SESSION["charme_userid"],
-					"userId" => $item["userId"],
-					"fkrevision" => $item["fkrevision"],
 					"key" => $item["key"],
-					"username" => $item["username"],
-					"value" => $item["value"],
-					"rsaEncEdgekey" => $item["rsaEncEdgekey"],
-					"fkEncEdgekey" => $item["fkEncEdgekey"],
-					"pubKeyRevision" => $item["pubKeyRevision"]
-
+					"newest" => true
 					), array("upsert" => true));
 
-
-			$item["edgekey"]["owner"] = $_SESSION["charme_userid"];
-			$item["edgekey"]["newest"] = true;
-
-			if ($col->edgekeys->count(array("revision" => $item["edgekey"]["revision"],
-			 "owner" => $_SESSION["charme_userid"],
-			"userId" => $item["edgekey"]["userId"]))<1)
-			{
-				$col->edgekeys->update(array("owner" => $_SESSION["charme_userid"],
-				 "userId" => $item["edgekey"]["userId"]),
-				 array('$set' => array("newest" => false)), array("multiple" => true));
-
-				$col->edgekeys->update(
-					array("revision" => $item["edgekey"]["revision"],
-					"owner" => $_SESSION["charme_userid"],
-					"userId" => $item["edgekey"]["userId"]),
-					$item["edgekey"], array("upsert" => true));
-			}
-
 			$returnArray[$action] = array("status" => "OK");
-
-
+		}
+		else {
+				$returnArray[$action] = array("status" => "OK", "noUpdate"=> true);
+		}
 
 
 		break;
@@ -2164,7 +2106,7 @@ foreach ($data["requests"] as $item)
 
 
 					$col = \App\DB\Get::Collection();
-			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('value')), false);
+			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array('key')), false);
 
 
 
@@ -2180,8 +2122,6 @@ foreach ($data["requests"] as $item)
 			// CORS is enabled here
 			case "key_get":
 
-
-				clog2($item);
 				// Return public key and revision
 				$col = \App\DB\Get::Collection();
 
@@ -2239,13 +2179,16 @@ foreach ($data["requests"] as $item)
 
 			foreach ($item["recryptedData"] as $key => $value) {
 
-				if ($key == "conversations")
+				if ($key == "messageKeys")
 				{
 					foreach ($value as $key2 => $value2) {
 
 
 						// got from JSON: id, aesEnc, revision
-						$col->conversations->update(array("receiver" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("aesEnc" => $value2["aesEnc"], "revision" => $value2["revision"])));
+						$col->messageKeys->update(
+						array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("key.rsaEncEdgekey" =>  $value2["rsaEncEdgekey"]	, "key.revisionB" => $value2["revisionB"]))
+
+						);
 
 					}
 				}
@@ -2255,8 +2198,7 @@ foreach ($data["requests"] as $item)
 
 						// id,revision,value
 
-						$col->keydirectory->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("value" => $value2["value"], "fkrevision" => $value2["revision"], "rsaEncEdgekey" => $value2["rsaEncEdgekey"],
-					"fkEncEdgekey" => $value2["fkEncEdgekey"])));
+						$col->keydirectory->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("key" => $value2["key"])));
 
 					}
 				}
@@ -2265,12 +2207,23 @@ foreach ($data["requests"] as $item)
 					foreach ($value as $key2 => $value2) {
 
 						// Update here....
-						$col->pieces->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("value.aesEnc" => $value2["aesEnc"], "value.revision" => $value2["revision"])));
+						$col->pieces->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("value" => $value2["value"])));
 
 
 					}
 				}
-				else if ($key == "piecebuckets")
+				else if ($key == "pieceBuckets")
+				{
+					foreach ($value as $key2 => $value2) {
+
+						// got from json: bucketkeyData,id,revision
+						$col->pieceBuckets->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("bucketaes" => $value2["bucketaes"])));
+
+					}
+				}
+
+
+				else if ($key == "pieceBucketItems")
 				{
 					foreach ($value as $key2 => $value2) {
 
@@ -2300,24 +2253,22 @@ foreach ($data["requests"] as $item)
 			$cursor = iterator_to_array($all, false);
 			$data["pieceBucketItems"] = $cursor;
 
+			$all = $col->pieceBuckets->find(array("owner" => $_SESSION["charme_userid"]), array("bucketaes", "_id"));
+			$cursor = iterator_to_array($all, false);
+			$data["pieceBuckets"] = $cursor;
 
-			// pieces.value.aesEnc, pieces.value.revision   -> MY DATA
 
 			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $_SESSION["charme_userid"]), array('value', 'key', "_id")), false);
 			$data["pieces"] = $cursor;
 
-			$cursor = iterator_to_array($col->conversations->find(array("receiver"=> $_SESSION["charme_userid"]), array('aesEnc', "revision", "_id")), false);
-			$data["conversations"] = $cursor;
+			$cursor = iterator_to_array($col->messageKeys->find(array("owner"=> $_SESSION["charme_userid"]), array('key', "_id", "revision", "owner")), false);
+			$data["messageKeys"] = $cursor; // recrypt rsaEncEdgekey with new private rsa key!!!
 
-			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array("rsaEncEdgekey", "fkEncEdgekey", 'value',  "_id", "fkrevision")), false);
 
+			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array("key", "_id")), false);
 			$data["keydirectory"] = $cursor;
 
 
-			// keydirectory, conversations!
-
-
-			// Recrypt key directory here!
 
 			$returnArray[$action] =  array("SUCCESS" => true, "data" => $data);
 
@@ -2794,16 +2745,12 @@ foreach ($data["requests"] as $item)
 			// TODO: check access here.
 
 			$col = \App\DB\Get::Collection();
-
-			$query = array("owner" => $item["publicKeyOwner"], "userId" => $item["privateKeyOwner"]);
+			$query = array("owner" => $item["publicKeyOwner"], "key.obj.publicKeyUserId" => $item["privateKeyOwner"]);
 
 			if ($item["revision"] != 0)
-				$query["revision"] = $item["revision"];
+				$query["key.obj.revisionSum"] = $item["revision"];
 
-
-			$result = $col->edgekeys->find($query)->sort(array("revision" => -1))->limit(1);
-
-
+			$result = $col->keydirectory->find($query)->sort(array("key.obj.revisionSum" => -1))->limit(1);
 			foreach ($result as $resItem)
 			{
 				$returnArray[$action] = array("data" => $resItem);
@@ -3005,8 +2952,13 @@ foreach ($data["requests"] as $item)
 
 					$res2 = $col->followers->find(array("collectionId" => new MongoId($item["postData"]["object"]["collectionId"]) ));
 
+	 				clog("33333 colid:".$item["postData"]["object"]["collectionId"]);
+
 					foreach ($item["keys"] as $userkey)
 					{
+
+
+
 						// Insert Keys into db.
 						$col->postkeys->insert(array(
 							"postId" => $content["_id"]->__toString(),
@@ -3041,6 +2993,7 @@ foreach ($data["requests"] as $item)
 
 					foreach ($res2 as $resItem)
 					{
+
 						/*clog("REVISION ARE");
 		clog("FOLLOWER IS ".$revisions[$resItem["follower"]]);*/
 						//if (isset($revisions[$resItem["follower"]]))

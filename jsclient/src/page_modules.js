@@ -573,7 +573,7 @@ var view_register = view_page.extend({
         // The second request adds our own public key to the key directory
         CharmeModels.Keys.makeKeyStoreRequestObject(
             publicKey.publickey,  // The public key consiting of n and e
-            0,                    // Revision of public key
+            1,                    // Revision of public key
             userid,               // User id of currently logged in user
             username              // The username
         )
@@ -855,18 +855,20 @@ control_postField = Backbone.View.extend({
       jQuery.each(edgekeys, function() {
 
         var fastkey = getFastKey(0, 1);
-        var edgekey = aes_decrypt(fastkey.fastkey1, this.fkEncEdgekey);
-        var postKeyEnc = aes_encrypt(edgekey, postKey);
+        var edgekey = crypto_decryptFK1(this.key.obj.edgekeyWithFK).message;
 
-        fkEncPostKey = aes_encrypt(fastkey.fastkey1, postKey);
+        var postKeyEnc = aes_encrypt(edgekey, postKey); // TODO: add integrity protection for fastkey revision
+
+        fkEncPostKey = crypto_encryptFK1(postKey);
 
         keys.push({
-          userId: this.userId,
+          userId: this.key.obj.publicKeyUserId,
           key: postKeyEnc,
-          revisionB: this.revisionB,
-          edgeKeyRevision: this.revision
+          revisionB: this.key.obj.publicKeyRevision,
+          edgeKeyRevision: this.key.obj.revisionSum
         });
-        if (this.userId == charmeUser.userId)
+
+        if (this.key.obj.publicKeyUserId == charmeUser.userId)
           myPostKey = postKey;
 
         //this.fkEncEdgekey
@@ -876,8 +878,10 @@ control_postField = Backbone.View.extend({
     }
 
 
-    if (this.options.collectionId == "") // If collection Seletor enabled, get value from collection selector
+    if (this.options.collectionId == "") {  // If collection Seletor enabled, get value from collection selector
       collectionId = $("#collectionSelector option:selected:first").data("collectionid");
+
+    }
     else
       collectionId = this.options.collectionId;
 
@@ -1801,7 +1805,6 @@ control_postItem = Backbone.View.extend({
     if (that.options.isCollectionView || that.options.liveAdd) {
       if (that.options.postKey != "") {
         if (this.options.postObj.post.isEncrypted) {
-
           that.options.postObj.post.content = aes_decrypt(that.options.postKeyTemp, that.options.postObj.post.content);
           that.options.postObj.post.postKey = that.options.postKeyTemp;
         }
@@ -1812,6 +1815,8 @@ control_postItem = Backbone.View.extend({
 
 
       var afterEdgeKey = function(edgeKey) {
+
+
         var postKey = aes_decrypt(edgeKey, postObj.postKey);
         var text = aes_decrypt(postKey, postObj.post.content)
         that.options.postKey = postKey;
@@ -1834,17 +1839,15 @@ control_postItem = Backbone.View.extend({
             "privateKeyOwner": charmeUser.userId, // This is me
           }, ]
         }, function(data) {
-          // Decrypt public key with fk1 first
-          fk1 = getFastKey(0, 1);
-
-          var edgeKey = (crypto_rsaDecryptWithRevision(data.edgekey_request.data.rsaEncEdgekey, data.edgekey_request.data.revisionB));
-
+          console.log(data);
+          try {
+          var edgeKey = (crypto_rsaDecryptWithRevision(data.edgekey_request.data.key.obj.edgekeyWithPublicKey, data.edgekey_request.data.key.obj.publicKeyRevision));
           afterEdgeKey(edgeKey);
-
           storeCache(cacheKey, edgeKey);
-
-
+        }
+        catch(err) { console.warn("Error getting edgekey for "+that.options.postObj.post.author+": "+err.message);}
         }, "", that.options.postObj.post.author.split("@")[1]);
+
       }
     } else if (this.options.liveAdd && this.options.postObj.post.isEncrypted == 1) {
 

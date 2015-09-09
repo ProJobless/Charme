@@ -437,66 +437,41 @@
   CharmeModels.Keys = (function() {
     function Keys() {}
 
-    Keys.buildHash = function(key) {
-      return CryptoJS.SHA256(CryptoJS.SHA256(key.n) + CryptoJS.SHA256(key.e));
+    Keys.buildFingerprint = function(key) {
+      return CryptoJS.SHA256(key.n + key.e).toString(CryptoJS.enc.Base64);
     };
 
     Keys.makeRsaFkKeypair = function(publicKey) {
       var fastkey, randomKey, rk, rsa, rsaEncKey;
       randomKey = randomAesKey(32);
       fastkey = getFastKey(0, 1);
-      rk = aes_encrypt(fastkey.fastkey1, randomKey);
+      rk = crypto_encryptFK1(randomKey).message;
       rsa = new RSAKey();
       rsa.setPublic(publicKey.n, publicKey.e);
       rsaEncKey = rsa.encrypt(randomKey);
       return {
         rsaEncKey: rsaEncKey,
         "revision": fastkey.revision,
-        "randomKey": rk,
-        "randomKeyRaw": randomKey
+        "randomKey": rk
       };
-    };
-
-    Keys.mapDirectoryKey = function(userId) {
-      var dirkey, fastkey;
-      fastkey = getFastKey(0, 1);
-      dirkey = CryptoJS.SHA256(fastkey.fastkey1 + userId).toString(CryptoJS.enc.Base64);
-      return dirkey;
     };
 
     Keys.makeKeyStoreRequestObject = function(publicKey, addedPublicKeyRevision, publicKeyUserId, username) {
-      var e_value, edgekey, fastkey, keyhash, keypair, request;
-      fastkey = getFastKey(0, 1);
-      e_value = aes_encrypt(fastkey.fastkey1, JSON.stringify({
-        key: publicKey,
-        revision: addedPublicKeyRevision,
-        userId: publicKeyUserId
-      }));
-      keyhash = aes_encrypt_json(fastkey.fastkey1, {
-        revision: addedPublicKeyRevision,
-        hash: CharmeModels.Keys.buildHash(publicKey)
-      });
+      var e_value, keypair, request;
       keypair = CharmeModels.Keys.makeRsaFkKeypair(publicKey);
-      edgekey = {
-        "revisionA": fastkey.revision,
-        "revisionB": addedPublicKeyRevision,
-        "revision": fastkey.revision + addedPublicKeyRevision,
-        "rsaEncEdgekey": keypair.rsaEncKey,
-        "fkEncEdgekey": keypair.randomKey,
-        "userId": publicKeyUserId
-      };
+      e_value = crypto_hmac_make({
+        username: username,
+        revisionSum: addedPublicKeyRevision + keypair.revision,
+        publicKey: publicKey,
+        publicKeyUserId: publicKeyUserId,
+        publicKeyRevision: addedPublicKeyRevision,
+        edgekeyWithFK: keypair.randomKey,
+        edgekeyWithPublicKey: keypair.rsaEncKey,
+        fingerprint: CharmeModels.Keys.buildFingerprint(publicKey)
+      });
       request = {
         "id": "key_storeInDir",
-        "key": CharmeModels.Keys.mapDirectoryKey(publicKeyUserId),
-        "userId": publicKeyUserId,
-        "keyhash": keyhash,
-        "username": username,
-        "pubKeyRevision": addedPublicKeyRevision,
-        "fkrevision": fastkey.revision,
-        "rsaEncEdgekey": keypair.rsaEncKey,
-        "fkEncEdgekey": keypair.randomKey,
-        "value": e_value,
-        "edgekey": edgekey
+        "key": e_value
       };
       return request;
     };

@@ -5,33 +5,33 @@
 \BOOKMARK [3][-]{subsubsection.2.2.1}{AES-CBC }{subsection.2.2}% 5
 \BOOKMARK [3][-]{subsubsection.2.2.2}{RSA}{subsection.2.2}% 6
 \BOOKMARK [3][-]{subsubsection.2.2.3}{Further reading}{subsection.2.2}% 7
-\BOOKMARK [2][-]{subsection.2.3}{Diffie-Hellman Key Exchange}{section.2}% 8
-\BOOKMARK [2][-]{subsection.2.4}{Crypto Implementation}{section.2}% 9
-\BOOKMARK [2][-]{subsection.2.5}{Implementation}{section.2}% 10
-\BOOKMARK [2][-]{subsection.2.6}{Client server seperation}{section.2}% 11
-\BOOKMARK [2][-]{subsection.2.7}{Passphrase}{section.2}% 12
-\BOOKMARK [2][-]{subsection.2.8}{Verifying private keys}{section.2}% 13
-\BOOKMARK [3][-]{subsubsection.2.8.1}{Generating Fingerprints}{subsection.2.8}% 14
-\BOOKMARK [2][-]{subsection.2.9}{Preventing List and Message MITM Attacks}{section.2}% 15
-\BOOKMARK [2][-]{subsection.2.10}{Post encryption}{section.2}% 16
-\BOOKMARK [2][-]{subsection.2.11}{Message encryption}{section.2}% 17
-\BOOKMARK [2][-]{subsection.2.12}{Distributing private information}{section.2}% 18
-\BOOKMARK [2][-]{subsection.2.13}{Key Updates}{section.2}% 19
-\BOOKMARK [2][-]{subsection.2.14}{Possible Attack Vectors}{section.2}% 20
-\BOOKMARK [3][-]{subsubsection.2.14.1}{XSS}{subsection.2.14}% 21
-\BOOKMARK [3][-]{subsubsection.2.14.2}{DOS}{subsection.2.14}% 22
-\BOOKMARK [3][-]{subsubsection.2.14.3}{Replay attacks}{subsection.2.14}% 23
-\BOOKMARK [3][-]{subsubsection.2.14.4}{Malformed data}{subsection.2.14}% 24
-\BOOKMARK [3][-]{subsubsection.2.14.5}{Spam}{subsection.2.14}% 25
-\BOOKMARK [1][-]{section.3}{Backend}{}% 26
-\BOOKMARK [2][-]{subsection.3.1}{Technology Stack}{section.3}% 27
-\BOOKMARK [1][-]{section.4}{Search}{}% 28
-\BOOKMARK [2][-]{subsection.4.1}{Further reading}{section.4}% 29
-\BOOKMARK [1][-]{section.5}{Token Generation and API}{}% 30
-\BOOKMARK [1][-]{section.6}{Coding Guidelines}{}% 31
-\BOOKMARK [1][-]{section.7}{Technical Documentation}{}% 32
-\BOOKMARK [2][-]{subsection.7.1}{Login}{section.7}% 33
-\BOOKMARK [2][-]{subsection.7.2}{Messages}{section.7}% 34
-\BOOKMARK [2][-]{subsection.7.3}{Edgekeys}{section.7}% 35
-\BOOKMARK [2][-]{subsection.7.4}{Recryption of data}{section.7}% 36
-\BOOKMARK [1][-]{section.8}{Sources}{}% 37
+\BOOKMARK [2][-]{subsection.2.3}{Crypto Implementation}{section.2}% 8
+\BOOKMARK [2][-]{subsection.2.4}{Implementation}{section.2}% 9
+\BOOKMARK [2][-]{subsection.2.5}{Client server seperation}{section.2}% 10
+\BOOKMARK [2][-]{subsection.2.6}{Passphrase}{section.2}% 11
+\BOOKMARK [2][-]{subsection.2.7}{Verifying private keys}{section.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.7.1}{Generating Fingerprints}{subsection.2.7}% 13
+\BOOKMARK [2][-]{subsection.2.8}{Preventing List and Message MITM Attacks}{section.2}% 14
+\BOOKMARK [2][-]{subsection.2.9}{Post encryption}{section.2}% 15
+\BOOKMARK [2][-]{subsection.2.10}{Message encryption}{section.2}% 16
+\BOOKMARK [2][-]{subsection.2.11}{Distributing private information}{section.2}% 17
+\BOOKMARK [2][-]{subsection.2.12}{Key Updates}{section.2}% 18
+\BOOKMARK [2][-]{subsection.2.13}{Possible Attack Vectors}{section.2}% 19
+\BOOKMARK [3][-]{subsubsection.2.13.1}{XSS}{subsection.2.13}% 20
+\BOOKMARK [3][-]{subsubsection.2.13.2}{DOS}{subsection.2.13}% 21
+\BOOKMARK [3][-]{subsubsection.2.13.3}{Replay attacks}{subsection.2.13}% 22
+\BOOKMARK [3][-]{subsubsection.2.13.4}{Malformed data}{subsection.2.13}% 23
+\BOOKMARK [3][-]{subsubsection.2.13.5}{Spam}{subsection.2.13}% 24
+\BOOKMARK [1][-]{section.3}{Backend}{}% 25
+\BOOKMARK [2][-]{subsection.3.1}{Technology Stack}{section.3}% 26
+\BOOKMARK [1][-]{section.4}{Search}{}% 27
+\BOOKMARK [2][-]{subsection.4.1}{Further reading}{section.4}% 28
+\BOOKMARK [1][-]{section.5}{Token Generation and API}{}% 29
+\BOOKMARK [1][-]{section.6}{Data Sharing for the Internet of Things}{}% 30
+\BOOKMARK [1][-]{section.7}{Coding Guidelines}{}% 31
+\BOOKMARK [1][-]{section.8}{Technical Documentation}{}% 32
+\BOOKMARK [2][-]{subsection.8.1}{Login}{section.8}% 33
+\BOOKMARK [2][-]{subsection.8.2}{Messages}{section.8}% 34
+\BOOKMARK [2][-]{subsection.8.3}{Edgekeys}{section.8}% 35
+\BOOKMARK [2][-]{subsection.8.4}{Recryption of data}{section.8}% 36
+\BOOKMARK [1][-]{section.9}{Sources}{}% 37

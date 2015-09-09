@@ -3,16 +3,22 @@ function talks_encryptEdgekeys(edgeKeyList, messageKey) {
 
 	$.each(edgeKeyList, function(index, item) {
 
+		if (crypto_hmac_check(item.key)) {
 		// Encrypt message key with edgekey here.
-		var edgekey = aes_decryptWithFastKey1(item.fkEncEdgekey, 0);
-		var messageKeyEnc = aes_encrypt(edgekey.message, messageKey);
+		var edgekey = crypto_decryptFK1(item.key.obj.edgekeyWithFK).message;
+		var messageKeyEnc = aes_encrypt(edgekey, messageKey);
 
 		peopleMessageKeys.push({
 			messageKey: messageKeyEnc,
-			userId: item.userId,
-			rsaEncEdgekey: item.rsaEncEdgekey,
-			revisionB: item.pubKeyRevision
+			userId: item.key.obj.publicKeyUserId,
+			rsaEncEdgekey: item.key.obj.edgekeyWithPublicKey,
+			revisionB: item.key.obj.publicKeyRevision
 		});
+
+		}
+		else {
+			alert("CRITICAL ERROR: HMAC VERIFICATION OF PUBLIC KEY FAILED");
+		}
 
 
 	});

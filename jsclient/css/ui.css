@@ -160,7 +160,7 @@ position: relative;
 {
 	width: 48px;
 	height: 48px;
-	background-image:url(actions2.png);
+	background-image:url(actions2.svg);
 	display:inline-block;
 	cursor:pointer;
 }

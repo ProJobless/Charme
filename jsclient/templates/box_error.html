@@ -1,0 +1,16 @@
+
+
+
+<div style='max-width:400px'>
+<div style='padding:16px;'>
+  <%- rc.simpleMessage %>
+  <br>  <br>
+  <a onclick="$('#errorDetails').show(); $(this).hide();">Details</a>
+  <div id="errorDetails" style="display:none;">
+<%- rc.errorMessage %>
+</div>
+
+</div>
+<div class='boxMargin'>
+<a onclick="ui_closeBox()" class='button' >Close</a>
+</div></div>

@@ -294,14 +294,13 @@ $(function() {
 
                     // Do decrypt
                     $.each(d2.piece_store_get.items, function() {
-                        var key = getFastKey(this.value.revision, 1);
-                        var original = "";
+
                         try{
-                        var aes = aes_decrypt(key.fastkey1, this.value.aesEnc);
 
-                        var original = aes_decrypt(aes, this.value.value);
+                        var original = decryptField(this.value);
                         }catch(err){
-
+                            console.warn(this.value);
+                            console.warn(err);
                         }
                         d2.prvInfo[this.key] = original;
 
@@ -439,7 +438,7 @@ $(function() {
                     loginStatusCode: localStorage.getItem("loginStatusCode")
                 };
             }
-            localStorage.removeItem("loginStatus");
+            localStorage.removeItem("loginStatusCode");
 
             container_main.setCurrent(pa);
             pa.render();
