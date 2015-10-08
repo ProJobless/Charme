@@ -9,8 +9,8 @@
         android:id="@+id/icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-android:src="@drawable/circle"
-        android:layout_marginRight="8dp"
+
+        android:layout_marginRight="12dp"
 
         >
     </ImageView>
@@ -29,13 +29,14 @@ android:src="@drawable/circle"
             <TextView
                 android:id="@+id/label"
 
-                android:layout_marginTop="-4dp"
-                android:layout_width="wrap_content"
 
+                android:layout_width="wrap_content"
+                android:lines="1"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
-                android:text="adadasdsads"
+                android:text="adadasdsads adadasdsads addadasdsads addadasdsads addadasdsads addadasdsads addadasdsads addadasdsads adadasdsads "
                 android:layout_marginBottom="2dp"
-                android:textSize="20dp" />
+                />
 
             <TextView
                 android:id="@+id/submessage"
@@ -49,17 +50,14 @@ android:src="@drawable/circle"
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:background="#1A3C87"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView1"
-            android:textColor="#ffffff"
-            android:padding="5dp"
-        android:minWidth="24dp"
-        android:textSize="12dp"
-        android:gravity="center"
-android:textAlignment="gravity"
+            android:id="@+id/messagecounter"
+            android:textColor="@color/primary"
+
+
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0" />

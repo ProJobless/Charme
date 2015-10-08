@@ -6,11 +6,19 @@
         android:showAsAction="never"
         android:title="@string/action_settings"/>
 
+
+<!--
     <item
         android:id="@+id/action_online"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Online Version"/>
+        android:title="Online Version"/>-->
 
+
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="104"
+        android:showAsAction="never"
+        android:title="Logout"/>
 
 </menu>

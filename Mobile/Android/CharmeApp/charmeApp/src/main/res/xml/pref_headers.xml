@@ -2,14 +2,14 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header android:fragment="com.mschultheiss.charmeapp.SettingsActivity$GeneralPreferenceFragment"
+    <header android:fragment="com.mschultheiss.charmeapp.Controllers.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.mschultheiss.charmeapp.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.mschultheiss.charmeapp.Controllers.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
-    <header android:fragment="com.mschultheiss.charmeapp.SettingsActivity$DataSyncPreferenceFragment"
+    <header android:fragment="com.mschultheiss.charmeapp.Controllers.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

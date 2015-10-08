@@ -20,7 +20,9 @@ android {
 
 dependencies {
     compile project(':library')
-    compile project(':googleplayservices_lib')
+
     compile project(':androidSugarORM')
     compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:design:22.2.0'
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
 }

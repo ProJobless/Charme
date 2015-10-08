@@ -6,9 +6,12 @@
 
     <Button
         android:id="@+id/button1"
-        style="?android:attr/buttonStyleSmall"
+        android:textColor="@drawable/buttonmore"
+        android:background="#000000ff"
+        android:layout_marginTop="8dp"
+
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Show more..." />
+        android:text="..." />
 
 </LinearLayout>

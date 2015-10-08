@@ -295,13 +295,13 @@ view_subpage = Backbone.View.extend({
 
       var templateData = {};
 
-      if (that.getData != null) {
+      if (typeof that.getData !== "undefined") {
 
+          _.templateSettings.variable = "rc";
         templateData = that.getData();
 
-        _.templateSettings.variable = "rc";
-
       }
+      console.log();
       var template = _.template(d, templateData);
 
       // Problem: Selector may be okay, but element may have changed -> choose $el.selector in stead of el??
@@ -376,12 +376,17 @@ function setSCHeight() {
 }
 
 $(window).resize(function() {
+
   setSCHeight();
-  if (!isResponsive() &&  typeof container_main.currentView !== "undefined" && container_main.currentView.options.useSidebar) // Show or hid eSidebar on resize
-      $('.sbBeta').show();
-  else {
-      $('.sbBeta').hide();
-  }
+  if (  typeof container_main.currentView !== "undefined" &&  container_main.currentView != null) {
+    if (!isResponsive()
+    && container_main.currentView.options.useSidebar ) // Show or hid eSidebar on resize
+        $('.sbBeta').show();
+    else {
+        $('.sbBeta').hide();
+    }
+}
+
 });
 
 var view_notifications = view_page.extend({

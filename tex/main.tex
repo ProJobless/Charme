@@ -234,6 +234,13 @@ This information is also signed using the senders private key.
     When a private key or passphrase is compromised  it is necessary to recrypt the encryped data storage. In this case, all information are transmitted to the client, decryped with the current passphrase and encrypted with the new passhprase. The revision number for the public key increases afterwards.
 
   \subsection{Possible Attack Vectors}
+  
+  \subsubsection{MITM on Client Software}
+  The client software must be distributed with integrity protection. For example as a Cordova package. To use the client software on a third party server is very dangerous and only recommended for testing purposes! The server admin can possibility read all your data in this case, if the server sends you a malicious client software instead of the original one.
+  
+   There is also a new technology called sub resource integrity which can be used to validate Javascript and CSS resources (See \url{http://www.w3.org/TR/SRI/} and \url{http://githubengineering.com/subresource-integrity/}). Maybe they introduce some mechanism to validate a whole web page with a hash recommended by the majority of browser users and additionally located on a (Mozilla or Google) server. So lets keep an eye on that.
+
+  
    \subsubsection{XSS}
    One of the most critical attack vectors in Charme is Cross Site Scripting as with this technique private keys can be stolen.
    Therefore it is important to sanitize all displayed data from other people and servers. Never trust the server. For example imaging data is a JSON Object returned by the server:
@@ -276,6 +283,17 @@ All keys and tokens are generated randomly and encrypted with a passphrase deriv
 An application can now save data to the Charme server, once the triplet $A_i$, $T_i$ and Charme userId was added to the application.
 To perform an action A, the charme server sends a random value R to the application. The application generates the hash value $H(A|R|T_i)$ and sends it back to the server, where the hash is validated to maintain authenticity. Actions can be  STORE(key, value) and GET(key). Possible applications could be a note taking app or a calendar, saving data encrypted on the server for example.
 
+\section{Ideas}
+  \subsection{Location based Chats}
+  Idea: We save the GPS position $p_i = (x_i,y_i)$  every x seconds. After some time
+  we generate a vector $v = (x_0+x_1+x_2+..., y_0+y_1+y_2+...)$. Now we use a hash function $H$ to map the vector with a location accuracy defiend as $a$. 
+  $$
+  H(v) = (\lceil v^{(0)}/a \rceil +\lceil v^{(1)}/a \rceil )
+  $$
+  This will generate a unique key for each location. We save a trace of locations in the first place to detect a moving object such as a train, ship or bus.  However, the location sensors of the mobile device must be very accurate!
+  
+  
+  
   \section{Data Sharing for the Internet of Things}
   For Internet of Things (IoT) devices, it may be helpful to allow services or institutions to access your devices. Charme could handle the key management with using the already existing symmetric edgekeys $E$ (See section \ref{edge} for details) derived from the public key for the communication between service and device. (Figure \ref{iot})
 Of course, we can not use the edgekey e directly, as a evil device could 

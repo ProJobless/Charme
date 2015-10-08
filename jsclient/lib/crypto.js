@@ -298,7 +298,6 @@ function aes_decrypt_json(pass, obj)
 
 var AES_ALGORITHM_VERSION = 1;
 
-
 function aes_encrypt(pass, text)
 {
 

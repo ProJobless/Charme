@@ -432,18 +432,22 @@ $(function() {
                 template: "welcome",
                 noLogin: true
             });
+
+
             pa.getData = function() {
+                _.templateSettings.variable = "rc";
+
+                var code = localStorage.getItem("loginStatusCode");
+                  localStorage.removeItem("loginStatusCode");
                 return {
                     username: localStorage.getItem("userAutoComplete"),
-                    loginStatusCode: localStorage.getItem("loginStatusCode")
+                    loginStatusCode: code
                 };
             }
-            localStorage.removeItem("loginStatusCode");
+
 
             container_main.setCurrent(pa);
             pa.render();
-
-
 
         });
 
@@ -792,7 +796,9 @@ function logout(loginStatusCode) {
     silentLogout();
     container_guest.render();
     localStorage.setItem("loginStatusCode", loginStatusCode);
-    app_router.navigate("welcome", {trigger: true, replace: false});
+    location.href = "./";
+
+  //  app_router.navigate("welcome", {trigger: true, replace: false});
 }
 
 function delTemp() {

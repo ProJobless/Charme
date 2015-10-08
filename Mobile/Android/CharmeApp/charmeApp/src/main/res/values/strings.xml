@@ -15,5 +15,7 @@
     <string name="title_activity_image_viewer">Image</string>
     <string name="title_activity_about_page">About</string>
     <string name="title_activity_web_wrapper">Charme</string>
+    <string name="title_activity_new_conversation">New Conversation</string>
 
+    <string name="hello_world">Hello world!</string>
 </resources>

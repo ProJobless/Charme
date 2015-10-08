@@ -1191,8 +1191,11 @@ foreach ($data["requests"] as $item)
 				}
 
 
+					//clog2($item["localreceivers"], "locals:");
+
+
 				   // TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
-                $gcmpeople = $item["localreceivers"];
+                $gcmpeople = $item["allreceivers"];
                 $bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
                 $deviceIds = array();
                 foreach ($bucketCol as $citem)
@@ -1200,13 +1203,26 @@ foreach ($data["requests"] as $item)
                     $deviceIds[] = $citem["regId"];
                 }
 
+								clog2($deviceIds, "deviceids:");
+
+
+								clog2("arra people is",$item);
+
                 $gcmcontent = array("messageEnc" =>  $item["message"]["object"]["content"], "conversationId" => $item["message"]["object"]["conversationId"], "sendername" => $item["sendername"]);
 
                // if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
-              	{
-              		if ($CHARME_SETTINGS["DEBUG"])
+
+              	//	if (!$CHARME_SETTINGS["DEBUG"])
+
+
+						//	$deviceIds = 		array_filter($deviceIds);
+
+
+									// Returns 0 if no registration ids have been found
                 	$messageFromServerIfDebugIsOn = \App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
-                }
+									clog("send notify".$messageFromServerIfDebugIsOn);
+									clog2($deviceIds);
+
 
 
 

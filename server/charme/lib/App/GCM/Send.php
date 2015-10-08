@@ -11,18 +11,15 @@ class Send
 
 	public static function NotifyNew($registrationIDs, $payload)
 	{
-		if (Count($registrationIDs) < 1) // 
+		if (Count($registrationIDs) < 1) // No registration Id found
 			return 0;
-
 
 			global $CHARME_SETTINGS;			// Replace with real GCM browser / server API key from Google APIs
 			$apiKey = $CHARME_SETTINGS["GCM_APIKEY"];
 			// Replace with real client registration IDs, most likely stored in your database
-					
-			// Get ids in GCM Collection containing receiver list.
-			
 
-		
+			// Get ids in GCM Collection containing receiver list.
+
 			// Payload data to be sent
 			$data = array( 'message' => $payload);
 			// Set request URL to GCM endpoint
@@ -33,7 +30,7 @@ class Send
 			                'data'              => $data,
 			                );
 			// Set request headers (authentication and payload type)
-			$headers = array( 
+			$headers = array(
 			                    'Authorization: key=' . $apiKey,
 			                    'Content-Type: application/json'
 			                );
@@ -50,20 +47,7 @@ class Send
 			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 			// Set post data
 			curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
-
 			curl_setopt($ch, CURLOPT_USERAGENT, "curl");
-   			
-			// MAKE ASYNC:
-   			// curl_setopt($ch, CURLOPT_TIMEOUT, 1); 
-
-
-			//curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-			//curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1);
-
-
-
-
-
 
 			// Send the request
 			$result = curl_exec($ch);
@@ -71,10 +55,10 @@ class Send
 			// Close connection
 			curl_close($ch);
 			// Debug GCM response
-	
+
 			return $result;
 
-	} 
+	}
 
 
 }
