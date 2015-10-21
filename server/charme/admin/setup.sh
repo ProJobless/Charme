@@ -26,9 +26,11 @@ step2() {
 		apt-get install gearman
 		apt-get install gearman-job-server libgearman-dev
 		pecl install gearman-1.0.3
+		apt-get install mongodb
 		apt-get install libzmq-dev
 		pecl install zmq-beta
-
+		apt-get install pkg-config
+  	
 	fi
 
   if [[ ! -z $YUM_CMD ]]; then
@@ -36,13 +38,17 @@ step2() {
   elif [[ ! -z $APT_GET_CMD ]]; then
   echo -e "Please follow the instructions on http://docs.mongodb.org/ to install mongoDB on Debian."
   fi
-
-	read -r -p "Type y if you have installed mongoDB? [y]  " response
-	if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
-	then
-	    step3
-	else
-	    echo "Installation cancelled...."
+	
+	if [[ ! -z $YUM_CMD ]]; then
+		read -r -p "Type y if you have installed mongoDB? [y]  " response
+		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+		then
+		    step3
+		else
+		    echo "Installation cancelled...."
+		fi
+	elif [[ ! -z $APT_GET_CMD ]]; then
+		step3
 	fi
 }
 
@@ -77,6 +83,7 @@ step4() {
   pecl install gearman-1.0.3
   apt-get install libzmq-dev
   pecl install zmq-beta
+
   fi
 
   stepLast
@@ -85,7 +92,13 @@ step4() {
 stepLast() {
 	echo -e "---------------------------"
 	echo -e "Restarting Apache Server"
-	service httpd restart
+
+	  if [[ ! -z $YUM_CMD ]]; then
+		service httpd restart
+	  elif [[ ! -z $APT_GET_CMD ]]; then
+		service apache2 restart
+	  fi
+
 	sleep 1
 	echo -e "---------------------------"
 
@@ -100,7 +113,17 @@ stepLast() {
 }
 
 step1(){
-  echo -e "IMPORTANT: Please make sure you  are in superuser mode.\nWe are going to install a lot of packages now...\n "
+
+if [ "$EUID" -ne 0 ]
+  then   echo -e "ERROR: Please run in superuser mode\n "
+  exit
+else
+   step1b
+fi
+
+}
+
+step1b() {
 	read -r -p "Do you want to install Charme? [y/N]  " response
 	if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
 	then
