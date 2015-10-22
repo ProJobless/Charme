@@ -1,8 +1,10 @@
 package com.mschultheiss.charmeapp.Controllers;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -61,6 +63,8 @@ public class NewConversation extends ActionBarActivity {
 
     public void makeNewConversationRequest( List<PersonItem> people) {
 
+        setContentView(R.layout.loading_indicator); // Nice loading animation
+
         if (people.size() < 1) // No people selected ---> no conversation!
             return;
 
@@ -108,12 +112,22 @@ public class NewConversation extends ActionBarActivity {
         //
         // TODO: Step2
         //
-
+        int errorCounter = 0;
         for (PersonItem p : people) {
             peopleJSON.put(p.makeJSON());
             jsonReceivers.put(p.UserId);
-            jsonMessageKeys.put(p.makeCryptoObject(messageKey, NewConversation.this)); // Step 3
+
+            JSONObject json =  p.makeCryptoObject(messageKey, NewConversation.this);
+
+            if (json != null)
+            jsonMessageKeys.put(json
+                   ); // Step 3
+            else
+                errorCounter++;
         }
+
+        if (errorCounter != 0)
+            System.out.println("Some Errors occured!");
 
         // Step 4: Build final request to server
 
@@ -128,22 +142,30 @@ public class NewConversation extends ActionBarActivity {
             jsonMessageData.put("usernames", peopleJSON);
             jsonMessageData.put("receivers", jsonReceivers);
             r1.put("messageData", jsonMessageData);
+            System.out.println("JSON jsonMessageKeys IS:" + jsonMessageKeys.toString());
             r1.put("messageKeys", jsonMessageKeys);
 
             list.put(r1);
             object.put("requests", list);
         }
-        catch(Exception x) {}
+        catch(Exception x) {
+           x.printStackTrace();
+        }
+
+        System.out.println("JSON SENT IS:"+object.toString());
 
         new AsyncHTTP() {
             @Override
             protected void onPostExecute(String result) {
                 try {
+
                     final JSONObject jo = new JSONObject(result);
                     String messageId = jo.getJSONObject("message_distribute").getString("messageId");
-                    openTalkActivity("messageId");
+                    openTalkActivity(messageId);
                 }
                 catch(Exception x) {
+
+                    setContentView(R.layout.activity_new_conversation);
 
                 }
             }
@@ -171,6 +193,8 @@ public class NewConversation extends ActionBarActivity {
                 try {
 
                     setContentView(R.layout.activity_new_conversation);
+                    initButtons();
+
                     mAdapter = new PersonArrayAdapter(NewConversation.this, R.layout.activity_conversation_listitem, mPersonList);
                     mListView = (ListView)findViewById(R.id.listView);
                     mListView.setAdapter(mAdapter);
@@ -214,7 +238,7 @@ public class NewConversation extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_indicator);
-        initButtons();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadAllKeysToList();
     }
 
@@ -235,6 +259,9 @@ public class NewConversation extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == android.R.id.home) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

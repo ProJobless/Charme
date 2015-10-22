@@ -552,6 +552,8 @@ public class TalksMessages extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		setContentView(R.layout.activity_talks_messages);
 
         Window window = this.getWindow();
@@ -775,7 +777,7 @@ public class TalksMessages extends ActionBarActivity {
 				}
 
 			}.execute(new AsyncCryptoArgs(rsa, messageRaw,
-					AsyncCryptoArgs.ACTION_SIGN));
+					AsyncCryptoArgs.ACTION_SIGN, TalksMessages.this));
 
 			//
 			// test end
@@ -969,9 +971,15 @@ public class TalksMessages extends ActionBarActivity {
 
 			return true;
 
+
 		case R.id.action_refresh:
 			checkNewMessages();
             return true;
+
+
+       case android.R.id.home:
+                finish();
+           return true;
 
         case R.id.action_settings:
 
@@ -1344,7 +1352,7 @@ public class TalksMessages extends ActionBarActivity {
 				}
 
 			}.execute(new AsyncCryptoArgs(rsa, messageRaw,
-					AsyncCryptoArgs.ACTION_SIGN));
+					AsyncCryptoArgs.ACTION_SIGN, TalksMessages.this));
 
 			// Async HTTP End
 

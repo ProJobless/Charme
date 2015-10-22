@@ -8,9 +8,11 @@
 \usepackage{amsmath}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 \usepackage{graphicx}
- \usepackage{amssymb}
- \usepackage{listings}
 
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
 
  \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref} %make url break
 \title{Charme - A distributed social network with end-to-end encryption and contextual information}
@@ -31,7 +33,7 @@ In contrast to classic social networks, distributed social networks with end-to-
 
 Another innovation of Charme is the so called \textit{Context}, every post can have optionally. A context contains semantic, computer-readable information about the post.
  An algorithm can later aggregate all users moving by car from point A to point B tomorrow, with having 3 seats free with a tolerance of 20 kilometers for example. Or you can look up for friends making pizza for lunch and want to share their food today. Figure \ref{figContext} shows the creation of a context and the creation of a filter to search for existing context of other users. 
- Websites already providing share-economy services can also add their data to the Charme network, using the Charme Schema JSON Syntax, as defined in the file schema.coffee. The context system introduces elements of the\textit{Web of Data}, formerly known as the semantic web to social networks.
+ Websites already providing share-economy services can also add their data to the Charme network, using the Charme Schema JSON Syntax, as defined in the file schema.coffee. The context system introduces elements of the \textit{Web of Data}, formerly known as the semantic web to social networks.
 
 \begin{figure}[ht]
 	\centering
@@ -45,8 +47,26 @@ Another innovation of Charme is the so called \textit{Context}, every post can h
  \section{Encryption and Security}
  \subsection{Existing work}
 With Diaspora one of the first popular distributed social networks was released. The messages are not end-to-end encrypted, however, which makes it possible for the server admin to read its users messages. 
-A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment, but such an encryption can be implemented later on using techniques like onion routing for example.
+A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment, but such an encryption scheme could be implemented later on using techniques like onion routing for example.
+\subsection{Formal Notation used in this paper}
+\subsubsection{Reach}
+ We define the \textit{reach} of a server as this: Each server $S_i, i \in {0,1,2,...}$, on which at least one user has a public key of another user hosted on server $T_j, j \in {0,1,2,..}$ is \textit{reached} by this server.
+The reach is a list of tuples $(S_i, T_j)$. See figure \ref{figContextGraph} as an example.
 
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=30mm]{illustrations/graph.pdf}
+
+	\caption{$|Reach(A)| = deg(A) = 2
+$ as the users on server A have public keys of two different servers. }
+	\label{figContextGraph}
+\end{figure}
+
+
+
+
+
+ 
 \subsection{Fundamental Concepts}
 \subsubsection{AES-CBC \label{AESCBC}}
 AES is a fast symmetric encryption algorithm that was standardized in 2001 and is still considered secure, although there exist some attacks on it.
@@ -72,7 +92,7 @@ There are several techniques to add it (
 \begin{enumerate}
 \item Encrypt Message using AES-CBC
 \item Get SHA-256 hash value of encrypted message and salt with key k and crypto algorithm version a.
-\item JSON Result is: \{ a: 1, m: $Enc_{k||v}(text)$, h: sha256HMac($Enc_{k||v}$(text), k||v) \}. The algorithm version a is added as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
+\item JSON Result is:\\\\ \{ a: 1, m: $Enc_{k||v}(text)$, h: sha256HMac($Enc_{k||v}$(text), k||v) \}\\\\ The algorithm version a is added as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
 
 For example: The current implementation supports Non-HMAC AES when the information was encrypted without a HMAC. An attacker could remove the HMAC key and just send the plain AES encrypted content to the client and the client would still decrypt it correctly.
 
@@ -119,7 +139,7 @@ http://dev.ionous.net/2009/03/hmac-vs-raw-sha-1.html}
 
 
 \subsection{Crypto Implementation}
-There are a Javascript library called Gibberish AES for Javascript and Tom Wu's RSA Library for RSA providing the main functionality. Google wrote with its E2E project a better implementation of cryptographic algorithms which should replace the above ones as soon as possible. The long term goal is to use the W3C web crypo API however, if supported in all major browsers, as this one is more secure regarding key deletion from memory (RAM) and random number generation. 
+There are a Javascript library called Gibberish AES for Javascript and Tom Wu's RSA Library for RSA providing the main functionality. Google wrote with its E2E project a better implementation of cryptographic algorithms which should replace the above ones as soon as possible. The long term goal is to use the W3C web crypto API however, if supported in all major browsers, as this one is more secure regarding key deletion from memory (RAM) and random number generation. 
 
 \subsection{Implementation}
  \subsection{Client server seperation}
@@ -240,6 +260,15 @@ This information is also signed using the senders private key.
   
    There is also a new technology called sub resource integrity which can be used to validate Javascript and CSS resources (See \url{http://www.w3.org/TR/SRI/} and \url{http://githubengineering.com/subresource-integrity/}). Maybe they introduce some mechanism to validate a whole web page with a hash recommended by the majority of browser users and additionally located on a (Mozilla or Google) server. So lets keep an eye on that.
 
+   \subsubsection{Attacks on Integrity Protection}
+   Certain information, such as the Name/UserID pairs of a conversation must be distributed with integrity protection using either the private key of each receiver or the conversation key. Asymmetric private keys used for signing the message data have the following advantages and disadvantages in contrast to the symmetric conversation key.
+   
+   \textbf{Using the private key }
+   \begin{enumerate}
+   \item (Advantage) Slower (Factor ca. 1000)
+    \item (Disadvantage) No attackers inside a conversation manipulating username/userId pairs
+   \end{enumerate}
+   
   
    \subsubsection{XSS}
    One of the most critical attack vectors in Charme is Cross Site Scripting as with this technique private keys can be stolen.
@@ -268,8 +297,10 @@ Attackers can flood small servers with a lot of requests.
 On server side, PHP is used as an interpreter. The reason for PHP is that it has a wide community supporting it, as it is used by many other big websites like Facebook or Wordpress for example. \textit{ZeroMQ} is used to send socket messages and communicate between different PHP threads. \textit{Gearman} is necessary to execute background tasks like sending messages in the asynchronously. As a database, \textit{MongoDB} is used, as it is scalable and has the ability to directly store JSON object to the database.
 Administrations scripts are written for GNU Bash to provide ssh access.
 
+
   \section{Search}
   When it comes to search, we face some problems. Of course, it is not efficient to query hundreds or even more server from one client in the charme network. Filesharing applications typically use Kademlia  or Chord to index data within peer-to-peer networks. Such concepts may also be useful for search, as YaCy for example has shown. Thorsten Schütt et al. have proposed a technique which can be used for multidimensional parameter search in their paper \textit{Range queries on structured overlay networks}. A search in social networks could also use the social graph to rank results of near people higher than from people more far away.
+  
 
 
 \subsection{Further reading}
@@ -326,8 +357,7 @@ Afterwards we send $R$ to the service provider and $K\_A $ to the device.
 \subsection{Login}
 \textbf{ 1st step:} Get password salt value via \textit{reg\_salt\_get}\\
 \textbf{2nd step:} Login with \textit{user\_login} and parameters u (username) and p (salt hashed password). Status PASS is returned if successful.
-  \\\\
-  Note: Please look up the parameters in the technical documentation, found somewhere in the Github Wiki. For examples, just perfom a global search (CTRL+Shift+F in Sublime Text) for the command in /jsclient.
+
 \subsection{Messages}
 To load the conversation preview list, \textit{messages\_get} is called. Each message has a message key. If a new message Key is generated, it is encrypted with the edgekey of the receiving users (Section \ref{edge}).
 
@@ -336,6 +366,105 @@ For every kind of communication between two users we generate a directed edgekey
 The edgekeys should change after a certain timespan. (1 week?). Currently the edgekey is generated after a key was added to a key directory in \textit{settings\_keymanager.js}. The edgekeys are requested to decrypt from user B. Later they will be cached in local storage of user B to even gain the performance we have planned to gain.
 \subsection{Recryption of data}
 When the private key is updated, it is required to recrypt the data in the encrypted data storage. This is done in the function \textit{updateDataOK()} in \textit{settings\_keymanager.js}.
+
+
+\section{Protocol Specification}
+\subsubsection{Add public key to keydirectory}
+A new public key is requested, verified and added to the key directory.
+\\\\
+\begin{tikzpicture}
+
+
+
+\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=8mm, nodes={draw=none, anchor=center,text depth=0pt} ]
+{
+Client A & & Server A & & Server B &  & Client B \\[-4mm]
+};
+
+\draw[] (m-1-1.south east)--(m-1-1.south west);
+\draw[] (m-1-3.south east)--(m-1-3.south west);
+\draw[] (m-1-5.south east)--(m-1-5.south west);
+\draw[] (m-1-7.south east)--(m-1-7.south west);
+
+\draw[-latex] (m-2-2.south west)--(m-2-2.south east);
+
+\end{tikzpicture}
+\\\\
+
+\begin{enumerate}
+\item Client A requests public key of client B
+\item test2s
+\end{enumerate}
+
+\subsubsection{Init Conversation}
+Let convId the id of the conversation. Let's call $D_j$ the payload. It contains information relevant to the conversation such as time, last preview text, members or identifier.  $D_j$ must be integrity protected of course. K is a 256 bit symmetric key used for AES encryption. The communication between the client initiating a new conversation and its server is defined as this: \\\\
+\begin{tikzpicture}
+
+
+
+\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=8mm, nodes={draw=none, anchor=center,text depth=0pt} ]
+{
+Client A & & Server A \\[-4mm]
+1. Obtain public keys& & \\[-7mm]
+  of Users $U_1, U_2,...$ & & \\[-7mm]
+2. Generate $K = \{0,1\}^{256}$ & & \\[-7mm]
+3. $D_j = \{Enc_{Pub}(K, U_i),$ & & \\[-7mm]
+$ convId, ... \}$ & & \\[-7mm]
+ & & \\
+ & Send $D_j$ & \\
+& & Distribute $D_j$ \\[-7mm]
+& & to other servers \\
+ & ACK (HTTP 200) & \\
+};
+
+\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-1.south east)--(m-1-1.south west);
+\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-3.south east)--(m-1-3.south west);
+
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-8-2.south west)--(m-8-2.south east);
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-11-2.south east)--(m-11-2.south west);
+\end{tikzpicture}
+\\\\
+Server A distributed the payload to other servers afterwards. Technically this is done by a Gearman daemon running in the background. The receiver clients can afterwards decrypt the key K with their private key.
+
+\subsubsection{Write message}
+
+Let K be the message key, which has been generated at conversation init.\\\\
+\begin{tikzpicture}
+
+
+
+\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=8mm, nodes={draw=none, anchor=center,text depth=0pt} ]
+{
+Client A & & Server A \\[-4mm]
+& & \\[-7mm]
+& & \\[-7mm]
+1. Get $K$ & & \\[-7mm]
+2. $D_j = \{Enc_{K}(message),$ & & \\[-7mm]
+$ convId, ...\}$ & & \\[-7mm]
+ & & \\
+ & Send $D_j$ & \\
+& & Distribute $D_j$ \\[-7mm]
+& & to other servers \\
+ & ACK (HTTP 200) & \\
+};
+
+\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-1.south east)--(m-1-1.south west);
+\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-3.south east)--(m-1-3.south west);
+
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-8-2.south west)--(m-8-2.south east);
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-11-2.south east)--(m-11-2.south west);
+\end{tikzpicture}
+
+\section{Terminology}
+
+\textbf{||}\\
+ Concatenation Operator. For example $"a" || "b" \Leftrightarrow "ab" $
+\\
+
+\textbf{Conversation}\\ A sequence of messages of different users
+\\\\
+\textbf{userId}\\  An unique identifier for each person in the Charme network, similar to email. Example: ms@myserver.com
+
 
 
 \section{Sources}

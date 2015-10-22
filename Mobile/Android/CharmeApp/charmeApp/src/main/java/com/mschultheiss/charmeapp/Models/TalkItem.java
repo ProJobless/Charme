@@ -25,8 +25,8 @@ public class TalkItem {
 		this.Usernames = usernames;
 		this.ConversationId = convId;
 	}
-	public String getPeopleAsName() {
-		return GroupTools.getNameByReceivers(this.Usernames);
+	public String getPeopleAsName(Context context) {
+		return GroupTools.getNameByReceivers(this.Usernames, context);
 
 	}
 	public int getImageResource(Context context) {

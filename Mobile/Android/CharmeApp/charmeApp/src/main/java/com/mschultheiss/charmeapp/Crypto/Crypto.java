@@ -25,25 +25,77 @@ public class Crypto {
 			}
 
 		}
+		public static int getFastKey1Revision( Context context) {
+		try {
+			JSONObject keyringObj = ActivityLogin.findKey(0, context);
+			final GibberishAESCrypto gib = new GibberishAESCrypto();
+			// TODO: Check HMAC, CRITICAL SECURITY FEATURE!!!!
+			return keyringObj.getInt("revision");
+		}
+		catch(Exception x) {
+			return -1;
+		}
 
-		public static DecryptReturn decryptFastKey1(JSONObject encryptedObject, Context context) {
+		}
+	public static String decryptFastKeyLocal(String chiper, Context context) {
+
+		try {
+			JSONObject keyringObj = ActivityLogin.findKey(0, context);
+
+			final GibberishAESCrypto gib = new GibberishAESCrypto();
+
+			// TODO: Check HMAC, CRITICAL SECURITY FEATURE!!!!
+			String text = gib.decrypt( chiper,
+					keyringObj.getString("fastkey1").toCharArray());
+
+			return text;
+		}
+		catch(Exception x) {
+
+			return null;
+		}
+
+	}
+
+		public static String encryptFastKeyLocal(String plaintext, Context context) {
 
 			try {
-				JSONObject keyringObj = ActivityLogin.findKey(encryptedObject.getInt("revision"), context);
+				JSONObject keyringObj = ActivityLogin.findKey(0, context);
 
 				final GibberishAESCrypto gib = new GibberishAESCrypto();
 
 				// TODO: Check HMAC, CRITICAL SECURITY FEATURE!!!!
-				String text = gib.decrypt(
-						keyringObj.getString("fastkey1"),encryptedObject.getString("ciphertext").toCharArray());
+				String text = gib.encrypt(
+						plaintext, keyringObj.getString("fastkey1").toCharArray());
 
-				return new Crypto.DecryptReturn(text, encryptedObject.getInt("revision"));
+				return text;
 			}
 			catch(Exception x) {
 
 				return null;
 			}
 
+		}
+
+
+
+		public static DecryptReturn decryptFastKey1(JSONObject encryptedObject, Context context) {
+			try {
+				JSONObject keyringObj = ActivityLogin.findKey(encryptedObject.getInt("revision"), context);
+				final GibberishAESCrypto gib = new GibberishAESCrypto();
+
+				// TODO: Check HMAC, CRITICAL SECURITY FEATURE!!!!
+				char[] fastkey1 = keyringObj.getString("fastkey1").toCharArray();
+				String chiper = encryptedObject.getString("ciphertext");
+
+				String text = gib.decrypt(chiper, fastkey1);
+				int revision = keyringObj.getInt("revision");
+
+				return new Crypto.DecryptReturn(text, revision);
+			}
+			catch(Exception x) {
+				return null;
+			}
 		}
 
 		public static String makeSha256(String text, boolean useBase64)

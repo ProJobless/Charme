@@ -38,12 +38,19 @@ public class PersonItem {
         try {
             JSONObject key = new JSONObject();
             key.put("userId", UserId);
+            System.out.println("PUT USER OBJECT FOR USER"+UserId);
             key.put("revisionB", publicKeyRevision);
             key.put("rsaEncEdgekey", edgekeyWithPublicKey);
 
             // 1. Get fastkey1 for specified revision and decrypt edgekeyWithFK with fastKey1
             // 2. Use this key to get edgekey
             Crypto.DecryptReturn edgekeyObj = Crypto.decryptFastKey1(edgekeyWithFK, context);
+
+            if (edgekeyObj == null) {
+                System.out.println("Warning: Edgekey is null! Aborting PersonItem.makeCryptoObject()...");
+                return null;
+
+            }
             String edgekey = edgekeyObj.message;
 
             // 3. Encrypt message key with edgekey
@@ -71,6 +78,7 @@ public class PersonItem {
 
         }
         catch(Exception x) {
+            x.printStackTrace();
             return null;
         }
     }

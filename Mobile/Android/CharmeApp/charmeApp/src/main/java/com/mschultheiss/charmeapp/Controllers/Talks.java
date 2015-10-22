@@ -40,11 +40,13 @@ import com.mschultheiss.charmeapp.Crypto.AsyncCrypto;
 import com.mschultheiss.charmeapp.Crypto.AsyncCryptoArgs;
 import com.mschultheiss.charmeapp.Helpers.AsyncHTTP;
 import com.mschultheiss.charmeapp.Helpers.AsyncHTTPParams;
+import com.mschultheiss.charmeapp.ORM.CharmeRequest;
 import com.mschultheiss.charmeapp.Service.GCMRegistrationService;
 import com.mschultheiss.charmeapp.Crypto.GibberishAESCrypto;
 import com.mschultheiss.charmeapp.R;
 import com.mschultheiss.charmeapp.Crypto.RSAObj;
 import com.mschultheiss.charmeapp.Models.TalkItem;
+import com.orm.SugarContext;
 
 
 import org.json.JSONArray;
@@ -79,12 +81,20 @@ public class Talks extends ActionBarActivity {
 
                 logoutDialog();
                 break;
+
+            case R.id.action_about:
+
+                aboutDialog();
+                break;
         }
 
         return true;
     }
 
-
+    public void aboutDialog() {
+        Intent intent = new Intent(getBaseContext(), AboutPage.class);
+        startActivity(intent);
+    }
 
     public void logoutDialog() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -106,6 +116,12 @@ public class Talks extends ActionBarActivity {
         builder.setMessage("Do you really want to logout?").setPositiveButton("Yes, i want!", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
+
+    public static void clearRSACache(Context c) {
+
+        SharedPreferences preferences = c.getSharedPreferences("cryptoRSACache", c.MODE_PRIVATE);
+        preferences.edit().clear().commit();
+    }
     public void logout() {
 
         SharedPreferences cookiePreferences =PreferenceManager.getDefaultSharedPreferences(this);
@@ -119,6 +135,10 @@ public class Talks extends ActionBarActivity {
         e.putString("server", "");
         e.putString("user_keyring", "");
         e.commit();
+
+        // Clear RSA Cache
+         clearRSACache(Talks.this);
+
 
         Intent intent = new Intent(getBaseContext(), ActivityLogin.class);
         startActivity(intent);
@@ -213,7 +233,6 @@ public class Talks extends ActionBarActivity {
 
                     if (!found) // New Conversation --> Update all messages
                     {
-
                         updateMessages();
                     }
                 }
@@ -242,6 +261,15 @@ public class Talks extends ActionBarActivity {
 
     }
     String server = "";
+
+    private void initListView() {
+        list2 = new ArrayList<TalkItem>();
+        adapter = new StableArrayAdapter(Talks.this, R.layout.activity_talks_listitem,
+                list2);
+
+        ListView listview = (ListView) findViewById(R.id.listView1);
+        listview.setAdapter(adapter);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -256,40 +284,224 @@ public class Talks extends ActionBarActivity {
         }
         else {
 
-            server = sharedPref.getString("server", "");
-
             setContentView(R.layout.activity_talks);
+            initListView();
+
+            server = sharedPref.getString("server", "");
             initButtons();
 
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //window.setStatusBarColor(this.getResources().getColor(R.color.primary));
 
             sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            list2 = new ArrayList<TalkItem>();
             context = getApplicationContext();
 
-
             if (checkPlayServices()) {
-
-                System.out.println("gcm Start registration service...");
                 // Start IntentService to register this application with GCM.
                 Intent intent = new Intent(this, GCMRegistrationService.class);
                 startService(intent);
             }
 
+            // Load offline messages
+            loadCache();
 
+            // Load online messages
             updateMessages();
         }
     }
+    void loadCache() {
+
+            // Load some messages from Cache
+            try {
+                /// TODO: delete old items!!!!!
+                SugarContext.init(this);
+                List<CharmeRequest> cr2 = CharmeRequest.find(CharmeRequest.class, "thekey = ?", Talks.cacheId);
+                String data = cr2.get(0).data;
+                System.out.println("cache data "+Talks.cacheId+" is"+data);
+                if (cr2.size() > 0) {
+                    processResult(data);
+                }
+
+                SugarContext.terminate();
+
+            } catch (Exception ee) {
+                System.out.println("LOAD CACHE ERROR: ");
+                ee.printStackTrace();
+            }
+
+    }
     SharedPreferences sharedPrefs;
+    void processResult(String result) {
+
+        if (result.equals(""))
+            return;
+
+        boolean sessionExpired = false;
+        // Problem: not logged in!
+        System.out.println("CHARME: RESULT of messages_get IS " + result.toString());
+        try {
+            JSONObject jo = new JSONObject(result);
+            if (jo.getInt("ERROR") == 1) {
+
+                // New Login needed!
+                finish();
+                Intent intent = new Intent(getBaseContext(),
+                        ActivityLogin.class);
+                intent.putExtra("autoLogin", false);
+
+                sessionExpired = true;
+                startActivity(intent);
+            }
+        } catch (Exception ee) {
+            System.out.println("EX 1");
+        }
+
+        if (!sessionExpired) {
+            if (result.toString().equals("")) {
+
+                Toast.makeText(
+                        getApplicationContext(),
+                        "No Internet connection...",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+            try {
+                final JSONObject jo = new JSONObject(result);
+                final GibberishAESCrypto gib = new GibberishAESCrypto();
+                final JSONArray arr = jo.getJSONObject("messages_get")
+                        .getJSONArray("messages");
+
+                final JSONArray messageKeys = jo.getJSONObject("messages_get")
+                        .getJSONArray("messageKeys");
+
+
+                System.out.println("CH1: arr" + arr.toString());
+                for (int i = 0; i < arr.length(); i++) {
+
+                    try {
+                        final JSONObject oo = arr.getJSONObject(i);
+
+                        JSONObject bestKeyObjTemp = null;
+                        int highestRevision = 0;
+
+                        for (int j = 0; j < messageKeys.length(); j++) {
+
+                            JSONObject keyObj = messageKeys.getJSONObject(j);
+
+                            if (keyObj.getJSONObject("conversationId").getString("$id").equals(oo.getJSONObject("messageData").getString("conversationId"))) {
+                                if (keyObj.getInt("revision") >= highestRevision) {
+                                    bestKeyObjTemp = keyObj;
+
+
+                                }
+                            }
+                        }
+                        final JSONObject bestKeyObj = bestKeyObjTemp;
+
+                        if (bestKeyObj != null) {
+
+
+                            int rsaRevision = bestKeyObj.getInt("revision");
+                            String rsaEncEdgeKey = bestKeyObj.getJSONObject("key").getString("rsaEncEdgekey");
+
+                            // Set up RSA decryption
+                            RSAObj rsa = new RSAObj();
+
+
+                            JSONObject oo5 = ActivityLogin
+                                    .findKey(rsaRevision, Talks.this)
+                                    .getJSONObject("rsa").getJSONObject("rsa");
+
+                            rsa.n = oo5.getString("n");
+                            rsa.d = oo5.getString("d");
+                            rsa.e = oo5.getString("e");
+
+                            System.out.println("CHARME INFO: rsaEncEdgeKey is " + rsaEncEdgeKey);
+                            // Decrypt the message key with RSA
+
+
+                            new AsyncCrypto() {
+                                @Override
+                                protected void onPostExecute(String result2) {
+
+                                    try {
+                                        String edgekey = result2;
+                                        String newestMessageKey = "";
+                                        System.out.println("edgekey is " + edgekey);
+                                        if (edgekey.equals(""))
+                                            System.out.println("CHARME WARNING: edgekey is empty!");
+
+                                        newestMessageKey = gib.decrypt(
+                                                bestKeyObj.getJSONObject("key").getString("messageKey"), edgekey.toCharArray());
+
+                                        System.out.println("newestMessageKey is " + newestMessageKey);
+
+
+                                        // With having the message key, we can decrypt the preview text now
+                                        //System.out.println("CH1:cid "+oo.getJSONObject("conversationId"));
+                                        String previewText = "...";
+                                        try {
+                                            previewText = gib.decrypt(
+                                                    oo.getString("preview"),
+                                                    newestMessageKey.toCharArray()).trim().replace("\n", "").replace("\r", "");
+                                        } catch (Exception ex) {
+                                        }
+                                        int count1 = 0;
+                                        if (oo.has("counter"))
+                                            count1 = oo.getInt("counter");
+
+
+                                        TalkItem x = new TalkItem(oo.getJSONObject("messageData").getString("conversationId"), previewText,
+                                                oo.getJSONObject("messageData").getJSONArray("receivers"),
+                                                oo.getJSONObject("messageData").getJSONArray("usernames"),
+                                                newestMessageKey,
+                                                count1, oo.getJSONObject("messageData").getString("conversationId"));
+
+                                        boolean found = false; // Check if already in list
+                                        for (TalkItem t : list2) {
+                                            if (t.ConversationId.equals(oo.getJSONObject("messageData").getString("conversationId"))) {
+                                                found = true;
+                                                t = x;
+                                            }
+                                        }
+                                        if (!found) {
+
+                                            list2.add(0, x);
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                    }
+                                    catch(Exception x) {
+
+                                        x.printStackTrace();
+                                    }
+                                }
+
+                            }.execute(new AsyncCryptoArgs(rsa, rsaEncEdgeKey,
+                                    AsyncCryptoArgs.ACTION_DECRYPT, rsaRevision, Talks.this));
+
+                        } else {
+                            // key not found exec[ption
+                        }
+                    } catch (Exception ea) {
+                        ea.printStackTrace();
+                    }
+                }
+
+
+                registerBCReceiver();
+
+            } catch (Exception ee) {
+                System.out.println("CHARME ERROR12341" + ee.toString());
+                ee.printStackTrace();
+            }
+        }
+    }
+    final static String cacheId = "messages_get";
     void updateMessages() {
 
-        list2 = new ArrayList<TalkItem>();
         final ListView listview = (ListView) findViewById(R.id.listView1);
-        final String cacheId = "messages_get";
-        final Talks that = this;
 
         try {
 
@@ -311,158 +523,9 @@ public class Talks extends ActionBarActivity {
                 protected void onPostExecute(String result) {
 
 
-                    boolean sessionExpired = false;
-                    // Problem: not logged in!
-                    System.out.println("CHARME: RESULT of messages_get IS " + result.toString());
-                    try {
-                        JSONObject jo = new JSONObject(result);
-                        if (jo.getInt("ERROR") == 1) {
-
-                            // New Login needed!
-                            finish();
-                            Intent intent = new Intent(getBaseContext(),
-                                    ActivityLogin.class);
-                            intent.putExtra("autoLogin", false);
-
-                            sessionExpired = true;
-                            startActivity(intent);
-                        }
-                    } catch (Exception ee) {
-                    }
-
-                    if (!sessionExpired) {
-                        if (result.toString().equals("")) {
-
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "No Internet connection...",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                        try {
-                            final JSONObject jo = new JSONObject(result);
-                            final GibberishAESCrypto gib = new GibberishAESCrypto();
-                            final JSONArray arr = jo.getJSONObject("messages_get")
-                                    .getJSONArray("messages");
-
-                            final JSONArray messageKeys = jo.getJSONObject("messages_get")
-                                    .getJSONArray("messageKeys");
-
-
-                            System.out.println("CH1: arr" + arr.toString());
-                            for (int i = 0; i < arr.length(); i++) {
-
-                                try {
-                                    final JSONObject oo = arr.getJSONObject(i);
-
-                                     JSONObject bestKeyObjTemp = null;
-                                    int highestRevision = 0;
-
-                                    for (int j = 0; j < messageKeys.length(); j++) {
-
-                                        JSONObject keyObj = messageKeys.getJSONObject(j);
-
-                                        if (keyObj.getJSONObject("conversationId").getString("$id").equals(oo.getJSONObject("messageData").getString("conversationId"))) {
-                                            if (keyObj.getInt("revision") >= highestRevision) {
-                                                bestKeyObjTemp = keyObj;
-
-
-                                            }
-                                        }
-                                    }
-                                    final JSONObject bestKeyObj = bestKeyObjTemp;
-
-                                    if (bestKeyObj != null) {
-
-
-                                        int rsaRevision = bestKeyObj.getInt("revision");
-                                        String rsaEncEdgeKey = bestKeyObj.getJSONObject("key").getString("rsaEncEdgekey");
-
-                                        // Set up RSA decryption
-                                        RSAObj rsa = new RSAObj();
-
-
-                                        JSONObject oo5 = ActivityLogin
-                                                .findKey(rsaRevision, that)
-                                                .getJSONObject("rsa").getJSONObject("rsa");
-
-                                        rsa.n = oo5.getString("n");
-                                        rsa.d = oo5.getString("d");
-                                        rsa.e = oo5.getString("e");
-
-                                        System.out.println("CHARME INFO: rsaEncEdgeKey is " + rsaEncEdgeKey);
-                                        // Decrypt the message key with RSA
-
-
-                                        new AsyncCrypto() {
-                                            @Override
-                                            protected void onPostExecute(String result2) {
-
-                                                try {
-                                                    String edgekey = result2;
-                                                    String newestMessageKey = "";
-                                                    System.out.println("edgekey is " + edgekey);
-                                                    if (edgekey.equals(""))
-                                                        System.out.println("CHARME WARNING: edgekey is empty!");
-
-                                                    newestMessageKey = gib.decrypt(
-                                                            bestKeyObj.getJSONObject("key").getString("messageKey"), edgekey.toCharArray());
-
-                                                    System.out.println("newestMessageKey is " + newestMessageKey);
-
-
-                                                    // With having the message key, we can decrypt the preview text now
-                                                    //System.out.println("CH1:cid "+oo.getJSONObject("conversationId"));
-                                                    String previewText = "...";
-                                                    try {
-                                                        previewText = gib.decrypt(
-                                                                oo.getString("preview"),
-                                                                newestMessageKey.toCharArray()).trim().replace("\n", "").replace("\r", "");
-                                                    } catch (Exception ex) {
-                                                    }
-                                                    int count1 = 0;
-                                                    if (oo.has("counter"))
-                                                        count1 = oo.getInt("counter");
-
-                                                    list2.add(new TalkItem(oo.getJSONObject("messageData").getString("conversationId"), previewText,
-                                                            oo.getJSONObject("messageData").getJSONArray("receivers"),
-                                                            oo.getJSONObject("messageData").getJSONArray("usernames"),
-                                                            newestMessageKey,
-                                                            count1, oo.getJSONObject("messageData").getString("conversationId")));
-
-                                                    adapter.notifyDataSetChanged();
-                                                    System.out.println("Added Talk item");
-                                                }
-                                                catch(Exception x) {
-
-                                                    x.printStackTrace();
-                                                }
-                                            }
-
-                                        }.execute(new AsyncCryptoArgs(rsa, rsaEncEdgeKey,
-                                                AsyncCryptoArgs.ACTION_DECRYPT, rsaRevision)); // TODO: Support Caching!!!
-
-                                    } else {
-                                        // key not found exec[ption
-                                    }
-                                } catch (Exception ea) {
-                                    ea.printStackTrace();
-                                }
-                            }
-                            adapter = new StableArrayAdapter(that, R.layout.activity_talks_listitem,
-                                    list2);
-
-                            ListView listview = (ListView) findViewById(R.id.listView1);
-                            listview.setAdapter(adapter);
-                            registerBCReceiver();
-
-                        } catch (Exception ee) {
-                            System.out.println("CHARME ERROR12341" + ee.toString());
-                            ee.printStackTrace();
-                        }
-                    }
+                   processResult(result);
                 }
-            }.execute(new AsyncHTTPParams(object.toString(), this, cacheId, server));
+            }.execute(new AsyncHTTPParams(object.toString(), this, Talks.cacheId, server));
         } catch (Exception ex) {
             System.out.println("CHARME ERROR3211 " + ex.toString());
         }
@@ -524,7 +587,7 @@ public class Talks extends ActionBarActivity {
 
             final TalkItem t = mIdMap.get(position);
 
-            ((TextView)convertView.findViewById(R.id.label)).setText(t.getPeopleAsName());
+            ((TextView)convertView.findViewById(R.id.label)).setText(t.getPeopleAsName(Talks.this));
             ((TextView)convertView.findViewById(R.id.submessage)).setText(t.Title);
             ((ImageView)convertView.findViewById(R.id.icon)).setImageDrawable(getResources().getDrawable(t.getImageResource(getContext())));
 

@@ -1,8 +1,10 @@
 package com.mschultheiss.charmeapp.Helpers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 
 import com.mschultheiss.charmeapp.R;
 
@@ -35,8 +37,6 @@ public class GroupTools {
                 if (hah<0)
                     hah=hah*-1;
                 hah+=1;
-
-
                 String index = String.valueOf(receivers.length())+String.valueOf(hah);
 
 
@@ -60,30 +60,44 @@ public class GroupTools {
 
     }
 
-    public static String getNameByReceivers(JSONArray names) {
+    public static String getNameByReceivers(JSONArray names, Context context) {
+
+
+        SharedPreferences cookiePreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String myUserId = cookiePreferences.getString("user_id", "'");
 
         // TODO: Do not display my own name!
         
         try {
             String all = "";
-
+            int namecounter = 0;
             for (int i = 0; i < names.length(); i++) {
 
-                if (i<3) {
-                    String s =  names.getJSONObject(i).getString("name");
-                    String firstWord = null; // Only first name
-                    if(s.contains(" ")){
-                        s= s.substring(0, s.indexOf(" "));
+                String s = names.getJSONObject(i).getString("name");
+                String userId = names.getJSONObject(i).getString("userId");
+                if (namecounter<3 && !myUserId.equals(userId)) {
+
+                    namecounter++;
+
+                    // Extract first name
+                    String firstWord = null; // Only first name, not the last name
+                    if (s.contains(" ")) {
+                        s = s.substring(0, s.indexOf(" "));
                     }
+
+                    // Add name
                     all += s;
-                    if (i < 2 && i<(names.length()-1))
+
+                    // Add comma
+                    if (namecounter < 4 && namecounter < (names.length() - 1))
                         all = all + ", ";
+                    else if (namecounter  == (names.length()-1)) {
+                        int moreCount  = names.length()-namecounter-1;
+                        if (moreCount > 0)
+                        all = all + " and "+String.valueOf(moreCount)+" more";
+                    }
                 }
-
             }
-
-            if (names.length() > 2)
-                all += " and more";
 
             return all;
         }
@@ -93,9 +107,5 @@ public class GroupTools {
 
             return "";
         }
-
-
-
-
     }
 }

@@ -36,6 +36,7 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
             try {
                 /// TODO: delete old items!!!!!
                 SugarContext.init(data2[0].Context);
+
                 List<CharmeRequest> cr2 = CharmeRequest.find(CharmeRequest.class, "thekey = ?", data2[0].storageId);
 
                 if (cr2.size() > 0)
@@ -101,7 +102,10 @@ public class AsyncHTTP extends AsyncTask<AsyncHTTPParams, Void, String> {
             if (!data2[0].storageId.equals("") && !result.equals("")) {
                 // todo delete old items before inserting new ones!
                 SugarContext.init(data2[0].Context);
+              CharmeRequest.deleteAll(CharmeRequest.class, "thekey = ?", data2[0].storageId);
+
                 // Save result to db if cacheable
+                System.out.println("Cache data "+data2[0].storageId+" save: "+result);
                 CharmeRequest cr = new CharmeRequest(data2[0].storageId, result);
                 cr.save();
                 SugarContext.terminate();

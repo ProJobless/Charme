@@ -67,9 +67,15 @@ public class GibberishAESCrypto {
   }  
 
   public String decrypt(String cipherText, char[] password) throws Exception {
-
+    JSONObject json = null;
     try {
-      JSONObject json = new JSONObject(cipherText);
+      json  = new JSONObject(cipherText);
+    }
+    catch(Exception x) {
+      System.out.println("Warning: Chiphertext is no JSON!");
+    }
+    try {
+     // json = new JSONObject(cipherText);
       StringBuilder sb = new StringBuilder(64);
       sb.append(password);
       sb.append(json.getString("a")); // Algorithm Version of encoded Object. MUST BE TYPE CHAR!!!

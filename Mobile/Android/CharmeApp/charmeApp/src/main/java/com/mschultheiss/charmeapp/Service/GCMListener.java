@@ -121,7 +121,7 @@ public class GCMListener extends GcmListenerService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            String aeskey = sharedPref.getString("conv_"+jo.getString("conversationId").toString(), "");
+            String aeskey = sharedPref.getString("conv_"+jo.getString("conversationId").toString(), ""); // TODO: This is not secure if the device is stolen etc!!!
 
             System.out.println("aeskey is "+aeskey);
 
