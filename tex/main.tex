@@ -442,7 +442,7 @@ More in detail, the JSON message schema to init a conversation from the senders 
   \begin{itemize}
     \item \textbf{hmac}: The HMAC to check integrity
     \item \textbf{revision}: Revision of $K$
-    \item \textbf{objType}=object
+    \item \textbf{objType} = object
      \item \textbf{obj}
      \begin{itemize}
         \item \textbf{receivers}: List of userIds
@@ -453,7 +453,7 @@ More in detail, the JSON message schema to init a conversation from the senders 
 \end{itemize}
 
 
-The server redirects the message to the receivers servers afterwards, the message looks like this here:
+The server redirects the message to the receivers servers afterwards, the message JSON has the following properties:
 
 \begin{itemize}
     \item \textbf{id} = message\_receive
@@ -517,8 +517,13 @@ $ convId, ...\}$ & & \\[-7mm]
  Concatenation Operator. For example $"a" || "b" \Leftrightarrow "ab" $
 \\
 
+
 \textbf{Conversation}\\ A sequence of messages of different users
 \\\\
+\textbf{Revision}\\
+ After a key is updated it gets a new revision. A key update can happen after a new keyring is generated or someone has been removed of a conversation for example. both cases we generate an updated key.
+\\
+
 \textbf{userId}\\  An unique identifier for each person in the Charme network, similar to email. Example: ms@myserver.com
 
 
