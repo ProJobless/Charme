@@ -1,218 +1,26 @@
-TOP PRIORITY:
-can not decrypt key when new account
-- key updates!
-   - NOTIFY OTHERS!!!!
-   - where is fastkey1 used:
-   - MAKE SURE KEY REVSION ALSO SAVED WITH INTEGRITY PROTECTION!!!
-      -> make new edgekey for myself
-      -> adapt to crypto_encryptFK11: keydirectory,  pieces, , piechebucketitems, postkeys!!
-      -> make recrypt
-      => re hmac  key directory sha256
+Important:
+-----------------------------------------
+crypto_hmac_make testing
+message signature refactoring with  hmac and no duplicate receivers!
+------------------------------------------
 
-- better logout, see request.js, loggin out
-- test debian setup script
+Login:
+1. No RSA Decrypt error if other account
 
+Message Signatures:
+1. Make sure receiver/name pairs are signed with the message key
+2.
 
-- 3. improve audience limiter for context items with signature  60 MIN BIB!!!
-- lmit collection audience when displaying collection.
-- complete filters!
-  - comments:
-    - if filter: cache stream for 3 days and register for comment updates druign that periode
-    - if post is archived then do not show comments!!!
-    - :
-  - Cron JOB: Delete Stream items older than...
-  - No Context in collections!!!!!!!!!!!!!!!!!!
-  ; kein filter darf nur subscribed anzeigen (und encrypted)
-  / Do collection ssubscriptio nwork afterwards??
-  - FILTERS CONTRAINTS:
-    - load all into box_filter
-      - build schema
-      - iterate schema, generate input fields
-    - hide/show on context change
-    -\
-  - Context Options: visible for all people, or lists only!
+Key Updates:
+1. Test
+2. Notify others after update
+3. ENSURE KEY REVSION ALSO SAVED WITH INTEGRITY PROTECTION!!!
 
-- load more messages displaying duplicates
-- lists are not shown in other users profil FIXED?
-- make key updates working
-- reponsive search etc.
-- responsive message back button not wokring
-=================================================
+Layout:
+1. Responsive Search
 
-if own key not added:
-- collections do not display own posts
-- no messages to myself etc.
----> SOLUTION: Add own key at the start.
+Unverified bugs:
+1. "load more messages" displaying duplicates
 
-responsive search etc.
-   save image height
-
------------------
-MULTI USER Tests
-
-- no notificatoins for own actions
-- Key recrypt, public key update!!,
-  - public key update notification
-  -
-- maintain edgekey revision correctly
--
------------------
-
-
-
-
-documentation
-
-- multiple editors per collection
-  -> STEP 1 edit field in properties
-  -> step 2 inform new editors if they were elected editor
-  -> step 3: author sends new posts to collection owner server who then distributes it
-security:
-  sign fileId
-
-window.addEventListener("error", function(e) {
-before message all keys including own key is required to add!!!!!!!!!
-
-
-major bugs:
-  stream updates not working
- only add postitems if all decrypted!
-
-message refactoring:
--1: save charme version in charme cache
- 0. messages to myself are created twice
- 1. message owner is current sender link / image server -> must be author!
-2. messages responsive
-3. images (+picturebox generic)
-4. cache EDGEKEYS IN STREAM key: (userid+edgekeyrevision)!!!!!!
-
-edgekeys:
-1. key exists on profile working correctly?
-2. update all edgekeys when my public key changes
-3. update 1 edgekey if publicKey of another users changes
-4. update edgekey encrypted postkeys!
-5. only update edgekey if new public key revision when clicking on profile link update
-6. make sure returned edgekey revision is not an old one when encrypting with edgekey.
-
-misc:
-2. update encryptedcollectionstate after collection edit to encrypted collection
-4. search responsive complete
-5. delete comments     -> sign id+action    for delete command, like post!
-
-major changes:
- ☐  do not use fastkey1 for hash values (search fastkey1!)
- ☐ keymanager_checkRevCount
-       alternative: do not allow old public keys by receiver!
- ☐ recrypt: update of data needed before new recrypt!
-    -> check current revision here
- ☐ (use this key to encrypt posts later)
-
-
-## signatures for posts and messages
-   - Save all public key revisions of other users to validate signatures
-   - Repost and like verification by signing and storing hash on server
-   - Important: Warn if newer public key available
-   - On recrypt: Resign all posts
-
-## ROADMAP
-
-HIGH PRIORITY
-- Delete old private Keys from Encrypted Data Storage.
-- make sure sendernames/ids can not be changed in messages! -> SIGN!
-- Multiserver support
-
-
-------
-
-- key hash: do not use fastkey1 as hashvalue, use randomsalt1 instead
-- messages: send: autocomplete only receivers with key
-- badkey error , when new bucket, and request send. error disapears when saving private info again.
-- revision counter
-- Recrypt Public Key Directory when changing key
-  -> note down all public key encrypted data!
-
-
-
-
-MEDIUM PRIORITY
-#- GCM: do not notify myself if message is from me
-- sign comments
-- signature verification also on client side
-- images zip download: ignore failed request attempts
-- testing library
-- Make sure requests are delivered, repeat if failed to deliver
-- notify users on pub key update: hash public key A , send to user B encrypted with pub key B
-- key directory cache
--keyupdate:
-	- notify message receiver that key is no longer valid
-	- recrypt with new fastkey:
-		- key directory
-		- buckets
-		- messages (?)
-- Public key verification in background
-
-LOW PRIORITY
-- love/repost on status detail not working
-- revoke private info access
-- notify people who are not in lists any more!r
-- repost images, cache image on own server then.
-- small image  appended to post is scaled to big for thumbnail
-
-
-
-## Development Areas
-Note: We have the Instant section for code tasks that do not require much knowledge about the whole architecture.
-
-- Server
-   - Core
-   - Performance
-   - Message Distribution
-   - GCM
-- UI
-- Documentation
-- Crypto
-   - Encrypted Data Storage
-   - Messages
-   - Private Information
-   - Key Verfication (Web of Trust etc.)
-   - AES/RSA Core
-- Graphics / Promotion
-- Mobile
-   - Android
-   - iOS
-
-
-
-## Spam Protect&Security
- - likes only from people in my lists
- - subscribers only from people in my lists?
-- Check also ids for XSS attacks!
-
-
-### Cool libraries to include later
-Google PGP JS Lib
-https://code.google.com/p/end-to-end/
-
-Random Color Generator
-http://llllll.li/randomColor/
-
-------------------------------------------------------------------
-Chrome Extension:
-
-Bypass Same Origin Policy with manifest.json
-
-
-
------------------------------------------------------------------
-notes: right php5 version:
- cp /src/php-5.5.12/libs/libphp5.so  /usr/lib/apache2/modules/libphp5.so
-
-copy gearman
-cp /usr/local/lib/php/extensions/debug-zts-20121212/gearman.so  /usr/lib/apache2/modules/gearman.so
-
-
-pecl --with-config-file-scan-dir=/usr/local/lib
-
-
-sudo pear config-set php_ini /usr/local/lib/php.ini
-sudo pecl config-set bin_dir /usr/bin/
+Database:
+- Cron JOB: Delete Stream items older than...

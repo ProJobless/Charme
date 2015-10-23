@@ -1063,16 +1063,23 @@ foreach ($data["requests"] as $item)
 			foreach ($clustered as $receiver)
 			{
 					$reqdata = array(
+
 						"id" => "message_receive",
 						"localreceivers" => array($receiver),
 						"allreceivers" => $res["messageData"]["receivers"],
+						//"encMessage" => $item["encMessage"],
+						//"messagePreview" => $item["messagePreview"],
 						"message" => $item["message"],
 						"sender" => $_SESSION["charme_userid"],
+
 						"sendername" => $sendername
+						//"conversationId" => $convId->__toString(),
+						//"aesEnc" => $receiver["aesEnc"], known already by receiver
 						);
 
 					if (isset($fileId))
 						$reqdata["fileId"] = $fileId;
+
 
 					$data = array("requests" => array($reqdata));
 
@@ -1080,7 +1087,10 @@ foreach ($data["requests"] as $item)
 					$receiver,
 					$_SESSION["charme_userid"],
 					$data
+
 					);
+
+
 
 					$req21->givePostman(1);
 			}
@@ -1150,12 +1160,9 @@ foreach ($data["requests"] as $item)
 					// insert update notification
 
 				}
-				else {
-					if (!isset($item["key"]["userId"]) || $item["key"]["userId"] == "")
-						clog("E1155 userId does not exist");
-					else
-						$col->messageGroups->insert(array("messageData" => $item["messageData"], "owner" =>  $item["key"]["userId"], "lastAction" => new MongoDate(), "sendername" => $item["messageData"]["sendername"]));
-				}
+				else
+				$col->messageGroups->insert(array("messageData" => $item["messageData"], "owner" =>  $item["key"]["userId"], "lastAction" => new MongoDate(), "sendername" => $item["messageData"]["sendername"]));
+
 
 
 			}
@@ -1168,13 +1175,25 @@ foreach ($data["requests"] as $item)
 				$messageInsertion  = array();
 				// This is currently only calledo once per server, localreceivers is incomplete!
 				foreach ($item["localreceivers"] as $receiver) {
+
+
+
+
+
 						$messageInsertion =array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"]);
+
 							if ($item["fileId"] != 0)
-								$messageInsertion["fileId"] = $item["fileId"];
+						$messageInsertion["fileId"] = $item["fileId"];
+
 
 						$col->messages->insert($messageInsertion);
+
 				}
+
+
 					//clog2($item["localreceivers"], "locals:");
+
+
 				   // TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
                 $gcmpeople = $item["allreceivers"];
                 $bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
@@ -1229,7 +1248,6 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-		// This is called on the client's server when the client writes a new message.
 		case "message_distribute":
 			$col = \App\DB\Get::Collection();
 

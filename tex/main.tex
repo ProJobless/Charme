@@ -11,6 +11,13 @@
 
 \usepackage{amssymb}
 \usepackage{listings}
+
+\lstdefinestyle{JSON2}
+{
+    language=JSON,
+    literate = *{\ \ }{\ }1, %replaces each occurence of two consecutive spaces by one
+}
+
 \usepackage{tikz}
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
 
@@ -386,14 +393,14 @@ Client A & & Server A & & Server B &  & Client B \\[-4mm]
 \draw[] (m-1-5.south east)--(m-1-5.south west);
 \draw[] (m-1-7.south east)--(m-1-7.south west);
 
-\draw[-latex] (m-2-2.south west)--(m-2-2.south east);
+
 
 \end{tikzpicture}
 \\\\
 
 \begin{enumerate}
 \item Client A requests public key of client B
-\item test2s
+\item TODO
 \end{enumerate}
 
 \subsubsection{Init Conversation}
@@ -425,6 +432,55 @@ $ convId, ... \}$ & & \\[-7mm]
 \end{tikzpicture}
 \\\\
 Server A distributed the payload to other servers afterwards. Technically this is done by a Gearman daemon running in the background. The receiver clients can afterwards decrypt the key K with their private key.
+
+More in detail, the JSON message schema to init a conversation from the senders client to the senders server looks like this:
+
+\begin{itemize}
+    \item \textbf{id} = message\_distribute
+    \item \textbf{action} = initConversation
+    \item \textbf{messageData} (signed with $K$)
+  \begin{itemize}
+    \item \textbf{hmac}: The HMAC to check integrity
+    \item \textbf{revision}: Revision of $K$
+    \item \textbf{objType}=object
+     \item \textbf{obj}
+     \begin{itemize}
+        \item \textbf{receivers}: List of userIds
+        \item \textbf{usernames}: List of (userId,name) tuples.
+ \end{itemize}
+    \end{itemize}
+    \item \textbf{messageKeys}: List of public key encrypted public keys $K$
+\end{itemize}
+
+
+The server redirects the message to the receivers servers afterwards, the message looks like this here:
+
+\begin{itemize}
+    \item \textbf{id} = message\_receive
+    \item \textbf{action} = initConversation
+    \item \textbf{messageData} (signed with $K$)
+    \begin{itemize}
+    \item (See above)
+
+    \end{itemize}
+    \item \textbf{key}: Public key encrypted public key $K$ for the receiver
+\end{itemize}
+
+Please note that here we could be more efficient in the future by grouping the message\_receive requests for same people on same servers.
+
+
+%       r1.put("id", "message_distribute");
+%            JSONObject jsonMessageData = new JSONObject();
+%            jsonMessageData.put("action", "initConversation");
+%            jsonMessageData.put("usernames", peopleJSON);
+%            jsonMessageData.put("receivers", jsonReceivers);
+%            r1.put("messageData", jsonMessageData);
+%            System.out.println("JSON jsonMessageKeys IS:" + jsonMessageKeys.toString());
+%            r1.put("messageKeys", jsonMessageKeys);
+%            
+            
+            
+            
 
 \subsubsection{Write message}
 

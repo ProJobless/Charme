@@ -119,6 +119,8 @@ function crypto_checkKeyUpdate(inputItems)
 
 	Params:
 	obj:string or object:a string or object where integrity protection is needed
+	customKey (optional): A custom key that is not the fastkey for the signature generation
+  customKeyRevision (if customKey was provided): An revision as integer
 
 	Location:
 	crypto.js
@@ -128,7 +130,7 @@ function crypto_checkKeyUpdate(inputItems)
 
 */
 
-function crypto_hmac_make(obj) {
+function crypto_hmac_make(obj, customKey, customKeyRevision) {
 
 	var objType = "string"; // We support both object and strings for the hmac
 	var hmacStr; // the final hmac of the object or string
@@ -141,11 +143,17 @@ function crypto_hmac_make(obj) {
 		hmacStr = obj; // object is a stirng
 	}
 
-	var fk1 = getFastKey(0, 1);
-	var hmac = CryptoJS.HmacSHA256(hmacStr+fk1.revision, fk1.fastkey1).toString(CryptoJS.enc.Base64);
+	if (typeof customKey === 'undefined') {
+		var fk1 = getFastKey(0, 1);
+		customKeyRevision = fk1.revision;
+		customKey = fk1.fastkey1;
+	}
+
+
+	var hmac = CryptoJS.HmacSHA256(hmacStr+customKeyRevision, customKey).toString(CryptoJS.enc.Base64);
 
 	var fullObject =  {
-		"revision": fk1.revision, // fastkey revision
+		"revision": customKeyRevision, // fastkey revision
 		"hmac": hmac,
 		"obj": obj,
 		"objType": objType
