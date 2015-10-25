@@ -172,12 +172,12 @@ function talks_startConversation() {
 				apl_request({
 					"requests": [{
 							"id": "message_distribute",
-							"messageKeys": peopleMessageKeys,
-							"messageData": {
-								"receivers": output,
-								"usernames": usernames,
-								"action": "initConversation"
-							}
+							"messageKeys": peopleMessageKeys, // Receivers must only accept the public newest key here. So we do not need integrity protection for the key revision
+							"messageData": crypto_hmac_make( // Make HMAC to protect message integrity
+														  {
+															"usernames": usernames,
+															"action": "initConversation"
+															}, messageKey, 0)
 						}
 
 					]
@@ -266,6 +266,7 @@ var view_talks_subpage = view_subpage.extend({
 
 			if (newKeyRequired) {
 
+				alert( serverData[0].message.object.conversationId);
 				apl_request({
 					"requests": [{
 						"id": "messages_get_keys",
@@ -704,6 +705,8 @@ var view_talks_subpage = view_subpage.extend({
 			limit = this.countAll % 10;
 
 		var that = this;
+
+
 		apl_request({
 			"requests": [{
 				"id": "messages_get_sub",
@@ -1030,8 +1033,8 @@ var view_talks = view_page.extend({
 					this.messageKeys = msgKeys;
 					console.log(this.messageKeys);
 					this.messageTitle = this.sendername;
-					if (this.messageData.receivers.length > 1)
-						this.messageTitle += " and " + (this.messageData.receivers.length - 1) + " more.";
+					if (this.messageData.obj.usernames.length > 1)
+						this.messageTitle += " and " + (this.messageData.obj.usernames.length - 1) + " more.";
 
 					try {
 						var msgKey = that.getNewestMessageKey(msgKeys).key;

@@ -9,6 +9,7 @@ namespace App\Requests;
 // Usage: $col = new \App\DB\Get();
 class Cluster
 {
+	// Cluster people objects by server
 	public static function ClusterPeople($people)
 	{
 
@@ -16,16 +17,18 @@ class Cluster
 		$servers = array();
 		$fewpeople = array();
 
-		foreach ($people as $item)
+		foreach ($people as $item2)
 		{
+			$item = $item["userId"];
+
 			$ex = explode('@',  $item);
 			$ex = $ex[1];
 
 			if (!in_array($ex, $servers))
 			{
 				$servers[] = $ex;
-				$fewpeople[] = $item;
-					
+				$fewpeople[] = $item2;
+
 			}
 		}
 
@@ -33,6 +36,6 @@ class Cluster
 
 
 		return $fewpeople;
-	} 
+	}
 }
 ?>
