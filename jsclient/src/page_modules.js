@@ -529,7 +529,10 @@ var view_register = view_page.extend({
     var serverurl = $('#inp_server').val();
     var userid = $("#inp_username").val() + "@" + serverurl;
     var pass = $('#inp_pass').val();
-    var username = $('input[name=firstname]').val() + $('input[name=lastname]').val();
+    var username = $('input[name=firstname]').val() + " " + $('input[name=lastname]').val();
+
+
+
     /*
 		TODO: check errors!
 			if ($data["password"] != $data["password2"])
@@ -564,6 +567,13 @@ var view_register = view_page.extend({
       var disabled = $("#form_signup").find(':input:disabled').removeAttr('disabled'); // Remove disabled property temporary as serializeArray does not take disabled inputs into account
       var formData = $("#form_signup").serializeObject();  // Convert signup form data to JSON object
 
+      var dataToBeSigned = {username: username};
+      var fastkey1 = that.fastkey1;
+
+
+      var signedData = crypto_hmac_make(dataToBeSigned, fastkey1, 1);
+
+      formData.signedData = signedData; // Append to formData
 		  formData.hashpass = hashpass; // Add hashed password to form data
 
       var publicKey = $.parseJSON($("#pubkey").val());
@@ -572,7 +582,8 @@ var view_register = view_page.extend({
         // user_register must be the first request to set session Id on the server!!!!
         {
           "id": "user_register",
-          "data": formData
+          "data": formData,
+          "signedData":signedData
         },
 
         // The second request adds our own public key to the key directory
@@ -609,12 +620,15 @@ var view_register = view_page.extend({
     // certificates are generated in a bakcground task
     var worker = new Worker("lib/crypto/thread_makeSignature.js");
     $("#but_makecert").text("Please Wait...");
+    var that = this;
 
     worker.onmessage = function(e) {
 
       console.log(e.data);
 
       var fastkey1 = randomAesKey(32);
+      that.fastkey1 = fastkey1; // Needed later for signing the username
+
       var fastkey2 = randomAesKey(32);
       var randomsalt1 = randomSalt(32);
       var randomsalt2 = randomSalt(32);

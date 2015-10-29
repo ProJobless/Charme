@@ -37,46 +37,10 @@ function cryptotest()
 	//console.log(crypto_checksign(sign, "boese nachricht", ""));
 }
 
-/***
-	Name:
-	crypto_buildHashKeyDir
-
-	Info:
-	Build the hash keys for querying the key directory. Returns a list in form [{userid, keyhash}, {userid, keyhash}, ...]
-
-
-	Location:
-	crypto.js
-
-	Code:JS:
-	hashkeys = buildHashKeyDir(["test@test.de"]);
-
-*/
-function crypto_buildHashKeyDir(inputItems)
-{
-	// TODO!!!!!
-	var fastkey = getFastKey(0, 1);
-	var output = [];
-
-
-
-
-	$.each(inputItems, function(index, item) {
-
-		var e_key = CryptoJS.SHA256(fastkey.fastkey1 + item).toString(CryptoJS.enc.Base64);
-		output.push(e_key);
-	});
-	return output;
-}
-
 function decryptKeyDirValue(keyvalue)
 {
 	var fastkey = getFastKey(0, 1);
 	return $.parseJSON(aes_decrypt(fastkey.fastkey1,keyvalue));
-
-}
-function compareRevisions()
-{
 
 }
 
@@ -190,7 +154,10 @@ function crypto_hmac_check(fullObject) {
 		hmacStr = JSON.stringify(fullObject.obj);
 	}
 
+
+
 	var fk1 = getFastKey(fullObject.revision, 1);
+
 	var hmac = CryptoJS.HmacSHA256(hmacStr+fk1.revision, fk1.fastkey1).toString(CryptoJS.enc.Base64);
 
 	if (fullObject.hmac == hmac)

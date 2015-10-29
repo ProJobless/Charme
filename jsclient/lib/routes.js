@@ -709,7 +709,8 @@ function login() {
 
             localStorage.setItem("user", u);
 
-            charmeUser = new apl_user(u);
+
+            charmeUser = new apl_user(u, data.user_login.ret.signedData.obj); // crypto_hmac_check is called below, as we need fastkey1.
             // Save server
             container_main.userIdURL = charmeUser.userIdURL;
 
@@ -724,11 +725,8 @@ function login() {
 
                     }
 
-
-
                     // Store passphrase encoded with session Id.
                     localStorage.setItem("sessionPassphrase", (aes_encrypt(charmeUser.sessionId, passphrase)));
-
 
                     // The keyring contains a list of
                     // Keypairs, where the last item is the newest key
@@ -740,11 +738,13 @@ function login() {
                     localStorage.setItem("keyring", keyring);
                     localStorage.setItem("userAutoComplete", u);
 
-
                     apl_setup2();
-                    // When completed, open main view
-                    $("#welcome_main").fadeOut(0, function() {
+          
+                    if (!crypto_hmac_check(data.user_login.ret.signedData)) // MUST be called after apl_setup2 as we need the keyring to check the hmac with fastkey1
+                    alert("CRITICAL SECURITY ERROR: Could not verify integrity of signed data. ");
 
+                    // When completed, open main view
+                    $("#welcome_main").fadeOut(300, function() {
                         container_main.render();
                         location.href = "#stream";
                     });

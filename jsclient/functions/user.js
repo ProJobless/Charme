@@ -58,7 +58,7 @@ function getKeyByRevision(revision)
 
 	Params:
 	uid:String:The user id, "me@myserver.com" for example.
-
+	signedData:object: Signed data, must be integrity checked before passing it!
 	Properties:
 	sessionId:String:Server Session Id, do not set!
 	sessionPassphrase:String:Passphrase encoded with sessionId
@@ -74,13 +74,13 @@ function getKeyByRevision(revision)
 	console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
 */
 
-function apl_user(uid)
+function apl_user(uid, signedData)
 {
 	this.userId = uid;
 	this.userIdURL = encodeURIComponent(uid);
 	this.server = uid.split("@")[1];
 	this.username = uid.split("@")[0];
-
+	this.signedData = signedData;
 
 	this.getServer = function()
 	{

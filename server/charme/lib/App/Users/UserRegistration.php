@@ -80,6 +80,7 @@ class UserRegistration implements \App\Models\Action
 			"userid" => $data["username"]."@".$data["server"],
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],
+			"signedData" => $data["signedData"],
 			"lastname" =>$data["lastname"],
 			"name" => $data["firstname"]." ".$data["lastname"],
 			"salt" => $randomString,

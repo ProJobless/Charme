@@ -27,22 +27,17 @@ page_authenticated = Backbone.View.extend({
 	setCurrent: function(obj) {
 
 
-
 		if (this.currentView != null) {
 			console.log(this.currentView);
 
 			// Important, we have to "unregister" events from subViews
 			this.currentView.setSub(null);
-
-
-
 			this.currentView.undelegateEvents();
 			//	this.currentView.remove();
 			//	this.currentView.unbind();
 			//this.delegateEvents();
 			//this.undelegateEvents();
 
-			console.log("Cleared current view");
 		}
 		this.currentView = obj;
 

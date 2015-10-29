@@ -1351,7 +1351,7 @@ foreach ($data["requests"] as $item)
 				die("CHARME_SETTINGS NOT INCLUDED");
 
 
-			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p1), array('userid', "rsa", "keyring"));
+			$cursor = $col->users->findOne(array("userid"=> ($item["u"]), "password"=>$p1), array('userid', "rsa", "keyring", "signedData"));
 			clog($cursor["userid"]."///");
 			if ($cursor["userid"]==($item["u"]) && $cursor["userid"] != "")
 			{
@@ -1368,7 +1368,7 @@ foreach ($data["requests"] as $item)
 				$stat = "FAIL";
 
 		}
-			$returnArray[$action] =   (array("status" => $stat, "sessionId" => $sessionIdOfUser, "CHARME_VERSION" => $CHARME_VERSION, "ret"=>$cursor, "gcmprojectid" => $CHARME_SETTINGS["GCM_PROJECTID"]));
+			$returnArray[$action] =   (array("status" => $stat, "sessionId" => $sessionIdOfUser,  "CHARME_VERSION" => $CHARME_VERSION, "ret"=>$cursor, "gcmprojectid" => $CHARME_SETTINGS["GCM_PROJECTID"]));
 
 		break;
 

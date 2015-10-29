@@ -2,6 +2,7 @@ Important:
 -----------------------------------------
 crypto_hmac_make testing
 message signature refactoring with  hmac and no duplicate receivers!
+no duplicates!
 ------------------------------------------
 
 Login:

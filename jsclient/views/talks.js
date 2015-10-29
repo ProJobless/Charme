@@ -128,7 +128,7 @@ function talks_startConversation() {
 	var output = [charmeUser.userId];
 	var usernames = [{
 		userId: charmeUser.userId,
-		name: "Me"
+		name: charmeUser.signedData.username // TODO: Add real name provided in charmeUser Object.
 	}];
 
 	$.each(receiversTemp, function(index, item) {
@@ -1032,7 +1032,7 @@ var view_talks = view_page.extend({
 					});
 					this.messageKeys = msgKeys;
 					console.log(this.messageKeys);
-					this.messageTitle = this.sendername;
+					this.messageTitle = this.messageData.obj.usernames[0].name;
 					if (this.messageData.obj.usernames.length > 1)
 						this.messageTitle += " and " + (this.messageData.obj.usernames.length - 1) + " more.";
 
