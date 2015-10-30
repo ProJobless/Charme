@@ -701,16 +701,14 @@ function login() {
         console.log(data);
         if (data.user_login.CHARME_VERSION < CHARME_VERSION_REQUIRED)
         {
-            alert("Your server version is outdated. Please notify your server administrator.");
+            alert("Your server version is outdated. Please notify your servers administrator.");
         }
         else if (data.user_login.status == "PASS") {
 
-
-
             localStorage.setItem("user", u);
+            localStorage.setItem("signedData", JSON.stringify(data.user_login.ret.signedData.obj));
 
-
-            charmeUser = new apl_user(u, data.user_login.ret.signedData.obj); // crypto_hmac_check is called below, as we need fastkey1.
+            charmeUser = new apl_user(u); // crypto_hmac_check is called below, as we need fastkey1.
             // Save server
             container_main.userIdURL = charmeUser.userIdURL;
 
@@ -739,7 +737,7 @@ function login() {
                     localStorage.setItem("userAutoComplete", u);
 
                     apl_setup2();
-          
+
                     if (!crypto_hmac_check(data.user_login.ret.signedData)) // MUST be called after apl_setup2 as we need the keyring to check the hmac with fastkey1
                     alert("CRITICAL SECURITY ERROR: Could not verify integrity of signed data. ");
 

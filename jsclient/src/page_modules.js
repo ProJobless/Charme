@@ -583,7 +583,6 @@ var view_register = view_page.extend({
         {
           "id": "user_register",
           "data": formData,
-          "signedData":signedData
         },
 
         // The second request adds our own public key to the key directory

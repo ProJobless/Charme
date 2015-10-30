@@ -2091,9 +2091,16 @@ foreach ($data["requests"] as $item)
 
 						// id,revision,value
 
-						$col->keydirectory->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("key" => $value2["key"])));
+						$col->keydirectory->update(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($value2["id"])),	array('$set' => array("key" => $value2["key"]))); // TODO: is this correct?
 
 					}
+				}
+				else if ($key == "signedUserData")
+				{
+
+						// id,revision,value
+						$col->users->update(array("userid" => $_SESSION["charme_userid"]),	array('$set' => array("signedData" => $value)));
+
 				}
 				else if ($key == "pieces")
 				{
@@ -2150,18 +2157,20 @@ foreach ($data["requests"] as $item)
 			$cursor = iterator_to_array($all, false);
 			$data["pieceBuckets"] = $cursor;
 
-
 			$cursor = iterator_to_array($col->pieces->find(array("owner"=> $_SESSION["charme_userid"]), array('value', 'key', "_id")), false);
 			$data["pieces"] = $cursor;
 
 			$cursor = iterator_to_array($col->messageKeys->find(array("owner"=> $_SESSION["charme_userid"]), array('key', "_id", "revision", "owner")), false);
 			$data["messageKeys"] = $cursor; // recrypt rsaEncEdgekey with new private rsa key!!!
 
+			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array("key", "_id")), false);
+			$data["keydirectory"] = $cursor;
 
 			$cursor = iterator_to_array($col->keydirectory->find(array("owner"=> $_SESSION["charme_userid"]), array("key", "_id")), false);
 			$data["keydirectory"] = $cursor;
 
-
+			$cursor = $col->users->findOne(array("userid"=> $_SESSION["charme_userid"]), array("signedData"));
+			$data["signedUserData"] = $cursor;
 
 			$returnArray[$action] =  array("SUCCESS" => true, "data" => $data);
 

@@ -65,7 +65,8 @@ function updateDataOK() {
 			"keydirectory" : [],
 			"pieces" : [],
 			"pieceBuckets" : [],
-			"pieceBucketItems": []
+			"pieceBucketItems": [],
+			"signedUserData": {},
 		};
 
 		console.log("OLD:");
@@ -115,7 +116,17 @@ function updateDataOK() {
 			}
 		});
 
+		var oldSignedUD = d.key_update_recrypt_getData.data.signedUserData.signedData;
+		if (!crypto_hmac_check(oldSignedUD)) {
+			alert("CRITICAL SECURITY ERROR: Could not integrity check signed user data.");
+			return;
+		}
+		else
+		 {
+			var signedData = crypto_hmac_make(oldSignedUD.obj, currentFastKey1, rsaKeyNewest.revision );
+			recryptedData["signedUserData"] = signedData;
 
+		}
 
 		$.each(d.key_update_recrypt_getData.data.keydirectory, function(index, item) {
 

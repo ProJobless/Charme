@@ -1,6 +1,8 @@
 Important:
 -----------------------------------------
 crypto_hmac_make testing
+recrypt signed user data!!!!!!
+finish safe logout
 message signature refactoring with  hmac and no duplicate receivers!
 no duplicates!
 ------------------------------------------
@@ -8,9 +10,6 @@ no duplicates!
 Login:
 1. No RSA Decrypt error if other account
 
-Message Signatures:
-1. Make sure receiver/name pairs are signed with the message key
-2.
 
 Key Updates:
 1. Test

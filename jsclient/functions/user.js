@@ -54,7 +54,7 @@ function getKeyByRevision(revision)
 	apl_user
 
 	Info:
-	Returns a User Object.
+	Returns a User Object. hihihihihi
 
 	Params:
 	uid:String:The user id, "me@myserver.com" for example.
@@ -74,13 +74,18 @@ function getKeyByRevision(revision)
 	console.log(user.userIdURL); // me@myserver.com encoded with encodeURIComponent for URL requests.
 */
 
-function apl_user(uid, signedData)
+function apl_user(uid)
 {
 	this.userId = uid;
 	this.userIdURL = encodeURIComponent(uid);
 	this.server = uid.split("@")[1];
 	this.username = uid.split("@")[0];
-	this.signedData = signedData;
+
+	this.getSignedData = function()
+	{
+		var retrievedObject = localStorage.getItem('signedData');
+		return JSON.parse(retrievedObject);
+	}
 
 	this.getServer = function()
 	{

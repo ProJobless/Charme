@@ -124,11 +124,12 @@ function talks_startConversation() {
 			receivers.push(item);
 	});
 
+console.warn(charmeUser.getSignedData());
 	// Get plain receiver userIds in a list
 	var output = [charmeUser.userId];
 	var usernames = [{
 		userId: charmeUser.userId,
-		name: charmeUser.signedData.username // TODO: Add real name provided in charmeUser Object.
+		name: charmeUser.getSignedData().username // TODO: Add real name provided in charmeUser Object.
 	}];
 
 	$.each(receiversTemp, function(index, item) {
