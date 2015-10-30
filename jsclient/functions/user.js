@@ -54,7 +54,7 @@ function getKeyByRevision(revision)
 	apl_user
 
 	Info:
-	Returns a User Object. hihihihihi
+	Returns a User Object.
 
 	Params:
 	uid:String:The user id, "me@myserver.com" for example.
