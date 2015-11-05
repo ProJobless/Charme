@@ -2,6 +2,13 @@
 
 # This script starts background processes for Charme
 
+
+if [ "$EUID" -ne 0 ]
+  then   echo -e "ERROR: Please run in superuser mode\n "
+  exit
+fi
+
+
 echo -e "\n"
 echo -e "################################################################"
 echo -e "Note: Make sure you are in superuser mode... Type 'su' to do so."
@@ -13,6 +20,7 @@ sleep 1
 . ./variables.sh # include variables
 . ./functions.sh # include functions
 
+service mongod start
 
 #su
 

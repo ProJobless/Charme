@@ -30,7 +30,7 @@ step2() {
 		apt-get install libzmq-dev
 		pecl install zmq-beta
 		apt-get install pkg-config
-  	
+
 	fi
 
   if [[ ! -z $YUM_CMD ]]; then
@@ -38,8 +38,10 @@ step2() {
   elif [[ ! -z $APT_GET_CMD ]]; then
   echo -e "Please follow the instructions on http://docs.mongodb.org/ to install mongoDB on Debian."
   fi
-	
+
 	if [[ ! -z $YUM_CMD ]]; then
+    dnf install mongodb mongodb-server
+    /usr/sbin/setsebool -P httpd_can_network_connect 1 # needed to avoid mongodb permission errors from php webpage
 		read -r -p "Type y if you have installed mongoDB? [y]  " response
 		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
 		then
@@ -66,7 +68,7 @@ step3() {
 step4() {
 
   echo -e "We install MongoDB driver for PHP, Gearman and ZeroMQ now...."
-  pecl install mongo
+
 
   if [[ ! -z $YUM_CMD ]]; then
 
@@ -76,6 +78,9 @@ step4() {
   yum install gearmand
   pecl install gearman
   pecl install zmq-beta
+  dnf install openssl-devel # needed for php mongodb driver
+  pecl install mongo
+
   elif [[ ! -z $APT_GET_CMD ]]; then
   apt-get install gcc
   apt-get install gearman
@@ -84,6 +89,7 @@ step4() {
   apt-get install libzmq-dev
   pecl install zmq-beta
 
+  pecl install mongo
   fi
 
   stepLast
@@ -107,8 +113,29 @@ stepLast() {
 	echo -e "extension=curl.so"
 	echo -e "extension=gearman.so"
 	echo -e "extension=zmq.so"
+  echo -e "\n\n"
 
-  echo -e "\n\n\ If your done then restart your apache/httpd server!!!"
+  NameVirtualHost charme.local:80
+
+  #  sudo gedit /etc/httpd/conf/httpd.conf
+  #  <VirtualHost charme.local:80>
+  #     ServerAdmin webmaster@example.com
+  #     DocumentRoot /www/Charme/server
+  #     ServerName charme.local:80
+  # </VirtualHost>
+  #
+  # <VirtualHost client.local:80>
+  #     ServerAdmin webmaster@example.com
+  #     DocumentRoot /www/Charme/jsclient
+  #     ServerName charme.local:80
+  # </VirtualHost>
+
+
+  if [[ ! -z $YUM_CMD ]]; then
+     echo -e "On Fedora your php.ini is usually located in /etc/php.ini"
+  fi
+
+  echo -e "\n\n\ If your done then restart your apache or httpd server!"
 
 }
 

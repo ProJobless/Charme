@@ -1,10 +1,11 @@
 Important:
 -----------------------------------------
-crypto_hmac_make testing
-recrypt signed user data!!!!!!
+converations are generated twwice if sent to myself -> remove duplicate receivers!!!
+update add people
 finish safe logout
-message signature refactoring with  hmac and no duplicate receivers!
-no duplicates!
+check add people to conversation etc.
+check image download
+user search with id not working
 ------------------------------------------
 
 Login:

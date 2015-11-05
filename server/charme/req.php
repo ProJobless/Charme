@@ -1269,7 +1269,7 @@ foreach ($data["requests"] as $item)
 
 			$messageData = $item["messageData"]["obj"];
 			$conversationId = $item["messageData"]["conversationId"];
-		$messageData["sendername"] = $sendername;
+			$messageData["sendername"] = $sendername;
 
 
 			if ($messageData["action"] == "initConversation")

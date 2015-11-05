@@ -35,7 +35,7 @@ function talks_addPeople(revision, conversationId, currentPeople, currentUsernam
 	var receivers = [];
 	// Remove duplicate receivers
 	$.each(receiversTemp, function(index, item) {
-		if (!$.inArray(receivers, item))
+		if ($.inArray(item, receivers) === -1)
 			receivers.push(item);
 	});
 
@@ -52,6 +52,8 @@ function talks_addPeople(revision, conversationId, currentPeople, currentUsernam
 		});
 
 	});
+
+	// TOOD: output usernames
 
 	var message = usernames.length + " people were added.";
 	messageRaw = {
@@ -117,14 +119,8 @@ function talks_startConversation() {
 
 	// Get receivers from UI element
 	var receiversTemp = ($("#inp_receivers").tokenInput("get"));
-	var receivers = [];
-	// Remove duplicate receivers
-	$.each(receiversTemp, function(index, item) {
-		if (!$.inArray(receivers, item))
-			receivers.push(item);
-	});
+	var receivers = [charmeUser.userId];
 
-console.warn(charmeUser.getSignedData());
 	// Get plain receiver userIds in a list
 	var output = [charmeUser.userId];
 	var usernames = [{
@@ -132,14 +128,19 @@ console.warn(charmeUser.getSignedData());
 		name: charmeUser.getSignedData().username // TODO: Add real name provided in charmeUser Object.
 	}];
 
-	$.each(receiversTemp, function(index, item) {
-		output.push(item.id); // add userid
-		usernames.push({
-			userId: item.id,
-			name: item.name
-		});
 
+	$.each(receiversTemp, function(index, item) {
+		if ($.inArray(item.id, output) === -1) {
+
+			receivers.push(item.id);
+			output.push(item.id); // add userid
+			usernames.push({
+				userId: item.id,
+				name: item.name
+			});
+		}
 	});
+
 
 	var keyAlert = function(problems) {
 
@@ -155,7 +156,6 @@ console.warn(charmeUser.getSignedData());
 			ui_showBox(template);
 		});
 	};
-
 	// Send apl_request to server to get edgekeys
 	apl_request({
 			"requests": [{

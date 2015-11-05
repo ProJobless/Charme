@@ -9,10 +9,10 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // if POST, GET, OPT
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-type: application/json');
-header('Access-Control-Allow-Credentials: true'); 
+header('Access-Control-Allow-Credentials: true');
 
 session_start();
- 
+
 require_once 'lib/App/ClassLoader/UniversalClassLoader.php';
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -21,22 +21,23 @@ $loader->registerNamespaces(array('App' => __DIR__ . '/lib'));
 $loader->register();
 
 $col = \App\DB\Get::Collection();
-$sel = array("owner" => $_SESSION["charme_userid"], 
-	'username' => new MongoRegex('/'.$_GET["q"].'/i')
+$sel = array("owner" => $_SESSION["charme_userid"],
+	'key.obj.username' => new MongoRegex('/'.$_GET["q"].'/i')
 ); // q is the search query for the autocomplete.
 
 $ar = iterator_to_array($col->keydirectory->find($sel), true);
 $keys = array();
-$jsonArr = array(); 
+$jsonArr = array();
 
 // Filter out duplicates
 foreach ($ar as $key => $value) {
 	if (!in_array($value["userId"], $keys))
 	{
-		if ($value["userId"] != $_SESSION["charme_userid"])
+    $userId =  $value["key"]["obj"]["publicKeyUserId"];
+		if (  $userId  != $_SESSION["charme_userid"])
 		{
-			$keys[] = $value["userId"];
-			$jsonArr [] = array("name" => $value["username"], "id" => $value["userId"]);
+			$keys[] =   $userId ;
+			$jsonArr [] = array("name" => $value["key"]["obj"]["username"], "id" =>   $userId );
 		}
 	}
 }
