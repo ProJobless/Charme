@@ -649,31 +649,6 @@ function login() {
 
 
 
-    /*
-        var passphrase = "";
-        if (localStorage.getItem("!user_"+u) == null)
-        {
-
-               // also ask for certificate
-               passphrase =prompt("Please enter your passphrase","");
-               // localStorage.setItem("!user_"+u);
-
-        }
-*/
-
-
-    // TODO: Change server.local to user id val
-    // var url = 'http://'+serverurl+'/charme/req.php?u='+encodeURI(u)+'&p='+encodeURI(p)+'&action=user.login&callback=?';
-
-
-
-    // always load certificate...
-
-    /*   $.ajax({
-          dataType: "jsonp",
-          url: url,
-          data: "",
-          success: function(data) {*/
 
       apl_request({
         "requests": [{
@@ -705,18 +680,28 @@ function login() {
         }
         else if (data.user_login.status == "PASS") {
 
+            var oldUserId = localStorage.getItem("userAutoComplete");
+  
+
             localStorage.setItem("user", u);
             localStorage.setItem("signedData", JSON.stringify(data.user_login.ret.signedData.obj));
-
             charmeUser = new apl_user(u); // crypto_hmac_check is called below, as we need fastkey1.
             // Save server
             container_main.userIdURL = charmeUser.userIdURL;
 
             apl_setup(function() {
+
+
+
                 try {
                     var passphrase;
-                    if (localStorage.getItem("passPassphrase") !== null)
+                    if (localStorage.getItem("passPassphrase") !== null &&
+                    oldUserId == u
+                  ) {
+
                         passphrase = aes_decrypt(p, localStorage.getItem("passPassphrase"));
+
+                    }
                     else {
                         passphrase = prompt("Please enter your passphrase", "");
                         localStorage.setItem("passPassphrase", aes_encrypt(p, passphrase))
@@ -754,8 +739,7 @@ function login() {
                     localStorage.removeItem("keyring");
                     localStorage.removeItem("passPassphrase");
                     localStorage.removeItem("user");
-
-
+                    localStorage.removeItem("user");
 
                     return;
                 }
@@ -780,18 +764,30 @@ function login() {
     }, "", serverurl);
 
 }
-function silentLogout() {
+
+function silentLogout(deleteAll) {
   main_container = null;
   charmeUser = null;
-
+  if (deleteAll == true) { // Also delete passphrase and userId
+      localStorage.removeItem("passPassphrase");
+      localStorage.removeItem("userAutoComplete");
+      localStorage.removeItem("signedData");
+  }
+  localStorage.removeItem("keyring");
   localStorage.removeItem("user");
   localStorage.removeItem("passphrase");
   localStorage.removeItem("sessionPassphrase"); // important!
-
 }
-function logout(loginStatusCode) {
+
+function logout(loginStatusCode, deleteAll) {
+
+    if (deleteAll) {
+      if(!confirm("Are you sure to perform a safe logout?"))
+        return;
+    }
+
     ui_closeBox();
-    silentLogout();
+    silentLogout(deleteAll);
     container_guest.render();
     localStorage.setItem("loginStatusCode", loginStatusCode);
     location.href = "./";
@@ -800,7 +796,9 @@ function logout(loginStatusCode) {
 }
 
 function delTemp() {
-
+    localStorage.removeItem("keyring");
+    localStorage.removeItem("signedData");
+    localStorage.removeItem("userAutoComplete");
     localStorage.removeItem("sessionPassphrase");
     localStorage.removeItem("certificate");
     localStorage.removeItem("passPassphrase");

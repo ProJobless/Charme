@@ -259,7 +259,6 @@ view_page = Backbone.View.extend({
 
         _.templateSettings.variable = "rc";
         var templateData = that.getData();
-        console.log(templateData);
         var template = _.template(d, templateData);
 
         $(that.$el).html(template);

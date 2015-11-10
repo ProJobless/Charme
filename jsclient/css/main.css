@@ -140,7 +140,9 @@ a.category
 {
 	background-color: #4937a4;
 }
-
+#contextChoices label {
+	text-align: left;
+}
 .metaData.meta_publicevent
 {
 	color: maroon;
