@@ -1,11 +1,8 @@
 Important:
 -----------------------------------------
-converations are generated twwice if sent to myself -> remove duplicate receivers!!!
-update add people
 finish safe logout
-check add people to conversation etc.
-check image download
-user search with id not working
+search by username!
+
 ------------------------------------------
 
 Login:

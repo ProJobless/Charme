@@ -26,96 +26,79 @@ function talks_encryptEdgekeys(edgeKeyList, messageKey) {
 	return peopleMessageKeys;
 }
 
-function talks_addPeople(revision, conversationId, currentPeople, currentUsernames, currentPeopleHash) {
+function talks_addPeople(revision, conversationId, currentUsernames) {
+
 	newRevision = revision + 1;
-	messageKey = randomAesKey(32);
+	newMessageKey = randomAesKey(32);
 
-	// Get receivers from UI element
-	var receiversTemp = ($("#inp_receivers").tokenInput("get"));
-	var receivers = [];
-	// Remove duplicate receivers
-	$.each(receiversTemp, function(index, item) {
-		if ($.inArray(item, receivers) === -1)
-			receivers.push(item);
-	});
-
-	// Get plain receiver userIds in a list
-	var output = [];
-	var usernames = [];
-
-	/* These are the new users */
-	$.each(receiversTemp, function(index, item) {
-		output.push(item.id); // add userid
-		usernames.push({
-			userId: item.id,
-			name: item.name
-		});
-
-	});
+	var uDir = makeConversationUserDirectory();
+	var usernamesAdded = uDir.usernames;
+	var output = uDir.output;
 
 	// TOOD: output usernames
 
-	var message = usernames.length + " people were added.";
-	messageRaw = {
-		"conversationId": conversationId,
-		"content": aes_encrypt(messageKey, message),
-		"preview": aes_encrypt(messageKey, message),
-		"msgKeyRevision": newRevision,
-		"sender": charmeUser.userId,
-		"time": {
-			sec: new Date().getTime() / 1000
-		},
-	};
+	var message = usernamesAdded.length + " people were added.";
 
 	/*
 		Remove duplicate Usernames from list
 	*/
 	var uidList = []
-	var newUsernamesTemp = $.merge(usernames, currentUsernames);
-	var newUsernames = [];
+	var newUsernamesTemp = $.merge(usernamesAdded, currentUsernames);
+	var allUsernames = [];
 	$.each(newUsernamesTemp, function(i, el) {
 		if ($.inArray(el.userId, uidList) === -1) {
-			newUsernames.push(el);
+			allUsernames.push(el);
 			uidList.push(el.userId)
 		}
 	});
-	var peopleList = CharmeModels.ListOperations.makeUniqueList($.merge(output, currentPeople));
+
+
+	message_data = crypto_hmac_make( // Make HMAC to protect message integrity
+									{
+									"usernames": allUsernames,
+									"action": "addPeople",
+									"sender": charmeUser.userId,
+									"revision" : newRevision,
+									"time": {
+										sec: new Date().getTime() / 1000
+									}
+								}, newMessageKey, 0);
+
+	message_data["conversationId"] = conversationId; // Warning: conversationId is not signed !!!!!
+	message_data["revision"] = newRevision;
+
 
 	apl_request({
 		"requests": [{
 			"id": "edgekeys_byUserIds",
-			"userIdList": peopleList
+			"userIdList": uidList
 		}, ]
 	}, function(d) {
 
-		console.log(d.edgekeys_byUserIds.value);
-		var peopleMessageKeys = talks_encryptEdgekeys(d.edgekeys_byUserIds.value, messageKey);
+		// TODO: Check Edgekeys!
+		if (d.edgekeys_byUserIds.status=="KEYS_NOT_FOUND") {
+			console.warn("Edgekeys were not found when adding new user...");
+		}
+
+		var peopleMessageKeys = talks_encryptEdgekeys(d.edgekeys_byUserIds.value, newMessageKey);
 		apl_request({
 			"requests": [{
 				"id": "message_distribute",
 				"messageKeys": peopleMessageKeys,
-
-				"messageData": {
-					"receivers": peopleList,
-					"messageKeysRevision": newRevision,
-					"usernames": newUsernames,
-					"conversationId": conversationId,
-					"message": CharmeModels.Signature.makeSignedJSON(messageRaw),
-
-					"action": "initConversation"
-				},
-
+				"messageData":message_data
 			}]
 		}, function(d2) {
 			location.href="#talks";
 			ui_closeBox();
+			location.reload();
 			//	location.reload();
 		});
 	});
 }
 
-// Fired on message ok button click, leave arguments empty if new conversation, fill in arguments if adding people to conversation
-function talks_startConversation() {
+
+function makeConversationUserDirectory() {
+
 
 	// Get receivers from UI element
 	var receiversTemp = ($("#inp_receivers").tokenInput("get"));
@@ -141,6 +124,15 @@ function talks_startConversation() {
 		}
 	});
 
+	return {usernames: usernames, output: output };
+
+}
+// Fired on message ok button click, leave arguments empty if new conversation, fill in arguments if adding people to conversation
+function talks_startConversation() {
+
+	var uDir = makeConversationUserDirectory();
+	var usernames = uDir.usernames;
+	var output = uDir.output;
 
 	var keyAlert = function(problems) {
 
@@ -171,7 +163,7 @@ function talks_startConversation() {
 				var messageKey = randomAesKey(32);
 				var peopleMessageKeys = talks_encryptEdgekeys(d.edgekeys_byUserIds.value, messageKey);
 				apl_request({
-					"requests": [{
+					"requests":[{
 							"id": "message_distribute",
 							"messageKeys": peopleMessageKeys, // Receivers must only accept the public newest key here. So we do not need integrity protection for the key revision
 							"messageData": crypto_hmac_make( // Make HMAC to protect message integrity
@@ -179,9 +171,7 @@ function talks_startConversation() {
 															"usernames": usernames,
 															"action": "initConversation"
 															}, messageKey, 0)
-						}
-
-					]
+						}]
 				}, function(d2) {
 					location.href = "#talks/"+d2.message_distribute.messageId;
 					ui_closeBox(); // Open message in view
@@ -267,7 +257,7 @@ var view_talks_subpage = view_subpage.extend({
 
 			if (newKeyRequired) {
 
-				alert( serverData[0].message.object.conversationId);
+
 				apl_request({
 					"requests": [{
 						"id": "messages_get_keys",
@@ -275,7 +265,11 @@ var view_talks_subpage = view_subpage.extend({
 
 					}]
 				}, function(d2) {
-					that.options.messageKeys = d2.messages_get_keys.messageKeys;
+
+					var msgKeys = [];
+					msgKeys[serverData[0].message.object.conversationId] = 	d2.messages_get_keys.messageKeys ;
+					that.options.messageKeys = msgKeys;
+
 					renderMessages(serverData);
 				});
 
@@ -316,7 +310,10 @@ var view_talks_subpage = view_subpage.extend({
 	fileChanged: function(h) {
 		var that = this;
 		var files = h.target.files; // FileList object
+
 		var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+		// (comment to fix atom syntax highlighting)
+
 		var reader = new FileReader();
 
 		reader.file = files[0];
@@ -431,15 +428,15 @@ var view_talks_subpage = view_subpage.extend({
 
 						}]
 					}, function(d2) {
-						that.options.messageKeys = d2.messages_get_keys.messageKeys;
-						talks_addPeople(that.getMessageKey(-1).revision, that.options.conversationId, that.options.receivers, that.options.usernames);
+
+						var msgKeys = [];
+						msgKeys[that.options.conversationId] = 	d2.messages_get_keys.messageKeys ;
+						that.options.messageKeys = msgKeys;
+
+						talks_addPeople(that.getMessageKey(-1).revision, that.options.conversationId, that.options.usernames);
 					});
 				});
-
 			});
-
-
-
 		});
 	},
 
@@ -673,8 +670,18 @@ var view_talks_subpage = view_subpage.extend({
 	// -1 for newest revision:
 	getMessageKey: function(revision, conversationId) {
 
+
 		if (typeof conversationId === "undefined")
 			conversationId = this.options.conversationId;
+
+		if (typeof this.options.messageKeys[conversationId] === "undefined") {
+			alert("ERROR: Did not find any message keys...");
+
+		}
+		else {
+
+						console.info(this.options.messageKeys );
+		}
 
 		var maxRevision = -1;
 		var bestKey;
@@ -730,18 +737,9 @@ var view_talks_subpage = view_subpage.extend({
 			}
 
 			$.get("templates/control_messageview.html", function(d) {
-				// RSA Decode, for each:
-				// d2.messages_get_sub
-				console.log("DATA IS");
-				console.log(d2);
-
 
 
 				that.options.messageKeys[that.options.conversationId] = d2.messages_get_sub.messageKeys;
-				//return; // TODO: remove
-
-
-				//return;
 
 
 				$.each(d2.messages_get_sub.messages, function() {
@@ -1023,16 +1021,14 @@ var view_talks = view_page.extend({
 				jQuery.each(d2.messages_get.messages, function(index, item) {
 
 					// Decode AES Key with private RSA Key
-
-					msgKeys = [];
-
+					var msgKeys = [];
 
 					jQuery.each(d2.messages_get.messageKeys, function(index2, item2) {
 						if (item2.conversationId.$id == item.messageData.conversationId)
 							msgKeys.push(item2);
 					});
+
 					this.messageKeys = msgKeys;
-					console.log(this.messageKeys);
 					this.messageTitle = this.messageData.obj.usernames[0].name;
 					if (this.messageData.obj.usernames.length > 1)
 						this.messageTitle += " and " + (this.messageData.obj.usernames.length - 1) + " more.";

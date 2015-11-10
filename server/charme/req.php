@@ -324,7 +324,6 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "messages_get_keys" :
-			clog("Session owner is:". $item["conversationId"]);
 			$col = \App\DB\Get::Collection();
 			$messageKeys  = $col->messageKeys->find(array("conversationId" => new MongoId($item["conversationId"]), "owner" => $_SESSION["charme_userid"]));
 			$returnArray[$action] = array("messageKeys" => iterator_to_array($messageKeys, false));
@@ -1107,8 +1106,8 @@ foreach ($data["requests"] as $item)
 
 		break;
 
+		// message receiver function for remote servers B_i getting message from server A
 		case "message_receive" :
-
 
 			$col = \App\DB\Get::Collection();
 
@@ -1116,37 +1115,38 @@ foreach ($data["requests"] as $item)
 			$conversationId = $item["messageData"]["conversationId"];
 			// Problem: How to verify new message keys?
 
+			if (	$messageData["action"] == "addPeople") 			// Add people to an existing conversation
+			{
+
+				$col->messageKeys->insert(array("key" => $item["key"], "conversationId" => new MongoId($conversationId), "owner" => $item["key"]["userId"], "revision" => $revision));
+				$col->messageGroups->update(array("messageData.conversationId" => (	$conversationId),
+					"owner" => $item["key"]["userId"]),
+					array('$set' => array(
+						//"messageData.obj.receivers" =>  	$messageData["receivers"],
+						"messageData" => 	$item["messageData"],
+						)));
+			}
+
 			// Initiate a new conversation:
-			if (	$messageData["action"] == "initConversation")
+			else if (	$messageData["action"] == "initConversation")
 			{
 				if (isset(	$messageData["messageKeysRevision"]))
 					$revision = 	$messageData["messageKeysRevision"];
 				else
 					$revision = 0;
+
 				// Add key to messageKeys collection
-
 				$col->messageKeys->insert(array("key" => $item["key"], "conversationId" => new MongoId($conversationId), "owner" => $item["key"]["userId"], "revision" => $revision));
+				$alreadyExists = false; // Does the conversation already exist?
 
-				$alreadyExists = false;
-
-				if (isset(	$item["messageData"]["conversationId"]))
-				{
-					clog("look for ".	$conversationId. "with uid". $item["key"]["userId"]);
-					if ($col->messageGroups->count(array("messageData.obj.conversationId" => (	$conversationId), "owner" => $item["key"]["userId"]))> 0)
-					{
+				if (isset(	$item["messageData"]["conversationId"])) {
+					if ($col->messageGroups->count(array("messageData.obj.conversationId" => (	$conversationId), "owner" => $item["key"]["userId"]))> 0)	{
 						$alreadyExists = true;
-
-
-
 					}
-					//else
-					//	clog("does not  EXIST");
 				}
 
 				if ($alreadyExists)
 				{
-
-
 					// set new people here....
 					$col->messageGroups->update(array("messageData.conversationId" => (	$conversationId),
 						"owner" => $item["key"]["userId"]),
@@ -1154,92 +1154,50 @@ foreach ($data["requests"] as $item)
 							//"messageData.obj.receivers" =>  	$messageData["receivers"],
 							"messageData.obj.usernames" => 	$messageData["usernames"],
 							)));
-
 					$messageInsertion = array("message" =>	$messageData["message"], "owner" => $item["key"]["userId"], "sendername" => 	$messageData["sendername"]);
 
 					if ($item["fileId"] != 0)
 						$messageInsertion["fileId"] = $item["fileId"];
 
 					$col->messages->insert($messageInsertion);
-
-
-					//$col->messages->insert(array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"]));
-
-
-					// insert update notification
-
 				}
 				else
-				$col->messageGroups->insert(array("messageData" => $item["messageData"], "owner" =>  $item["key"]["userId"], "lastAction" => new MongoDate(), "sendername" =>	$messageData["sendername"]));
+					$col->messageGroups->insert(array("messageData" => $item["messageData"], "owner" =>  $item["key"]["userId"], "lastAction" => new MongoDate(), "sendername" =>	$messageData["sendername"]));
 
 
 
 			}
 			else
 			{
-				// Remove signature, can be queried at host server
+				// Remove signature, as it can be queried at host server
 				unset($item["message"]["signature"]);
 
 				// Insert Message in db for every user
 				$messageInsertion  = array();
 				// This is currently only calledo once per server, localreceivers is incomplete!
 				foreach ($item["localreceivers"] as $receiver) {
-
-
-
-
-
 						$messageInsertion =array("message" => $item["message"], "owner" => $receiver, "sendername" => $item["sendername"]);
 
 							if ($item["fileId"] != 0)
-						$messageInsertion["fileId"] = $item["fileId"];
-
-
+								$messageInsertion["fileId"] = $item["fileId"];
 						$col->messages->insert($messageInsertion);
-
 				}
 
+				// TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
+				$gcmpeople =array();
+				foreach ( $item["allreceivers"] as $receiver) { // TODO: remove allreceivers and look them up in database instead!
+					$gcmpeople[] = $receiver["userId"];
+				}
 
-					//clog2($item["localreceivers"], "locals:");
+				$bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
+				$deviceIds = array();
+				foreach ($bucketCol as $citem)
+				{
+				    $deviceIds[] = $citem["regId"];
+				}
 
-
-				   // TODO: Ensure the $gcmpeople array contains (in this operation) only people from my server!
-                $gcmpeople =array();
-								foreach ( $item["allreceivers"] as $receiver) { // TODO: remove allreceivers and look them up in database instead!
-									$gcmpeople[] = $receiver["userId"];
-								}
-
-                $bucketCol = $col->gcmclients->find(array( 'owner' => array('$in' => $gcmpeople)));
-                $deviceIds = array();
-                foreach ($bucketCol as $citem)
-                {
-                    $deviceIds[] = $citem["regId"];
-                }
-
-								clog2($deviceIds, "deviceids:");
-
-
-								clog2("arra people is",$item);
-
-                $gcmcontent = array("messageEnc" =>  $item["message"]["object"]["content"], "conversationId" => $item["message"]["object"]["conversationId"], "sendername" => $item["sendername"]);
-
-               // if (!$CHARME_SETTINGS["DEBUG"]) // Only send messagese if not debugging, for debugging this function append clog before function.
-
-              	//	if (!$CHARME_SETTINGS["DEBUG"])
-
-
-						//	$deviceIds = 		array_filter($deviceIds);
-
-
-									// Returns 0 if no registration ids have been found
-                	$messageFromServerIfDebugIsOn = \App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
-									clog("send notify".$messageFromServerIfDebugIsOn);
-									clog2($deviceIds);
-
-
-
-
-
+				$gcmcontent = array("messageEnc" =>  $item["message"]["object"]["content"], "conversationId" => $item["message"]["object"]["conversationId"], "sendername" => $item["sendername"]);
+				$messageFromServerIfDebugIsOn = \App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
 
 				// Get Conversation User
 				$groups = $col->messageGroups->find(array("messageData.obj.conversationId" => $item["message"]["object"]["conversationId"]), array("owner"));
@@ -1256,7 +1214,6 @@ foreach ($data["requests"] as $item)
 					}
 				}
 				$res = $col->messageGroups->update(array("messageData.obj.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])), array("multiple" => true));
-
 			}
 
 		break;
@@ -1272,7 +1229,8 @@ foreach ($data["requests"] as $item)
 			$messageData["sendername"] = $sendername;
 
 
-			if ($messageData["action"] == "initConversation")
+			if ($messageData["action"] == "initConversation" ||
+					$messageData["action"] == "addPeople")
 			{
 				// Create a unique Id for each conversation
 
@@ -1284,11 +1242,11 @@ foreach ($data["requests"] as $item)
 				}
 
 
-				 for ($i = 0; $i<Count($messageData["usernames"]); $i++)
-				 {
-				 	if ($messageData["usernames"][$i]["userId"] == $_SESSION["charme_userid"])
-				 			$messageData["usernames"][$i]["name"] = $sendername;
-				 }
+				// for ($i = 0; $i<Count($messageData["usernames"]); $i++)
+			//	 {
+				// 	if ($messageData["usernames"][$i]["userId"] == $_SESSION["charme_userid"])
+				// 			$messageData["usernames"][$i]["name"] = $sendername;
+			//	 }
 
 
 				foreach ($messageData["usernames"] as  $userTuple) {

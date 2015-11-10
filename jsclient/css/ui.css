@@ -193,6 +193,11 @@ position: relative;
 	border-radius: 100px;
 	padding: 6px 8px;
 }
+.imagePreview img{
+  -webkit-box-align:center;
+  -webkit-box-pack:center;
+  display:-webkit-box;
+}
 .imagePreview
 {
 	overflow: auto;

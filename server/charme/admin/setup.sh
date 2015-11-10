@@ -115,8 +115,8 @@ stepLast() {
 	echo -e "extension=zmq.so"
   echo -e "\n\n"
 
-  NameVirtualHost charme.local:80
-
+  # For testing, developers can setup the vhosts like:
+  #
   #  sudo gedit /etc/httpd/conf/httpd.conf
   #  <VirtualHost charme.local:80>
   #     ServerAdmin webmaster@example.com
@@ -127,9 +127,8 @@ stepLast() {
   # <VirtualHost client.local:80>
   #     ServerAdmin webmaster@example.com
   #     DocumentRoot /www/Charme/jsclient
-  #     ServerName charme.local:80
+  #     ServerName client.local:80
   # </VirtualHost>
-
 
   if [[ ! -z $YUM_CMD ]]; then
      echo -e "On Fedora your php.ini is usually located in /etc/php.ini"

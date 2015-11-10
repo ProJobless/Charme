@@ -488,6 +488,10 @@ Please note that here we could be more efficient in the future by grouping the m
             
             
             
+\subsubsection{Add People to Conversation}
+People present in the key directory can be added to an existing conversation.
+As they should not be able to see previous messages, a new message key $K_{(revision+1)}$ is generated in this case by the person who adds the new people.
+This key is distributed to the other people afterwards. The people in the conversation have now to be signed again.
 
 \subsubsection{Write message}
 

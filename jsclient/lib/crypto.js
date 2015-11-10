@@ -324,7 +324,7 @@ function aes_decrypt(pass, encText)
 
 				var plaintext = GibberishAES.dec(chypertext.replace(/(\r\n|\n|\r)/gm,"\n"), password); 	// .replace does a linebreak cleanup
 				var hmacNew = CryptoJS.HmacSHA256(chypertext, password).toString(CryptoJS.enc.Base64);
-				console.log("new hmac is+"+hmacNew+"     "+ json.h ); // TODO: HMAC does not work correclty in threads
+				//console.log("new hmac is+"+hmacNew+"     "+ json.h ); // TODO: HMAC does not work correclty in threads
 
 
 				if (json.h == hmacNew)
@@ -339,7 +339,12 @@ function aes_decrypt(pass, encText)
 	}
 	catch(e)
 	{
+		if (typeof encText ==="undefined")
+			console.warn("Encoded object was undefined at aes_decrypt");
+
+
 		console.log(e);
+
 		 return GibberishAES.dec(encText.replace(/(\r\n|\n|\r)/gm,"\n"), pass); // .replace does a linebreak cleanup
 	}
 }
