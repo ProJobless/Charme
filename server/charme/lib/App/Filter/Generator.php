@@ -41,7 +41,7 @@ class Generator
     else {
         $res2 = $dbCollection->keydirectory->find(array("owner" => $_SESSION["charme_userid"] ));
         foreach ($res2 as $resItem) {
-          $splitArray = explode ('@', $resItem["userId"]);
+          $splitArray = explode ('@', $resItem["key"]["obj"]["publicKeyUserId"]);
           $server = $splitArray[1];
           $serverArray[] = $server;
 

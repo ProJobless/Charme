@@ -490,7 +490,7 @@ foreach ($data["requests"] as $item)
 			$res2 = $col->keydirectory->find(array("owner" => $_SESSION["charme_userid"] ));
 			foreach ($res2 as $resItem)
 			{
-				$splitArray = explode ('@', $resItem["userId"]);
+				$splitArray = explode ('@', $resItem["key"]["obj"]["publicKeyUserId"]);
 				$server = $splitArray[1];
 				$serverArray[] = $server;
 			}
@@ -524,6 +524,7 @@ foreach ($data["requests"] as $item)
 			if ($maxServer > 5) // Contact 5 servers for seach query as maximum
 				$maxServer = 5;
 
+			clog2($serverArray);
 			//
 			// Build curl requests
 			//

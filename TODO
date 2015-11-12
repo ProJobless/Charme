@@ -1,21 +1,15 @@
 Important:
 -----------------------------------------
-finish safe logout
 search by username!
 
 ------------------------------------------
 
-Login:
-1. No RSA Decrypt error if other account
 
 
 Key Updates:
 1. Test
 2. Notify others after update
 3. ENSURE KEY REVSION ALSO SAVED WITH INTEGRITY PROTECTION!!!
-
-Layout:
-1. Responsive Search
 
 Unverified bugs:
 1. "load more messages" displaying duplicates
