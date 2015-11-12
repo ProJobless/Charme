@@ -775,11 +775,27 @@ control_postField = Backbone.View.extend({
           var template = _.template(d, {userlists: d22.lists_get});
 
         ui_showBox(template, function() {
+
+          $("#but_goback").click(function() {
+
+            $("#contextContainer .scroller").animate({
+              left: -0
+            }, 400);
+
+
+          });
+
+
           $(".contextItem").click(function() {
 
           var contextType = $(this).data("type");
           var html = CharmeModels.Context.getForm(contextType);
-          $("#contextDetails").prepend(html);
+          $("#contextDetails").html(html);
+
+
+
+
+
           $("#contextContainer .scroller").animate({
             left: -400
           }, 400);
@@ -1413,6 +1429,7 @@ control_postItem = Backbone.View.extend({
       }
 
 
+
       if (metaData["type"] == "publicevent") {
         /*
 					onclick='ui_showMap("+parseFloat(metaData.startLocation_data.latitude)+","+parseFloat(metaData.startLocation_data.longitude)+")'>"+xssText(metaData.startLocation_data.name)+ "</a> to <a  onclick='ui_showMap("+parseFloat(metaData.endLocation_data.longitude)+","+parseFloat(metaData.endLocation_data.latitude)+", '"+xssAttr( metaData.startLocation_data.name)+"')'> "+xssText(metaData.endLocation_data.name)+ "</a>
@@ -1475,6 +1492,13 @@ control_postItem = Backbone.View.extend({
               parseFloat(metaData.location_data.position.coordinates[0]),
               metaData.location_data.name);
           });
+
+
+      }
+      if (metaData.type == "lend") {
+
+        metaDataStr = "<div class='metaData meta_" + metaData.type + "'><div class='point'></div>" + xssText(metaData.currency + " " + metaData.price) + " per day</div>";
+        $("#post_" + that.options.postObj.postId + " .cont").append(metaDataStr);
 
 
       }

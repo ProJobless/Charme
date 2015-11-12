@@ -165,6 +165,33 @@
 			]
 		},
 
+
+		'lend': {
+			name: "Offer"
+			attributes: [
+
+				{
+					id: "price"
+					type: "moneyamount" #
+					name: "Price per day"
+					filter: "range"
+				},
+				{
+					id: "currency"
+					type: "currency"
+					name: "Currency"
+				}
+				{
+					id: "sell"
+					type: "productcategory"
+					name: "Product Identifier"
+					filter: "exact"
+				}
+			]
+		},
+
+
+
 		'offer': {
 			name: "Offer"
 			attributes: [

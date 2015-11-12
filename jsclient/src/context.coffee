@@ -241,7 +241,7 @@ class CharmeModels.Context
 			else if v["type"] == "int"
 				html += "<input name='"+v["id"]+"' type='text' class='box'>"
 			else if v["type"] == "moneyamount"
-				html += "<input data-typed='float' name='"+v["id"]+"' type='text' class='box'>"
+				html += "<input type='number' min='1' step='any' name='"+v["id"]+"'  class='box'>"
 			else if v["type"] == "currency"
 				html += '<select name="'+v["id"]+'">'+CharmeModels.Context.getCurrencies()+'</select>'
 			else if v["type"] == "activity"

@@ -140,6 +140,11 @@ a.category
 {
 	background-color: #4937a4;
 }
+.metaData.meta_lend .point
+{
+	background-color:  #1fad28;
+}
+
 #contextChoices label {
 	text-align: left;
 }
@@ -155,6 +160,11 @@ a.category
 {
 	color: #b88504;
 }
+.metaData.meta_lend
+{
+	color: #1fad28;
+}
+
 
 .metaData a
 {
