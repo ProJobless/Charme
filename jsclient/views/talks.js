@@ -670,7 +670,6 @@ var view_talks_subpage = view_subpage.extend({
 	// -1 for newest revision:
 	getMessageKey: function(revision, conversationId) {
 
-
 		if (typeof conversationId === "undefined")
 			conversationId = this.options.conversationId;
 
@@ -678,21 +677,14 @@ var view_talks_subpage = view_subpage.extend({
 			alert("ERROR: Did not find any message keys...");
 
 		}
-		else {
-
-						console.info(this.options.messageKeys );
-		}
 
 		var maxRevision = -1;
 		var bestKey;
 
 		$.each(this.options.messageKeys[conversationId], function(i) {
-
-
 			if ((this.revision > maxRevision && revision == -1) || revision == this.revision) {
 				bestKey = this;
 				maxRevision = this.revision;
-
 			}
 		});
 
@@ -703,7 +695,6 @@ var view_talks_subpage = view_subpage.extend({
 			key: msgKey,
 			revision: bestKey.revision
 		};
-
 	},
 	loadMessages: function(start) {
 

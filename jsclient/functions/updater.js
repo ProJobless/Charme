@@ -52,9 +52,8 @@ $(function(){
 								apl_update_apply(data.updates_get);
 							}, null, null, true);
 					}
-					else if (typeof container_main.currentView.sub.refreshMessages !== "undefined")
+					else if (typeof container_main.currentView.sub.refreshMessages !== "undefined") // Refresh conversations if in conversation view
 					{
-
 						container_main.currentView.sub.refreshMessages([data]);
 					}
 					else

@@ -1088,7 +1088,6 @@ foreach ($data["requests"] as $item)
 
 
 					$data = array("requests" => array($reqdata));
-					clog2("---".$receiver);
 					$req21 = new \App\Requests\JSON(
 					$receiver,
 					$_SESSION["charme_userid"],
@@ -1170,6 +1169,7 @@ foreach ($data["requests"] as $item)
 			}
 			else
 			{
+
 				// Remove signature, as it can be queried at host server
 				unset($item["message"]["signature"]);
 
@@ -1201,12 +1201,14 @@ foreach ($data["requests"] as $item)
 				$messageFromServerIfDebugIsOn = \App\GCM\Send::NotifyNew($deviceIds, json_encode($gcmcontent));
 
 				// Get Conversation User
-				$groups = $col->messageGroups->find(array("messageData.obj.conversationId" => $item["message"]["object"]["conversationId"]), array("owner"));
+				$groups = $col->messageGroups->find(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array("owner"));
 
 				foreach ($groups as $group)
 				{
+
 					if ($item["message"]["object"]["sender"] != $group["owner"]) // No notification for myself
 					{
+
 						$context = new ZMQContext(); // Notifiy events.php which send the notification via web sockets to the client.
 						$socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
 						$socket->connect("tcp://localhost:5555");
