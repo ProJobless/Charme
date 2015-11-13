@@ -2302,7 +2302,7 @@ foreach ($data["requests"] as $item)
 
 			if (isset($item["filter"])  && isset($item["filter"]["lists"])) {
 				$item2["people"] = $people; // TODO: filter out so that only people on the server are requested
-				clog("People filter is on");
+				//clog("People filter is on");
 			}
 
 			$data = array("requests" => array($item2));
@@ -2325,7 +2325,7 @@ foreach ($data["requests"] as $item)
 			//
 			$mh = curl_multi_init(); // Init the curl module for HTTP Requests
 			$ch = array();
-		//	clog2($serverList);
+
 		//	for ($i = 0; $i<Count($serverList); $i++) {
 			foreach ($serverList as $i => $server) {
 
@@ -2358,7 +2358,6 @@ foreach ($data["requests"] as $item)
 			}
 
 
-
 		//	$streamItems = array(); // TODO: REMOVE!! THIS IS TO DEBUG WITHOUT LOCAL ENTRIES!
 		//	$postIds = array(); // TODO: REMOVE!! THIS IS TO DEBUG WITHOUT LOCAL ENTRIES!
 
@@ -2378,6 +2377,7 @@ foreach ($data["requests"] as $item)
 
 					//clog("content".$content);
 					if ($content != "") {
+
 				        $json = json_decode($content, true);
 								foreach ($json["stream_respond"] as $item3) {
 
@@ -2416,6 +2416,9 @@ foreach ($data["requests"] as $item)
 									}
 								}
 				        curl_multi_remove_handle($mh, $val);
+							}
+							else {
+								//clog("WARNING: Stream search content returned empty.");
 							}
 				}
 		}

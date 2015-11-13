@@ -826,6 +826,9 @@ control_postField = Backbone.View.extend({
               var floatFields =   CharmeModels.Context.getContextFloats(contextType);
               that.metaData = {}
               var metaDataTemp = $('#contextDetails').serializeObject();
+
+
+
               $.each(metaDataTemp, function(index, value) {
                 if ($.inArray(index, floatFields) !== -1) {
                   value = parseFloat(value);
@@ -836,6 +839,7 @@ control_postField = Backbone.View.extend({
                 that.metaData[index] = value;
 
               });
+
 
               // The context type (offer, move, etc...)
               that.metaData.type = contextType;
@@ -2259,11 +2263,13 @@ var view_stream = view_page.extend({
                   if ($(this).attr("data-type") != "additional") {
 
                     if ($(this).attr("data-type")  == "range") {
+
+                      var elementName = $(this).attr("name");
                       filterAsJson.constraints.push({
-                        name: $(this).attr("name"),
+                        name: elementName,
                         type: $(this).attr("data-type"),
                         start:  $(this).val(), // Start range input field
-                        end: $("[name="+$(this).attr("name")+"_end]").val()// End range input field
+                        end: $(this).parent().find("[name="+elementName+"_end]").val()// End range input field
                         });
                     }
                     else if ($(this).attr("data-type")  == "exact") {

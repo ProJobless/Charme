@@ -39,16 +39,20 @@ class Generator
 
     }
     else {
+        // Find the most connected server from this user (aka the servers where the most public keys have been added from).
         $res2 = $dbCollection->keydirectory->find(array("owner" => $_SESSION["charme_userid"] ));
         foreach ($res2 as $resItem) {
           $splitArray = explode ('@', $resItem["key"]["obj"]["publicKeyUserId"]);
           $server = $splitArray[1];
-          $serverArray[] = $server;
+          if (!in_array($server, $serverArray))
+            $serverArray[] = $server;
+
 
       }
       $returnedServers =  array_slice($serverArray, 0, 5);
 
     }
+
 
     return array_unique($returnedServers);
 
@@ -82,11 +86,15 @@ class Generator
     {
 
       // TODO: ensureIndex on GPS Location
-
+    //  clog2($filterObject["constraints"], "constraints are");
       foreach ($filterObject["constraints"] as $constraint) {
         if ($constraint["type"] == "range") {
-          $const3[$prefix.".".$constraint["name"]] = array('$gte' => intval( $constraint["start"]));
-          $const3[$prefix.".".$constraint["name"]] = array('$lt' =>intval(  $constraint["end"]));
+
+          if (isset($constraint["start"]) &&  is_numeric($constraint["start"]))
+          $const3[$prefix.".".$constraint["name"]] = array('$gte' => doubleval( $constraint["start"]));
+          if (isset($constraint["end"]) &&  is_numeric($constraint["end"]))
+          $const3[$prefix.".".$constraint["name"]] = array('$lt' =>doubleval(  $constraint["end"]));
+
         }
         else  if ($constraint["type"] == "exact") {
           $const3[$prefix.".".$constraint["name"]] = $constraint["value"] ;
