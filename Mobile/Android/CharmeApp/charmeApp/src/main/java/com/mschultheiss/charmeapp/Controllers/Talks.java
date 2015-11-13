@@ -453,8 +453,8 @@ public class Talks extends ActionBarActivity {
 
 
                                         TalkItem x = new TalkItem(oo.getJSONObject("messageData").getString("conversationId"), previewText,
-                                                oo.getJSONObject("messageData").getJSONArray("receivers"),
-                                                oo.getJSONObject("messageData").getJSONArray("usernames"),
+
+                                                oo.getJSONObject("messageData").getJSONObject("obj").getJSONArray("usernames"),
                                                 newestMessageKey,
                                                 count1, oo.getJSONObject("messageData").getString("conversationId"));
 

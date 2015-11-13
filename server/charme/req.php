@@ -1046,8 +1046,8 @@ foreach ($data["requests"] as $item)
 			$res = $col->messageGroups->findOne(array("messageData.conversationId"=> ($convId->__toString())), array('messageData'));
 
 
-
 			$clustered = \App\Requests\Cluster::ClusterPeople($res["messageData"]["obj"]["usernames"]); // Cluster people to save bandwith
+
 
 			$fileId = 0;
 
@@ -1088,7 +1088,7 @@ foreach ($data["requests"] as $item)
 
 
 					$data = array("requests" => array($reqdata));
-
+					clog2("---".$receiver);
 					$req21 = new \App\Requests\JSON(
 					$receiver,
 					$_SESSION["charme_userid"],

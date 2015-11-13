@@ -11,16 +11,14 @@ public class TalkItem {
 	public String ID;
 	public String Title;
 	public String AES;
-	public JSONArray People;
 	public JSONArray Usernames;
 	public int Count = 0;
 	public String ConversationId;
-	public TalkItem(String id, String title, JSONArray people,  JSONArray usernames, String aes, int count , String convId)
+	public TalkItem(String id, String title,  JSONArray usernames, String aes, int count , String convId)
 	{
 		this.Count=count;
 		this.ID=id;
 		this.Title = title;
-		this.People = people;
 		this.AES = aes;
 		this.Usernames = usernames;
 		this.ConversationId = convId;
@@ -30,7 +28,7 @@ public class TalkItem {
 
 	}
 	public int getImageResource(Context context) {
-		int r = GroupTools.getImageByReceivers(this.People, context);
+		int r = GroupTools.getImageByReceivers(this.Usernames, context);
 		System.out.println("R is "+r);
 		return r;
 	}

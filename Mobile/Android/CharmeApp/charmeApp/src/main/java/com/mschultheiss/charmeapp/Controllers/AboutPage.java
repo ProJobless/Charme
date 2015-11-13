@@ -24,6 +24,7 @@ public class AboutPage extends ActionBarActivity {
 		Window window = this.getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 		window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 	}public void close(View v) {
@@ -42,12 +43,8 @@ public class AboutPage extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
-		}
 
-		if (id == R.id.showHome) {
+		if (id == R.id.home) {
 			finish();
 			return true;
 		}

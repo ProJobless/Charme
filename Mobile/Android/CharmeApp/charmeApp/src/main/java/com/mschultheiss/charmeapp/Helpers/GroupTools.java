@@ -15,29 +15,26 @@ import org.json.JSONArray;
  */
 public class GroupTools {
 
-    public static int getImageByReceivers(JSONArray receivers, Context context) {
+    public static int getImageByReceivers(JSONArray names, Context context) {
 
         try {
-
             String a = "";
-            for (int i = 0; i<receivers.length(); i++)
-                a += receivers.getString(i);
-
+            for (int i = 0; i<names.length(); i++)
+                a += names.getJSONObject(i).getString("userId");
 
             int[] numImages = {0, 0, 4, 2,4, 1,1}; // The available images for each peope count
-
-            int receiverNumber = receivers.length();
+            int receiverNumber = names.length();
 
             if (receiverNumber>numImages.length)
                 return R.drawable.i91;
             else
             {
 
-                int hah = a.hashCode()%numImages[receivers.length()];
+                int hah = a.hashCode()%numImages[names.length()];
                 if (hah<0)
                     hah=hah*-1;
                 hah+=1;
-                String index = String.valueOf(receivers.length())+String.valueOf(hah);
+                String index = String.valueOf(names.length())+String.valueOf(hah);
 
 
                 Resources resources = context.getResources();
@@ -62,12 +59,9 @@ public class GroupTools {
 
     public static String getNameByReceivers(JSONArray names, Context context) {
 
-
         SharedPreferences cookiePreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String myUserId = cookiePreferences.getString("user_id", "'");
 
-        // TODO: Do not display my own name!
-        
         try {
             String all = "";
             int namecounter = 0;
@@ -98,6 +92,9 @@ public class GroupTools {
                     }
                 }
             }
+
+            if (namecounter == 0)
+                    all = "Soliloquy";
 
             return all;
         }

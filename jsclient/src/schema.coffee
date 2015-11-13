@@ -167,7 +167,7 @@
 
 
 		'lend': {
-			name: "Offer"
+			name: "Lend"
 			attributes: [
 
 				{

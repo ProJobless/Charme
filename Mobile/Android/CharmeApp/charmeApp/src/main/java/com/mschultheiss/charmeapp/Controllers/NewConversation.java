@@ -88,15 +88,13 @@ public class NewConversation extends ActionBarActivity {
                 revisionB: item.key.obj.publicKeyRevision
 		        })]
 
-            4. 	"requests": [{
-							"id": "message_distribute",
-							"messageKeys": peopleMessageKeys,
-							"messageData": {
-								"receivers": output,
-								"usernames": usernames,
-								"action": "initConversation"
-							}
-						}
+            4. 		"id": "message_distribute",
+                    "messageKeys": peopleMessageKeys, // Receivers must only accept the public newest key here. So we do not need integrity protection for the key revision
+                    "messageData": crypto_hmac_make( // Make HMAC to protect message integrity
+                                  {
+                                    "usernames": usernames,
+                                    "action": "initConversation"
+                                    }, messageKey, 0)
 
 
          */
@@ -140,9 +138,9 @@ public class NewConversation extends ActionBarActivity {
             JSONObject jsonMessageData = new JSONObject();
             jsonMessageData.put("action", "initConversation");
             jsonMessageData.put("usernames", peopleJSON);
-            jsonMessageData.put("receivers", jsonReceivers);
-            r1.put("messageData", jsonMessageData);
-            System.out.println("JSON jsonMessageKeys IS:" + jsonMessageKeys.toString());
+
+
+            r1.put("messageData", Crypto.makeJsonHmac(jsonMessageData, messageKey, 0));
             r1.put("messageKeys", jsonMessageKeys);
 
             list.put(r1);

@@ -19,14 +19,14 @@ class Cluster
 
 		foreach ($people as $item2)
 		{
-			$item = $item["userId"];
+			$item = $item2["userId"];
 
 			$ex = explode('@',  $item);
-			$ex = $ex[1];
+			$serverExt = $ex[1];
 
-			if (!in_array($ex, $servers))
+			if (!in_array($serverExt, $servers))
 			{
-				$servers[] = $ex;
+				$servers[] = $serverExt;
 				$fewpeople[] = $item2;
 
 			}

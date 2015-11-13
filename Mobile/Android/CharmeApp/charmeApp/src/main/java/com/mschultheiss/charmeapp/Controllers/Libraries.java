@@ -6,8 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.mschultheiss.charmeapp.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Libraries extends ActionBarActivity {
 
@@ -19,6 +24,37 @@ public class Libraries extends ActionBarActivity {
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(
+                    new InputStreamReader(getAssets().open("libraries.txt"), "UTF-8"));
+
+            // do reading, usually loop until end of file reading
+            String mLine;
+            String all = "";
+            while ((mLine = reader.readLine()) != null) {
+               all += mLine+"\n";
+
+            }
+            TextView tx = (TextView)findViewById(R.id.txtLibraries);
+            tx.setText(all);
+
+        } catch (IOException e) {
+            System.out.println(e.toString());
+            //log the exception
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
     }
 

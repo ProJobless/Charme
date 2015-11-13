@@ -113,9 +113,7 @@ function crypto_hmac_make(obj, customKey, customKeyRevision) {
 		customKey = fk1.fastkey1;
 	}
 
-
 	var hmac = CryptoJS.HmacSHA256(hmacStr+customKeyRevision, customKey).toString(CryptoJS.enc.Base64);
-
 	var fullObject =  {
 		"revision": customKeyRevision, // fastkey revision
 		"hmac": hmac,
