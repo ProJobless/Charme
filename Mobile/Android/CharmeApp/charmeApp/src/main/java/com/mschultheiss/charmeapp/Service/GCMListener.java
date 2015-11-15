@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -113,6 +114,9 @@ public class GCMListener extends GcmListenerService {
 
             //  ii.putExtra("aes", value);
             // ii.putExtra("superId", value);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String ringToneName = preferences.getString("notifications_new_message_ringtone", "DEFAULT_SOUND");
+
 
 
             Intent intent = new Intent();
@@ -141,20 +145,35 @@ public class GCMListener extends GcmListenerService {
                 msg = "New message";
 
 
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                    ii , PendingIntent.FLAG_CANCEL_CURRENT); // PendingIntent.FLAG_CANCEL_CURRENT is necessary for putExtra
+            if (preferences.getBoolean("notifications_new_message", true)) {
 
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle(jo.getString("sendername"))
+                PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                        ii , PendingIntent.FLAG_CANCEL_CURRENT); // PendingIntent.FLAG_CANCEL_CURRENT is necessary for putExtra
 
-                            .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText(msg))
-                            .setContentText(msg);
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle(jo.getString("sendername"))
 
-            mBuilder.setContentIntent(contentIntent);
-            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                                .setStyle(new NotificationCompat.BigTextStyle()
+                                        .bigText(msg))
+                                .setContentText(msg);
+
+                mBuilder.setContentIntent(contentIntent);
+
+
+                mBuilder.setSound(Uri.parse(ringToneName));
+
+                if (preferences.getBoolean("notifications_new_message_vibrate", true))
+                    mBuilder.setVibrate(new long[]{250, 250});
+
+
+                mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+            }
+
+
+
 
 
         }

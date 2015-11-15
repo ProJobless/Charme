@@ -76,7 +76,6 @@ public class RSAObj {
 			signatureObj.put("keyRevision", keyRevision );
 
 			// Generate new key
-			KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
 			PrivateKey privateKey = getPrivateKey();
 
 			// Compute signature
@@ -95,11 +94,7 @@ public class RSAObj {
 			cipher.init(Cipher.ENCRYPT_MODE, privateKey);
 			byte[] cipherText = cipher.doFinal(digest);
 
-			// Display results
-			System.out.println("Input data: " + jsonStr);
-			System.out.println("Digest: " + bytesToHex(digest));
-			System.out.println("Cipher text: " + bytesToHex(cipherText));
-			System.out.println("Signature: " + bytesToHex(signature));
+
 
 			signatureObj.put("hashvalue", bytesToHex(signature));
 			returnOb.put("signature", signature);

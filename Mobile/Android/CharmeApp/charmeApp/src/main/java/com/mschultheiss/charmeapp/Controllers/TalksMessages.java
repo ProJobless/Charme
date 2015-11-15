@@ -31,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import com.mschultheiss.charmeapp.Helpers.AsyncHTTP;
 import com.mschultheiss.charmeapp.Helpers.AsyncHTTPParams;
 import com.mschultheiss.charmeapp.Crypto.Crypto;
 import com.mschultheiss.charmeapp.Crypto.GibberishAESCrypto;
+import com.mschultheiss.charmeapp.Models.MessageItem;
 import com.mschultheiss.charmeapp.R;
 import com.mschultheiss.charmeapp.Crypto.RSAObj;
 import com.mschultheiss.charmeapp.Helpers.StringFormatter;
@@ -765,7 +767,8 @@ public class TalksMessages extends ActionBarActivity {
 
 								} catch (Exception ex) {
 									System.out.println("CHARME ERROR2"
-											+ ex.toString());
+											+ ex.toString() + " RESULT WAS:"+result);
+
 								}
 
 							}
@@ -993,36 +996,9 @@ public class TalksMessages extends ActionBarActivity {
 		}
 	}
 
-	public class MessageItem {
-		public MessageItem(String msg, String username, String uid, int typ,
-				String id, double timestamp) {
-			this.message = msg;
-			this.user = username;
-			this.type = typ;
-			this.ID = id;
-			this.userId = uid;
-            this.timestamp = timestamp;
 
-		}
-        public void saveToDatabase(sqLiteHelper sqd, String conversationId)
-        {
-            try {
 
-              db.addMessage(message, conversationId, timestamp, this.user, this.ID, this.hasFile, this.userId, this.fileId); // last argumeent is fileId
-            }
-            catch(android.database.sqlite.SQLiteConstraintException ex){ System.out.println("CHARME INFO: DB Lite failed, entry probably already exists.");}
-        }
-    public double timestamp;
-		public String ID;
-		public Bitmap image;
-        public String fileId;
 
-		public String user;
-		public String userId;
-		public int hasFile = 0;
-		public String message;
-		public int type; // Message / Image / Information / Show more
-	}
 
 	public String getTheNewestMessageKey() {
 		JSONObject messageKey = getMessageKeyByRevision(-1);
@@ -1120,39 +1096,45 @@ public class TalksMessages extends ActionBarActivity {
 
 			if (type == 0) {
 				if (convertView == null
-						|| !(convertView.getTag() instanceof ViewHolder)) {
+					) {
 					convertView = LayoutInflater.from(getContext()).inflate(
 							R.layout.talks_messages_row_message, parent, false);
-					convertView.setTag(new ViewHolder((TextView) convertView
-							.findViewById(R.id.textView1),
-
-					(TextView) convertView.findViewById(R.id.textView2),
-							(LinearLayout) convertView
-									.findViewById(R.id.mainbox)
-
-					));
 				}
 
-				ViewHolder holder = (ViewHolder) convertView.getTag();
-				if (t != null && t.message != null && holder != null) {
-					holder.atext.setText(t.user);
-					holder.atext2.setText(t.message);
+
+
+
+				if (t != null && t.message != null) {
+
+
+                    TextView txtUsername =  (TextView)convertView.findViewById(R.id.textViewUsername);
+                    TextView txtMessage =  (TextView)convertView.findViewById(R.id.textViewMessage);
+                    View mainLayout = (View) convertView.findViewById(R.id.mainbox);
+                    ProgressBar progress = (ProgressBar) convertView.findViewById(R.id.progressSending);
+
+                    if (t.isSending)
+                        progress.setVisibility(View.VISIBLE);
+                    else
+                        progress.setVisibility(View.GONE);
+
+                    txtUsername.setText(t.user);
+                    txtMessage.setText(t.message);
 
 					float scale = getResources().getDisplayMetrics().density;
 					int dp50 = (int) (50 * scale + 0.5f);
 					int dp8 = (int) (8 * scale + 0.5f);
 
 					if (!t.userId.equals(getCurrentUserId())) {
-						holder.mainbox.setPadding(dp8, dp8, dp50, 0);
+                        mainLayout.setPadding(dp8, dp8, dp50, 0);
 					} else
-						holder.mainbox.setPadding(dp50, dp8, dp8, 0);
+                        mainLayout.setPadding(dp50, dp8, dp8, 0);
 
 				}
 
 			}
-			if (type == 2) {
+			if (type == 2) { // Image Box
 				if (convertView == null
-						|| !(convertView.getTag() instanceof ViewHolder)) {
+						|| !(convertView.getTag() instanceof ViewHolder3)) {
 					convertView = LayoutInflater.from(getContext()).inflate(
 							R.layout.talks_messages_row_images, parent, false);
 					convertView.setTag(new ViewHolder3((TextView) convertView
@@ -1179,7 +1161,7 @@ public class TalksMessages extends ActionBarActivity {
 
 					holder3.atext.setText(t.user);
 
-					System.out.println("SET 123");
+
 					if (t.image != null)
 						holder3.img.setImageBitmap(t.image);
 
@@ -1252,13 +1234,16 @@ public class TalksMessages extends ActionBarActivity {
 		final TalksMessages that = this;
 		final EditText mEdit = (EditText) findViewById(R.id.editText1);
 
-        mEdit.setEnabled(false);
 		final String realmessage = mEdit.getText().toString();
-		String shortmessage = StringFormatter.shorten(mEdit.getText()
+
+        if (realmessage.equals("") || this.conversationId.equals(""))
+            return;
+
+
+        String shortmessage = StringFormatter.shorten(mEdit.getText()
                 .toString(), 127);
 
-		if (realmessage.equals("") || this.conversationId.equals(""))
-			return;
+
 
 		try {
 			String newestMessageKey = getTheNewestMessageKey();
@@ -1278,8 +1263,28 @@ public class TalksMessages extends ActionBarActivity {
 
 			final RSAObj rsa = getRSAEncryptObject();
 
-            ImageButton btn = (ImageButton) findViewById(R.id.button1);
-			btn.setEnabled(false);
+
+            final MessageItem msgItem = 	new MessageItem(
+                    realmessage,
+                    "My Name",
+                    getCurrentUserId(),
+            0, "", getCurrentTimeSecondsAsDouble());
+
+
+            adapter.addItem(
+                    msgItem, adapter.getSize());
+            msgItem.isSending = true;
+
+            adapter.refresh();
+
+
+
+            adapter.notifyDataSetChanged();
+            mEdit.setText("");
+            m_listview
+                    .setSelection(adapter
+                            .getSize() - 1);
+
 
 			new AsyncCrypto() {
 				@Override
@@ -1300,43 +1305,44 @@ public class TalksMessages extends ActionBarActivity {
 						new AsyncHTTP() {
 							@Override
 							protected void onPostExecute(String result) {
+                                if (result.equals("")) {
 
+                                    System.out.println("CRITICAL ERROR: NO CONNECTION?");
+                                    return;
+
+                                }
 								try {
 									JSONObject jo = new JSONObject(result);
 									String myname = jo.getJSONObject(
 											"message_distribute_answer")
 											.getString("sendername");
 
-									adapter.addItem(
-											new MessageItem(
-													realmessage,
-													myname,
-                                                    getCurrentUserId(),
-													0, "", getCurrentTimeSecondsAsDouble()), adapter.getSize());
+                                    msgItem.user = myname;
+                                    msgItem.isSending = false;
+                                    adapter.notifyDataSetChanged();
+
 
 									// must run in ui thread to maintain scroll
-									// position
-									TalksMessages.this
-											.runOnUiThread(new Runnable() {
+                                            // position
+                                            TalksMessages.this
+                                                    .runOnUiThread(new Runnable() {
 
-												@Override
-												public void run() {
-													// refresh list
-													adapter.refresh();
-                                                    mEdit.setEnabled(true);
-													mEdit.setText("");
+                                                        @Override
+                                                        public void run() {
+                                                            // refresh list
+                                                            adapter.refresh();
 
-                                                    ImageButton btn = (ImageButton) findViewById(R.id.button1);
-													btn.setEnabled(true);
 
-													// scroll down
-													m_listview
-															.setSelection(adapter
-																	.getSize() - 1); // scroll
-																						// to
-																						// bottom
-												}
-											});
+
+
+                                                            // scroll down
+                                                            m_listview
+                                                                    .setSelection(adapter
+                                                                            .getSize() - 1); // scroll
+                                                            // to
+                                                            // bottom
+                                                        }
+                                                    });
 
 								} catch (Exception ex) {
 									System.out.println("CHARME ERROR2"
@@ -1349,10 +1355,10 @@ public class TalksMessages extends ActionBarActivity {
 					} catch (Exception ee) {
 					}
 
-				}
+                }
 
-			}.execute(new AsyncCryptoArgs(rsa, messageRaw,
-					AsyncCryptoArgs.ACTION_SIGN, TalksMessages.this));
+            }.execute(new AsyncCryptoArgs(rsa, messageRaw,
+                    AsyncCryptoArgs.ACTION_SIGN, TalksMessages.this));
 
 			// Async HTTP End
 
@@ -1467,19 +1473,6 @@ public class TalksMessages extends ActionBarActivity {
 		}
 	}
 
-	private static class ViewHolder {
-		public TextView atext;
-		public TextView atext2;
-		public LinearLayout mainbox;
-
-		private ViewHolder(TextView text, TextView text2, LinearLayout mb) {
-
-			this.atext = text;
-			this.atext2 = text2;
-			this.mainbox = mb;
-
-		}
-	}
 
 	private static class ViewHolder3 {
 		public TextView atext;
