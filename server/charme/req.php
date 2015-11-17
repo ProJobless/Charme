@@ -1216,7 +1216,7 @@ foreach ($data["requests"] as $item)
 
 					}
 				}
-				$res = $col->messageGroups->update(array("messageData.obj.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])), array("multiple" => true));
+				$res = $col->messageGroups->update(array("messageData.conversationId" => $item["message"]["object"]["conversationId"]), array('$set' => array("lastAction" => new MongoDate(), "sendername" => $item["sendername"], "preview" => $item["message"]["object"]["preview"])), array("multiple" => true));
 			}
 
 		break;

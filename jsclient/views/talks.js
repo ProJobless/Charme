@@ -1024,14 +1024,20 @@ var view_talks = view_page.extend({
 					if (this.messageData.obj.usernames.length > 1)
 						this.messageTitle += " and " + (this.messageData.obj.usernames.length - 1) + " more.";
 
+
+
 					try {
 						var msgKey = that.getNewestMessageKey(msgKeys).key;
+
 						this.messagePreview = aes_decrypt(msgKey, this.preview);
 						this.messagePreview = $.charmeMl(this.messagePreview, {
 							tags: ["smiliedelete"]
 						});
 
-					} catch (e) {}
+
+					} catch (e) {
+
+					}
 
 
 				});
