@@ -681,7 +681,7 @@ function login() {
         else if (data.user_login.status == "PASS") {
 
             var oldUserId = localStorage.getItem("userAutoComplete");
-  
+
 
             localStorage.setItem("user", u);
             localStorage.setItem("signedData", JSON.stringify(data.user_login.ret.signedData.obj));
@@ -725,6 +725,12 @@ function login() {
 
                     if (!crypto_hmac_check(data.user_login.ret.signedData)) // MUST be called after apl_setup2 as we need the keyring to check the hmac with fastkey1
                     alert("CRITICAL SECURITY ERROR: Could not verify integrity of signed data. ");
+
+
+                    if (!global_socket_connection_isactive) {
+                      apl_updater_connect_socket();
+                    }
+
 
                     // When completed, open main view
                     $("#welcome_main").fadeOut(300, function() {
@@ -777,6 +783,10 @@ function silentLogout(deleteAll) {
   localStorage.removeItem("user");
   localStorage.removeItem("passphrase");
   localStorage.removeItem("sessionPassphrase"); // important!
+
+  if (typeof global_socket_connection !== "undefined")
+    global_socket_connection.close();
+    
 }
 
 function logout(loginStatusCode, deleteAll) {

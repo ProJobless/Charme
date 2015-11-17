@@ -15,6 +15,15 @@
 */
 $(function(){
 
+	apl_updater_connect_socket();
+
+});
+
+
+var global_socket_connection;
+var global_socket_connection_isactive;
+
+function apl_updater_connect_socket() {
 		if (typeof charmeUser !== 'undefined' && charmeUser != null) {
 
 
@@ -33,20 +42,21 @@ $(function(){
 
 		console.log("Socket connection host is "+host+"....");
 
-		var conn = new ab.Session(host,
+		 global_socket_connection = new ab.Session(host,
 			function() {
 				console.log("WAMP session started!");
-				conn.subscribe(charmeUser.userId, function(topic, data) {
+				global_socket_connection_isactive = true;
+				global_socket_connection.subscribe(charmeUser.userId, function(topic, data) {
 					// This is where you would add the new article to the DOM (beyond the scope of this tutorial)
 					console.log('new message "' + topic + '" : ' + data);
 
 					if (data.type=="newNotifications")
 					{
 						apl_request(
-						    {"requests" : [
-						    {"id" : "updates_get"}
+								{"requests" : [
+								{"id" : "updates_get"}
 
-						    ]
+								]
 							}, function(data){
 
 								apl_update_apply(data.updates_get);
@@ -71,6 +81,7 @@ $(function(){
 				});
 			},
 			function() {
+						global_socket_connection_isactive = false;
 				console.warn('WebSocket connection closed');
 			}, {
 				'skipSubprotocolCheck': true
@@ -78,59 +89,8 @@ $(function(){
 		);
 
 
-
-	/*
-	var host = "http://" + charmeUser.getServer() + "/charme/events.php";
-
-		refresh = function () {
-
-		    $.ajax({
-		        url: host,
-		        type: 'POST',
-		        dataType: "json",
-		        async: true,
-		        crossDomain : true,
-						xhrFields: {
-				    withCredentials: true
-				 },
-		        cache: false,
-		        success: function (data, textStatus) {
-		          console.log(data);
-		        },
-		    })
-		    .done(function() {
-		        console.log("success");
-		        	refresh();
-		    })
-		    .fail(function(error) {
-		        refresh();
-		        console.log('Error: ' + error.statusText);
-		    });
-		}
-		refresh();
-*/
-
-
-/*
-$.doTimeout( 'getnotify', 1000*20, function(state){
-
-apl_request(
-    {"requests" : [
-    {"id" : "updates_get"}
-
-    ]
-	}, function(data){
-		apl_update_apply(data.updates_get);
-	});
-
-
-return true;
-
-
-});*/
+	}
 }
-});
-
 
 
 
