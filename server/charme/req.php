@@ -3014,8 +3014,8 @@ foreach ($data["requests"] as $item)
 
 
 
-			foreach ($oldListsTmp as $item){
-			$oldLists[] = $item["list"];
+			foreach ($oldListsTmp as $item2){
+			$oldLists[] = $item2["list"];
 			}
 
 			$notify = false;

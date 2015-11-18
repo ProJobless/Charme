@@ -46,5 +46,7 @@
 \contentsline {subsubsection}{\numberline {10.0.2}Init Conversation}{16}{subsubsection.10.0.2}
 \contentsline {subsubsection}{\numberline {10.0.3}Add People to Conversation}{17}{subsubsection.10.0.3}
 \contentsline {subsubsection}{\numberline {10.0.4}Write message}{18}{subsubsection.10.0.4}
-\contentsline {section}{\numberline {11}Terminology}{18}{section.11}
-\contentsline {section}{\numberline {12}Sources}{19}{section.12}
+\contentsline {section}{\numberline {11}Future Work}{18}{section.11}
+\contentsline {subsection}{\numberline {11.1}Use of encrypted Databases}{18}{subsection.11.1}
+\contentsline {section}{\numberline {12}Terminology}{18}{section.12}
+\contentsline {section}{\numberline {13}Sources}{19}{section.13}
