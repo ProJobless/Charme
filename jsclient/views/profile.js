@@ -413,7 +413,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 				var postKey = "";
 
-				alert()
+
 				if (this.postData.object.isEncrypted == 1)
 				{
 					$.each(d.collection_posts_get.postkeys, function() {

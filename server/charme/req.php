@@ -3281,7 +3281,7 @@ foreach ($data["requests"] as $item)
 					//clog(print_r($comments, true));
 					foreach ($comments as $comment)
 					{
-						unset($comment["id"]);
+				  unset($comment["_id"]);
 					$col->streamcomments->update($comment,$comment, array("upsert" => true));
 					}
 

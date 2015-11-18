@@ -913,7 +913,7 @@ control_postField = Backbone.View.extend({
       // Encrypt edgekeys here.
 
     }
-
+    alert(isEncrypted);
 
     if (this.options.collectionId == "") {  // If collection Seletor enabled, get value from collection selector
       collectionId = $("#collectionSelector option:selected:first").data("collectionid");
@@ -1057,9 +1057,10 @@ control_postField = Backbone.View.extend({
     var txt = $("#textfield").val();
     var that = this;
 
+    var isContextPost = $("#metaIndicator").is(":visible"); // Is it a context post?
 
-    // Check if we need to encrypt the collection
-    if (that.options.forceCurrentList != 0 && that.options.forceCurrentList != undefined) {
+    // Check if we need to encrypt the collection. We also do not encrypt if it is a context post
+    if (!isContextPost && that.options.forceCurrentList != 0 && that.options.forceCurrentList != undefined) {
 
       apl_request({
         "requests": [{
@@ -1071,7 +1072,7 @@ control_postField = Backbone.View.extend({
 
         that.doRealPost(txt, d.edgekeys_bylist.value);
       });
-    } else if ($("#collectionSelector option:selected:first").data("isencrypted") == true) {
+    } else if (!isContextPost &&  $("#collectionSelector option:selected:first").data("isencrypted") == true) {
       apl_request({
         "requests": [{
           "id": "edgekeys_bylist",
@@ -1763,7 +1764,7 @@ control_postItem = Backbone.View.extend({
           var item2 = new control_commentItem({
             "content": contentRaw,
             "username": d.post_comment.username,
-            userId: 0,
+            userId: charmeUser.userId,
             el: $('#postComments' + uniId),
             commentId: d.post_comment.commentId
           });
