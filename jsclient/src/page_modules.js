@@ -913,7 +913,6 @@ control_postField = Backbone.View.extend({
       // Encrypt edgekeys here.
 
     }
-    alert(isEncrypted);
 
     if (this.options.collectionId == "") {  // If collection Seletor enabled, get value from collection selector
       collectionId = $("#collectionSelector option:selected:first").data("collectionid");
