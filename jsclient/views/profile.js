@@ -413,7 +413,7 @@ view_profilepage_collection_show = view_subpage.extend({
 
 				var postKey = "";
 
-
+				alert()
 				if (this.postData.object.isEncrypted == 1)
 				{
 					$.each(d.collection_posts_get.postkeys, function() {
@@ -571,7 +571,7 @@ var view_profilepage_posts = view_subpage.extend({
 
 			var edgeKey;
 			if (hasEdgeKey)
-				edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.rsaEncEdgekey,  d.edgekey_request.data.revisionB));
+				edgeKey = (crypto_rsaDecryptWithRevision(d.edgekey_request.data.key.obj.edgekeyWithPublicKey,  d.edgekey_request.data.key.obj.publicKeyRevision));
 
 			jQuery.each(d.collection_posts_get.items, function(index, item) {
 

@@ -16,3 +16,6 @@ service httpd restart
 ```
 ### Gearman
 When getting a `GearmanException` with message `Failed to set exception option` then make sure gearmand is running. To check use `ps aux | grep gearmand`.
+
+##  Class 'Guzzle\Http\Message\Header\CacheControl' not found
+Try a composer update. TODO: Still gives error!

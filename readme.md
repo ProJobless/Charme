@@ -7,15 +7,46 @@
 
 Moreover you can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
 
-![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/tex/illustrations/context.jpg "Screenshot")
+
 
 ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/screen3.png "Screenshot")
 
 For smartphones, the client can be exported as an Apache Cordova project.
 
-**Warning:** This is for preview puposes only. This preview version is neither stable nor secure. It is in development.
+**Warning:** This is for preview puposes only. This preview version is neither stable nor secure. It is in development. The code is of not-so-good quality right now and will be refactored and documented in the next months.
 
 
+
+## Setup a client
+  * Just copy the files in `/jsclient` on your server
+
+## Setup a Server
+ * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
+ Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
+
+ * The most common errros are listed in <a href="/faq_errors.md">faq_errors.md</a>.
+
+
+## More Screenshots
+ ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/tex/illustrations/context.jpg "Screenshot")
+
+
+## FAQ
+
+### Why am I not allowed to loose the passphrase
+The passphrase basically encrypts all your private stuff. We can not provide a revert function here, because otherwise we could also read your private data, which is not what we want to.
+
+### You have stolen the collection feature from Google Plus!
+Wrong! Google introduced collections in May 2015 (https://plus.google.com/+googleplus/posts/7ZpGWeou2sV).
+Charme had collections since 2012. Check out the commits from 2012/2013:
+* https://github.com/mschultheiss/Charme/commit/a46d47bd4c59bf7fcae4c85992d271970d4e4f68
+* https://github.com/mschultheiss/Charme/commit/eb8f2a7d8eb5534cb76db692dd489f78fd7a859d
+
+
+
+
+
+## Developers
 Directories:
 
 <table>
@@ -43,21 +74,14 @@ Directories:
 
 
 
-## How to Contribute?
+### How to Contribute?
 
 * Help testing or write code! You can also write code for stand alone components while having zero knowledge about the system architecture itself!
 * Getting started: https://github.com/mschultheiss/Charme/wiki/Getting%20Started
 * Ask questions here: https://groups.google.com/forum/?hl=de&fromgroups#!forum/charmeproject
 
 
-## Setup a client
-  * Just copy the files in `/jsclient` on your server
 
-## Setup a Server
- * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
- Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
-
- * The most common errrs are listed in <a href="/faq_errors.md">faq_errors.md</a>.
 
 ## Libraries
  A lot of libraries are used in Charme. Find a list <a href="/libraries.md">here</a>.
