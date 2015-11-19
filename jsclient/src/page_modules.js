@@ -1302,7 +1302,7 @@ control_postItem = Backbone.View.extend({
       if (that.options.postObj.post.isEncrypted == 1) {
         this.commentData.object.text = aes_decrypt(that.options.postKey, this.commentData.object.text);
       }
-      console.log(this);
+
       var commentid =  "";
       if (this.commentId)
         commentId = this.commentId;

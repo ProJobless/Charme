@@ -353,22 +353,23 @@ foreach ($data["requests"] as $item)
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "talks", 0);
 			$messages = $col->messageGroups->find(array("owner" => $_SESSION["charme_userid"]))
 				->sort(array("lastAction" => -1))
-				->limit(7)
-				->skip(7*$start);
+			->limit(7)
+			->skip(7*$start)
+			;
 
 			$messageIds = array();
+			$messagesReturn = array();
+
 			foreach ($messages as $message) {
 				$messageIds[] = new MongoId($message["messageData"]["conversationId"]);
-
+				$messagesReturn[] = $message;
 			}
 
 			$messageKeys = $col->messageKeys->find(array("conversationId" => array('$in' => $messageIds)));
 
 			// Get 10 conversations
  			$returnArray[$action] = array("count" => $count,  "messages" =>
-			iterator_to_array(
-				$messages
-			, false), "messageKeys" =>
+		$messagesReturn, "messageKeys" =>
 			iterator_to_array(
 				$messageKeys
 			, false));

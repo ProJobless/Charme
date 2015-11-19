@@ -740,12 +740,16 @@ var view_talks_subpage = view_subpage.extend({
 
 
 
+
 					if (start == -1) // Only after first load messages
 						that.options.lastid = this._id.$id;
 
 					try {
 						if (typeof this.message.object.content != 'undefined')
 							this.message.object.content = aes_decrypt(msgKey.key, this.message.object.content);
+
+
+
 					} catch (err) {
 						this.message.object.content = err + "\r\nmsgKeyRevision required: " + this.message.object.msgKeyRevision + " Found: " + msgKey.revision;
 					}
@@ -757,8 +761,10 @@ var view_talks_subpage = view_subpage.extend({
 				$(".talkmessages").prepend(tmpl);
 
 
+
+
 				if (start == -1) {
-					console.log(d2.messages_get_sub.usernames);
+
 					try
 					{jQuery.each(d2.messages_get_sub.usernames, function(i) {
 
@@ -988,18 +994,17 @@ var view_talks = view_page.extend({
 	// Function to load conversations
 	loadMessages: function(start) {
 		// load template
-		var cr = false;
-		if (start == 0)
-			cr = true;
-
-
 		var that = this;
+
+		var messageCountValueReturnedByServer = false;
+		if (start == 0)
+			messageCountValueReturnedByServer = true;
 
 		apl_request({
 			"requests": [{
 				"id": "messages_get",
 				start: start,
-				countReturn: cr
+				countReturn: messageCountValueReturnedByServer
 			}]
 		}, function(d2) {
 			$.get("templates/control_messagelist.html", function(d) {
@@ -1007,13 +1012,11 @@ var view_talks = view_page.extend({
 				if (d2.messages_get.count != -1)
 					that.maxMessages = d2.messages_get.count;
 
-				console.log(d2.messages_get.messageKeys);
-
+				// Iterate through each message
 				jQuery.each(d2.messages_get.messages, function(index, item) {
 
 					// Decode AES Key with private RSA Key
 					var msgKeys = [];
-
 					jQuery.each(d2.messages_get.messageKeys, function(index2, item2) {
 						if (item2.conversationId.$id == item.messageData.conversationId)
 							msgKeys.push(item2);
@@ -1036,7 +1039,7 @@ var view_talks = view_page.extend({
 
 
 					} catch (e) {
-
+						console.error(e);
 					}
 
 
@@ -1079,10 +1082,7 @@ var view_talks = view_page.extend({
 					that.sub.loadMessages(-1);
 
 					$('.msgItems li:first').removeClass("new");
-
-
 				}
-
 
 				$(".msgItems li a:first").addClass("active");
 				setSCHeight();

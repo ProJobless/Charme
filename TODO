@@ -1,10 +1,13 @@
 Important:
 -----------------------------------------
+- Move add List function to extra class
+- Add default lists
+- zmq rewrite in python?
 - stream contains (context) entries of non friends
 - delete collections!
 - distribute context items to stream!
 - [SEC] Sign/HMac list item username/userId pairs
-- Add default lists
+
 
 find page with context etc...
 goback button bette rdesign and for forget password/about page when not logged in
