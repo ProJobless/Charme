@@ -1,4 +1,5 @@
 <?php
+
 namespace MyApp;
 /*
 	TODO: ONLY ALLOW USERS TO SUBSCRIBE TO THEIR OWN MESSAGES!!!
@@ -18,7 +19,7 @@ class Pusher implements WampServerInterface {
     public function onSubscribe(ConnectionInterface $conn, $topic) {
 
         print("USER ID IS".$topic->getId());
-        $this->theUserIds[$topic->getId()] = $topic; 
+        $this->theUserIds[$topic->getId()] = $topic;
     }
 
     public function onNewMessage($message) {
@@ -33,30 +34,30 @@ class Pusher implements WampServerInterface {
         // re-send the data to all the clients subscribed to that category
       // if ($entryData["owner"] != $this->theUserId)
          $topic->broadcast($entryData);
- 
+
         }
     }
-  
+
     public function onUnSubscribe(ConnectionInterface $conn, $topic) {
     }
-    
+
     public function onOpen(ConnectionInterface $conn) {
          echo "onpen ";
     }
-    
+
     public function onClose(ConnectionInterface $conn) {
     }
-    
+
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params) {
         // In this application if clients send data it's because the user hacked around in console
         $conn->callError($id, $topic, 'You are not allowed to make calls')->close();
     }
-    
+
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible) {
         // In this application if clients send data it's because the user hacked around in console
         $conn->close();
     }
-    
+
     public function onError(ConnectionInterface $conn, \Exception $e) {
     }
 }

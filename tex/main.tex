@@ -267,7 +267,7 @@ This information is also signed using the senders private key.
   
    There is also a new technology called sub resource integrity which can be used to validate Javascript and CSS resources (See \url{http://www.w3.org/TR/SRI/} and \url{http://githubengineering.com/subresource-integrity/}). Maybe they introduce some mechanism to validate a whole web page with a hash recommended by the majority of browser users and additionally located on a (Mozilla or Google) server. So lets keep an eye on that.
 
-   \subsubsection{Attacks on Integrity Protection}
+   \subsubsection{Attacks on Integrity Protection (OTG-BUSLOGIC-003)}
    Certain information, such as the Name/UserID pairs of a conversation must be distributed with integrity protection using either the private key of each receiver or the conversation key. Asymmetric private keys used for signing the message data have the following advantages and disadvantages in contrast to the symmetric conversation key.
    
    \textbf{Using the private key }
@@ -276,15 +276,15 @@ This information is also signed using the senders private key.
     \item (Disadvantage) No attackers inside a conversation manipulating username/userId pairs
    \end{enumerate}
    
-     \subsubsection{New Conversations with malicious userId/Name pair}
-     An attacker can initiate a new conversation with the name of a fridn of you, but use another userId instead. Example:
+     \subsubsection{New Conversations with malicious userId/Name pair }
+     An attacker can initiate a new conversation with the name of a friend of you, but use another userId instead. Example:
       \begin{enumerate}
      \item Alice (alice@server.com) and Bob Alice (bob@server.com) are friends
      \item Eve initiates a new conversation with Bob with Name "Alice" and userId eve@server.com. 
      \item Bob thinks he is talking to Alice, but he is not.
      \end{enumerate}
      A solution for this problem would be to allow only names from the key directory.
-   \subsubsection{XSS}
+   \subsubsection{XSS (OTG-CLIENT-002)}
    One of the most critical attack vectors in Charme is Cross Site Scripting as with this technique private keys can be stolen.
    Therefore it is important to sanitize all displayed data from other people and servers. Never trust the server. For example imaging data is a JSON Object returned by the server:
    

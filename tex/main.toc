@@ -20,9 +20,9 @@
 \contentsline {subsection}{\numberline {2.13}Key Updates}{11}{subsection.2.13}
 \contentsline {subsection}{\numberline {2.14}Possible Attack Vectors}{11}{subsection.2.14}
 \contentsline {subsubsection}{\numberline {2.14.1}MITM on Client Software}{11}{subsubsection.2.14.1}
-\contentsline {subsubsection}{\numberline {2.14.2}Attacks on Integrity Protection}{11}{subsubsection.2.14.2}
+\contentsline {subsubsection}{\numberline {2.14.2}Attacks on Integrity Protection (OTG-BUSLOGIC-003)}{11}{subsubsection.2.14.2}
 \contentsline {subsubsection}{\numberline {2.14.3}New Conversations with malicious userId/Name pair}{11}{subsubsection.2.14.3}
-\contentsline {subsubsection}{\numberline {2.14.4}XSS}{12}{subsubsection.2.14.4}
+\contentsline {subsubsection}{\numberline {2.14.4}XSS (OTG-CLIENT-002)}{12}{subsubsection.2.14.4}
 \contentsline {subsubsection}{\numberline {2.14.5}DOS}{12}{subsubsection.2.14.5}
 \contentsline {subsubsection}{\numberline {2.14.6}Replay attacks}{12}{subsubsection.2.14.6}
 \contentsline {subsubsection}{\numberline {2.14.7}Malformed data}{12}{subsubsection.2.14.7}
