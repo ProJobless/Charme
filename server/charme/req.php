@@ -54,10 +54,9 @@ $returnArray = array(); // This array will contain the returned data
 foreach ($data["requests"] as $item)
 {
 
-
 	$action = $item["id"];
 	// This array contains a list of requests Ids, that can be executed without a session Id
-	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive",
+	if ( !isset($_SESSION["charme_userid"]) && !in_array($action, array("post_like_receive", "comment_delete_receive", "collection_delete_receive",
 	 "key_update_notification", "search_respond", "stream_respond", "post_delete_receive", "ping", "piece_get4profile", "key_getMultipleFromDir", "reg_salt_get", "reg_salt_set", "piece_getkeys",  "list_receive_notify","profile_get_name","post_comment_distribute", "collection_3newest", "post_comment_receive_distribute", "piece_request_receive", "post_like_receive_distribute", "user_login", "register_collection_post", "key_get", "collection_getinfo", "edgekey_request",  "register_collection_follow", "user_register", "comments_get", "collection_getAll", "profile_get", "message_receive", "register_isfollow", "post_getLikes", "collection_posts_get" ))){
 				$returnArray = array("ERROR" => 1);
 
@@ -1319,7 +1318,6 @@ foreach ($data["requests"] as $item)
 			{
 
 				$_SESSION["charme_userid"] = $cursor["userid"];
-				clog("SET SESSION USER ID COMPLETE: ".$cursor["userid"]);
 				$sessionIdOfUser = session_id();
 				//echo $_SESSION["charme_userid"] ;
 
@@ -1447,6 +1445,8 @@ foreach ($data["requests"] as $item)
   		$returnArray[$action] = $array2;
 
 		break;
+
+
 
 		case "collection_getinfo":
 
@@ -2436,7 +2436,6 @@ foreach ($data["requests"] as $item)
 			// Append last 3 comments for each item.
 			foreach ($streamItems  as $key => $item2)
 			{
-				clog("iterate 1");
 				// Save postIds to avoid duplicates provides from other servers later on...
 				$postIds[] = $item2["postId"];
 
@@ -2895,10 +2894,6 @@ foreach ($data["requests"] as $item)
 			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]->__toString(), "hasImage" => $hasImage);
 
 		break;
-
-
-
-
 
 		case "collection_getAll" :
 			$col = \App\DB\Get::Collection();
@@ -3403,21 +3398,69 @@ foreach ($data["requests"] as $item)
 
 
 		case "lists_add" :
-			$col = \App\DB\Get::Collection();
-			$content = array("name" => $item["name"], "owner" => $_SESSION["charme_userid"]);
 
-			if ($item["name"] != "")
-				$ins = $col->lists->insert($content);
+			$result = \App\CRUD\Lists::CreateList($item["name"],$_SESSION["charme_userid"] );
 
-			$returnArray[$action] = array("SUCCESS" => true, "id" => $content["_id"]);
+			$returnArray[$action] = array("SUCCESS" => true, "id" => $result );
 
 		break;
 
-		case "post_delete_receive":
+		case "collection_delete":
+			$col = \App\DB\Get::Collection();
 
-			// TODO: Verify sender / Check Signature
-			clog("receiv ok");
-			$realPostId = $item["signature"]["object"]["postId"];
+			$realCollectionID = $item["signature"]["object"]["collectionId"];
+			if ($col->collections->count(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($realCollectionID))) > 0) {
+				$col->collections->remove(array("owner" => $_SESSION["charme_userid"], "_id" => new MongoId($realCollectionID)));
+				$col->follower->remove(array("collectionId" => new MongoId($realCollectionID)));
+				$col->following->remove(array("collectionId" => new MongoId($realCollectionID)));
+				//$col->posts->remove(array("collectionId" => new MongoId($item["collectionId"])));
+				// MAKE DELETE POST FUNCTION!!!!!
+
+
+
+				// TODO: Notify other servers!
+
+				$dbReturn2 = $col->posts->find(array("collectionId"=> $realCollectionID));
+				foreach ($dbReturn2 as $item_post)
+				{
+					$postId = $item_post["_id"]; // Type is MongoId here
+					clog(		$postId." is a postId");
+					// Delete postkeys
+					$col->postkeys->remove(array("postId" => $item_post["_id"]->__toString(), "postOwner" => $_SESSION["charme_userid"])); // Delete post local first
+
+
+				}
+
+				$dbReturn2 = $col->followers->find(array("collectionId"=> new MongoId($realCollectionID)));
+				foreach ($dbReturn2 as $m_item)
+				{
+					// Now we notifiy the followers server
+					$data = array("requests" => array(array(
+					"id" => "collection_delete_receive",
+					"signature" => $item["signature"],
+					"userId" => $_SESSION["charme_userid"]
+					)));
+					$req21 = new \App\Requests\JSON(
+					$m_item["follower"],
+					$_SESSION["charme_userid"],
+					$data);
+					$arr = $req21->givePostman(2); // Queue the message. Call Distribute::start() to send it out!
+				}
+				\App\Hydra\Distribute::start();
+
+				$returnArray[$action] = array("STATUS"=> "OK");
+			}
+			else
+				$returnArray[$action] = array("STATUS"=> "ERROR");
+		break;
+
+		/***
+			@param signature: Contains collection Id and action=delete
+			@param userId
+		***/
+		case "collection_delete_receive":
+
+			$realCollectionID = $item["signature"]["object"]["collectionId"];
 			$pemkey = \App\Security\PublicKeys::tryToGet($item["userId"],$item["signature"]["signature"]["keyRevision"]);
 
 			if ($pemkey != false)
@@ -3425,9 +3468,32 @@ foreach ($data["requests"] as $item)
 				$ok = \App\Security\PublicKeys::checkX509($item["signature"], $pemkey);
 				if ($ok)
 				{
-					$col->streamitems->remove(array("postId" => $item["postId"]));
-					$col = \App\DB\Get::Collection();
+						$col = \App\DB\Get::Collection();
+						$dbReturn2 = $col->streamitems->find(array("post.collectionId"=> $realCollectionID));
+						$postIds = array();
+						foreach ($dbReturn2 as $item_post){
+							$postIds[] = $item_post["postId"]; // We can not delete in this loop as we are iterating over it, so we just save the postIds to delete them later
 
+						}
+						foreach ($postIds as $postId) {
+							\App\CRUD\Posts::deleteOnRemote($postId );
+						}
+				}
+			}
+
+		break;
+
+
+		case "post_delete_receive":
+
+			$realPostId = $item["signature"]["object"]["postId"];
+			$pemkey = \App\Security\PublicKeys::tryToGet($item["userId"],$item["signature"]["signature"]["keyRevision"]);
+			if ($pemkey != false)
+			{
+				$ok = \App\Security\PublicKeys::checkX509($item["signature"], $pemkey);
+				if ($ok)
+				{
+					\App\CRUD\Posts::deleteOnRemote($realPostId );
 				}
 			}
 
@@ -3440,7 +3506,7 @@ foreach ($data["requests"] as $item)
 			$colId = $dbReturn["postData"]["object"]["collectionId"];
 
 			// TODO: Make this more efficient. Only one request per server
-			$dbReturn2 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn["collectionId"])));
+			$dbReturn2 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn["postData"]["object"]["collectionId"])));
 
 			foreach ($dbReturn2 as $m_item)
 			{
@@ -3449,7 +3515,7 @@ foreach ($data["requests"] as $item)
 				$data = array("requests" => array(array(
 				"id" => "post_delete_receive",
 				"signature" => $item["signature"],
-				"collectionId" => $dbReturn["collectionId"],
+				"collectionId" => $dbReturn["postData"]["object"]["collectionId"],
 				"postId" => $dbReturn["_id"]->__toString(),
 				"userId" => $_SESSION["charme_userid"]
 				)));
@@ -3471,14 +3537,18 @@ foreach ($data["requests"] as $item)
 			$col = \App\DB\Get::Collection();
 
 			// Find out the post and collection id respectivly to which the post belongs
-			$dbReturn1 = $col->comments->findOne(array("_id" => new MongoId($item["commentId"])), array("postId", "_id")); // has field owner
-			$dbReturn2 = $col->posts->findOne(array("_id" => new MongoId($dbReturn1["postId"])),array("collectionId", "_id"));  // has field owner
+			$dbReturn1 = $col->comments->findOne(array("_id" => new MongoId($item["signature"]["object"]["commentId"])), array("commentData.object.postId", "_id")); // has field owner
+			$postId = $dbReturn1["commentData"]["object"]["postId"]; // Type is string
+			$commentId = $dbReturn1["_id"]; // Type is MongoID!
+
+
+			$dbReturn2 = $col->posts->findOne(array("_id" => new MongoId($postId)),array("collectionId", "_id"));  // has field owner
 			$dbReturn3 = $col->followers->find(array("collectionId"=> new MongoId($dbReturn2["collectionId"])));
 
 			$data = array("requests" => array(array(
 			"id" => "comment_delete_receive",
-			"commentId" => $dbReturn1["_id"]->__toString(),
-			"postId" => $dbReturn1["postId"],
+			"signature" => $item["signature"],
+			"postId" => $postId,
 			"deleter" => $_SESSION["charme_userid"]
 
 			)));
@@ -3494,7 +3564,7 @@ foreach ($data["requests"] as $item)
 			}
 
 			// Notify people seeing the post in their filtered stream
-			$cursor4 = $col->streamSubscribers->find(array("postId" => $dbReturn1["postId"]) );
+			$cursor4 = $col->streamSubscribers->find(array("postId" => $postId) );
 			// Send comment to other servers which have registred for it in search_respond
 			// These servers will get comment updates for 3? days
 			foreach ($cursor4 as $receiver) {
@@ -3505,11 +3575,10 @@ foreach ($data["requests"] as $item)
 				$arr = $req21->givePostman(2);
 			}
 
+			//	$col->streamcomments->remove(array("commentId" =>  $item["signature"]["object"]["commentId"], "postowner" => $_SESSION["charme_userid"])); // will be done locally via comment_delete receive
 
-			// TODO: later
-			$col->streamcomments->remove(array("commentId" => $item["commentId"], "postowner" => $_SESSION["charme_userid"])); // Delete post local first
-
-			$col->comments->remove(array("_id" => new MongoId($dbReturn2["_id"]), "owner" => $_SESSION["charme_userid"])); // Delete post local first
+			$col->comments->remove(array("_id" => ($commentId), "userId" => $_SESSION["charme_userid"])); // Delete comment locally
+			$col->comments->remove(array("_id" => ($commentId), "postowner" => $_SESSION["charme_userid"]));
 			\App\Hydra\Distribute::start(); // Start server distribution
 
 		break;
@@ -3519,8 +3588,21 @@ foreach ($data["requests"] as $item)
 		// TODO: Check if sender signature is commentId and also add sender signature to commentId
 				$col = \App\DB\Get::Collection();
 
-			$col->streamcomments->remove(array("commentId" => $item["commentId"]));
-			$col->streamcomments->remove(array("commentData.object.userId" => $item["commentId"]));
+				$realCommentId = $item["signature"]["object"]["commentId"];
+				$pemkey = \App\Security\PublicKeys::tryToGet($item["deleter"],$item["signature"]["signature"]["keyRevision"]);
+				if ($pemkey != false)
+				{
+					$ok = \App\Security\PublicKeys::checkX509($item["signature"], $pemkey);
+					if ($ok)
+					{
+
+						$col->streamcomments->remove(array("commentId" => $realCommentId));
+						$col->streamcomments->remove(array("commentData.object.userId" => $realCommentId));
+					}
+				}
+
+
+
 
 		break;
 

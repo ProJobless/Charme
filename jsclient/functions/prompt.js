@@ -1,7 +1,24 @@
+// Display a Yes/No Prompt
+function ui_yesno(text, textYes, textNo, callback) {
 
+	$.get("templates/box_yesno.html", function(d) {
 
+		var templateData = {
+			text: text,
+			textYes: textYes,
+			textNo: textNo
+		};
 
+		_.templateSettings.variable = "rc";
+		var template = _.template(d, templateData);
 
+		ui_showBox(template, function() {
+			$("#but_yes").click(function() {
+				callback();
+			});
+		});
+	});
+}
 
 function ui_block(content)
 {

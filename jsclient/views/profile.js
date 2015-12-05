@@ -284,14 +284,35 @@ view_profilepage_collection_show = view_subpage.extend({
 
 				$.get("templates/box_collectionEdit.html", function(d) {
 					_.templateSettings.variable = "rc";
+					d2.isOnEdit = true; // Some indicator variable for editing as the view is used for both add and edit
 					var template = _.template(d, d2);
 
 					ui_showBox(template, function() {
 
-						$("#inp_box_name").focus().val(d2.collection_editPrepare.name);
-						$('#inp_box_description').val(d2.collection_editPrepare.description);
+								$("#inp_box_name").focus().val(d2.collection_editPrepare.name);
+								$('#inp_box_description').val(d2.collection_editPrepare.description);
 
+								$("#but_deleteCollection").click(function() {
+									ui_yesno("Do you really want to delete the collection? This can not be undone.", "Delete", "Cancel", function() {
 
+										var signature = CharmeModels.Signature.makeSignedJSON({
+							        collectionId: that.options.collectionId,
+							        action: "delete_collection"
+							      });
+
+										apl_request({
+										"requests": [{
+										"id": "collection_delete",
+										"signature": signature
+										}]
+										},
+										function(d2) {
+											ui_closeBox();
+											location.href="#user/"+charmeUser.userId+"/collections";
+										}
+									);
+							});
+						});
 						$('#but_box_save').click(function() {
 
 							apl_request({

@@ -1,16 +1,29 @@
 Important:
 -----------------------------------------
-- Move add List function to extra class
-- Add default lists
-- zmq rewrite in python?
-- stream contains (context) entries of non friends
+
+1
 - delete collections!
+- remove start and endtime from move
+- location manager
+- more products etc
+- user does not exist message
+- If server is down, user can not logout!
+- comment delete with signature
+
+2
+- android!!!
+- stream contains (context) entries of non friends
+- stream filled with context after switching to archive and back
 - distribute context items to stream!
+
+3
+- add location: hint when none exists, text box select for quick jump!
+- goback button bette rdesign and for forget password/about page when not logged in
 - [SEC] Sign/HMac list item username/userId pairs
+- find page with context etc...
 
 
-find page with context etc...
-goback button bette rdesign and for forget password/about page when not logged in
+
 ------------------------------------------
 
 

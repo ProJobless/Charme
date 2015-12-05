@@ -113,7 +113,7 @@ stepLast() {
 	echo -e "extension=curl.so"
 	echo -e "extension=gearman.so"
 	echo -e "extension=zmq.so"
-  echo -e "\n\n"
+  echo -e "\n\nAlso make sure /charme/admin is protected with a .htaccess file properly."
 
   # For testing, developers can setup the vhosts like:
   #

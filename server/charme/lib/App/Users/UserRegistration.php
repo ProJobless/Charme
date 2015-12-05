@@ -102,6 +102,12 @@ class UserRegistration implements \App\Models\Action
 			// Set session Id
 			$_SESSION["charme_userid"] =  $data["username"]."@".$data["server"];
 
+			// Create some default lists
+			\App\CRUD\Lists::CreateList("Friends",$_SESSION["charme_userid"] );
+			\App\CRUD\Lists::CreateList("Colleagues",$_SESSION["charme_userid"] );
+			\App\CRUD\Lists::CreateList("Fellow students",$_SESSION["charme_userid"] );
+
+
 		}
 
 

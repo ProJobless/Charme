@@ -1246,10 +1246,16 @@ control_commentItem = Backbone.View.extend({
     $('#delete_' + uniIdCounter).click(function() {
 
 
+      var signature = CharmeModels.Signature.makeSignedJSON({
+        commentId: that.options.commentId,
+        action: "comment_delete"
+      });
+
+
       apl_request({
         "requests": [{
           "id": "comment_delete",
-          "commentId": that.options.commentId
+          "signature": signature
         }, ]
       }, function(d) {
 
@@ -1550,7 +1556,7 @@ control_postItem = Backbone.View.extend({
       // TODO: ARE YOU SURE?
 
       var signature = CharmeModels.Signature.makeSignedJSON({
-        postId: that.options.postId,
+        postId: that.options.postObj.postId,
         action: "delete_post"
       });
 

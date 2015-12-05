@@ -1,52 +1,109 @@
-\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
-\contentsline {section}{\numberline {2}Encryption and Security}{3}{section.2}
-\contentsline {subsection}{\numberline {2.1}Existing work}{3}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Formal Notation used in this paper}{3}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Reach}{3}{subsubsection.2.2.1}
-\contentsline {subsection}{\numberline {2.3}Fundamental Concepts}{4}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}AES-CBC }{4}{subsubsection.2.3.1}
-\contentsline {subsubsection}{\numberline {2.3.2}RSA}{5}{subsubsection.2.3.2}
-\contentsline {subsubsection}{\numberline {2.3.3}Further reading}{6}{subsubsection.2.3.3}
-\contentsline {subsection}{\numberline {2.4}Crypto Implementation}{6}{subsection.2.4}
-\contentsline {subsection}{\numberline {2.5}Implementation}{6}{subsection.2.5}
-\contentsline {subsection}{\numberline {2.6}Client server seperation}{6}{subsection.2.6}
-\contentsline {subsection}{\numberline {2.7}Passphrase}{7}{subsection.2.7}
-\contentsline {subsection}{\numberline {2.8}Verifying private keys}{7}{subsection.2.8}
-\contentsline {subsubsection}{\numberline {2.8.1}Generating Fingerprints}{7}{subsubsection.2.8.1}
-\contentsline {subsection}{\numberline {2.9}Preventing List and Message MITM Attacks}{8}{subsection.2.9}
-\contentsline {subsection}{\numberline {2.10}Post encryption}{9}{subsection.2.10}
-\contentsline {subsection}{\numberline {2.11}Message encryption}{9}{subsection.2.11}
-\contentsline {subsection}{\numberline {2.12}Distributing private information}{9}{subsection.2.12}
-\contentsline {subsection}{\numberline {2.13}Key Updates}{11}{subsection.2.13}
-\contentsline {subsection}{\numberline {2.14}Possible Attack Vectors}{11}{subsection.2.14}
-\contentsline {subsubsection}{\numberline {2.14.1}MITM on Client Software}{11}{subsubsection.2.14.1}
-\contentsline {subsubsection}{\numberline {2.14.2}Attacks on Integrity Protection (OTG-BUSLOGIC-003)}{11}{subsubsection.2.14.2}
-\contentsline {subsubsection}{\numberline {2.14.3}New Conversations with malicious userId/Name pair}{11}{subsubsection.2.14.3}
-\contentsline {subsubsection}{\numberline {2.14.4}XSS (OTG-CLIENT-002)}{12}{subsubsection.2.14.4}
-\contentsline {subsubsection}{\numberline {2.14.5}DOS}{12}{subsubsection.2.14.5}
-\contentsline {subsubsection}{\numberline {2.14.6}Replay attacks}{12}{subsubsection.2.14.6}
-\contentsline {subsubsection}{\numberline {2.14.7}Malformed data}{12}{subsubsection.2.14.7}
-\contentsline {subsubsection}{\numberline {2.14.8}Spam}{12}{subsubsection.2.14.8}
-\contentsline {section}{\numberline {3}Backend}{12}{section.3}
-\contentsline {subsection}{\numberline {3.1}Technology Stack}{12}{subsection.3.1}
-\contentsline {section}{\numberline {4}Search}{13}{section.4}
-\contentsline {subsection}{\numberline {4.1}Further reading}{13}{subsection.4.1}
-\contentsline {section}{\numberline {5}Token Generation and API}{13}{section.5}
-\contentsline {section}{\numberline {6}Ideas}{13}{section.6}
-\contentsline {subsection}{\numberline {6.1}Location based Chats}{13}{subsection.6.1}
-\contentsline {section}{\numberline {7}Data Sharing for the Internet of Things}{14}{section.7}
-\contentsline {section}{\numberline {8}Coding Guidelines}{15}{section.8}
-\contentsline {section}{\numberline {9}Technical Documentation}{15}{section.9}
-\contentsline {subsection}{\numberline {9.1}Login}{15}{subsection.9.1}
-\contentsline {subsection}{\numberline {9.2}Messages}{15}{subsection.9.2}
-\contentsline {subsection}{\numberline {9.3}Edgekeys}{15}{subsection.9.3}
-\contentsline {subsection}{\numberline {9.4}Recryption of data}{15}{subsection.9.4}
-\contentsline {section}{\numberline {10}Protocol Specification}{16}{section.10}
-\contentsline {subsubsection}{\numberline {10.0.1}Add public key to keydirectory}{16}{subsubsection.10.0.1}
-\contentsline {subsubsection}{\numberline {10.0.2}Init Conversation}{16}{subsubsection.10.0.2}
-\contentsline {subsubsection}{\numberline {10.0.3}Add People to Conversation}{17}{subsubsection.10.0.3}
-\contentsline {subsubsection}{\numberline {10.0.4}Write message}{18}{subsubsection.10.0.4}
-\contentsline {section}{\numberline {11}Future Work}{18}{section.11}
-\contentsline {subsection}{\numberline {11.1}Use of encrypted Databases}{18}{subsection.11.1}
-\contentsline {section}{\numberline {12}Terminology}{18}{section.12}
-\contentsline {section}{\numberline {13}Sources}{19}{section.13}
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Prologue}{3}{section.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Encryption and Security}{4}{section.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.1}Existing work}{4}{subsection.3.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.2}Formal Notation used in this paper}{5}{subsection.3.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.2.1}Reach}{5}{subsubsection.3.2.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.3}Fundamental Concepts}{5}{subsection.3.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.3.1}AES-CBC }{5}{subsubsection.3.3.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.3.2}RSA}{6}{subsubsection.3.3.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.3.3}Further reading}{7}{subsubsection.3.3.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.4}Crypto Implementation}{7}{subsection.3.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.5}Implementation}{7}{subsection.3.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.6}Client server seperation}{7}{subsection.3.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.7}Passphrase}{7}{subsection.3.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.8}Verifying private keys}{8}{subsection.3.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.8.1}Generating Fingerprints}{8}{subsubsection.3.8.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.9}Preventing List and Message MITM Attacks}{9}{subsection.3.9}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.10}Post encryption}{9}{subsection.3.10}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.11}Message encryption}{10}{subsection.3.11}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.12}Distributing private information}{11}{subsection.3.12}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.13}Key Updates}{11}{subsection.3.13}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.14}Possible Attack Vectors}{11}{subsection.3.14}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.1}MITM on Client Software}{11}{subsubsection.3.14.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.2}Attacks on Integrity Protection}{12}{subsubsection.3.14.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.3}New Conversations with malicious userId/Name pair}{12}{subsubsection.3.14.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.4}XSS}{12}{subsubsection.3.14.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.5}Session Capturing}{13}{subsubsection.3.14.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.6}DOS}{13}{subsubsection.3.14.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.7}Replay attacks}{13}{subsubsection.3.14.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.8}Malformed data}{13}{subsubsection.3.14.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.14.9}Spam}{13}{subsubsection.3.14.9}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Backend}{13}{section.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.1}Technology Stack}{13}{subsection.4.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Search}{14}{section.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1}Further reading}{14}{subsection.5.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Token Generation and API}{14}{section.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7}Ideas}{14}{section.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {7.1}Location based Chats}{14}{subsection.7.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {8}Data Sharing for the Internet of Things}{15}{section.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {9}Coding Guidelines}{16}{section.9}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {10}Technical Documentation}{16}{section.10}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {10.1}Login}{16}{subsection.10.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {10.2}Messages}{16}{subsection.10.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {10.3}Edgekeys}{16}{subsection.10.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {10.4}Recryption of data}{16}{subsection.10.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {11}Protocol Specification}{17}{section.11}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {11.0.1}Add public key to keydirectory}{17}{subsubsection.11.0.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {11.0.2}Init Conversation}{17}{subsubsection.11.0.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {11.0.3}Add People to Conversation}{18}{subsubsection.11.0.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {11.0.4}Write message}{19}{subsubsection.11.0.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {12}Future Work}{19}{section.12}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {12.1}Use of encrypted Databases}{19}{subsection.12.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {13}Terminology}{19}{section.13}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {14}Sources}{20}{section.14}

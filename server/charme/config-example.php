@@ -30,6 +30,6 @@ $CHARME_SETTINGS["GCM_APIKEY"] ="";
 
 //Will be updated automatically to block evil servers or users
 //you should leave this empty if your not using  a  network id starting with CHARME
-$CHARME_SETTINGS["blacklist"] ="http://www.charmeproject.com/blacklist.txt";
+$CHARME_SETTINGS["blacklist"] ="https://www.mschultheiss.com/blacklist_charme.php";
 
 ?>

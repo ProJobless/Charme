@@ -55,7 +55,10 @@ local.properties
 ###
 ## TEX
 ###
-
+tex/*.bbl
+tex/*.blg
+tex/*.run.xml
+tex/main-blx.bib
 tex/*.aux
 tex/*.log
 tex/*.out
