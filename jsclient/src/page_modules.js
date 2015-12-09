@@ -829,6 +829,27 @@ control_postField = Backbone.View.extend({
               that.metaData = {}
               var metaDataTemp = $('#contextDetails').serializeObject();
 
+              var missingFields = false;
+              $('#contextContainer').find('input, select').each(function(){
+                  if($(this).prop('required') && $(this).val() == ""){
+                      missingFields=true;
+
+                      if ($(this).data("requiredref") !== undefined)
+                        $($(this).data("requiredref")).addClass("requiredBg");
+                      else
+                        $(this).addClass("requiredBg");
+
+                  }
+                  else {
+                    $(this).removeClass("requiredBg");
+                  }
+              });
+              if (missingFields){
+                $("#errorRequiredContextField").show();
+              //  alert("Please fill out all required fields.");
+                return;
+              }
+
 
 
               $.each(metaDataTemp, function(index, value) {
@@ -1421,7 +1442,19 @@ control_postItem = Backbone.View.extend({
 					onclick='ui_showMap("+parseFloat(metaData.startLocation_data.latitude)+","+parseFloat(metaData.startLocation_data.longitude)+")'>"+xssText(metaData.startLocation_data.name)+ "</a> to <a  onclick='ui_showMap("+parseFloat(metaData.endLocation_data.longitude)+","+parseFloat(metaData.endLocation_data.latitude)+", '"+xssAttr( metaData.startLocation_data.name)+"')'> "+xssText(metaData.endLocation_data.name)+ "</a>
 
 				*/
-        metaDataStr = "<div class='metaData meta_" + metaData.type + "'><div class='point'></div><a id='loc_" + uniIdCounter + "_start'> " + xssText(metaData.startLocation_data.name) + "</a> <i class='fa fa-long-arrow-right'></i> <a id='loc_" + uniIdCounter + "_end'> " + xssText(metaData.endLocation_data.name) + "</a> at " + xssText(metaData.startTime_day) +  "." + xssText(metaData.startTime_month) + "." + xssText(metaData.startTime_year) + " " + xssText(metaData.startTime_hour) + ":" + xssText(metaData.startTime_minute) + " with having " + xssText(metaData.seats) + " seats free </div>";
+
+        var starttime = "";
+        if (metaData.startTime_month != "")
+          starttime = xssText(metaData.startTime_day) +  "." + xssText(metaData.startTime_month) + "." + xssText(metaData.startTime_year) + " ";
+        if (metaData.startTime_hour != "")
+          starttime += xssText(metaData.startTime_hour) + ":" + xssText(metaData.startTime_minute);
+
+        var seatsfree = "";
+        if (metaData.seats != null)
+          seatsfree = " with " + xssText(metaData.seats) + " seats free ";
+
+
+        metaDataStr = "<div class='metaData meta_" + metaData.type + "'><div class='point'></div><a id='loc_" + uniIdCounter + "_start'> " + xssText(metaData.startLocation_data.name) + "</a> <i class='fa fa-long-arrow-right'></i> <a id='loc_" + uniIdCounter + "_end'> " + xssText(metaData.endLocation_data.name) + "</a> " + starttime +  seatsfree +"</div>";
 
         $("#post_" + that.options.postObj.postId + " .cont").append(metaDataStr);
         $("#loc_" + uniIdCounter + "_start").click(function() {

@@ -11,6 +11,17 @@ cursor: pointer;
 	display: block;
 
 }
+
+.error {
+	color: #ff6666;
+	text-align: center;
+	font-weight: bold;
+	padding: 16px 0px;
+}
+.hidden {
+	display: none;
+}
+
 #but_addImg {
 	float:right;
 }

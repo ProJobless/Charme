@@ -178,11 +178,13 @@
             id: "startLocation",
             type: "location",
             name: "Start",
+            required: true,
             filter: "location"
           }, {
             id: "endLocation",
             type: "location",
             name: "Destination",
+            required: true,
             filter: "location"
           }, {
             id: "startTime",
@@ -210,6 +212,7 @@
             id: "price",
             type: "moneyamount",
             name: "Price per day",
+            required: true,
             filter: "range"
           }, {
             id: "currency",
@@ -218,6 +221,7 @@
           }, {
             id: "sell",
             type: "productcategory",
+            required: true,
             name: "Product Identifier",
             filter: "exact"
           }
@@ -230,7 +234,8 @@
             id: "price",
             type: "moneyamount",
             name: "Price",
-            filter: "range"
+            filter: "range",
+            required: true
           }, {
             id: "currency",
             type: "currency",
@@ -239,7 +244,8 @@
             id: "sell",
             type: "productcategory",
             name: "Product Identifier",
-            filter: "exact"
+            filter: "exact",
+            required: true
           }
         ]
       },
@@ -249,7 +255,8 @@
           {
             id: "price",
             type: "moneyamount",
-            name: "Price per hour "
+            name: "Price per hour ",
+            required: true
           }, {
             id: "currency",
             type: "currency",
@@ -257,6 +264,7 @@
           }, {
             id: "service",
             type: "service",
+            required: true,
             name: "Typ"
           }
         ]
@@ -403,19 +411,19 @@
     Signature.revision;
 
     /*
-    
+
     	Name:
     	Signature(originalMessage)
-    
+
     	Info:
     	Generate a signature with the users private key.
-    	
+
     	Params:
     	message:string:The message you want to sign
-    
+
     	Location:
     	crypto.js
-    
+
     	Code:JS:
     	var signature = crypto_sign("hallo welt", );
     */
@@ -433,21 +441,21 @@
     }
 
     /*
-    	
+
     	Name:
     	Signature.Verify(hash, message2verify, publicKey)
-    
+
     	Info:
     	Verify a signature. Returns TRUE or FALSE
-    
+
     	Params:
     	signature:string:The signature to check
     	message:string:The message you want to check
     	publicKey:object:The publicKey (usually from key directory)
-    
+
     	Location:
     	crypto.js
-    
+
     	Code:JS:
     	// TODO
     */
@@ -499,7 +507,7 @@
     };
 
     /*
-    
+
     		Return Form: {object, signature {keyRevision, hashvalue}}
     */
 
@@ -596,6 +604,7 @@
     Context.getTimeHours = function() {
       var k, str, _i, _len, _ref;
       str = "";
+      str += "<option value=''>-</option>";
       _ref = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         k = _ref[_i];
@@ -607,6 +616,7 @@
     Context.getTimeMinutes = function() {
       var k, str, _i, _len, _ref;
       str = "";
+      str += "<option value=''>-</option>";
       _ref = [0, 15, 30, 45];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         k = _ref[_i];
@@ -711,17 +721,20 @@
       var k, str, _i, _j, _k, _len, _ref;
       str = "";
       str += "<select  name='" + name + "_day'>";
+      str += "<option value=''>-</option>";
       for (k = _i = 1; _i < 31; k = _i += 1) {
         str += "<option vale='" + k + "'>" + k + "</option>";
       }
       str += "</select>";
       str += "<select  name='" + name + "_month'>";
+      str += "<option value=''>-</option>";
       for (k = _j = 1; _j < 12; k = _j += 1) {
         str += "<option vale='" + k + "'>" + k + "</option>";
       }
       str += "</select>";
       str += "<select name='" + name + "_year'>";
-      _ref = ["2014", "2015", "2016"];
+      str += "<option value=''>-</option>";
+      _ref = ["2015", "2016", "2017", "2018", "2019", "2020"];
       for (_k = 0, _len = _ref.length; _k < _len; _k++) {
         k = _ref[_k];
         str += "<option vale='" + k + "'>" + k + "</option>";
@@ -827,6 +840,7 @@
             $(elementSearch).show().focus().select();
             $(elementHelp).html(CharmeModels.Context.renderCateogries(null));
             CharmeModels.Context.registerEventProductClick(elementHelp);
+            $(elementSearch).next().val("");
           });
           $(elementSearch).hide();
         }
@@ -845,13 +859,13 @@
       });
     };
 
-    Context.getProductSelector = function(name) {
-      return '<input placeholder="Search..." class="productidentifierSearch box" type="text" style="margin-bottom:8px;"><input style="clear:both" data-type="exact" type="hidden" name="' + name + '" class="productSelector"><div  class="productidentifierHelp">' + CharmeModels.Context.renderCateogries() + '</div>';
+    Context.getProductSelector = function(name, requiredStr) {
+      return '<input placeholder="Search..." class="productidentifierSearch box" type="text" style="margin-bottom:8px;"><input ' + requiredStr + ' data-requiredref=".productidentifierSearch" style="clear:both" data-type="exact" type="hidden" name="' + name + '" class="productSelector"><div  class="productidentifierHelp">' + CharmeModels.Context.renderCateogries() + '</div>';
     };
 
     Context.getForm = function(fieldId) {
-      var hasOptional, html, k, v, _ref;
-      html = "";
+      var hasOptional, html, k, requiredStr, v, _ref;
+      html = "<div id='errorRequiredContextField' class='error hidden'>Please fill out all required fields.</div>";
       hasOptional = false;
       _ref = charme_schema.global[fieldId].attributes;
       for (k in _ref) {
@@ -863,12 +877,16 @@
           html += "<div>";
         }
         html += "<div style='padding:8px 0px; font-weight:bold;'>" + v["name"] + "</div>";
+        requiredStr = "";
+        if ((v["required"] != null) && v["required"] === true) {
+          requiredStr = " required='true' ";
+        }
         if (v["type"] === "area") {
-          html += "<select  name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a> Radius: <select name='" + v["id"] + "_radius'>" + CharmeModels.Context.getRad() + "</select>";
+          html += "<select  " + requiredStr + " name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a> Radius: <select name='" + v["id"] + "_radius'>" + CharmeModels.Context.getRad() + "</select>";
         } else if (v["type"] === "location") {
-          html += "<select name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a>";
+          html += "<select  " + requiredStr + "  name='" + v["id"] + "' class='locationContainer'><option value=''>-</option></select> <a class='but_addLocation'>Add Location</a>";
         } else if (v["type"] === "optionallocation") {
-          html += "<select name='" + v["id"] + "' class='locationContainer'><option value='0' class='nolocation'>No location</option></select> <a class='but_addLocation'>Add Location</a>";
+          html += "<select  " + requiredStr + "  name='" + v["id"] + "' class='locationContainer'><option value='0' class='nolocation'>No location</option></select> <a class='but_addLocation'>Add Location</a>";
         } else if (v["type"] === "string") {
           html += "<input  name='" + v["id"] + "' type='text' class='box'>";
         } else if (v["type"] === "entity") {
@@ -880,23 +898,20 @@
         } else if (v["type"] === "int") {
           html += "<input name='" + v["id"] + "' type='text' class='box'>";
         } else if (v["type"] === "moneyamount") {
-          html += "<input type='number' min='1' step='any' name='" + v["id"] + "'  class='box'>";
+          html += "<input " + requiredStr + "  type='number' min='1' step='any' name='" + v["id"] + "'  class='box'>";
         } else if (v["type"] === "currency") {
           html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getCurrencies() + '</select>';
         } else if (v["type"] === "activity") {
           html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getActivities() + '</select>';
         } else if (v["type"] === "service") {
-          html += '<select name="' + v["id"] + '">' + CharmeModels.Context.getServices() + '</select>';
+          html += '<select  ' + requiredStr + ' name="' + v["id"] + '"><option value="">-</option>' + CharmeModels.Context.getServices() + '</select>';
         } else if (v["type"] === "productcategory") {
-          html += CharmeModels.Context.getProductSelector(v["id"]);
+          html += CharmeModels.Context.getProductSelector(v["id"], requiredStr);
         }
         html += "</div>";
       }
       if (hasOptional) {
         html += "<div style='padding-top:32px; padding-bottom:16px;'><a id='advancedproperties'>Show Advanced Properties</a></div>";
-        $("#advancedproperties").click(function() {
-          return $(".optionalproperty").show();
-        });
       }
       return html;
     };

@@ -2,15 +2,18 @@ Important:
 -----------------------------------------
 
 1
-- remove start and endtime from move (or optional)
-- If server is down, user can not logout!
-- location manager
 
+- required options
+- select last choosen place for each category
+- location manager: delete locations (20min)
+
+
+- If server is down, user can not logout!
 2
-- android!!!
 - stream contains (context) entries of non friends
 - stream filled with context after switching to archive and back
 - distribute context items to stream!
+- android!!!
 
 3
 - add location: hint when none exists, text box select for quick jump!

@@ -237,6 +237,7 @@
 					id: "startLocation"
 					type: "location"
 					name: "Start"
+					required: true
 					filter: "location"
 
 				},
@@ -244,6 +245,7 @@
 					id: "endLocation"
 					type: "location"
 					name: "Destination"
+					required: true
 					filter: "location"
 				},
 				{
@@ -277,6 +279,7 @@
 					id: "price"
 					type: "moneyamount" #
 					name: "Price per day"
+					required: true
 					filter: "range"
 				},
 				{
@@ -287,6 +290,7 @@
 				{
 					id: "sell"
 					type: "productcategory"
+					required: true
 					name: "Product Identifier"
 					filter: "exact"
 				}
@@ -304,6 +308,7 @@
 					type: "moneyamount" #
 					name: "Price"
 					filter: "range"
+					required: true
 				},
 				{
 					id: "currency"
@@ -315,6 +320,7 @@
 					type: "productcategory"
 					name: "Product Identifier"
 					filter: "exact"
+					required: true
 				}
 			]
 		},
@@ -328,6 +334,7 @@
 					id: "price"
 					type: "moneyamount"
 					name: "Price per hour "
+					required: true
 				},
 				{
 					id: "currency"
@@ -338,6 +345,7 @@
 				{
 					id: "service"
 					type: "service"
+					required: true
 					name: "Typ"
 				},
 			]
