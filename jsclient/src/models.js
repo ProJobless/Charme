@@ -9,14 +9,21 @@
 
 
 (function() {
-  this.charme_schema_services = ["software", "music", "electronic", "clean", "artist", "trainer"];
+  this.charme_schema_services = ["carrepair", "pcrepair", "electronic", "engineer", "electrician", "clean", "assembly", "music", "musicteach", "plumber", "trainer", "software", "trainer"];
 
   this.charme_schema_services_names = {
-    "software": "Software Engineer",
-    "music": "Musician",
+    "carrepair": "Car Repair",
+    "pcrepair": "Computer Repair",
     "electronic": "Electronic Engineer",
-    "clean": "Room Cleaning",
-    "artist": "Artist",
+    "engineer": "Engineer",
+    "electrician": "Electrician",
+    "clean": "Home Cleaning",
+    "assembly": "Indoor Assembly",
+    "music": "Musician",
+    "musicteach": "Music Teacher",
+    "plumber": "Plumber",
+    "trainer": "Painting",
+    "software": "Software Engineer",
     "trainer": "Trainer"
   };
 
@@ -28,6 +35,18 @@
         {
           id: 'el_smartphone',
           name: 'Smartphones and Mobile Phones'
+        }, {
+          id: 'el_tv',
+          name: 'Television'
+        }, {
+          id: 'el_car',
+          name: 'Car Electronics'
+        }, {
+          id: 'el_pc',
+          name: 'Laptops and Computers'
+        }, {
+          id: 'el_screens',
+          name: 'Screens'
         }, {
           id: 'el_smartphone',
           name: 'PC Components',
@@ -44,6 +63,9 @@
             }, {
               id: 'el_pc_hdd',
               name: 'Harddisk'
+            }, {
+              id: 'el_pc_print',
+              name: 'Printers'
             }
           ]
         }
@@ -58,6 +80,54 @@
         }, {
           id: 'cl_hats',
           name: 'Hats'
+        }
+      ]
+    }, {
+      id: 'bo',
+      name: 'Books and Magazines',
+      sub: [
+        {
+          id: 'bo_nonfiction',
+          name: 'Nonfiction Books',
+          sub: [
+            {
+              id: 'cl_nonfiction_engineer',
+              name: 'Engineering Books'
+            }, {
+              id: 'cl_nonfiction_cs',
+              name: 'Computer Science Books'
+            }, {
+              id: 'cl_nonfiction_medical',
+              name: 'Medical Books'
+            }, {
+              id: 'cl_nonfiction_law',
+              name: 'Law Books'
+            }
+          ]
+        }, {
+          id: 'bo_photo',
+          name: 'Photography Books'
+        }, {
+          id: 'bo_bio',
+          name: 'Biographies'
+        }, {
+          id: 'bo_child',
+          name: 'Books for Children'
+        }, {
+          id: 'bo_cook',
+          name: 'Cookbooks'
+        }, {
+          id: 'bo_scifi',
+          name: 'Sci-Fi and Fantasy Books'
+        }, {
+          id: 'bo_teen',
+          name: 'Books for Teenage and Young Adult'
+        }, {
+          id: 'bo_lit',
+          name: 'Literature and Fiction Books'
+        }, {
+          id: 'bo_rom',
+          name: 'Romance Books'
         }
       ]
     }, {
@@ -117,16 +187,19 @@
           }, {
             id: "startTime",
             type: "datetime",
-            name: "Start Time"
+            name: "Start Time",
+            optional: true
           }, {
             id: "endTime",
             type: "datetime",
-            name: "End Time"
+            name: "End Time",
+            optional: true
           }, {
             id: "seats",
             type: "int",
             name: "Seats",
-            filter: "range"
+            filter: "range",
+            optional: true
           }
         ]
       },
@@ -777,11 +850,18 @@
     };
 
     Context.getForm = function(fieldId) {
-      var html, k, v, _ref;
+      var hasOptional, html, k, v, _ref;
       html = "";
+      hasOptional = false;
       _ref = charme_schema.global[fieldId].attributes;
       for (k in _ref) {
         v = _ref[k];
+        if (v["optional"]) {
+          hasOptional = true;
+          html += "<div class='optionalproperty' style='display:none'>";
+        } else {
+          html += "<div>";
+        }
         html += "<div style='padding:8px 0px; font-weight:bold;'>" + v["name"] + "</div>";
         if (v["type"] === "area") {
           html += "<select  name='" + v["id"] + "' class='locationContainer'></select> <a class='but_addLocation'>Add Location</a> Radius: <select name='" + v["id"] + "_radius'>" + CharmeModels.Context.getRad() + "</select>";
@@ -810,7 +890,13 @@
         } else if (v["type"] === "productcategory") {
           html += CharmeModels.Context.getProductSelector(v["id"]);
         }
-        html += "<br>";
+        html += "</div>";
+      }
+      if (hasOptional) {
+        html += "<div style='padding-top:32px; padding-bottom:16px;'><a id='advancedproperties'>Show Advanced Properties</a></div>";
+        $("#advancedproperties").click(function() {
+          return $(".optionalproperty").show();
+        });
       }
       return html;
     };

@@ -790,11 +790,13 @@ control_postField = Backbone.View.extend({
 
           var contextType = $(this).data("type");
           var html = CharmeModels.Context.getForm(contextType);
+
           $("#contextDetails").html(html);
 
-
-
-
+          $("#advancedproperties").click(function() {
+            $(".optionalproperty").show();
+              $("#advancedproperties").parent().remove();
+          });
 
           $("#contextContainer .scroller").animate({
             left: -400

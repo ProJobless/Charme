@@ -7,21 +7,35 @@
 
 ###
 @charme_schema_services = [
-	"software"
-	"music"
+	"carrepair"
+	"pcrepair"
 	"electronic"
+	"engineer"
+	"electrician"
 	"clean"
-	"artist"
+	"assembly"
+	"music"
+	"musicteach"
+	"plumber"
+	"trainer"
+	"software"
 	"trainer"
 ]
 
 # To be exchanged by translation later on
 @charme_schema_services_names = {
-	"software": "Software Engineer"
-	"music": "Musician"
+	"carrepair": "Car Repair"
+	"pcrepair": "Computer Repair"
 	"electronic": "Electronic Engineer"
-	"clean": "Room Cleaning"
-	"artist": "Artist"
+	"engineer": "Engineer"
+	"electrician": "Electrician"
+	"clean": "Home Cleaning"
+	"assembly": "Indoor Assembly"
+	"music": "Musician"
+	"musicteach": "Music Teacher"
+	"plumber": "Plumber"
+	"trainer": "Painting"
+	"software": "Software Engineer"
 	"trainer": "Trainer"
 }
 
@@ -33,6 +47,22 @@
 			{
 				id: 'el_smartphone'
 				name: 'Smartphones and Mobile Phones'
+			},
+			{
+				id: 'el_tv'
+				name: 'Television'
+			},
+			{
+				id: 'el_car'
+				name: 'Car Electronics'
+			},
+			{
+				id: 'el_pc'
+				name: 'Laptops and Computers'
+			},
+			{
+				id: 'el_screens'
+				name: 'Screens'
 			},
 			{
 				id: 'el_smartphone'
@@ -53,6 +83,10 @@
 					{
 						id: 'el_pc_hdd'
 						name: 'Harddisk'
+					},
+					{
+						id: 'el_pc_print'
+						name: 'Printers'
 					}
 				]
 
@@ -75,6 +109,71 @@
 		]
 
 	},
+	{
+		id: 'bo'
+		name: 'Books and Magazines'
+		sub: [
+			{
+				id: 'bo_nonfiction'
+				name: 'Nonfiction Books'
+				sub: [
+					{
+						id: 'cl_nonfiction_engineer'
+						name: 'Engineering Books'
+					},
+					{
+						id: 'cl_nonfiction_cs'
+						name: 'Computer Science Books'
+					},
+					{
+						id: 'cl_nonfiction_medical'
+						name: 'Medical Books'
+					},
+					{
+						id: 'cl_nonfiction_law'
+						name: 'Law Books'
+					}
+				]
+			},
+
+			{
+				id: 'bo_photo'
+				name: 'Photography Books'
+			},
+			{
+				id: 'bo_bio'
+				name: 'Biographies'
+			},
+			{
+				id: 'bo_child'
+				name: 'Books for Children'
+			},
+			{
+				id: 'bo_cook'
+				name: 'Cookbooks'
+			}
+			{
+				id: 'bo_scifi'
+				name: 'Sci-Fi and Fantasy Books'
+			},
+			{
+				id: 'bo_teen'
+				name: 'Books for Teenage and Young Adult'
+			},
+			{
+				id: 'bo_lit'
+				name: 'Literature and Fiction Books'
+			},
+			{
+				id: 'bo_rom'
+				name: 'Romance Books'
+			},
+
+		]
+
+	},
+
+
 	{
 		id: 'fo'
 		name: 'Food and drinks'
@@ -139,6 +238,7 @@
 					type: "location"
 					name: "Start"
 					filter: "location"
+
 				},
 				{
 					id: "endLocation"
@@ -150,17 +250,20 @@
 					id: "startTime"
 					type: "datetime"
 					name: "Start Time"
+					optional: true
 				},
 				{
 					id: "endTime"
 					type: "datetime"
 					name: "End Time"
+					optional: true
 				}
 				{
 					id: "seats"
 					type: "int"
 					name: "Seats"
 					filter: "range"
+					optional: true
 				}
 			]
 		},

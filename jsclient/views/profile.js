@@ -60,6 +60,12 @@ var view_profilepage = view_page.extend({
 				]
 			}, function(d) {
 
+				if (d.profile_get_name.info === null) {
+					$("#page3").html("<div class='p32'>This user does not exist.</div>");
+					$(".profile_sidebar").html("");
+					return;
+				}
+
 				if (d3.key_getMultipleFromDir.value.length < 1) {
 					container_main.currentView.verified = false;
 					// Hide init conversation button
@@ -76,8 +82,6 @@ var view_profilepage = view_page.extend({
 
 				}
 				checkVerified();
-
-
 
 				container_main.currentView.username = d.profile_get_name.info.firstname + " " + d.profile_get_name.info.lastname;
 				$(".profile_name").text(container_main.currentView.username);

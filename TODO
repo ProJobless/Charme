@@ -2,13 +2,9 @@ Important:
 -----------------------------------------
 
 1
-- delete collections!
-- remove start and endtime from move
-- location manager
-- more products etc
-- user does not exist message
+- remove start and endtime from move (or optional)
 - If server is down, user can not logout!
-- comment delete with signature
+- location manager
 
 2
 - android!!!

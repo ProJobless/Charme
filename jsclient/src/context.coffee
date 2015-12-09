@@ -218,8 +218,15 @@ class CharmeModels.Context
 	@getForm: (fieldId) ->
 	# the event handlers are set in page_modules.js, function addContext
 		html = ""
-
+		hasOptional = false
 		for k,v of charme_schema.global[fieldId].attributes
+
+			if (v["optional"])
+				hasOptional=true
+				html += "<div class='optionalproperty' style='display:none'>"
+			else
+				html += "<div>"
+
 			html += "<div style='padding:8px 0px; font-weight:bold;'>"+v["name"]+"</div>"
 
 			if v["type"] == "area"
@@ -253,5 +260,10 @@ class CharmeModels.Context
 			else if v["type"] == "productcategory"
 				html += CharmeModels.Context.getProductSelector(v["id"])
 
-			html += "<br>"
+			html += "</div>"
+
+		if hasOptional
+			html += "<div style='padding-top:32px; padding-bottom:16px;'><a id='advancedproperties'>Show Advanced Properties</a></div>";
+		
+
 		return html
