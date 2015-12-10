@@ -702,7 +702,7 @@ var view_register = view_page.extend({
   }
 });
 
-function global_addLocation(element) {
+function global_addLocation(element, callback, keepMap) {
 
   ui_mapSelector(element, function (lon, lat) {
     var name = prompt("Enter a Name");
@@ -726,15 +726,21 @@ function global_addLocation(element) {
         // float values. Otherwise signatures will not work
       }, ]
     }, function(d) {
-      $(".locationContainer").append("<option value='" + d.simpleStore.itemId.$id + "'>" + data.name + "</option>");
+      $(".locationContainer").append("<option value='" + xssText(d.simpleStore.itemId.$id) + "'>" + xssText(data.name) + "</option>");
       $(".locationContainer option:last-child").data("json", d.simpleStore.data);
       //CharmeModels.Context.setupLocationSelector();
       console.log(d.simpleStore.data);
+
       $(element).prev().data("storage", d.simpleStore.data);
       $(element).prev().children("option:last").attr("selected","selected");
 
+      $(".locations").append("<li>" + xssText(data.name) + " <a data-locationid='" + xssText(d.simpleStore.itemId.$id) + "'>Delete</a></li>");
+      $(".nolocations").hide();
+      if (callback !== undefined)
+        callback();
+
     });
-  });
+  }, keepMap);
 
 
 
@@ -2257,7 +2263,7 @@ var view_stream = view_page.extend({
 
 
             $.each(d22.simpleStore, function(d) {
-              $(".locationContainer").append("<option value='" + this._id.$id + "'>" + this.data.name + "</option>");
+              $(".locationContainer").append("<option value='" + this._id.$id + "'>" + this.data.name + "</option>"); // TODO: XSS SAVE!!!!!!!!!
               $(".locationContainer option:last-child").data("json", this.data);
 
             });

@@ -72,6 +72,44 @@ var view_settings_pwchange = view_subpage.extend({
 	}
 });
 
+
+var view_settings_locationmanager = view_subpage.extend({
+
+
+	events: {
+
+
+	},
+	getData: function() {
+		console.warn(this.options.data);
+		if (this.options.data != undefined)
+			return this.options.data;
+		else
+			return {};
+
+	},
+registerClick: function() {
+	$(".locations a ").click(function(){
+		var that=this;
+		 apl_request({
+			 "requests": [{
+				 "id": "simpleStore",
+				 "action": "delete",
+				 "class": "location",
+				 "itemId": $(this).data("locationid")
+			 }]
+		 }, function(d22) {
+			 $(that).parent().remove();
+		});
+	});
+},
+	postRender: function() {
+		global_addLocation("#map", this.registerClick, true);
+		this.registerClick();
+	}
+});
+
+
 var view_settings_keymanager = view_subpage.extend({
 
 

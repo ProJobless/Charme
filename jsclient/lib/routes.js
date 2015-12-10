@@ -217,6 +217,27 @@ $(function() {
 
                 });
             }
+            else   if (id == "locations") {
+
+                  apl_request({
+                      "requests": [{
+                          "id": "simpleStore",
+                          "action": "get",
+                          "class": "location"
+                          },
+                      ]
+                  }, function(d2) {
+
+                  
+                      var vsd = new view_settings_locationmanager({
+                          template: "view_settings_locations",
+                          navMatch: '#nav_' + id,
+                          data: d2
+                      });
+                      container_main.currentView.setSub(vsd);
+                      container_main.currentView.render();
+                  });
+              }
             else  if (id == "password") {
                 apl_request({
                     "requests": [{
@@ -786,7 +807,7 @@ function silentLogout(deleteAll) {
 
   if (typeof global_socket_connection !== "undefined")
     global_socket_connection.close();
-    
+
 }
 
 function logout(loginStatusCode, deleteAll) {

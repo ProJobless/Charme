@@ -1,0 +1,23 @@
+<div style="color:#fff; background-color:#333; padding:16px">
+Click somewhere on the map to add a location. You can use the scrollwheel to zoom:
+</div>
+<div style="border:2px #333 solid;">
+<div id="map" >
+</div></div>
+<div class="p32">
+Your locations:
+        <% if (rc.simpleStore.length==0)  { %>
+
+          <div class="nolocations">You do not have any locations yet...</div>
+
+            <% }%>
+<ul class="locations ">
+  <%- rc.data %>
+ <% _.each( rc.simpleStore, function(item){ %>
+
+    <li><%- item.data.name %> 	<a  data-locationid='<%- item._id.$id %>'>Delete</a></li>
+
+
+
+  <% }); %>
+</li></div>

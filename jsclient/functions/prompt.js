@@ -54,21 +54,22 @@ function ui_showImgBox(src, callback)
 
 }
 
-function ui_mapSelector(element, callback) {
+function ui_mapSelector(element, callback, keepMap) {
 
 		var randomId = "map"+String(Math.floor( Math.random()*99999 ));
 
 		$(".mapSelector").remove();
 		$('<div/>', {
     id: randomId,
-		style: "height: 200px; margin-top:8px",
+		style: "height: 300px;",
 		class: "mapSelector mapOsm fixedBoxInner"
 	}).insertAfter(element);
 
 		var map = L.map(randomId).setView([48, 11], 4);
 
 		function onMapClick(e) {
-			$(".mapSelector").remove();
+			if (true != keepMap)
+				$(".mapSelector").remove();
 		   callback(e.latlng.lng, e.latlng.lat);
 
 			// Alert: Location was added...

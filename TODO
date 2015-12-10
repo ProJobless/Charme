@@ -3,21 +3,23 @@ Important:
 
 1
 
-- required options
-- select last choosen place for each category
 - location manager: delete locations (20min)
-
+- add location: hint when none exists, text box select for quick jump!
 
 - If server is down, user can not logout!
-2
+
 - stream contains (context) entries of non friends
 - stream filled with context after switching to archive and back
 - distribute context items to stream!
+- duplicate context information
+- product categorie for selled products
+
+
+2
 - android!!!
+- video/gif
 
 3
-- add location: hint when none exists, text box select for quick jump!
-- goback button bette rdesign and for forget password/about page when not logged in
 - [SEC] Sign/HMac list item username/userId pairs
 - find page with context etc...
 
