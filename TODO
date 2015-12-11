@@ -3,17 +3,16 @@ Important:
 
 1
 
-- location manager: delete locations (20min)
-- add location: hint when none exists, text box select for quick jump!
-
 - If server is down, user can not logout!
 
 - stream contains (context) entries of non friends
+  - only insert to streamitems collection if friend
+  -
 - stream filled with context after switching to archive and back
 - distribute context items to stream!
 - duplicate context information
 - product categorie for selled products
-
+- increase session duration!!!
 
 2
 - android!!!

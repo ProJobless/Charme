@@ -72,19 +72,14 @@ class Generator
     $const2 = array();
     $const3 = array();
 
-
-
-
     if (isset($filterObject) && isset($filterObject["context"])) {
       $const1 = array($prefix.".type" => array('$in' => $filterObject["context"]));
     }
-    if (isset($filterObject)  && isset($filterObject["archived"]) && !$onRemote)
-    {
+    if (isset($filterObject)  && isset($filterObject["archived"]) && !$onRemote) {
       $const2 = array("archived" => true);
+      return $const2;
     }
-    if (isset($filterObject)  && isset($filterObject["constraints"]))
-    {
-
+    if (isset($filterObject)  && isset($filterObject["constraints"])) {
       // TODO: ensureIndex on GPS Location
     //  clog2($filterObject["constraints"], "constraints are");
       foreach ($filterObject["constraints"] as $constraint) {
@@ -102,14 +97,10 @@ class Generator
         else  if ($constraint["type"] == "location") {
 
           // NOTE: Delete index if database layout changes
-
-
           if (false) {
               $dbCollection->streamitems->deleteIndex( "post.metaData.".$constraint["name"]."_data.position");
               $dbCollection->posts->deleteIndex("postData.object.metaData.".$constraint["name"]."_data.position");
           }
-
-
           else {
             // TODO: This is SLOW. Make this only once!!
 
@@ -135,15 +126,10 @@ class Generator
             '$maxDistance' => intval($constraint["radius"])*1000
           ));
         }
-
-
       }
-
     }
 
     return  array_merge($const1, $const2, $const3);
-
-
 	}
 
 }

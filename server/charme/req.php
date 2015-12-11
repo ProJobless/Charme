@@ -846,195 +846,8 @@ foreach ($data["requests"] as $item)
 
 		break;
 
-
-		// Get message from server
-		case "message_receiveOLD" :
-
-			global $CHARME_SETTINGS;
-
-
-			//echo "!!!".$item["conversationId"];
-			// If receiver-sender relation is already there -> append message!
-
-			//$item["localreceivers"][] = $item["sender"];
-
-
-			/*
-			// Warning! One message per server only!
-
-
-			$blockWrite = false;
-		//	clog(print_r($item["localreceivers"], true));
-
-			foreach ($item["localreceivers"]as $receiver)
-			{
-
-				// Find conversation $item["aesEnc"] = aesEnc
-				// if not exists => create conversation
-
-
-				// Database Connection
-				$col = \App\DB\Get::Collection();
-
-				//$db_charme->messageReceivers->update(array("uniqueId" => $uniqueID, "receiver" => $item), $content2, array("upsert" => true));
-
-				// Check if CONVERATION (not message) already exists for THIS receiver (may exist on this server for another user!)
-				$numConvUser = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"]), "receiver" => $receiver));
-
-
-
-
-				if ($numConvUser < 1) // Conversation does not Exist for THIS User
-				{
-					// Add new people
-
-
-
-
-					$content = array(
-					"people" => $item["people"], // is this important?
-					//
-					"aesEnc" => $item["aesEnc"],
-					"conversationId" => new MongoId($item["conversationId"]),
-					"receiver" => $receiver,
-					"peoplenames" => $item["peoplenames"],
-					"revision" => $item["revision"],
-					"sendername" => $item["sendername"],
-					"messagePreview" => $item["messagePreview"],
-					"time" => new MongoDate(time()),
-					"pplCount" =>  Count($item["people"])
-					);
-
-
-
-					$c = $col->conversations->count(array("conversationId" =>  new MongoId($item["conversationId"])));
-					if ($c > 0)
-					{
-						/*
-						Set blockwrite to True,
-						It is true if the conversation already exists for some other user,
-						So we do not need to insert new messages!
-
-
-						$blockWrite = true;
-					}
-
-					$col->conversations->update(array("aesEnc" => $item["aesEnc"],  "read" => false, '$inc' => array('counter' => 1),  "sendername" => $item["sendername"] , "time" => new MongoDate()), $content ,  array('upsert' => true)); //
-					\App\Counter\CounterUpdate::inc( $receiver, "talks"); // Increment notification counter (Showed right of talks in the navigation)
-
-
-				}
-				else
-				{
-
-
-					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people", "peoplenames"));
-					$setarray = array("messagePreview" => $item["messagePreview"],"read" => false,   "time" => new MongoDate()
-						);
-
-					if ($item["status"] == "addPeople")
-					{
-
-						$i = 0;
-
-						$newpeople = array();
-						$newpeoplenames = array();
-
-						// Add existing receivers
-						foreach ($ppl["people"] as $item2)
-						{
-
-							if (!in_array($item2, $newpeople))
-							{
-
-								$newpeople[] = $item2;
-								$newpeoplenames[] = $ppl["peoplenames"][$i];
-							}
-							$i++;
-
-						}
-
-						$i = 0; // Reset index counter
-
-						// Add new receivers
-						foreach ($item["people"] as $item2)
-						{
-
-							if (!in_array($item2, $newpeople))
-							{
-
-								$newpeople[] = $item2;
-								$newpeoplenames[] = $item["peoplenames"][$i];
-							}
-							$i++;
-
-						}
-
-						$setarray["people"] = $newpeople;
-						$setarray["peoplenames"] = $newpeoplenames;
-
-					}
-
-					if (isset($item["messagePreview"])) // Please not $inc is not supported in $set array
-						$col->conversations->update(array("conversationId" =>  new MongoId($item["conversationId"])), array('$set' => $setarray, '$inc' => array('counter' => 1)),array('multiple' => true));
-
-
-					$ppl = $col->conversations->findOne(array("conversationId" =>  new MongoId($item["conversationId"])), array("people"));
-
-
-
-
-					// Increment receivers Counters
-					foreach ($ppl["people"] as $val) {
-
-						if ( $item["sender"] !=  $val)
-						\App\Counter\CounterUpdate::inc($val, "talks");
-					}
-
-
-				}
-
-
-
-
-				// Insert the actual message here
-				if (!$blockWrite) // Messages are only inserted once per server.
-				{
-
-				$ins = array("sendername" => $item["sendername"],
-
-				 "time" => new MongoDate(), "fileId"=> $item["fileId"], "conversationId" =>   new MongoId($item["conversationId"]),
-				 "encMessage" => $item["encMessage"], "sender" => $item["sender"], "status" => $item["status"]);
-
-				if ($ins["fileId"] == 0)
-				unset($ins["fileId"]);
-				if (isset($item["status"] ) && $item["status"] == "addPeople")
-				{
-					// TODO: also append the people who were added to message
-				}
-
-
-
-
-				$col->messages->insert($ins);
-
-				// Notify Android Devices via Google Cloud Messaging (GCM)
-
-
-
-
-			} // End foreach of receivers
-
-			*/
-
-
-		break;
-
-
-
 		// Get message from client
 		case "message_distribute_answer":
-
 
 			$col = \App\DB\Get::Collection();
 			$convId = new MongoId($item["message"]["object"]["conversationId"]);
@@ -1044,10 +857,7 @@ foreach ($data["requests"] as $item)
 
 			// Find receivers of this message by $item["conversationId"]
 			$res = $col->messageGroups->findOne(array("messageData.conversationId"=> ($convId->__toString())), array('messageData'));
-
-
 			$clustered = \App\Requests\Cluster::ClusterPeople($res["messageData"]["obj"]["usernames"]); // Cluster people to save bandwith
-
 
 			$fileId = 0;
 
@@ -1058,8 +868,6 @@ foreach ($data["requests"] as $item)
 				$grid = $col->getGridFS();
 				$fileId = (string)$grid->storeBytes($item["encFile"], array('type'=>"encMsg",'owner' => $_SESSION["charme_userid"]));
 				$ret2 = $grid->storeBytes($item["encFileThumb"], array('type'=>"encMsgThumb",'owner' => $_SESSION["charme_userid"], "orgId" => $fileId));
-
-
 			}
 
 			foreach ($clustered as $receiverObj)
@@ -2317,7 +2125,7 @@ foreach ($data["requests"] as $item)
 			rtrim($fields_string, '&');
 
 
-			// Close sesion to avoid curl deadlock when queriing own server!
+			// Close session to avoid curl deadlock when querying own server!
 			// DO NOT PERFORM ANY REQUEST THAT NEED SESSION AFTER a search request!!!
 			session_write_close();
 
@@ -2489,6 +2297,7 @@ foreach ($data["requests"] as $item)
 			//
 			$additionalConstraints = \App\Filter\Generator::getConstraints($item["filter"], $col, true);
 
+
 			$showCollectionPostsOnly = false;
 			if (Count($additionalConstraints) == 0)
 				$showCollectionPostsOnly = true;
@@ -2531,14 +2340,13 @@ foreach ($data["requests"] as $item)
 				)
 			)
 			->sort(array('time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
-			$streamItems= [];
 
+			$streamItems= [];
 			$postIds = array();
 
 			foreach ($iter as $postItem) {
 				$postIds [] =   $postItem["_id"]->__toString();
 			}
-
 
 			$iterLikes = $col->likes->find(array('postId' => array('$in' => $postIds), "liker"=> $item["searcher"]));
 			$likes = array();
@@ -2572,10 +2380,6 @@ foreach ($data["requests"] as $item)
 
 			// Set likes
 
-
-
-
-
 			// TODO: Append post comments!!
 
 			/*
@@ -2600,10 +2404,9 @@ foreach ($data["requests"] as $item)
 				iterator_to_array($col->streamcomments->find(array("commentData.object.postId" => (string)$item2["postId"], "postowner" => $item2["post"]["author"]) )->skip($startIndex)->limit($numberOfComments), false);
 			}
 			*/
+		///	clog2($streamItems, "RESPOND STREAM ITEMS");
 
 			$returnArray[$action] = $streamItems;
-
-
 		break;
 
 		case "edgekey_request" :
