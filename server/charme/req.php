@@ -2232,11 +2232,18 @@ foreach ($data["requests"] as $item)
 				}
 		}
 
-
+		// Limit audience
 		if (isset($item["filter"])  && isset($item["filter"]["lists"])) {
 			$additionalConstraints["post.author"] = array('$in' => $people);
 		}
 
+		if ($showCollectionPostsOnly)
+			$additionalConstraints =
+				array('$or' => array(
+				array("post.metaData" => array('$exists' => false)),
+				array("post.author" => $_SESSION["charme_userid"]),
+			)
+			);
 		//clog2($additionalConstraints, "add contraints");
 			$iter = $col->streamitems->find(array_merge(array("owner" => $_SESSION["charme_userid"]), $additionalConstraints))->sort(array('meta.time.sec' => -1))->skip($item["streamOffset"])->limit(10); // ->slice(-15)
 			$streamItems=  iterator_to_array($iter , false);
@@ -2291,6 +2298,7 @@ foreach ($data["requests"] as $item)
 		case "stream_respond" :
 
 			$col = \App\DB\Get::Collection();
+
 
 			//
 			// 1. Get search parameters
