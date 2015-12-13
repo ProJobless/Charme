@@ -320,7 +320,7 @@ public class Talks extends ActionBarActivity {
                 String data = cr2.get(0).data;
                 System.out.println("cache data "+Talks.cacheId+" is"+data);
                 if (cr2.size() > 0) {
-                    processResult(data);
+                    processResult(data, true);
                 }
 
                 SugarContext.terminate();
@@ -332,7 +332,7 @@ public class Talks extends ActionBarActivity {
 
     }
     SharedPreferences sharedPrefs;
-    void processResult(String result) {
+    void processResult(String result, boolean cacheLoad) {
 
         if (result.equals(""))
             return;
@@ -345,6 +345,7 @@ public class Talks extends ActionBarActivity {
             if (jo.getInt("ERROR") == 1) {
 
                 // New Login needed!
+                if (!cacheLoad) { // Do not finish when loading from cache, as we are logged out automatically otherwise
                 finish();
                 Intent intent = new Intent(getBaseContext(),
                         ActivityLogin.class);
@@ -352,6 +353,7 @@ public class Talks extends ActionBarActivity {
 
                 sessionExpired = true;
                 startActivity(intent);
+                }
             }
         } catch (Exception ee) {
             System.out.println("EX 1");
@@ -523,7 +525,7 @@ public class Talks extends ActionBarActivity {
                 protected void onPostExecute(String result) {
 
 
-                   processResult(result);
+                   processResult(result, false);
                 }
             }.execute(new AsyncHTTPParams(object.toString(), this, Talks.cacheId, server));
         } catch (Exception ex) {

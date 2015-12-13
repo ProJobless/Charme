@@ -115,6 +115,7 @@ public class ActivityLogin extends Activity {
     	{
 			Intent intent = new Intent(getBaseContext(), Talks.class);
 			startActivity(intent);
+
 			finish();
     	}
     	else
@@ -335,7 +336,7 @@ public class ActivityLogin extends Activity {
 				System.out.println("CHARME ERROR 1: Not connected to server?");
 				ee.printStackTrace();
 				flipCard();
-				StartLogin();
+			//	StartLogin();
 			}
 			}
 			

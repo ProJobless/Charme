@@ -1,5 +1,4 @@
 <div title='title' class='meta'>Search</div>
-
 <div class='p32'>
 <div class="onlyResponsive">You can search for UserIDs or Usernames:
 <div style="margin-top:8px; margin-bottom:24px;">
@@ -14,10 +13,11 @@
 
         <% if (item2.type=="user")  { %>
 
-
         <div class="result">
       		<a href="#/user/<%- encodeURIComponent(item2.id) %>">
+            <% if (item2.noPicture!=true)  { %>
       			<img src="http://<%- item2.id.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.id) %>&amp;s=64">
+            <% } %>
       		<%- item2.name %>
           <br style="clear:both">
       		</a>
@@ -31,7 +31,6 @@
           <%- item2.description %>
         </a>
         <% } %>
-
       <% }); %>
     </div>
   </div>

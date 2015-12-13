@@ -411,19 +411,19 @@
     Signature.revision;
 
     /*
-
+    
     	Name:
     	Signature(originalMessage)
-
+    
     	Info:
     	Generate a signature with the users private key.
-
+    	
     	Params:
     	message:string:The message you want to sign
-
+    
     	Location:
     	crypto.js
-
+    
     	Code:JS:
     	var signature = crypto_sign("hallo welt", );
     */
@@ -441,21 +441,21 @@
     }
 
     /*
-
+    	
     	Name:
     	Signature.Verify(hash, message2verify, publicKey)
-
+    
     	Info:
     	Verify a signature. Returns TRUE or FALSE
-
+    
     	Params:
     	signature:string:The signature to check
     	message:string:The message you want to check
     	publicKey:object:The publicKey (usually from key directory)
-
+    
     	Location:
     	crypto.js
-
+    
     	Code:JS:
     	// TODO
     */
@@ -507,7 +507,7 @@
     };
 
     /*
-
+    
     		Return Form: {object, signature {keyRevision, hashvalue}}
     */
 
@@ -639,7 +639,7 @@
     Context.getActivities = function() {
       var k, str, _i, _len, _ref;
       str = "";
-      _ref = ["Watching Soccer on TV", "Making Music", "Baseball", "Volleyball", "Table Tennis", "Soccer"];
+      _ref = ["House Party", "Watching Soccer on TV", "Making Music", "Baseball", "Volleyball", "Table Tennis", "Soccer"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         k = _ref[_i];
         str += "<option vale='" + k + "'>" + k + "</option>";
@@ -783,6 +783,21 @@
       }
     };
 
+    Context.catById = function(node, id) {
+      var retArray, subnode, subres, _i, _len;
+      retArray = [];
+      for (_i = 0, _len = node.length; _i < _len; _i++) {
+        subnode = node[_i];
+        if (subnode.id === id) {
+          return subnode.name;
+        } else if (subnode.sub != null) {
+          subres = this.catById(subnode.sub, id);
+          retArray = retArray.concat(subres);
+        }
+      }
+      return retArray;
+    };
+
     Context.searchRecursiveText = function(node, query) {
       var retArray, subnode, subres, _i, _len;
       retArray = [];
@@ -840,7 +855,6 @@
             $(elementSearch).show().focus().select();
             $(elementHelp).html(CharmeModels.Context.renderCateogries(null));
             CharmeModels.Context.registerEventProductClick(elementHelp);
-            $(elementSearch).next().val("");
           });
           $(elementSearch).hide();
         }

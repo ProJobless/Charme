@@ -159,6 +159,8 @@ a.category
 #contextChoices label {
 	text-align: left;
 }
+
+/*
 .metaData.meta_publicevent
 {
 	color: maroon;
@@ -171,10 +173,15 @@ a.category
 {
 	color: #b88504;
 }
+.metaData.meta_activity
+{
+	color: #4937a4;
+}
+
 .metaData.meta_lend
 {
 	color: #1fad28;
-}
+}*/
 
 
 .metaData a

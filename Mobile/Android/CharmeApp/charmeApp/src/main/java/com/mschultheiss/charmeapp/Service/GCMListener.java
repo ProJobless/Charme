@@ -147,29 +147,31 @@ public class GCMListener extends GcmListenerService {
 
             if (preferences.getBoolean("notifications_new_message", true)) {
 
-                PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                        ii , PendingIntent.FLAG_CANCEL_CURRENT); // PendingIntent.FLAG_CANCEL_CURRENT is necessary for putExtra
+                if (sharedPref.getString("currentConversation", "ldknzx;lwqn").equals(jo.getString("conversationId").toString())  )  // Do not show notification if message activity of this converation already in foreground
+                {
+                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                            ii, PendingIntent.FLAG_CANCEL_CURRENT); // PendingIntent.FLAG_CANCEL_CURRENT is necessary for putExtra
 
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setContentTitle(jo.getString("sendername"))
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                    .setContentTitle(jo.getString("sendername"))
 
-                                .setStyle(new NotificationCompat.BigTextStyle()
-                                        .bigText(msg))
-                                .setContentText(msg);
+                                    .setStyle(new NotificationCompat.BigTextStyle()
+                                            .bigText(msg))
+                                    .setContentText(msg);
 
-                mBuilder.setContentIntent(contentIntent);
-
-
-                mBuilder.setSound(Uri.parse(ringToneName));
-
-                if (preferences.getBoolean("notifications_new_message_vibrate", true))
-                    mBuilder.setVibrate(new long[]{250, 250});
+                    mBuilder.setContentIntent(contentIntent);
 
 
-                mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                    mBuilder.setSound(Uri.parse(ringToneName));
 
+                    if (preferences.getBoolean("notifications_new_message_vibrate", true))
+                        mBuilder.setVibrate(new long[]{250, 250});
+
+
+                    mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                }
             }
 
 

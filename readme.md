@@ -1,34 +1,35 @@
-![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/screen2.png "Screenshot")
+![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/vid.gif "Screenshot")
+
+*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice (Just like [Diaspora](https://github.com/diaspora/diaspora)). Furthermore messages, private posts and private profile information are end-to-end encrypted.
+
+
+- TODO: DEMO  Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
 
 
 
 
-*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted.
+You can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
 
-Moreover you can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
-
-
-
-![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/screen3.png "Screenshot")
-
-For smartphones, the client can be exported as an Apache Cordova project.
-
-**Warning:** This is for preview puposes only. This preview version is neither stable nor secure. It is in development. The code is of not-so-good quality right now and will be refactored and documented in the next months.
+**Warning:** This is for preview puposes only. It is almost function complete but neither stable nor secure.
+There are essential things missing, such as integrity protection for the client and forced https for server-to-server communication.
+The code is of not-so-good quality right now and will be refactored and documented in the next months.
+Things to do next:
+- Improve Protocol
+- Improve search
+- Prevent Spam
+- iOS App
 
 
 
 ## Setup a client
-  * Just copy the files in `/jsclient` on your server
+  * Just copy the files in `/jsclient` on your server to test. Later we will provide native builds for client installation.
+  * An Android apk is available in
 
 ## Setup a Server
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
  Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
 
  * The most common errros are listed in <a href="/faq_errors.md">faq_errors.md</a>.
-
-
-## More Screenshots
- ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/tex/illustrations/context.jpg "Screenshot")
 
 
 ## FAQ

@@ -1204,9 +1204,7 @@ control_postField = Backbone.View.extend({
         });
 
 
-        if (d.collection_getAll == 0)
-          that.$el.append("Create <a href='#user/" + xssAttr(charmeUser.userIdURL) + "/collections'>a collection</a> to start posting.");
-        else {
+      {
           addbox(that, items);
         }
 
@@ -1556,7 +1554,7 @@ control_postItem = Backbone.View.extend({
 
       if (metaData.type == "offer") {
 
-        metaDataStr = "<div class='metaData meta_" + metaData.type + "'><div class='point'></div>" + xssText(metaData.currency + " " + metaData.price) + "</div>";
+        metaDataStr = "<div class='metaData meta_" + metaData.type + "'><div class='point'></div>"+ CharmeModels.Context.catById(charme_schema_categories, metaData.sell) +" - " + xssText(metaData.currency + " " + metaData.price) + "</div>";
         $("#post_" + that.options.postObj.postId + " .cont").append(metaDataStr);
 
 
@@ -2040,6 +2038,12 @@ var view_stream_display = view_subpage.extend({
         filter:  that.options.filter
         // peopleChecksum:
         });
+
+        if (typeof arguments.filter.hint !== "undefined")
+          $(".hint").text(arguments.filter.hint).show();
+        else {
+          $(".hint").hide();
+        }
 
     }
 

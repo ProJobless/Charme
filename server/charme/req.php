@@ -483,6 +483,16 @@ foreach ($data["requests"] as $item)
 			// In the future this is going to be replaced by a more robust search base64_decode
 			// on a distributed hash table like chord
 
+			if (strpos($item["q"], "@") !== false)
+			{
+
+				$returnArray[$action] = array("STATUS" => "OK", "results" => array(
+					array("name" => "Goto profile with id ".$item["q"], "id" => $item["q"], "type" => "user", "noPicture" => true )
+				));
+
+				break;
+			}
+
 			// STEP 1: Get most often used servers
 			$col = \App\DB\Get::Collection();
 
@@ -524,7 +534,6 @@ foreach ($data["requests"] as $item)
 			if ($maxServer > 5) // Contact 5 servers for seach query as maximum
 				$maxServer = 5;
 
-			clog2($serverArray);
 			//
 			// Build curl requests
 			//

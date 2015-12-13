@@ -103,9 +103,17 @@ class UserRegistration implements \App\Models\Action
 			$_SESSION["charme_userid"] =  $data["username"]."@".$data["server"];
 
 			// Create some default lists
-			\App\CRUD\Lists::CreateList("Friends",$_SESSION["charme_userid"] );
-			\App\CRUD\Lists::CreateList("Colleagues",$_SESSION["charme_userid"] );
-			\App\CRUD\Lists::CreateList("Fellow students",$_SESSION["charme_userid"] );
+			$friendListId = \App\CRUD\Lists::CreateList("Friends",$_SESSION["charme_userid"] );
+			clog("frid list".$friendListId);
+
+			$colleagues = \App\CRUD\Lists::CreateList("Colleagues",$_SESSION["charme_userid"] );
+			$fellow = \App\CRUD\Lists::CreateList("Fellow students",$_SESSION["charme_userid"] );
+
+			\App\CRUD\Filter::CreateFilterWithList($_SESSION["charme_userid"] , "offer", "Local Shop", array($friendListId, 	$colleagues, 	$fellow), "This filter shows things your friends and colleagues give away. You can create your own filters by clicking on the plus symbol. ");
+			\App\CRUD\Filter::CreateFilterWithList($_SESSION["charme_userid"] , "offer", "Activities", array($friendListId),"This filter shows your friends activities. You can create your own filters by clicking on the plus symbol. ");
+
+			\App\CRUD\Collections::Insert($_SESSION["charme_userid"] , "Things about me (Public)", "Selfies, Stories and mor of me");
+			\App\CRUD\Collections::Insert($_SESSION["charme_userid"] , "Music and Videos I like (Public)", "Stuff I like so far...");
 
 
 		}

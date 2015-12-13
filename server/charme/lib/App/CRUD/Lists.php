@@ -15,9 +15,9 @@ class Lists
 
     if ($listName != "") {
       $ins = $col->lists->insert($content);
-      return false;
+    return   $content["_id"]->__toString();
     }
-    return   $content["_id"];
+      return false;
 	}
 }
 ?>

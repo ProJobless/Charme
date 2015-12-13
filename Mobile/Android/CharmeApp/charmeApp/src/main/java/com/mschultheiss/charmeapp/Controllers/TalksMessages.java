@@ -70,6 +70,19 @@ public class TalksMessages extends ActionBarActivity {
            In secure mode this should be disabled however...
      */
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (sharedPref != null) {
+            SharedPreferences.Editor e = sharedPref.edit();
+            e.putString("currentConversation", "");
+            e.commit();
+        }
+
+    }
+
+
     ListView m_listview;
     GibberishAESCrypto gib = new GibberishAESCrypto();
 
@@ -372,6 +385,12 @@ public class TalksMessages extends ActionBarActivity {
         Intent intent = getIntent();
 
         this.conversationId = intent.getStringExtra("conversationId");
+
+        SharedPreferences.Editor e = sharedPref.edit();
+        e.putString("currentConversation", this.conversationId);
+        e.commit();
+
+
         db = new sqLiteHelper(this);
         adapter = new MessagesArrayAdaper(this,
                 R.layout.talks_messages_row_message);

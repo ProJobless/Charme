@@ -39,6 +39,9 @@
 	"trainer": "Trainer"
 }
 
+
+
+
 @charme_schema_categories = [
 	{
 		id: 'el'

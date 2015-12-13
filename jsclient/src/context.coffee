@@ -37,7 +37,7 @@ class CharmeModels.Context
 
 	@getActivities: () ->
 		str = ""
-		for k in ["Watching Soccer on TV", "Making Music", "Baseball", "Volleyball", "Table Tennis", "Soccer"]
+		for k in ["House Party",  "Watching Soccer on TV", "Making Music", "Baseball", "Volleyball", "Table Tennis", "Soccer"]
 			str += "<option vale='"+k+"'>"+k+"</option>"
 		return str
 
@@ -126,6 +126,18 @@ class CharmeModels.Context
 				retval =  this.searchRecursiveId(subnode.sub, parentId, (level+1))
 
 				return retval if retval?
+
+	@catById: (node, id) ->
+		retArray = []
+		for subnode in node
+
+			if subnode.id == id
+				return subnode.name;
+			else if subnode.sub?
+				subres = this.catById(subnode.sub, id)
+				retArray = retArray.concat(subres)
+
+		return retArray
 
 	@searchRecursiveText: (node, query) ->
 		retArray = []
