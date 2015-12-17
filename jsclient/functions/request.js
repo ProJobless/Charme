@@ -73,6 +73,14 @@ function apl_request(requests, callback, ses, srv, showNoErrors) {
   // TIPP: http://stackoverflow.com/questions/15047279/how-can-i-retrieve-json-stringified-objects-in-php
   var url1 = "http://" + srv + "/charme/req.php";
 
+  var allowLogoutOnError = false;
+
+  if (charmeUser != null && charmeUser.server==srv) {
+
+   allowLogoutOnError = true;
+}
+
+
   $.ajax({
 
     url: url1,
@@ -85,6 +93,7 @@ function apl_request(requests, callback, ses, srv, showNoErrors) {
     xhrFields: {
       withCredentials: true
     },
+
 
     cache: false,
     error: function(xhr, status, thrownError) {
@@ -102,6 +111,7 @@ function apl_request(requests, callback, ses, srv, showNoErrors) {
 
           var templateData = {
             simpleMessage: simpleMessage,
+            allowLogoutOnError : allowLogoutOnError,
             errorMessage: thrownError + "\n\nStatus Code: " + status
           };
 
@@ -113,7 +123,6 @@ function apl_request(requests, callback, ses, srv, showNoErrors) {
 
     },
     success: function(data) {
-
 
       if (callback != undefined && typeof callback == 'function') {
         if (data.ERROR == 1 && typeof charmeUser !== 'undefined' && srv == charmeUser.server) {

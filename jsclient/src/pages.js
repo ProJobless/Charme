@@ -100,8 +100,9 @@ page_authenticated = Backbone.View.extend({
 				$('#notificationMain').html(template);
 
 				that.posNotificationMenu(); {
+
 					obj.addClass("active");
-					$('.actionCont').show().css("top", 31);;
+					$('.actionCont').show().css("top", $("#button_notifications").offset().top+31);;
 				}
 			});
 
@@ -138,15 +139,15 @@ page_authenticated = Backbone.View.extend({
 
 	render: function() {
 
-
-		var str = '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
+		var str = "<div class='testversion'> This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data.\nYour data may get exposed otherwise!!!</div>";
+		str += '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  id="button_settings" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:64px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img id="profileImage" src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \
 		</div> \
 		 <div style="padding:1px;background-color:#cdcdcd; padding-top:0; margin-bottom: 0px;"> \
 		     <input id="searchField" style="width:148px;padding:9px 8px; padding-bottom:9px; border:0px; margin:0;" placeholder="Find..." type="text"></div> \
 		<ul></ul> \
-		<a href="#about">About</a> - <a href="#help">Help</a><div style="color:gray; font-size:10px; padding-top:6px;">For testing purposes only. Charme is NOT secure yet!</div></div> \
+		<a href="#about">About</a> - <a href="#help">Help</a></div> \
 		    <div class="sbBetaCont"> \
 		        <div class="sidebar sbBeta"> \
 		           <div class="actionBar"> \

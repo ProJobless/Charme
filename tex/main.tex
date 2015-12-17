@@ -74,7 +74,7 @@ Another innovation of Charme is the so called \textit{Context}, every post can h
  \section{Encryption and Security}
  \subsection{Existing work}
 With Diaspora one of the first popular distributed social networks was released. The messages are not end-to-end encrypted, however, which makes it possible for the server admin to read its users messages. 
-A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment, but such an encryption scheme could be implemented later on using techniques like onion routing for example.
+A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment for simplicity and performance reasons, but such an encryption scheme could be implemented later on using techniques like onion routing for example.
 \subsection{Formal Notation used in this paper}
 \subsubsection{Reach}
  We define the \textit{reach} of a server as this: Each server $S_i, i \in {0,1,2,...}$, on which at least one user has a public key of another user hosted on server $T_j, j \in {0,1,2,..}$ is \textit{reached} by this server.
@@ -115,11 +115,11 @@ $$
 It is important that the IV is shipped with integrity protection, otherwise an attacker could modify the first 256 bits in order to set the first decrypted plaintext block to a custom value. The other blocks can not be influenced however. 
 There are several techniques to add it (
 \url{https://en.wikipedia.org/wiki/Authenticated_encryption}).
- Integrity protection can be achieved using the following steps which mach the encrypt-then-mac Scheme:
+ Integrity protection can be achieved using the following steps using an encrypt-then-mac Scheme:
 \begin{enumerate}
 \item Encrypt Message using AES-CBC
 \item Get SHA-256 hash value of encrypted message and salt with key k and crypto algorithm version a.
-\item JSON Result is:\\\\ \{ a: 1, m: $Enc_{k||v}(text)$, h: sha256HMac($Enc_{k||v}$(text), k||v) \}\\\\ The algorithm version a is added as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
+\item JSON Result is:\\\\ \{ a: 1, m: $Enc_{k||v}(text)$, h: sha256HMac($Enc_{k||v}$(text), k||v) \}\\\\ The algorithm version a is added, as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
 
 For example: The current implementation supports Non-HMAC AES when the information was encrypted without a HMAC. An attacker could remove the HMAC key and just send the plain AES encrypted content to the client and the client would still decrypt it correctly.
 
@@ -152,7 +152,7 @@ In RSA there are two different keys. The public key is visible to everyone, whil
  n = p_1*p_2*...*p_n
 \end{eqnarray*}
 with $p_1$ being r and $p_2$ being $q$.
-
+\cite{carle}
  % TUM Network Security, WS 2014/15, Chapter 2.4 The RSA Public Key Algorithm
 
 \subsubsection{Further reading}
@@ -415,6 +415,18 @@ When the private key is updated, it is required to recrypt the data in the encry
 
 
 \section{Protocol Specification}
+\subsubsection{Signup}
+Client:
+\begin{enumerate}
+\item Get salt s from server
+\item Generate password p = Sha256(s||p') from plaintext password p'
+\item Generate passphrase PP and asymmetric keypair KP. Encrypt KP with PP.
+\item Generate sub keys fastkey1 and fastkey2, encrypt them with passphrase.
+\item Hash username with FK1 to prove integrity later
+\item transmit Enc(KP), Enc(FK1), Enc(FK2), Sha256(username||FK1) and other userdata to server.
+
+\end{enumerate}
+
 \subsubsection{Add public key to keydirectory}
 A new public key is requested, verified and added to the key directory.
 \\\\

@@ -200,6 +200,7 @@ class CharmeModels.Context
 				$(elementSearch).next().val $(this).data('final')
 
 				$(elementHelp).find('.resetProduct').click ->
+					$(".productSelector").val("");
 					$(elementSearch).show().focus().select()
 					$(elementHelp).html CharmeModels.Context.renderCateogries(null)
 					CharmeModels.Context.registerEventProductClick(elementHelp)

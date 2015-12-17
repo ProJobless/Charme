@@ -12,6 +12,14 @@ cursor: pointer;
 
 }
 
+.testversion
+{
+	padding:8px;
+	background-color:#770000;
+	text-align:center;
+	color:#fff;
+}
+
 .error {
 	color: #ff6666;
 	text-align: center;

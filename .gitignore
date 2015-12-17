@@ -10,6 +10,8 @@
 /server/mongodb.php
 /server/charme/config.php
 /server/charme/log.txt
+/server/charme/config
+/server/charme/config/*
 /server/charme/admin/log.txt
 /server/charme/admin/nohup.out
 /cordova/charmesocial/www/*

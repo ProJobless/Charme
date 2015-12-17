@@ -28,7 +28,6 @@ function apl_setup2()
 	 	{
 			var keyring = localStorage.getItem("keyring");
 			charmeUser.keyring = jQuery.parseJSON(keyring);
-			alert("This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data.\nYour data may get exposed otherwise!!!");
 		}
 
 		catch(e)

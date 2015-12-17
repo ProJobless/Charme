@@ -498,7 +498,11 @@ var view_register = view_page.extend({
         } ]
     },
     function(d) {
-      if (d.ping.pong) {
+      if (d.ping.signupblocked)
+      {
+        alert("This Server does not accept user registrations.");
+      }
+      else if (d.ping.pong) {
       $("#form_signup").show();
       $("#prompt_server").hide();
           $("#inp_server").val(server);
@@ -517,7 +521,6 @@ var view_register = view_page.extend({
 
   postRender: function() {
 
-    console.log("set talks height");
     $("#box_errors div").hide();
     $("#box_errors").hide();
   },

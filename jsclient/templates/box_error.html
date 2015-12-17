@@ -10,7 +10,23 @@
 <%- rc.errorMessage %>
 </div>
 
+
+
+
+
+
+
+ <% if (rc.allowLogoutOnError)  { %>
+   <div><br>
+   If this  server has been shut down completly, you can perform a <a href="javascript:logout(undefined, true)">complete logout</a> and login as another user.
+   </div>
+
+  <% } %>
+
+
+
 </div>
 <div class='boxMargin'>
+
 <a onclick="ui_closeBox()" class='button' >Close</a>
 </div></div>

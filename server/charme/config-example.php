@@ -27,6 +27,13 @@ $CHARME_SETTINGS["DEBUG"] =false;
 $CHARME_SETTINGS["GCM_PROJECTID"] ="";
 $CHARME_SETTINGS["GCM_APIKEY"] ="";
 
+$CHARME_SETTINGS["BLOCK_NEW_USERS"] = false;
+// You can set this to true to prevent new users to sign up.
+// You should also be able to set it dependent on a SESSION variable. e.g. if ($_SESSION["signupallowed"] = true) $CHARME_SETTINGS["BLOCK_NEW_USERS"] = false;
+
+
+
+
 
 //Will be updated automatically to block evil servers or users
 //you should leave this empty if your not using  a  network id starting with CHARME

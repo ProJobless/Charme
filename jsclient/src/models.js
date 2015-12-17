@@ -852,6 +852,7 @@
           $(elementHelp).html('<b>' + $(this).text() + '</b> - <a class=\'resetProduct\'>Select another Category</a>');
           $(elementSearch).next().val($(this).data('final'));
           $(elementHelp).find('.resetProduct').click(function() {
+            $(".productSelector").val("");
             $(elementSearch).show().focus().select();
             $(elementHelp).html(CharmeModels.Context.renderCateogries(null));
             CharmeModels.Context.registerEventProductClick(elementHelp);

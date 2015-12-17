@@ -228,7 +228,7 @@ $(function() {
                       ]
                   }, function(d2) {
 
-                  
+
                       var vsd = new view_settings_locationmanager({
                           template: "view_settings_locations",
                           navMatch: '#nav_' + id,
@@ -432,6 +432,10 @@ $(function() {
                 navMatch: id,
                 noLogin: true
             });
+            pa.getData = function() {
+                _.templateSettings.variable = "rc";
+                return {"imprinturl": "http://"+charmeUser.server+"/charme/config/imprint.html"}
+             };
 
             if (charmeUser != null) {
                 container_main.setCurrent(pa);

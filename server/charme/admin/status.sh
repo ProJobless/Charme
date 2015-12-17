@@ -102,7 +102,9 @@ checkRunning bg_events.php "bg_events.php"
 echo -e "${BBlu}Hint:${RCol} Run startbg.sh if some background tasks are not running."
 echo -e ""
 
-
+if [ ! -f ../config/imprint.html ]; then
+    echo -e "${BRed}Important Warning: $RCol config/imprint.html not found. You should provide an imprint as hoster.\n"
+fi
 
 
 #
@@ -117,5 +119,3 @@ echo -e "-----------------------------------------------------------------------
 echo -e "Please see README to fix any problems marked red above\nAlso make sure you check the apache logs for errors. \nUsually the log is saved in /var/log/apache2/error.log"
 echo -e "If gearman is not running run 'gearmand'"
 echo -e ""
-
-

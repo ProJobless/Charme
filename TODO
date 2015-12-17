@@ -3,19 +3,19 @@ Important:
 
 1 DO NOT SHOW ACTIVE MESSAGES I NANDROID NOTIFICATIONS!
 
-- default: meals@friends, offers from friends
-- product categorie for selled products, activities etc
-- If server is down, user can not logout!
+- no rsa decryption errors! 15min
+- change gcm id as exposed
+
 
 2
 - android!!!
-- video/gif
 - index.html: location.reload(true) and redirect to newest version!!!
-- Server: reject users if to many!
+- empty listitemnames 5min
 
 3
 - [SEC] Sign/HMac list item username/userId pairs
 - [SEC] Context post better protected of foreign people!
+- [SEC] Password Salt
 - find page with context etc...
 
 
@@ -24,7 +24,6 @@ Important:
 -----------------------------------------
 Before release:
 
-- no rsa decryption errors!
 - cordova app!
 ------------------------------------------
 

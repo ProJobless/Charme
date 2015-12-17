@@ -128,6 +128,13 @@ foreach ($data["requests"] as $item)
 		break;
 
 		case "ping":
+
+				global $CHARME_SETTINGS;
+				if ($CHARME_SETTINGS["BLOCK_NEW_USERS"]) {
+					$returnArray[$action] =   (array("signupblocked" => true));
+					break;
+				}
+
 				$returnArray[$action] = array("pong" => true); // Used in sign up to check if the server is a valid Charme server.
 		break;
 
@@ -1161,7 +1168,11 @@ foreach ($data["requests"] as $item)
 
 
 		case "user_register":
-
+			global $CHARME_SETTINGS;
+			if ($CHARME_SETTINGS["BLOCK_NEW_USERS"]) {
+				$returnArray[$action] =   (array("status" => "signupblocked"));
+				break;
+			}
 
 			// Return error if: Captcha is false, no name, invalid name/password/email
 			$user = new \App\Users\UserRegistration($item["data"]);
@@ -2061,7 +2072,8 @@ foreach ($data["requests"] as $item)
 			\App\Counter\CounterUpdate::set( $_SESSION["charme_userid"], "stream", 0);
 
 			if (!isset($item["filter"]))
-				$item["filter"] = array();
+
+			$item["filter"] = array();
 			$streamItems = array();
 			$col = \App\DB\Get::Collection();
 			$serverArray = array();
@@ -2144,6 +2156,7 @@ foreach ($data["requests"] as $item)
 			$mh = curl_multi_init(); // Init the curl module for HTTP Requests
 			$ch = array();
 
+
 		//	for ($i = 0; $i<Count($serverList); $i++) {
 			foreach ($serverList as $i => $server) {
 
@@ -2180,6 +2193,7 @@ foreach ($data["requests"] as $item)
 		//	$postIds = array(); // TODO: REMOVE!! THIS IS TO DEBUG WITHOUT LOCAL ENTRIES!
 
 		if (!$showCollectionPostsOnly) {
+
 				$active = null;
 				do {
 				   curl_multi_exec($mh, $active);
@@ -2188,6 +2202,8 @@ foreach ($data["requests"] as $item)
 				$results = array();
 
 				 foreach ($ch as $key => $val) {
+
+
 					$content = curl_multi_getcontent($val);
 
 					//clog(curl_errno($ch[3]));
@@ -2304,6 +2320,9 @@ foreach ($data["requests"] as $item)
 		break;
 
 		// Needs parameters streamOffset,
+		// parameters:
+		// - people: The allowed group of persons that can be retured (optional)
+		// - filter
 		case "stream_respond" :
 
 			$col = \App\DB\Get::Collection();
@@ -2335,12 +2354,21 @@ foreach ($data["requests"] as $item)
 			// $item["searcher"] refers to the person starting the search request.
 			// If the post is a context enabled post, then only return it
 			// if searcher is in audience list.
-			// TODO: Here we need better approaches to avoid data mining, as searcher can
+			// TODO: Here we need better approaches to avoid data mining by evil servers, as searcher can
 			// also be modified by the server to obtain all the lmited audience posts
 			//
-			if (isset($item["people"])) {
-				$additionalConstraints["audience"] = $item["searcher"];
+
+
+
+			if (isset($item["people"])) { // !CRITICAL!
+				$additionalConstraints['$or']	 =array(
+					array("audience" => array('$exists' => false)),
+					array("audience" => $item["searcher"])
+				);
+			//	$additionalConstraints["audience"] = $item["searcher"];
 			}
+		clog2($additionalConstraints);
+
 
 			//
 			// 3. Find
