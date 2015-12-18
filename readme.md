@@ -13,12 +13,6 @@ You can add semantic information to your posts. With this feature it is possible
 **Warning:** This is for preview puposes only. It is almost function complete but neither stable nor secure.
 There are essential things missing, such as integrity protection for the client and forced https for server-to-server communication.
 The code is of not-so-good quality right now and will be refactored and documented in the next months.
-Things to do next:
-- Improve Protocol
-- Improve search
-- Prevent Spam
-- iOS App
-
 
 
 ## Setup a client
@@ -28,7 +22,7 @@ Things to do next:
 ## Setup a Server
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
  Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
-
+ * Make sure to create a config/imprint.html file containing your contact information.
  * The most common errros are listed in <a href="/faq_errors.md">faq_errors.md</a>.
 
 
