@@ -3,7 +3,7 @@
 *﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice (Just like [Diaspora](https://github.com/diaspora/diaspora)). Furthermore messages, private posts and private profile information are end-to-end encrypted.
 
 
-- [Demo](https://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
+- [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
 
 
 
