@@ -434,7 +434,10 @@ $(function() {
             });
             pa.getData = function() {
                 _.templateSettings.variable = "rc";
-                return {"imprinturl": "http://"+charmeUser.server+"/charme/config/imprint.html"}
+                if (typeof charmeUser !== "undefined")
+                  return {"imprinturl": "http://"+charmeUser.server+"/charme/config/imprint.html"}
+                else
+                  return {"imprinturl": ""}
              };
 
             if (charmeUser != null) {
