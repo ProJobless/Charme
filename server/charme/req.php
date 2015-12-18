@@ -2360,15 +2360,13 @@ foreach ($data["requests"] as $item)
 
 
 
-			if (isset($item["people"])) { // !CRITICAL!
+		//	if (isset($item["people"])) { // !CRITICAL!
 				$additionalConstraints['$or']	 =array(
 					array("audience" => array('$exists' => false)),
 					array("audience" => $item["searcher"])
 				);
 			//	$additionalConstraints["audience"] = $item["searcher"];
-			}
-		clog2($additionalConstraints);
-
+		//	}
 
 			//
 			// 3. Find

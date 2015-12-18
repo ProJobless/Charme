@@ -11,11 +11,18 @@ cursor: pointer;
 	display: block;
 
 }
-
+#layout
+{
+	margin-top: 36px;
+}
 .testversion
 {
 	padding:8px;
 	background-color:#770000;
+	position: fixed;
+	width:100%;
+	z-index: 200;
+	top:0px;
 	text-align:center;
 	color:#fff;
 }
