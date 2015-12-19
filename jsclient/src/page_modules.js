@@ -609,6 +609,8 @@ var view_register = view_page.extend({
         }
         else if (data.success == 1) {
               localStorage.setItem("userAutoComplete",userid);
+              localStorage.removeItem("passPassphrase");
+
           disabled.attr('disabled','disabled');  // Enable previously disabled fields again
           location.replace('#signup_success');
         }

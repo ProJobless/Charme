@@ -16,8 +16,9 @@ The code is of not-so-good quality right now and will be refactored and document
 
 
 ## Setup a client
-  * Just copy the files in `/jsclient` on your server to test. Later we will provide native builds for client installation.
-  * An Android apk is available in
+  * You can use the Demo Client, linked above for testing
+  * You can also run it on your own server by copying the files in `/jsclient` on your server to test. Please note the client does not support https right now, due to mixed content.
+  * Later we will provide native build for Windows, Mac etc.
 
 ## Setup a Server
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`

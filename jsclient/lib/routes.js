@@ -722,8 +722,9 @@ function login() {
 
 
                 try {
+
                     var passphrase;
-                    if (localStorage.getItem("passPassphrase") !== null &&
+                    if (localStorage.getItem("passPassphrase") != null &&
                     oldUserId == u
                   ) {
 
