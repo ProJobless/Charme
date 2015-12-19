@@ -1,10 +1,10 @@
 ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/vid.gif "Screenshot")
 
-*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice (Just like [Diaspora](https://github.com/diaspora/diaspora)). Furthermore messages, private posts and private profile information are end-to-end encrypted.
+*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted.
 
 
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
-
+- [Paper](https://rawgit.com/mschultheiss/Charme/master/tex/main.pdf) - The paper describes the basic ideas and the protocol of Charme. Please note that it is unfinished.
 
 
 
@@ -24,7 +24,7 @@ The code is of not-so-good quality right now and will be refactored and document
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
  Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
  * Make sure to create a config/imprint.html file containing your contact information.
- * The most common errros are listed in <a href="/faq_errors.md">faq_errors.md</a>.
+ * The most common errros are listed in <a href="/doc/faq_errors.md">faq_errors.md</a>.
 
 
 ## FAQ

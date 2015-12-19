@@ -57,14 +57,14 @@ local.properties
 ###
 ## TEX
 ###
-tex/*.bbl
-tex/*.blg
-tex/*.run.xml
-tex/main-blx.bib
-tex/*.aux
-tex/*.log
-tex/*.out
-tex/main.synctex.gz
+doc/tex/*.bbl
+doc/tex/*.blg
+doc/tex/*.run.xml
+doc/tex/main-blx.bib
+doc/tex/*.aux
+doc/tex/*.log
+doc/tex/*.out
+doc/tex/main.synctex.gz
 
 #################
 ## Visual Studio
