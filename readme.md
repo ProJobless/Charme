@@ -4,7 +4,7 @@
 
 
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
-- [Paper](https://rawgit.com/mschultheiss/Charme/master/tex/main.pdf) - The paper describes the basic ideas and the protocol of Charme. Please note that it is unfinished.
+- [Paper](https://rawgit.com/mschultheiss/Charme/master/doc/tex/main.pdf) - The paper describes the basic ideas and the protocol of Charme. Please note that it is unfinished.
 
 
 
