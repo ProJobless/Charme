@@ -4,100 +4,96 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2}Introduction}{4}{section.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3}Encryption and Security}{5}{section.3}
+\contentsline {section}{\numberline {3}Existing work}{5}{section.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1}Existing work}{5}{subsection.3.1}
+\contentsline {section}{\numberline {4}Encryption and Security}{6}{section.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}Formal Notation used in this paper}{5}{subsection.3.2}
+\contentsline {subsection}{\numberline {4.1}Formal Notation used in this paper}{6}{subsection.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.2.1}Reach}{5}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Reach}{6}{subsubsection.4.1.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3}Fundamental Concepts}{5}{subsection.3.3}
+\contentsline {subsection}{\numberline {4.2}Cryptographic Algorithms}{6}{subsection.4.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.3.1}AES-CBC }{5}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {4.2.1}AES-CBC }{6}{subsubsection.4.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.3.2}RSA}{6}{subsubsection.3.3.2}
+\contentsline {subsubsection}{\numberline {4.2.2}RSA}{7}{subsubsection.4.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.3.3}Further reading}{7}{subsubsection.3.3.3}
+\contentsline {subsubsection}{\numberline {4.2.3}Further reading}{8}{subsubsection.4.2.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.4}Crypto Implementation}{7}{subsection.3.4}
+\contentsline {subsection}{\numberline {4.3}Used Libraries}{8}{subsection.4.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Implementation}{8}{section.4}
+\contentsline {section}{\numberline {5}Implementation}{9}{section.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.1}Backend Technology Stack}{8}{subsection.4.1}
+\contentsline {subsection}{\numberline {5.1}Backend Technology Stack}{9}{subsection.5.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2}Client server seperation}{8}{subsection.4.2}
+\contentsline {subsection}{\numberline {5.2}Separation of Client and Server}{9}{subsection.5.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3}Passphrase}{8}{subsection.4.3}
+\contentsline {subsection}{\numberline {5.3}Public Keys Verification}{10}{subsection.5.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4}Verifying private keys}{9}{subsection.4.4}
+\contentsline {subsection}{\numberline {5.4}Encryption}{10}{subsection.5.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.4.1}Generating Fingerprints}{9}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {5.4.1}Edgekeys}{11}{subsubsection.5.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.5}Preventing List and Message MITM Attacks}{9}{subsection.4.5}
+\contentsline {subsubsection}{\numberline {5.4.2}Post Encryption}{11}{subsubsection.5.4.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.6}Post encryption}{10}{subsection.4.6}
+\contentsline {subsubsection}{\numberline {5.4.3}Message Encryption}{11}{subsubsection.5.4.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.7}Message encryption}{10}{subsection.4.7}
+\contentsline {subsubsection}{\numberline {5.4.4}Encryption of Personal Information}{12}{subsubsection.5.4.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.8}Distributing private information}{11}{subsection.4.8}
+\contentsline {subsection}{\numberline {5.5}Key Updates}{13}{subsection.5.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.9}Key Updates}{12}{subsection.4.9}
+\contentsline {subsection}{\numberline {5.6}Primary Attack Vectors}{13}{subsection.5.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.10}Primary Attack Vectors}{12}{subsection.4.10}
+\contentsline {subsubsection}{\numberline {5.6.1}List Integrity}{13}{subsubsection.5.6.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.1}MITM on Client Software}{12}{subsubsection.4.10.1}
+\contentsline {subsubsection}{\numberline {5.6.2}MITM on Client Software}{13}{subsubsection.5.6.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.2}Attacks on Integrity Protection}{12}{subsubsection.4.10.2}
+\contentsline {subsubsection}{\numberline {5.6.3}Attacks on Integrity Protection}{14}{subsubsection.5.6.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.3}New Conversations with malicious userId/Name pair}{13}{subsubsection.4.10.3}
+\contentsline {subsubsection}{\numberline {5.6.4}New Conversations with malicious userId/Name pair}{14}{subsubsection.5.6.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.4}XSS}{13}{subsubsection.4.10.4}
+\contentsline {subsubsection}{\numberline {5.6.5}XSS}{14}{subsubsection.5.6.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.5}Session Capturing}{13}{subsubsection.4.10.5}
+\contentsline {subsubsection}{\numberline {5.6.6}Session Capturing}{15}{subsubsection.5.6.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.6}DOS}{14}{subsubsection.4.10.6}
+\contentsline {subsubsection}{\numberline {5.6.7}DOS}{15}{subsubsection.5.6.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.7}Replay attacks}{14}{subsubsection.4.10.7}
+\contentsline {subsubsection}{\numberline {5.6.8}Replay attacks}{15}{subsubsection.5.6.8}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.8}Malformed data}{14}{subsubsection.4.10.8}
+\contentsline {subsubsection}{\numberline {5.6.9}Malformed data}{15}{subsubsection.5.6.9}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.9}Logging of Requests}{14}{subsubsection.4.10.9}
+\contentsline {subsubsection}{\numberline {5.6.10}Logging of Requests}{15}{subsubsection.5.6.10}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.10.10}Spam}{14}{subsubsection.4.10.10}
+\contentsline {subsubsection}{\numberline {5.6.11}Spam}{15}{subsubsection.5.6.11}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Protocol Specification}{15}{section.5}
+\contentsline {section}{\numberline {6}Protocol Specification }{16}{section.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.1}Login}{15}{subsection.5.1}
+\contentsline {subsection}{\numberline {6.1}Login}{16}{subsection.6.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.2}Search}{15}{subsection.5.2}
+\contentsline {subsection}{\numberline {6.2}Search}{16}{subsection.6.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.3}Messages}{15}{subsection.5.3}
+\contentsline {subsection}{\numberline {6.3}Add public key to keydirectory}{16}{subsection.6.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.4}Edgekeys}{15}{subsection.5.4}
+\contentsline {subsection}{\numberline {6.4}Recryption of data}{17}{subsection.6.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {5.5}Recryption of data}{15}{subsection.5.5}
+\contentsline {subsection}{\numberline {6.5}Signup}{17}{subsection.6.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {5.5.1}Signup}{15}{subsubsection.5.5.1}
+\contentsline {subsection}{\numberline {6.6}Init Conversation}{18}{subsection.6.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {5.5.2}Add public key to keydirectory}{16}{subsubsection.5.5.2}
+\contentsline {subsection}{\numberline {6.7}Add People to Conversation}{19}{subsection.6.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {5.5.3}Init Conversation}{16}{subsubsection.5.5.3}
+\contentsline {subsection}{\numberline {6.8}Write message}{19}{subsection.6.8}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {5.5.4}Add People to Conversation}{18}{subsubsection.5.5.4}
+\contentsline {section}{\numberline {7}Future Work}{21}{section.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {5.5.5}Write message}{18}{subsubsection.5.5.5}
+\contentsline {subsection}{\numberline {7.1}Token Generation and API}{21}{subsection.7.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6}Future Work}{18}{section.6}
+\contentsline {subsection}{\numberline {7.2}Use of encrypted Databases}{21}{subsection.7.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.1}Token Generation and API}{18}{subsection.6.1}
+\contentsline {subsection}{\numberline {7.3}Location based Chats}{21}{subsection.7.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.2}Use of encrypted Databases}{19}{subsection.6.2}
+\contentsline {subsection}{\numberline {7.4}Data Sharing for the Internet of Things}{21}{subsection.7.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.3}Location based Chats}{19}{subsection.6.3}
+\contentsline {section}{\numberline {8}Terminology}{23}{section.8}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.4}Data Sharing for the Internet of Things}{19}{subsection.6.4}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7}Terminology}{20}{section.7}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {8}Sources}{22}{section.8}
+\contentsline {section}{\numberline {9}Sources}{24}{section.9}

@@ -8,9 +8,11 @@
 \usepackage{amsmath}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 \usepackage{graphicx}
-
+\usepackage{listing}
 \usepackage{amssymb}
 \usepackage{listings}
+
+\usepackage{pgf-umlsd}
 
 \usepackage[style=numeric,backend=bibtex]{biblatex}
 \addbibresource{references.bib}
@@ -34,7 +36,7 @@
 \begin{abstract}
 \noindent
   \textbf{Abstract.} 
-  Decentralized social networks with end-to-end encryption would take back control of data to the end-users. In this paper Charme is presented as such a network. First, some  basic cryptographic  principles are explained before focusing on the underlying  network protocol.
+  Decentralized social networks with end-to-end encryption would take back control of data to the end-users. In this paper Charme is presented as such a network. First, some  basic cryptographic  principles are explained before focusing on the underlying  protocol.
   \end{abstract}
   
   
@@ -43,15 +45,15 @@
 \section{Prologue}
 
 \begin{center}
-I's personal. It's private.
-And it's no one's business but yours.
+\textit{I's personal. It's private.
+And it's no one's business but yours.}
 \end{center}
 
 These are the first words, of Phil Zimmermann's essay "Why I wrote PGP" from 1991 \cite{PHIL}. 24 year later, electronic communication has gained more and more attention in your everyday life. Today, letters have become instant messages and half of your real world conversations have become social network posts. But while you could be almost sure a letter remained private, today a bunch of stakeholders such as governments, technicians and ad-serving companies has access to data derived from your conversations. 
 Most people I talk to simply give a "I have nothing to hide" as an answer when addressing this point. This may be true, as long as you are not a politician, your are not responsible for a business unit, or do not have anything else to say other people are willing to listen to. Otherwise information about you is always equal to power against you. While your self forgets most of the things you said, it is probably saved in some data center waiting to get parsed by some algorithms. With more and more data you become calculable, your actions can be predicted long before you perform them.
 
  Ads have become the number one revenue model of internet companies. 
-Politicians and trying to expand mass surveillance and ban encryption whenever it is possible \cite{EFF}. With the decay of classic media, such as newspaper and television, social networks are the primary infrastructure of directing people to information now. The heterogeneous  landscape of newspapers and blogs providing different information is slowly fading. Your newsfeed has become the primary navigation source of information. And should not trust a single institution  here, because who controls what you read controls who you become.
+Politicians and trying to expand mass surveillance and ban encryption whenever it is possible \cite{EFF}. With the decay of classic media, such as newspaper and television, social networks are the primary infrastructure of directing people to information now. The heterogeneous  landscape of newspapers and blogs providing different information is slowly fading. Your newsfeed has become the primary navigation source of information. And we should not trust a single institution  here, because who controls what you read controls who you become.
 
 
 
@@ -68,20 +70,21 @@ Another innovation of Charme is the so called \textit{Context}, every post can h
 
 \begin{figure}[ht]
 	\centering
-  \includegraphics[width=120mm]{illustrations/context.jpg}
+  \includegraphics[width=90mm]{illustrations/context.jpg}
 	\caption{Context dialogues. Finding existing context on the left; Adding context on the right. After a user has selected a context on the right, the user can add parameters like Location or time for the context.}
 	\label{figContext}
 \end{figure}
-
+\newpage
+ \section{Existing work}
+With Diaspora \cite{diaspora}, one of the first popular distributed social networks was released. The messages are not end-to-end encrypted, however, which makes it possible for the server admin to read its users messages. 
+A more secure concept is \textit{Twister} \cite{twister}, a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme itself does not encrypt meta data at the moment for simplicity and performance reasons, but such an encryption scheme could be implemented later on using techniques like onion routing between sender/receiver for example.
 
 \newpage
  \section{Encryption and Security}
- \subsection{Existing work}
-With Diaspora one of the first popular distributed social networks was released. The messages are not end-to-end encrypted, however, which makes it possible for the server admin to read its users messages. 
-A more secure concept is \textit{Twister} (\url{http://twister.net.co}), a Twitter like peer-to-peer micro blogging platform. Using the blockchain makes it possible to encrypt messages and even meta data (including the IP Address!). Charme does not encrypt meta data at the moment for simplicity and performance reasons, but such an encryption scheme could be implemented later on using techniques like already present in onion routing for example.
+
 \subsection{Formal Notation used in this paper}
 \subsubsection{Reach}
- We define the \textit{reach} of a server as this: Each server $S_i, i \in {0,1,2,...}$, on which at least one user has a public key of another user hosted on server $T_j, j \in {0,1,2,..}$ is \textit{reached} by this server.
+ We define the \textit{reach} of a server: Each server $S_i$, on which at least one user has a public key of another user hosted on server $T_j$ with $i,j \in {0,1,2,..}$ is \textit{reached} by this server.
 The reach is a list of tuples $(S_i, T_j)$. See figure \ref{figContextGraph} as an example.
 
 \begin{figure}[ht]
@@ -89,7 +92,7 @@ The reach is a list of tuples $(S_i, T_j)$. See figure \ref{figContextGraph} as 
     \includegraphics[width=30mm]{illustrations/graph.pdf}
 
 	\caption{$|Reach(A)| = deg(A) = 2
-$ as the users on server A have public keys of two different servers. }
+$ as the users on server A have public keys of two different servers. The edges representing two servers having public keys of users on the respectively other server (In a real world scenario, they would be directed edges of course). }
 	\label{figContextGraph}
 \end{figure}
 
@@ -98,7 +101,7 @@ $ as the users on server A have public keys of two different servers. }
 
 
  
-\subsection{Fundamental Concepts}
+\subsection{Cryptographic Algorithms}
 \subsubsection{AES-CBC \label{AESCBC}}
 AES is a fast symmetric encryption algorithm that was standardized in 2001 and is still considered secure, although there exist some attacks on it. The following explanation is based on the lecture slides of Carle et al \cite{carle}.
 
@@ -123,12 +126,20 @@ There are several techniques to add it (
 \begin{enumerate}
 \item Encrypt Message using AES-CBC
 \item Get SHA-256 hash value of encrypted message and salt with key k and crypto algorithm version a.
-\item JSON Result is:\\\\ \{ a: 1, m: $Enc_{k||v}(text)$, h: sha256HMac($Enc_{k||v}$(text), k||v) \}\\\\ The algorithm version a is added, as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
+\item JSON Result is:
+\begin{lstlisting}[mathescape]
+ { 
+   a: 1,
+   m: $Enc_{k||v}(text)$,
+   h: $HMAC_{Sha256}$($Enc_{k||v}$(text), $k||v$)
+ }
+ \end{lstlisting}
+  The algorithm version a is added, as otherwise, an attacker could extract the plaintext and use backwards compatibility to let the decryption and MAC check be performed by an old algorithm, also there is a better algorithm available.
 
 For example: The current implementation supports Non-HMAC AES when the information was encrypted without a HMAC. An attacker could remove the HMAC key and just send the plain AES encrypted content to the client and the client would still decrypt it correctly.
 
 \end{enumerate}
-Please note that for more security, the salt for the sha256HMac should also not use k, but a derived version of k.
+Please note that for more security, the salt for the $HMAC_{Sha256}$ should also not use k, but a derived version of k.
 
 \subsubsection{RSA}
 In RSA there are two different keys. The public key is visible to everyone, while the private key is only visible to the generator of both keys.  Asymmetric encryption is a lot of slower than symmetric encryption. So usually we generate an AES key, encrypt the text with the AES key and encrypt the AES key with the RSA key, rather than encrypting the whole text with the RSA key.
@@ -169,46 +180,45 @@ http://dev.ionous.net/2009/03/hmac-vs-raw-sha-1.html}
 \end{enumerate}
 
 
-\subsection{Crypto Implementation}
+\subsection{Used Libraries}
 There are a Javascript library called Gibberish AES for Javascript and Tom Wu's RSA Library for RSA providing the main functionality. Google wrote with its E2E project a better implementation of cryptographic algorithms which should replace the above ones as soon as possible. The long term goal is to use the W3C web crypto API however, if supported in all major browsers, as this one is more secure regarding key deletion from memory (RAM) and random number generation. 
 
 \newpage
 \section{Implementation}
 \subsection{Backend Technology Stack}
-On server side, PHP is used as an interpreter. The reason for PHP is that it has a wide community supporting it, as it is used by many other big websites like Facebook or Wordpress for example. Furthermore it does not depend on 100 extra packages for basic function with questionable future support like Node.js.
+On server side, PHP is used as an interpreter. The reason for PHP is that it has a wide community supporting it, as it is used by many other big websites like Facebook or Wordpress for example. Furthermore it does not depend on 100 extra packages for basic functions with questionable future support like Node.js.
  \textit{ZeroMQ} is used to send socket messages and communicate between different PHP threads. \textit{Gearman} is necessary to execute background tasks like sending messages in the asynchronously. As a database, \textit{MongoDB} is used, as it is scalable and has the ability to directly store JSON object to the database.
 Administrations scripts are written for GNU Bash to provide easy ssh access.
 
 
- \subsection{Client server separation}
-In contrast to classic social networks, we separate client and server in two separate projects first. This is necessary, as otherwise a server could return malicious javascript to the user. In a perfect word, the user has to download and install the client locally and verify the file hash, For testing purposes, he can also use a web hosted version of the client. Although they are hosted on different domains, client and server can still connect to each other via cross origin resource sharing (CORS).
+ \subsection{Separation of Client and Server}
+In contrast to classic social networks, we separate client and server in two separate projects first. In Charme, the server does not return HTML to the browser, but JSON instead which is parsed by the client software. This is necessary, as otherwise a server could return malicious javascript to the user for example and make end-to-end encryption useless. In a perfect world, the user has to download and install the client locally and verify the file hash, For testing purposes, the user can also use a web hosted version of the client. Although they are hosted on different domains, client and server can still connect to each other via cross origin resource sharing (CORS).
 
 \begin{figure}[ht]
 	\centering
   \includegraphics[]{eds.pdf}
-	\caption{Client and Server code is strictly separated. The client loads the Charme application from a local webserver, a browser plugin or a trusted server. This application connects to the server hosting the data via JSON.}
+	\caption{Client and Server code is strictly separated. The client loads the Charme application from a local webserver, a browser plugin or a trusted server. This application connects to the server hosting the data via JSON. Personal data such as messages or private profile information is encrypted and decrypted on the client side, so the server sees nothing}
 	\label{fig1}
 \end{figure}
 
 
-\subsection{Passphrase}
-Charmet uses an \textit{encrypted data storage}. This means critical data is encryped with a passhprase using AES-CBC (Section \ref{AESCBC}) and hosted on the server  (Figure \ref{fig1}). Consequently the server can not read the user data. Such data includes
+Hereby Charme uses an \textit{encrypted data storage}. This means critical data is encryped with a passhprase using AES-CBC (Section \ref{AESCBC}) and hosted on the server  (Figure \ref{fig1}). Consequently the server can not read the user data. Such data includes
 \begin{enumerate}
 \item \textbf{Personal information} like phone number. This information can later be decrypted and encrypted with a public key to distribute it to other people.
 \item \textbf{The private RSA key} used to decrypt everything from other users.
-\item \textbf{ The key directory}, which contains the public keys of all contacts. Here it is important that the receiver B of a message sent by user A only uses the newest private key to decrypt, as a malicious server of the key directory owner could return an old public key of user B.
+\item \textbf{The key directory}, which contains the public keys of all contacts. Here it is important that the receiver B of a message sent by user A only uses the newest private key to decrypt, as a malicious server of the key directory owner could return an old public key of user B.
 \end{enumerate}
 for example. The data is signed to prevent forgery of information.
 
-\subsection{Verifying private keys}
-When we want to write an encrypted message to user B, we need the public key of user B first. However, as the server or someone else can provide a wrong public key, it is necessary to check the public key for correctness. If done so, we encrypt the public key of user B with our passphrase and store it in the encrypted data storage.
+\subsection{Public Keys Verification}
+If we want to send an encrypted message to user B, we need the public key of user B first. However, as the server or someone else can provide a wrong public key, it is necessary to check the public key for correctness. If done so, we encrypt the public key of user B with our passphrase and store it in the encrypted data storage.
  
-\subsubsection{Generating Fingerprints}
-   Currently the fingerprint $f$ is generated by applying a SHA-256 Hash function on n (modulus) and e (exponent) concatenated:
+
+The user itself has to validate the fingerprint. Currently the fingerprint $f$ is generated by applying a SHA-256 Hash function on n (modulus) and e (exponent) concatenated:
    $$
    F = Sha256(n || e)
    $$
-   The function in the code is called \textit{buildHash} and is located in \textit{keys.coffee}. For a better user experience, the fingerprint can be truncated and : seperated later on, so the result looks something like:
+ For a better user experience, the fingerprint can be truncated and  seperated by ":", so the result looks something like:
   
    \begin{center}
    12 : 3f : 3e : 2f: 12 : 3f : 3e : 2f: 12 : 3f : 3e : 2f (...)
@@ -220,8 +230,8 @@ When we want to write an encrypted message to user B, we need the public key of 
   123f3e3f123f3e2f123f3e2f (...)
   \end{center}
   
-  
-  Figure \ref{figFP} show the dialog to validate fingerprints.
+  Fingerprints are used to verify public keys of other users.
+  Figure \ref{figFP} shows the dialog to validate fingerprints.
   \begin{figure}[ht]
 	\centering
   \includegraphics[width=90mm]{illustrations/fingerprint.png}
@@ -232,85 +242,83 @@ When we want to write an encrypted message to user B, we need the public key of 
 
 
   
-\subsection{Preventing List and Message MITM Attacks}
-Lists can be used to restrict access to certain information. Each list contains some people defined by the users. When a server behaves evil, we must ensure, that he can not manipulate the list and add new people for example, we will later send our message to.\\
-  
- Furthermore we must ensure, that the autocomplete only returns name/address pairs that have been added by the user. Imagine the following case: Alice adds Bob with his CharmeId bob@somewhere.com to her key directory. Now she wants to send a message to Bob and opens the auto complete. She types Bob, and the server returns a modified CharmeId, probably on the same server (eve@somewhere.com). The Charme client would now encrypt the message with the other key and send it to Eve. So Eve could be able to get some sensitive information as Alice thinks she is communicating with Bob.\\
+ \subsection{Encryption}
+The data to be encrypted can be divided into three main cases:
 
-Now how can we ensure, that this can not happen?
-\\
-The second case is that a list contains additional people added by an evil server.
+\begin{description}
+  \item[Posts] Posts of collections are encrypted for a lot of users. Each post is encrypted with a key, which needs to be distributed to the audience of the post using public key cryptography.
+  \item[Messages] Each message belongs to a conversation. Each conversation has a key, which needs to be distributed to the message receivers. Here we also have to take care of cases when someone is added and removed from a conversation.
+  \item[Personal Information] such as phone number or hometown. Here we have to make sure, that if access is revoked, we do not have to generate a new key and distribute it to all people. Therefore we introduce buckets, which make it possible to handle this case more efficient.
+\end{description}
 
- \subsection{Post encryption}
+The following sections will give a basic overview, for a more detailed explanation see section \ref{protocol}.
+ \subsubsection{Edgekeys}
+ An edgekey is a symmetric key, that is established after public key verification and send via public key to the other party. This is done, because asymmetric cryptography is a lot of slower than symmetric cryptography.
+ \subsubsection{Post Encryption}
 A new post is encrypted, when it is restricted to a list of people. 
-First we generate a postkey $k$, which encrypts the content of the post. Next we need to distribute $k_1$ to other people. We can use the symmetric edgekeys $e_1, e_2, ...$ of these people. We encrypt the post key with each edgekey ( $Enc_{e_1} (k)$) and distribute them to the receivers. An edgekey is a asymmetric key, that is established after public key verification and send via public key to the other party. This is because asymmetric cryptography is a lot of slower than symmetric cryptography.
- \subsection{Message encryption}
+In this case we generate a postkey $k$, which encrypts the content of the post. Next we need to distribute $k$ to other people. We can use the symmetric edgekeys $e_1, e_2, ...$ of these people. We encrypt $k$ with each edgekey ($Enc_{e_1} (k)$) and distribute it to the corresponding receivers. Furthermore we generate a signature of post data with our private key..
+ \subsubsection{Message Encryption}
  
-
-  
-  Message encryption is basically working like in PGP. We save  public keys encrypted in the cloud, however, here. A simplified concept is illustrated in Figure \ref{fig2}). 
-  A conversation $C$ consists of $n$ messages. A set of messages $S \in C$ has a symmetric key each. The symmetric key should change if a user is removed or a public key of a conversation participant is updated or a certain span of time has passed. Each message is encrypted with the newest symmetric key $s$.
-  A message consists of information such as
-  
-  
-  \begin{enumerate}
-\item Text encrpyted with symmetric key s
-\item Conversation ID
-\item Key Id of symmetric key s
-\item Time
-\end{enumerate}
-This information is also signed using the senders private key.
-
-
+  Message encryption is basically working like in PGP. A simplified concept is illustrated in Figure \ref{fig2}). 
+To start a new converation we obtain the public keys of the receivers from the encrypted data storage first. Then we generate a symmetric key and distribute it to the receivers. The symmetric key can change if a user is removed or a public key of a conversation participant is updated or a certain span of time has passed. In this case, we have to distribute it again. A new message is encrypted with the newest symmetric key $s$.
+A message consists of information such as \textit{message content}, \textit{conversation identifier}, \textit{time} and \textit{key identifier} of the symmetric key used for encryption. This information is also signed using the senders private key.
 
  \begin{figure}[ht]
 	\centering
-  \includegraphics[]{pubkey.pdf}
+  \includegraphics[width=120mm]{pubkey.pdf}
 	\caption{Basic message encryption. Server A can also send the message to more servers than only Server B. The client does not send the message directly to server B, as with increasing number of receivers this would cost to much bandwidth for the client.}
 	\label{fig2}
 \end{figure}
 
 
-\textbf{The current implementation misses some fundamental security stuff. An attacker could initiate a conversation with the identity of client A and start a MITM attack. Therefore the next step of the implementation is to sign the initial message and each following message.}
-
-  \subsection{Distributing private information}
-  When giving private information like telephone number or email to other people, this is working slightly different to message distribution for performance reasons. See figure \ref{fig3} for a illustration of the process. This may look kind of complicated first and you may wonder why the encryption is not done like for messages. The answer if the access to a certain person is revoked, it would be inefficient to send the newly encrypted information to all users. Instead we creates called \textit{buckets}, each containing a maximum of k users. When a new piece of information is encrypted, we generate a random key $K$, and encrypt it with each bucket key $B_i$. As every user who has access to the information has the bucket key, the user can decrypt it with
+  \subsubsection{Encryption of Personal Information}
+  When giving private information like telephone number or email to other people, this is working slightly different to message distribution for performance reasons.  If the access to a certain person is revoked, it would be inefficient to send the new key to all users. Instead we create  \textit{buckets}, each containing a maximum of k users. When a new piece of information is encrypted, we generate a random key $K$, and encrypt it with the bucket key $B_i$. As every user who has access to the information, owns the bucket key, the user can decrypt it with
   $$
-  plaintext = Dec_{B_i}{Dec_K(chyphertext)}
+  plaintext = Dec_{B_i}({Dec_K(chiphertext)})
   $$
-  When access is revoked for a user, we simply generate a new bucket key for the bucket, the user was in and do not distribute the bucket key to the user. With this system we are able to revoke access to information and release new information to a user with doing $\mathcal O(k) = \mathcal O(1)$ requests. For Charme we set $k = 10$. The code is located in \textit{settings\_privateinfo.js}.
+  When access is revoked for a user, we simply generate a new bucket key for the bucket assigned to the user and distribute the new bucket key to all users in this bucket. With this system we are able to revoke access to information and release new information to a user with doing $\mathcal O(k) = \mathcal O(1)$ requests. For Charme we set $k = 10$. See figure \ref{fig3} for a illustration of the process.
   
   
    \begin{figure}[ht]
 	\centering
   \includegraphics[]{prvInfo.pdf}
-	\caption{Encryption of personal information}
+	\caption{Encryption of personal information using buckets}
 	\label{fig3}
 \end{figure}
 
     \subsection{Key Updates}
-    When a private key or passphrase is compromised  it is necessary to recrypt the encryped data storage. In this case, all information are transmitted to the client, decryped with the current passphrase and encrypted with the new passhprase. The revision number for the public key increases afterwards.
+    When a private key or passphrase is compromised  it is necessary to recrypt the encryped data storage. In this case, all information is transmitted to the client, decryped with the current passphrase and encrypted with the new passhprase. The revision number for the public key increases afterwards.
 
   \subsection{Primary Attack Vectors}
   
+  \subsubsection{List Integrity}
+Lists can be used to restrict access to certain information. Each list contains some people defined by the users. When a server behaves evil, we must ensure, that he can not manipulate the list and add new people for example, we will later send our message to.\\
+  
+ Furthermore we must ensure, that the autocomplete only returns name/address pairs that have been added by the user. Imagine the following case: Alice adds Bob with his CharmeId bob@somewhere.com to her key directory. Now she wants to send a message to Bob and opens the auto complete. She types Bob, and the server returns a modified CharmeId, probably on the same server (eve@somewhere.com). The Charme client would now encrypt the message with the other key and send it to Eve. So Eve could be able to get some sensitive information as Alice thinks she is communicating with Bob.
+
+
   \subsubsection{MITM on Client Software}
   The client software must be distributed with integrity protection i nthe final release. For example as a Cordova package. To use the client software on a third party server is very dangerous and only recommended for testing purposes! The host of the client can theoretically read all your data by modifying the client software.
   
    There is also a new technology called sub resource integrity which can be used to validate Javascript and CSS resources (See \url{http://www.w3.org/TR/SRI/} and \url{http://githubengineering.com/subresource-integrity/}). Maybe they introduce some mechanism to validate a whole web page with a hash recommended by the majority of browser users and additionally located on a (Mozilla or Google) server. So lets keep an eye on that.
 
    \subsubsection{Attacks on Integrity Protection}
-   Certain information, such as the Name/UserID pairs of a conversation must be distributed with integrity protection using either the private key of each receiver or the conversation key. Asymmetric private keys used for signing the message data have the following advantages and disadvantages in contrast to the symmetric conversation key.
+   Certain information, such as the Name/UserID pairs of a conversation must be distributed with integrity protection using either the private key of each receiver or the conversation key. Asymmetric private keys used for signing the message data have the following advantages and disadvantages in contrast to the symmetric conversation key.\\
    
    \textbf{Using the private key }
    \begin{enumerate}
-   \item (Advantage) Slower (Factor ca. 1000)
-    \item (Disadvantage) No attackers inside a conversation manipulating username/userId pairs
+   \item (Disadvantage) Slower (Factor ca. 1000)
+    \item (Advantage) No attackers inside a conversation manipulating username/userId pairs
+   \end{enumerate}
+   
+    \textbf{Using the conversations key }
+   \begin{enumerate}
+   \item (Disadvantage) Participants can sign conversations for a user
+    \item (Advantage) Faster
    \end{enumerate}
    
         
- 
-   \textbf{Additional Information:}\\
-   OWASP Checklist: OTG-BUSLOGIC-003
+
    
      \subsubsection{New Conversations with malicious userId/Name pair }
      An attacker can initiate a new conversation with the name of a friend of you, but use another userId instead. Example:
@@ -350,38 +358,108 @@ Attackers can flood small servers with a lot of requests.
       In the current implementation, the user id is sent to other servers when requesting a profile or performing a search on this server for example. The server host could log who is visiting which profiles. 
 Possible counter measures are 
 \begin{enumerate}
-\item Performing a set of user ids, in which only one is the actual user id. This would affect the performance however and will only work if enough users are provided.
-\item 
+\item Providing a set of user ids, in which only one is the actual user id. This would affect the performance however and will only work if enough "fake" users are provided.
+\item Use an encrypted database. (See section "Future work" for details)
 \end{enumerate}      
       
       \subsubsection{Spam}
       All posts from non-friends should be blocked. An exception are posts containing semantic information which should be searchable all over the web. Here we can either expand the search to friends server (efficient but may contain more spam) or even check friend of friend posts only (more computational power, but less spam).
-      \newpage
 
 
 
-\section{Protocol Specification}
+\clearpage
+\section{Protocol Specification \label{protocol}}
 
 \subsection{Login}
-\textbf{ 1st step:} Get password salt value via \textit{reg\_salt\_get}\\
-\textbf{2nd step:} Login with \textit{user\_login} and parameters u (username) and p (salt hashed password). Status PASS is returned if successful.
+
+\begin{description}
+  \item[1st step] Get password salt value via \textit{reg\_salt\_get}
+  \item[2nd step] Login with \textit{user\_login} and parameters $u$ (username) and $p = sha256(password||salt)$. Status PASS is returned if successful.
+We will use some other hash function than Sha256 later of course, for security reasons.
+
+\end{description}
+
 
   \subsection{Search}
-  When it comes to search, we face some problems. Of course, it is not efficient to query hundreds or even more server from one client in the charme network. Filesharing applications typically use Kademlia  or Chord to index data within peer-to-peer networks. Such concepts may also be useful for search, as YaCy for example has shown. Thorsten Schütt et al. have proposed a technique which can be used for multidimensional parameter search in their paper \textit{Range queries on structured overlay networks}. A search in social networks could also use the social graph to rank results of near people higher than from people more far away.
+  When it comes to search, we face some problems. Of course, it is not efficient to query hundreds or even more server from one client in the whole network. Filesharing applications typically use Kademlia  or Chord to index data within peer-to-peer networks.Such concepts may also be useful for search, as YaCy for example has shown. Thorsten Schütt et al. have proposed an extension for distributed hash tables in their paper \textit{Range queries on structured overlay networks} \cite{schuett}. This technology could be used for contextual search such as \textit{"Show me all friends driving to a GPS location between lat,lng=(10,12) and (12,14) tomorrow"}.
   
   
-\subsection{Messages}
-To load the conversation preview list, \textit{messages\_get} is called. Each message has a message key. If a new message Key is generated, it is encrypted with the edgekey of the receiving users (Section \ref{edge}).
+   A search in social networks could also use the social graph to rank results of near people higher than from people more far away. Right now we have a simple approach, which is used for stream searches for example:
+  \begin{enumerate}
+  \item First we generate a list of all target servers we connect to. In case of a list is provided for stream filters, it's the hosts of the people in the list. Otherwise its the 10 most occurring severs in the key directory of the user. We also need to provide the user id $u$ of the searching user, in case the context item is limited to a specified audience (bad privacy)
+  \item The target server respond by providing posts for example. If a post was limited to a audience, we check if $u$ occurs in this list and return the post in this case. This check has to be improved for security reasons, as a bad source server could access posts he actually has no access to.
+  
+  \end{enumerate}
+  
+\subsection{Add public key to keydirectory}
+A new public key is requested, verified and added to the key directory.
+\\\\
 
-\subsection{Edgekeys\label{edge}}
-For every kind of communication between two users we generate a directed edgekey, to increase performance as asymmetric encryption for every kind of message would require to much computational power.
-The edgekeys should change after a certain timespan. (1 week?). Currently the edgekey is generated after a key was added to a key directory in \textit{settings\_keymanager.js}. The edgekeys are requested to decrypt from user B. Later they will be cached in local storage of user B to even gain the performance we have planned to gain.
+\begin{center}
+\begin{sequencediagram}
+\newthread[white]{ac}{Client A}
+\newinst[2]{as}{Server A}
+\newinst[2]{bs}{Server B}
+\newinst[2]{ba}{Client B}
+
+\begin{call}{ac}{1. Request Public Key}{bs}{}
+\end{call}
+
+\begin{callself}{ac}{2. Verify and encrypt public key}{}
+\end{callself}
+
+\begin{call}{ac}{3. Store on Server}{as}{}
+\end{call}
+
+
+%\begin{call}{u}{AIKAuthSecret}{b}{}
+%
+%  \mess{b}{verifyAIKAuthSecret}{t}
+%
+%  \begin{call}{b}{get AIK$_{pub}$}{t}{AIK$_{pub}$}
+%  \end{call}
+%\end{call}
+
+%  \begin{sdblock}{Loop}{}
+%
+%    \begin{call}{u}{Do Something}{p}{AIK$_{pub}$}
+%    \end{call}
+%  \end{sdblock}
+%  
+  
+\end{sequencediagram}
+\end{center}
+
+After 1. the user needs to verify the key. Afterwards encrypt the public key with fastkey1 and store it on our server afterwards.
+
+
 \subsection{Recryption of data}
-When the private key is updated, it is required to recrypt the data in the encrypted data storage. This is done in the function \textit{updateDataOK()} in \textit{settings\_keymanager.js}.
+When the private/public keypair is updated, it is required to recrypt the data in the encrypted data storage. This is done in the function \textit{updateDataOK()} in \textit{settings\_keymanager.js}.\\\\
 
 
+\begin{center}
 
-\subsubsection{Signup}
+
+\begin{sequencediagram}
+\newthread[white]{ac}{Client A}
+\newinst[8]{as}{Server A}
+
+\begin{callself}{ac}{Make new passphrase, fastkey1, ...}{}
+\end{callself}
+
+\begin{call}{ac}{Get Data}{as}{}
+\end{call}
+
+\begin{callself}{ac}{Decrypt data and encrypt with new passphrase}{}
+\end{callself}
+
+\begin{call}{ac}{Store on Server}{as}{}
+\end{call}
+ 
+\end{sequencediagram}
+\end{center}
+
+\subsection{Signup}
 Client:
 \begin{enumerate}
 \item Get salt s from server
@@ -393,61 +471,38 @@ Client:
 
 \end{enumerate}
 
-\subsubsection{Add public key to keydirectory}
-A new public key is requested, verified and added to the key directory.
-\\\\
-\begin{tikzpicture}
+
+\subsection{Init Conversation}
+Let convId the id of the conversation. Let's call $D_j$ the payload. It contains information relevant to the conversation such as time, last preview text, members or identifier.  $D_j$ must be integrity protected of course. K is a 256 bit symmetric key used for AES encryption.
 
 
+\begin{center}
+\begin{sequencediagram}
+\newthread[white]{ac}{Client A}
+\newinst[8]{as}{Server A}
 
-\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=8mm, nodes={draw=none, anchor=center,text depth=0pt} ]
-{
-Client A & & Server A & & Server B &  & Client B \\[-4mm]
-};
+\begin{call}{ac}{Obtain public keys  of Users $U_1, U_2,...$}{as}{}
+\end{call}
 
-\draw[] (m-1-1.south east)--(m-1-1.south west);
-\draw[] (m-1-3.south east)--(m-1-3.south west);
-\draw[] (m-1-5.south east)--(m-1-5.south west);
-\draw[] (m-1-7.south east)--(m-1-7.south west);
+\begin{callself}{ac}{Generate $K = \{0,1\}^{256}$}{}
+\end{callself}
 
-
-
-\end{tikzpicture}
-\\\\
-
-\begin{enumerate}
-\item Client A requests public key of client B
-\item TODO
-\end{enumerate}
-
-\subsubsection{Init Conversation}
-Let convId the id of the conversation. Let's call $D_j$ the payload. It contains information relevant to the conversation such as time, last preview text, members or identifier.  $D_j$ must be integrity protected of course. K is a 256 bit symmetric key used for AES encryption. The communication between the client initiating a new conversation and its server is defined as this: \\\\
-\begin{tikzpicture}
+\begin{callself}{ac}{$D_j = \{Enc_{Pub}(K, U_i),$}{}
+\end{callself}
 
 
+\begin{call}{ac}{Send $D_j$ to other servers}{as}{}
+\end{call}
 
-\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=8mm, nodes={draw=none, anchor=center,text depth=0pt} ]
-{
-Client A & & Server A \\[-4mm]
-1. Obtain public keys& & \\[-7mm]
-  of Users $U_1, U_2,...$ & & \\[-7mm]
-2. Generate $K = \{0,1\}^{256}$ & & \\[-7mm]
-3. $D_j = \{Enc_{Pub}(K, U_i),$ & & \\[-7mm]
-$ convId, ... \}$ & & \\[-7mm]
- & & \\
- & Send $D_j$ & \\
-& & Distribute $D_j$ \\[-7mm]
-& & to other servers \\
- & ACK (HTTP 200) & \\
-};
+\begin{callself}{as}{Send $D_j$ to other server}{}
+\end{callself}
 
-\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-1.south east)--(m-1-1.south west);
-\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-3.south east)--(m-1-3.south west);
 
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-8-2.south west)--(m-8-2.south east);
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-11-2.south east)--(m-11-2.south west);
-\end{tikzpicture}
-\\\\
+ 
+\end{sequencediagram}
+\end{center}
+
+
 Server A distributed the payload to other servers afterwards. Technically this is done by a Gearman daemon running in the background. The receiver clients can afterwards decrypt the key K with their private key.
 
 More in detail, the JSON message schema to init a conversation from the senders client to the senders server looks like this:
@@ -498,51 +553,52 @@ Please note that here we could be more efficient in the future by grouping the m
             
             
             
-\subsubsection{Add People to Conversation}
+\subsection{Add People to Conversation}
 People present in the key directory can be added to an existing conversation.
 As they should not be able to see previous messages, a new message key $K_{(revision+1)}$ is generated in this case by the person who adds the new people.
 This key is distributed to the other people afterwards. The people in the conversation have now to be signed again.
 
-\subsubsection{Write message}
+\subsection{Write message}
 
-Let K be the message key, which has been generated at conversation init.\\\\
-\begin{tikzpicture}
+Let K be the message key, which has been generated at conversation init.
+$D_j$ is a JSON string, containing data such as encrypted text $m$, the username or the signature.
+\begin{center}
+\begin{sequencediagram}
+\newthread[white]{ac}{Client A}
+\newinst[8]{as}{Server A}
 
 
 
-\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=8mm, nodes={draw=none, anchor=center,text depth=0pt} ]
-{
-Client A & & Server A \\[-4mm]
-& & \\[-7mm]
-& & \\[-7mm]
-1. Get $K$ & & \\[-7mm]
-2. $D_j = \{Enc_{K}(message),$ & & \\[-7mm]
-$ convId, ...\}$ & & \\[-7mm]
- & & \\
- & Send $D_j$ & \\
-& & Distribute $D_j$ \\[-7mm]
-& & to other servers \\
- & ACK (HTTP 200) & \\
-};
+\begin{callself}{ac}{Get conversation key $K $}{}
+\end{callself}
 
-\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-1.south east)--(m-1-1.south west);
-\draw[shorten <=-1.5cm,shorten >=-1.5cm] (m-1-3.south east)--(m-1-3.south west);
+\begin{callself}{ac}{$D_j = \{Enc_{K}(m), ...$}{}
+\end{callself}
 
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-8-2.south west)--(m-8-2.south east);
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-11-2.south east)--(m-11-2.south west);
-\end{tikzpicture}
 
+\begin{call}{ac}{Send $D_j$}{as}{}
+\end{call}
+
+\begin{callself}{as}{Send $D_j$ to other server}{}
+\end{callself}
+
+
+ 
+\end{sequencediagram}
+\end{center}
+
+\clearpage
 \section{Future Work}
 
   \subsection{Token Generation and API}
   In the future Charme will be able to be used by other applications as data storage. Therefore, we create a key $A_i$ and a token $T_i$ for each application i.
 All keys and tokens are generated randomly and encrypted with a passphrase derived key A'. When the passphrase is updated, we need to recrypt A'.
 An application can now save data to the Charme server, once the triplet $A_i$, $T_i$ and Charme userId was added to the application.
-To perform an action A, the charme server sends a random value R to the application. The application generates the hash value $H(A|R|T_i)$ and sends it back to the server, where the hash is validated to maintain authenticity. Actions can be  STORE(key, value) and GET(key). Possible applications could be a note taking app or a calendar, saving data encrypted on the server for example.
+To perform an action A, the Charme server sends a random value R to the application. The application generates the hash value $H(A|R|T_i)$ and sends it back to the server, where the hash is validated to maintain authenticity. Actions can be  STORE(key, value) and GET(key). Possible applications could be a note taking app or a calendar, saving data encrypted on the server for example. A application that is quite similar is Kinto \cite{kinto}, but it does not provide an encryption scheme with integrated key generation.
 
 
 \subsection{Use of encrypted Databases}
-For searching contextual posts, it will be necessary to hide the meta information. Here we could use encrypted databases as CryptDB developed at the MIT (\url{http://css.csail.mit.edu/cryptdb/}). The developers also responded to the paper  \emph{Inference attacks on property preserving encrypted databases }from Naveed et al., 2015, which questioned the security of such databases.
+For searching contextual posts, it will be necessary to hide the meta information. Here we could use encrypted databases as CryptDB developed at the MIT (\url{http://css.csail.mit.edu/cryptdb/}). The developers also responded to the paper  \emph{Inference attacks on property preserving encrypted databases} \cite{INF} which questioned the security of such databases.
 
 
   \subsection{Location based Chats}
@@ -575,26 +631,23 @@ Afterwards we send $R$ to the service provider and $K\_A $ to the device.
 \end{figure}
 
 
-\newpage\section{Terminology}
+\clearpage
+\section{Terminology}
 
-\textbf{||}\\
- Concatenation Operator. For example $"a" || "b" \Leftrightarrow "ab" $
-\\
+\begin{tabular}{p{4cm} p{10cm} }
+          &  \\
+\textbf{||} &  Concatenation Operator. For example $"a" || "b" \Leftrightarrow "ab" $ \\\\
+\textbf{Conversation} & A sequence of messages belonging to two or more users  \\\\
+\textbf{Fastkey} & A symmetric key dependent on the passphrase. It is only known by the user itself, no other persons or servers. \\\\
+\textbf{Revision} & After a key is updated it gets a new revision.\\\\
 
-
-\textbf{Conversation}\\ A sequence of messages of different users
-\\\\
-\textbf{Fastkey}\\ A symmetric key dependent on the passphrase. It is only known by the user itself, no other persons or servers.
-\\
-
-\textbf{Revision}\\
- After a key is updated it gets a new revision. A key update can happen after a new keyring is generated or someone has been removed of a conversation for example. both cases we generate an updated key.
-\\
-
-\textbf{userId}\\  An unique identifier for each person in the Charme network, similar to email. Example: ms@myserver.com
+\textbf{Key Update} &
+A key update can happen after a new keyring is generated or someone has been removed of a conversation for example. In both cases we generate an updated key, but with a different protocol. \\\\
+\textbf{userId} &  An unique identifier for each person in the Charme network, similar to email. Example: ms@myserver.com
+\end{tabular}
 
 
-\newpage
+\clearpage
 \section{Sources}
 \printbibliography
 
