@@ -1,6 +1,6 @@
 ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/vid.gif "Screenshot")
 
-*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted.
+*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted. This is a preview version and it is not ready for production use yet.
 
 
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
@@ -12,7 +12,7 @@ You can add semantic information to your posts. With this feature it is possible
 
 **Warning:** This is for preview puposes only. It is almost function complete but neither stable nor secure.
 There are essential things missing, such as integrity protection for the client and forced https for server-to-server communication.
-The code is of not-so-good quality right now and will be refactored and documented in the next months.
+The code is of not-so-good quality right now and will be refactored and documented during the next months.
 
 
 ## Setup a client
@@ -80,7 +80,7 @@ Directories:
 
 
 ## Libraries
- A lot of libraries are used in Charme. Find a list <a href="/libraries.md">here</a>.
+ A lot of libraries are used in Charme. Find a list <a href="/doc/libraries.md">here</a>.
 
 
 ## License
