@@ -139,7 +139,7 @@ page_authenticated = Backbone.View.extend({
 
 	render: function() {
 
-		var str = "<div class='testversion'> This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data.\nYour data may get exposed otherwise!!!</div>";
+		var str = "<div class='testversion'> This version of Charme is a TESTVERSION. It is NOT stable and NOT secure.\nDo not post any private data.\nYour data may get exposed otherwise!!!<br><a onclick='$(\".testversion\").remove()' class='testbutton'>Okay I understood</a></div>";
 		str += '<div id="cnt_loggedIn"><div class="actionCont"><div class="whitespace"></div><div id="notificationMain"></div></div><div class="containerAll"><div id="whitebg"></div><div class="sidebar sbAlpha"><div class="actionBar"> \
 		<a data-bgpos="0" id="button_notifications" ref="notifications"  class="actionButton">0</a><a data-bgpos="-30"  id="button_settings" style="background-position:-30px 0; " class="actionButton"></a></div> \
 		<div style="height:64px; background-color:#000;"><a  href="#user/' + (charmeUser.userIdURL) + '"><img id="profileImage" src="http://' + charmeUser.server + '/charme/fs.php?s=150&u=' + (charmeUser.userIdURL) + '"></a> \

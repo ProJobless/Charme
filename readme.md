@@ -2,7 +2,7 @@
 
 *﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted. This is a preview version and it is not ready for production use yet.
 
-
+- [Video](#) - Watch the video to get a basic functional overview. You should do that before trying the demo.
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" as a server when being asked at signup. Please note that data is reset periodically. Try to clear your cache if something is not working properly.
 - [Paper](https://rawgit.com/mschultheiss/Charme/master/doc/tex/main.pdf) - The paper describes the basic ideas and the protocol of Charme. Please note that it is unfinished.
 
@@ -10,18 +10,20 @@
 
 You can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
 
-**Warning:** This is for preview puposes only. It is almost function complete but neither stable nor secure.
+**Warning:** This is for preview purposes only. It is almost function complete but neither stable nor secure.
 There are essential things missing, such as integrity protection for the client and forced https for server-to-server communication.
-The code is of not-so-good quality right now and will be refactored and documented during the next months.
+The code is of not-so-good (horrible) quality right now and will be refactored and documented during the next months.
 
 
 ## Setup a client
   * You can use the Demo Client, linked above for testing
-  * You can also run it on your own server by copying the files in `/jsclient` on your server to test. Please note the client does not support https right now, due to mixed content.
+  * You can also run it on your own server by copying the files in `/jsclient` on your server to test. Please note the client does not support https right now, due to mixed content policy.
   * Later we will provide native build for Windows, Mac etc.
 
 ## Setup a Server
- * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is acessable via `yourserver.com/charme/req.php`
+ * Warning: PLEASE SET UP SERVERS IN A CLOSED TEST ENVIRONMENT (INTRANET etc.) ONLY RIGHT NOW!!! THE SOFTWARE IS FAR AWAY FROM SECURE RIGHT NOW!!!
+ * Setting up a server requires solid knowledge of Gnu/Linux
+ * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is accessable via `yourserver.com/charme/req.php`
  Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
  * Make sure to create a config/imprint.html file containing your contact information.
  * The most common errros are listed in <a href="/doc/faq_errors.md">faq_errors.md</a>.

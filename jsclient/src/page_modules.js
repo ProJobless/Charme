@@ -1459,7 +1459,7 @@ control_postItem = Backbone.View.extend({
           starttime += xssText(metaData.startTime_hour) + ":" + xssText(metaData.startTime_minute);
 
         var seatsfree = "";
-        if (metaData.seats != null)
+        if (metaData.seats != null && metaData.seats != "")
           seatsfree = " with " + xssText(metaData.seats) + " seats free ";
 
 

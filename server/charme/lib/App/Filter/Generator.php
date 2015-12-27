@@ -63,7 +63,7 @@ class Generator
   public static function getConstraints($filterObject, $dbCollection, $onRemote=false)
 	{
     $returnArray = array();
-
+    $locationUsed= false; // We can only use nearSphere once in mongoDB, therefore we have a variable indicating if it was used already
     $prefix = "post.metaData";
     if ($onRemote)
       $prefix = "postData.object.metaData"; // post collection items and stream collection items differentiate slightly
@@ -111,25 +111,49 @@ class Generator
               array( "post.metaData.".$constraint["name"]."_data.position" => '2dsphere'),
               array("sparse" => true));
           }
+          if (!$locationUsed) {
+            $locationUsed = true;
+            $const3[$prefix.".".$constraint["name"]."_data.position"] =
+            array(
+              '$nearSphere' => array(
+              '$geometry' => array(
+                "type" => "Point",
+                "coordinates" =>
+              array(floatval($constraint["value"]["position"]["coordinates"][0]),
+              floatval($constraint["value"]["position"]["coordinates"][1]))
 
-          $const3[$prefix.".".$constraint["name"]."_data.position"] =
-          array(
-            '$nearSphere' => array(
-            '$geometry' => array(
-              "type" => "Point",
-              "coordinates" =>
-            array(floatval($constraint["value"]["position"]["coordinates"][0]),
-            floatval($constraint["value"]["position"]["coordinates"][1]))
+            ),
 
-          ),
+              '$maxDistance' => intval($constraint["radius"])*1000
+            ));
+          }
+          else {
 
-            '$maxDistance' => intval($constraint["radius"])*1000
-          ));
+            $const3[$prefix.".".$constraint["name"]."_data.position"] =
+            array(
+              '$within' => array(
+              '$centerSphere' => array(
+
+
+              array(floatval($constraint["value"]["position"]["coordinates"][0]),
+              floatval($constraint["value"]["position"]["coordinates"][1]))
+
+              ,
+              intval($constraint["radius"])*1000/6378.1)
+
+            ));
+
+
+
+            //  loc: { $geoWithin: { $centerSphere: [ [ -88, 30 ], 10/3963.2 ] } }
+
+          }
         }
       }
     }
-
-    return  array_merge($const1, $const2, $const3);
+    $returnArray =  array_merge($const1, $const2, $const3);
+    clog2($returnArray);
+    return $returnArray;
 	}
 
 }

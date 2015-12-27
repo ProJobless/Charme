@@ -76,14 +76,6 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {7}Future Work}{22}{section.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.1}Token Generation and API}{22}{subsection.7.1}
+\contentsline {section}{\numberline {8}Terminology}{23}{section.8}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.2}Use of encrypted Databases}{22}{subsection.7.2}
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.3}Location based Chats}{22}{subsection.7.3}
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.4}Data Sharing for the Internet of Things}{22}{subsection.7.4}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {8}Terminology}{24}{section.8}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {9}Sources}{25}{section.9}
+\contentsline {section}{\numberline {9}Sources}{24}{section.9}

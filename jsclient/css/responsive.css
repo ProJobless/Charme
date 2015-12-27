@@ -85,9 +85,6 @@ input {
 		position: relative;
 		left:-8px;
 	}
-	#layout {
-		padding-top: 76px;
-	}
 
 		#welcome_main {
 			float:none !important;

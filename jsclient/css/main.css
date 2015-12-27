@@ -11,22 +11,35 @@ cursor: pointer;
 	display: block;
 
 }
-#layout
-{
-	padding-top: 36px;
+
+.testversion.onlyNoResponsive {
+		position: fixed;
+			top:0px;
 }
 .testversion
 {
-	padding:8px;
+	padding:16px;
+	box-sizing: border-box;
+
+	opacity: 0.9;
+
 	background-color:#770000;
-	position: fixed;
+
 	width:100%;
 	z-index: 200000;
-	top:0px;
+	position: fixed;
 	text-align:center;
 	color:#fff;
 }
-
+.testversion .testbutton {
+	padding: 4px;
+	border:1px #fff solid;
+	margin-top: 8px;
+	border-radius: 3px;
+	margin-bottom: 8px;
+	color:#fff;
+	display: inline-block;
+}
 .error {
 	color: #ff6666;
 	text-align: center;

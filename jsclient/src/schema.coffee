@@ -113,6 +113,21 @@
 
 	},
 	{
+		id: 'fur'
+		name: 'Furniture'
+		sub: [
+			{
+				id: 'fur_deco'
+				name: 'Decoration'
+			},
+			{
+				id: 'fur_tables'
+				name: 'Tables'
+			}
+		]
+
+	},
+	{
 		id: 'bo'
 		name: 'Books and Magazines'
 		sub: [

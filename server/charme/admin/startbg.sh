@@ -104,4 +104,4 @@ echo -e  "Starting Charme Status now..."
 
 ./status.sh
 
-echo -e "Please make sure to delete /charme/log.txt fron time to time as this file may get big!"
+echo -e "Please make sure to delete /charme/log.txt from time to time as this file may get big!"
