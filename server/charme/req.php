@@ -123,6 +123,8 @@ foreach ($data["requests"] as $item)
 				$col->saltvalues->update($cont, $cont, array("upsert" => true));
 				$returnArray[$action] = array("salt" => $randomString);
 			}
+			else
+			$returnArray[$action] = array("error" => "user_already_exists");
 			// Save
 
 		break;

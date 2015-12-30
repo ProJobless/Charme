@@ -103,9 +103,12 @@ echo -e "${BBlu}Hint:${RCol} Run startbg.sh if some background tasks are not run
 echo -e ""
 
 if [ ! -f ../config/imprint.html ]; then
-    echo -e "${BRed}Important Warning: $RCol config/imprint.html not found. You should provide an imprint as hoster.\n"
+    echo -e "${BRed}WARNING: $RCol config/imprint.html not found. You should provide an imprint as a server host."
 fi
 
+if [ ! -f ../config.php ]; then
+    echo -e "${BRed}ERROR: $RCol config.php not found."
+fi
 
 #
 #Section: Footer

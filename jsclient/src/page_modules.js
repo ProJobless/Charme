@@ -564,6 +564,11 @@ var view_register = view_page.extend({
 
       ]
     }, function(d2) {
+      if (d2.reg_salt_set.error == "user_already_exists")
+      {
+        alert("User id already exists.");
+        return;
+      }
 
 			var hashpass = CryptoJS.SHA256(pass + d2.reg_salt_set.salt).toString(CryptoJS.enc.Base64); // Generate a hashed password
       var disabled = $("#form_signup").find(':input:disabled').removeAttr('disabled'); // Remove disabled property temporary as serializeArray does not take disabled inputs into account

@@ -1,11 +1,11 @@
 ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/vid.gif "Screenshot")
 
-*﻿Charme* is a distributed and open source social network. In contrast to current social networks you can save your user data on your own server or a server of your choice. Furthermore messages, private posts and private profile information are end-to-end encrypted. This is a preview version and it is not ready for production use yet.
+*﻿Charme* is a decentralized social network with end-to-end encryption. You can save your user data on a server of your choice while you can still interact (write messages, visit profiles, etc.) with people on other servers. Furthermore messages, private posts and private profile information are end-to-end encrypted. This is a preview version and it is not ready for production use yet.
 
 - [Video](https://www.youtube.com/watch?v=FwAmeVs_fJc&feature=youtu.be) - Watch the video to get a basic functional overview. You should do that before trying the demo.
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" (or your own Charme server url) as a server when being asked at signup. Please note that data is reset periodically and the demo server is not always available as it is not very powerful. Setup your own server if you want a better test environment. Try to clear your cache if something is not working properly.
 - [Paper](https://rawgit.com/mschultheiss/Charme/master/doc/tex/main.pdf) - The paper describes the basic ideas and the protocol of Charme. Please note that it is unfinished.
-- [Send Money](http://mschultheiss.github.io/Charme/support.html) - You can support development by sending me some money
+- [Donate](http://mschultheiss.github.io/Charme/support.html) - You can support development by sending me some money
 
 
 You can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
