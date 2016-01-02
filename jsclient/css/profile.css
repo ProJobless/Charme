@@ -121,6 +121,9 @@ position:relative;
 	border-top:1px silver solid;
 	vertical-align: top;
 
+	max-width: 100px;
+    overflow: hidden;
+  word-wrap: break-word;
 
 }
 .aboutBox table{
