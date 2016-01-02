@@ -66,7 +66,7 @@ But beside ads have become the number one revenue model for internet companies a
 
 \newpage
 \section{Introduction}
-In contrast to classic social networks, distributed social networks with end-to-end encryption can provide self control of your data and  independence from big companies.  \textit{Distributed} means, that there is no central server hosting your data, but many small servers all around the world, which everyone can  setup. Just like email, every participant has a unique address like \textit{yourname@yourserver.com}. With end-to-end encryption not even the server hosting your data can see your data. This is necessary for a distributed architecture as otherwise the server admin could read your messages, for example.\\
+In contrast to classic social networks, distributed social networks with end-to-end encryption can provide self control of your data and  independence from big companies.  \textit{Distributed} means, that there is no central server hosting your data, but many small servers all around the world, which everyone can  setup. Just like email, every participant has a unique address like \textit{yourname@yourserver.com}. People can interact seamlessly with people on other server. With end-to-end encryption not even the server hosting your data can see your data. This is necessary for a distributed architecture as otherwise the server admin could read your messages, for example.\\
 
 Another innovation of Charme is the so called \textit{Context}, every post can have optionally. A context contains semantic, computer-readable information about the post.
  An algorithm can later aggregate all people moving from point A to point B tomorrow, with having 3 seats free in their car with a tolerance of 20 kilometers, for example. Or you can look up for friends making pizza for lunch and want to share their food today. Figure \ref{figContext} shows the creation of a context and the creation of a filter to search for existing context of other users. 
@@ -342,7 +342,7 @@ The following sections will give a basic overview, for a more detailed explanati
  An edgekey is a symmetric key, that is established after public key verification and encrypted via public key by the other party. This is done, because asymmetric cryptography is a lot of slower than symmetric cryptography.
  \subsubsection{Post Encryption}
 A new post is encrypted, when its audience is restricted to a list of people. 
-In this case we generate a postkey $pk$, which encrypts the content of the post. Next we need to distribute $k$ to other people. We can use the symmetric edgekeys $e_1, e_2, ...$ of these people to encrypt the postkeys: $k_{enc} = enc_{e_1} (k)$. Next we distribute it to the corresponding receivers. Furthermore we generate a signature of post data with our private key, and add the public key revision of the receiver.
+In this case we generate a postkey $pk$, which encrypts the content of the post. Next we need to distribute $pk$ to other people. We can use the symmetric edgekeys $e_1, e_2, ...$ of these people to encrypt the postkeys: $k_{enc} = enc_{e_1} (pk)$. Next we distribute it to the corresponding receivers. Furthermore we generate a signature of post data with our private key, and add the public key revision of the receiver.
  \subsubsection{Message Encryption}
  
   Message encryption is basically working like in PGP. A simplified concept is illustrated in Figure \ref{fig2}). 
