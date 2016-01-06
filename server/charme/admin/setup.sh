@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "Not working yet..."
 
 . ./variables.sh # include variables
 . ./functions.sh # include functions
