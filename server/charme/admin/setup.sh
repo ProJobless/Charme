@@ -17,20 +17,14 @@ step2() {
 		yum install php-gd
 
 	elif [[ ! -z $APT_GET_CMD ]]; then # or is it Debian?
-		apt-get install apache2
-    apt-get install libapache2-mod-php5
-		apt-get install php5-dev
-		apt-get install make
-		apt-get install php-pear
-		apt-get install php5-curl
-		apt-get install php5-gd
-		apt-get install gearman
-		apt-get install gearman-job-server libgearman-dev
-		pecl install gearman-1.0.3
-		apt-get install mongodb
-		apt-get install libzmq-dev
-		pecl install zmq-beta
-		apt-get install pkg-config
+
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -y  install apache2 php5-cli libapache2-mod-php5 php5-dev make php-pear php5-curl php5-gd gearman gearman-job-server libgearman-dev
+    pecl install gearman-1.0.3
+    apt-get -y  install mongodb libzmq-dev
+    pecl install zmq-beta
+    apt-get -y  install  pkg-config
+
 
 	fi
 
