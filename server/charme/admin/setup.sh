@@ -18,6 +18,7 @@ step2() {
 
 	elif [[ ! -z $APT_GET_CMD ]]; then # or is it Debian?
 		apt-get install apache2
+    apt-get install libapache2-mod-php5
 		apt-get install php5-dev
 		apt-get install make
 		apt-get install php-pear

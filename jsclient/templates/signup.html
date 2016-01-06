@@ -31,7 +31,7 @@ and make sure it matches with server Validation
 				<label for="vorn">Username:</label>
 				<input id='inp_username' name='username' style='width:150px' placeholder="username" class='box'> @
 				<div class="onlyResponsive" style="height:8px; padding:0px;"></div>
-				<input name='server' style='width:150px' value='' id='inp_server'  class='box'>
+				<input name='server' style='width:150px' disabled value='' id='inp_server'  class='box'>
 
 			</div>
 
@@ -108,10 +108,18 @@ and make sure it matches with server Validation
 			<div>
 				<label for="vorn">Repeat Password:</label>
 				<input placeholder="" id="inp_pass2" type='password' class='box signupfield' name='password2'>
+				<br>
+
 			</div>
+
+			<div>
+				<label for="vorn" class="onlyNoResponsive">&nbsp;</label>	By signing up, you agree to the <a id="inp_agb">Terms of Service</a> of the selected server.
+			</div>
+
 			<div>
 				<label for="vorn" class="onlyNoResponsive">&nbsp;</label><a id='but_signupok' class='button'>Submit</a>
 			</div>
+
 
 		</div>
 

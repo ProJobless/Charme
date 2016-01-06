@@ -22,9 +22,9 @@ The code is of not-so-good (horrible) quality right now and will be refactored a
 
 ## Setup a Server
  * Warning: PLEASE SET UP SERVERS IN A CLOSED TEST ENVIRONMENT (INTRANET etc.) ONLY RIGHT NOW!!! THE SOFTWARE IS FAR AWAY FROM SECURE RIGHT NOW!!!
- * Setting up a server requires solid knowledge of Gnu/Linux
+ * Setting up a server requires solid knowledge of GNU/Linux
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is accessable via `yourserver.com/charme/req.php`
- Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `install.md` file.
+ Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `doc/install.md` file.
  * Make sure to create a config/imprint.html file containing your contact information.
  * The most common errros are listed in <a href="/doc/faq_errors.md">faq_errors.md</a>.
 

@@ -67,6 +67,12 @@
         <td>jsclient/lib/crypto/gibberish.js</td>
     </tr>
 
+    <tr>
+           <td>CryptoJS</td>
+           <td>http://code.google.com/p/crypto-js/wiki/License</td>
+           <td>http://code.google.com/p/crypto-js</td>
+       </tr>
+
  <tr>
         <td>RequireJS</td>
         <td>MIT</td>
@@ -107,6 +113,20 @@
         <td>http://autobahn.ws/js/reference_wampv1.html</td>
     </tr>
 
+
+
+     <tr>
+            <td>Rachet for PHP</td>
+            <td>MIT</td>
+            <td>http://socketo.me/</td>
+        </tr>
+
+
+             <tr>
+                    <td>ZeroMQ</td>
+                    <td> GNU Lesser General Public License V3</td>
+                    <td>http://zeromq.org/</td>
+                </tr>
 
 
 
