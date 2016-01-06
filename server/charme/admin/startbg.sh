@@ -30,6 +30,7 @@ then
 else
 	echo -e  "Starting Gearman..."
 	service gearmand start&
+  #gearmand -d
 
 fi
 
@@ -56,7 +57,7 @@ then
 	echo -e  "mongo is already running"
 else
 	echo -e  "Starting mongo..."
-	nohup mongod &
+	nohup mongod & # Hint: Use --smallfiles if less than 3gb disk space  available
 fi
 
 echo -e  "Waiting some seconds..."
@@ -78,7 +79,7 @@ then
 	echo -e  "Hydra is already running"
 else
 	echo -e  "Starting hydra..."
-	nohup php ../bg_hydra.php --php-ini ${CLIPHPPATH}  &
+	nohup php -f "../bg_hydra.php" -c ${CLIPHPPATH}  &
 fi
 
 
@@ -87,7 +88,7 @@ then
 	echo -e "Socket Server is already running"
 else
 	echo -e  "Starting Socket Server..."
-	nohup php ../bg_events.php --php-ini ${CLIPHPPATH} &
+	nohup php -f "../bg_events.php" -c ${CLIPHPPATH} &
 fi
 
 echo -e  "Restarting Apache Server now..."
