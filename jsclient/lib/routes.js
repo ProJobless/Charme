@@ -435,7 +435,7 @@ $(function() {
             pa.getData = function() {
                 _.templateSettings.variable = "rc";
                 if (typeof charmeUser !== "undefined")
-                  return {"imprinturl": "http://"+charmeUser.server+"/charme/config/imprint.html"}
+                  return {"imprinturl": "http://"+charmeUser.server+"/charme/config/imprint.html", "termsurl": "http://"+charmeUser.server+"/charme/config/terms.html"}
                 else
                   return {"imprinturl": ""}
              };

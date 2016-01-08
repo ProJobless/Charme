@@ -506,7 +506,7 @@ var view_register = view_page.extend({
       $("#form_signup").show();
       $("#prompt_server").hide();
           $("#inp_server").val(server);
-          $("#inp_agb").attr("href", "http://"+server+"/charme/config/imprint.html");
+          $("#inp_agb").attr("href", "http://"+server+"/charme/config/terms.html");
       }
     }, "", server);
 

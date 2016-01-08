@@ -5,7 +5,8 @@
 - [Video](https://www.youtube.com/watch?v=FwAmeVs_fJc&feature=youtu.be) - Watch the video to get a basic functional overview. You should do that before trying the demo.
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" (or your own Charme server url) as a server when being asked at signup. Please note that data is reset periodically and the demo server is not always available as it is not very powerful. Setup your own server if you want a better test environment. Try to clear your cache if something is not working properly.
 - [Paper](https://rawgit.com/mschultheiss/Charme/master/doc/tex/main.pdf) - The paper describes the basic ideas and the protocol of Charme. Please note that it is unfinished.
-- [Donate](http://mschultheiss.github.io/Charme/support.html) - You can support development by sending me some money
+- [Send Money](http://mschultheiss.github.io/Charme/support.html) - You can support development by sending me some money via Paypal, Bitcoin or Flattr.
+- [Twitter Updates](https://twitter.com/m_schultheiss) - Get informed about updates
 
 
 You can add semantic information to your posts. With this feature it is possible to perform search queries like "Show me all events created by my fellow students in a 30 km radius" or "Show me all friends driving from Munich to Augsburg tommorrow":
@@ -27,6 +28,7 @@ The code is of not-so-good (horrible) quality right now and will be refactored a
  Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `doc/install.md` file.
  * Make sure to create a config/imprint.html file containing your contact information.
  * The most common errros are listed in <a href="/doc/faq_errors.md">faq_errors.md</a>.
+ * There is a short video on how to setup a test server [on Youtube](https://www.youtube.com/watch?v=UD0n1dnh57k)
 
 
 ## FAQ

@@ -110,6 +110,15 @@ if [ ! -f ../config.php ]; then
     echo -e "${BRed}ERROR: $RCol config.php not found."
 fi
 
+
+if [ ! -f ../config/terms.html ]; then
+    echo -e "${BRed}WARNING: $RCol config/terms.html not found. You should provide terms of use as a server host."
+fi
+
+
+
+
+
 #
 #Section: Footer
 #
