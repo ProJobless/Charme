@@ -23,7 +23,7 @@ The code is of not-so-good (horrible) quality right now and will be refactored a
   * Later we will provide native build for Windows, Mac etc.
 
 ## Setup a Server
- * Warning: PLEASE SET UP SERVERS IN A CLOSED TEST ENVIRONMENT (INTRANET etc.) ONLY RIGHT NOW!!! THE SOFTWARE IS FAR AWAY FROM SECURE RIGHT NOW!!!
+ * IT IS RECOMMENDED TO SETUP SERVERS IN A CLOSED TEST ENVIRONMENT (INTRANET etc.) WITHIN A VIRTUAL MACHINE ONLY!!! THE SOFTWARE IS NOT SECURE AT THE MOMENT!!!
  * Setting up a server requires solid knowledge of GNU/Linux
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is accessable via `yourserver.com/charme/req.php`
  Afterwards use the `charme/admin/setup.sh` script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `doc/install.md` file.
