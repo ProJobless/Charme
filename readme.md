@@ -26,8 +26,8 @@ The code is of not-so-good (horrible) quality right now and will be refactored a
  * Warning: PLEASE SET UP SERVERS IN A CLOSED TEST ENVIRONMENT (INTRANET etc.) ONLY RIGHT NOW!!! THE SOFTWARE IS FAR AWAY FROM SECURE RIGHT NOW!!!
  * Setting up a server requires solid knowledge of GNU/Linux
  * Copy the files in `/server/charme` to `yourserver.com/charme`, so that req.php is accessable via `yourserver.com/charme/req.php`
- Afterwards use the server/charme/admin/setup.sh script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `doc/install.md` file.
- * Mongo DB may require a /data/db directory to work. Always check ./status.sh and the Apache logs if something is not working.
+ Afterwards use the `charme/admin/setup.sh` script on Debian and Fedora. If you are using another OS or there are some errors, try out the steps described in the `doc/install.md` file.
+ * Mongo DB may require a /data/db directory to work. Always check status via `charme/admin/status.sh` and the Apache logs if something is not working.
  * Make sure to create a config/imprint.html and a config/terms.html file containing your contact information and terms of service if your server goes public. But do not set up a public server right now as the software is not stable or secure!!
  * The most common errros are listed in <a href="/doc/faq_errors.md">faq_errors.md</a>.
  * There is a short video on how to setup a test server [on Youtube](https://www.youtube.com/watch?v=UD0n1dnh57k)
