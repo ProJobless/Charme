@@ -20,6 +20,3 @@ service httpd restart
 ### Gearman
 - When getting a `GearmanException` with message `Failed to set exception option` then make sure gearmand is running. To check use `ps aux | grep gearmand`.
 - PHP Fatal error:  Class 'GearmanWorker' not found. Make sure `extension=gearman.so` is defined in your php.ini. Also note that you need to set it for the CLI and the Apache PHP module!!
-##  Class 'Guzzle\Http\Message\Header\CacheControl' not found
-Try a composer update. TODO: Still gives error!
-https://github.com/mschultheiss/Charme
