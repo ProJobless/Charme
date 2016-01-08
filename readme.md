@@ -1,7 +1,7 @@
 ![Screenshot](https://raw.githubusercontent.com/mschultheiss/Charme/master/demo/vid.gif "Screenshot")
 
-*﻿Charme* is a decentralized social network with end-to-end encryption. You can save your user data on a server of your choice while you can still interact (write messages, visit profiles, etc.) with people on other servers. Furthermore messages, private posts and private profile information are end-to-end encrypted. This is a preview version and it is not ready for production use yet.
-The software is not completed yet, as many things such as Spam or integrity protection are missing and will probably take some more years development time until the first stable release. 
+*﻿Charme* is a decentralized social network with end-to-end encryption. You can save your user data on a server of your choice while you can still interact (write messages, visit profiles, etc.) with people on other servers. Furthermore messages, private posts and private profile information are end-to-end encrypted. ** This is a preview version and it is not ready for production use yet.
+The software is not completed yet, as many things such as Spam or integrity protection are missing and will probably take some more years development time until the first stable release. **
 
 - [Video](https://www.youtube.com/watch?v=FwAmeVs_fJc&feature=youtu.be) - Watch the video to get a basic functional overview. You should do that before trying the demo.
 - [Demo](http://mschultheiss.github.io/Charme/client/v1)  - Do not provide any personal data as content is not served via https and the whole thing is not completely secure yet! Provide "mschultheiss.com" (or your own Charme server url) as a server when being asked at signup. Please note that data is reset periodically and the demo server is not always available as it is not very powerful. Setup your own server if you want a better test environment. Try to clear your cache if something is not working properly.
