@@ -37,8 +37,8 @@ The code is of not-so-good (horrible) quality right now and will be refactored a
 
 ## FAQ
 
-### Why am I not allowed to loose the passphrase
-The passphrase basically encrypts all your private stuff. We can not provide a revert function here, because otherwise we could also read your private data, which is not what we want to.
+### Why is protecting your passphrase important?
+The passphrase encrypts all your private data. We can not provide a "forgot passphrase" function as we would have to know your passphrase to do so.
 
 ### You have stolen the collection feature from Google Plus!
 Wrong! Google introduced collections in May 2015 (https://plus.google.com/+googleplus/posts/7ZpGWeou2sV).
