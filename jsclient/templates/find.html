@@ -1,0 +1,37 @@
+<div title='title' class='meta'>Search</div>
+<div class='p32'>
+<div class="onlyResponsive">You can search for UserIDs or Usernames:
+<div style="margin-top:8px; margin-bottom:24px;">
+<input class="box" id="responsiveSearchInput" style="margin-bottom:8px;"> <a style='top:0px;margin-bottom:8px;' class='button' id='but_startsearch'>Search</a></div>
+</div>
+
+<div id='fnd_results'>
+<h1>Results for <span id='fld_q'></span></h1>
+  <div >
+    <div class='searchresults'>
+      <% _.each( rc.results, function(item2){ %>
+
+        <% if (item2.type=="user")  { %>
+
+        <div class="result">
+      		<a href="#/user/<%- encodeURIComponent(item2.id) %>">
+            <% if (item2.noPicture!=true)  { %>
+      			<img src="http://<%- item2.id.split("@")[1] %>/charme/fs.php?u=<%- encodeURIComponent(item2.id) %>&amp;s=64">
+            <% } %>
+      		<%- item2.name %>
+          <br style="clear:both">
+      		</a>
+      	</div>
+        <% } %>
+
+        <% if (item2.type=="post")  { %>
+        <!-- post results -->
+        <a class="result post" href="<%- item2.url %>">
+          <b>  <%- item2.name %> wrote</b><br>
+          <%- item2.description %>
+        </a>
+        <% } %>
+      <% }); %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div style='width:400px'>
+<div style='padding:16px;'>
+You have asked for the key of: <b><%- rc.userId %></b>. Here it is:
+<div style='margin:8px 0; padding:8px; background-color:#efefef; word-wrap: break-word;
+'>
+
+<%- rc.key %></div>
+
+
+
+<div>
+
+Please check if the key is correct.<br><br>
+
+
+<div id='keyChanged'  style='display:none'>
+Update from revision <b><span id='span_keyrevision'>0</span></b> to 
+ <b><%- rc.revision %></b>.
+</div>
+
+<div id='keyNew' style='display:none'>
+You do not have any key stored yet. This is the first key to be stored.
+</div>
+
+
+<div id='keySame' style='display:none'>
+The key has not changed. There is no need to update.
+</div>
+
+
+
+
+</div>
+
+</div>
+<div class='boxMargin'>
+<a href='javascript:ui_closeBox();' class='button gray' style='margin-right:8px;'>Decline Key</a><a id='but_box_save' class='button'>Accept Key</a>
+</div></div>

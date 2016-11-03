@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<color name="primaryDark">#13515C</color>
+    <color name="primary">#15798B</color>
+
+<color name="accent">#7cadbd</color>
+
+    <color name="charmeLoginTitle">#033942</color>
+    <color name="colorControlHighlight">#7cadbd</color>
+
+    </resources>

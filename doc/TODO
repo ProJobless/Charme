@@ -1,0 +1,38 @@
+Important:
+-----------------------------------------
+
+1 DO NOT SHOW ACTIVE MESSAGES I NANDROID NOTIFICATIONS!
+video
+terms
+2
+- android!!!
+- index.html: location.reload(true) and redirect to newest version!!!
+- empty listitemnames 5min
+
+3
+- [SEC] Sign/HMac list item username/userId pairs
+- [SEC] Context post better protected of foreign people!
+- [SEC] Password Salt
+- find page with context etc...
+
+
+
+- increase session duration!!!
+-----------------------------------------
+Before release:
+- cordova app!
+------------------------------------------
+
+
+
+
+Key Updates:
+1. Test
+2. Notify others after update
+3. ENSURE KEY REVSION ALSO SAVED WITH INTEGRITY PROTECTION!!!
+
+Unverified bugs:
+1. "load more messages" displaying duplicates
+
+Database:
+- Cron JOB: Delete Stream items older than...

@@ -1,0 +1,3 @@
+include ':androidSugarORM'
+include ':library'
+include ':charmeApp'

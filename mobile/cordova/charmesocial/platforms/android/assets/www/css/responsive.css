@@ -1,0 +1,275 @@
+.responsive.header
+{
+	display: none;
+	width: 100%;
+	height: 64px;
+	z-index: 9000;
+	position: fixed;
+	background-color: #fff;
+}
+.onlyResponsive
+{
+	display: none;
+}
+.onlyNoResponsive
+{
+	display: block;
+}
+label.onlyNoResponsive, img.onlyNoResponsive
+{
+	display: inline-block;
+}
+.responsive.sbBeta
+{
+	display: none;
+}
+.header.responsive .row1
+{
+	background-color: #fff;
+}
+
+.header.responsive .row1 a.active
+{
+	background-color: #444;
+	color:#fff;
+}
+.header.responsive .row2
+{
+	background-color: #444;
+	line-height: 32px;
+	color:#fff;
+	padding-left: 8px;
+
+}
+.header.responsive .row1 a
+{
+	width: 14.27%;
+	float: left;
+	font-size: 20px;
+	line-height: 32px;
+	padding-top:  4px;
+	height: 28px;
+	text-align: center;
+	color:gray;
+}
+#barmenu
+{
+	color: #fff !important;
+	text-decoration: none !important;
+	font-size: 16px;
+	padding-top: 8px;
+	padding-right: 8px;
+}
+#welcome_main {
+	margin-top:200px
+}
+#loginfield {
+	float:right; width:264px;
+}
+input {
+	box-sizing: border-box;
+}
+
+
+@media (max-width: 632px)
+	{
+		.lightLink {
+			text-align:right; padding:16px;
+		}
+	}
+
+@media (max-width: 1000px)
+	{#but_addImg {
+		float: none;
+		position: relative;
+		left:-8px;
+	}
+
+
+		#welcome_main {
+			float:none !important;
+			width: auto !important;
+				margin-top:0px
+		}
+		#loginfield {
+		 width:100%;
+		}
+		.receiversinstant {
+			margin-top: 56px;
+		}
+		.sbBeta {
+			display: none;
+		}
+		.respColumn
+		{
+ 				width:100% !important;
+ 				box-sizing: border-box;
+		}
+		.msgScrollContainer
+		{
+			width: 100%;
+		}
+		.msgItems li a
+		{
+			margin-left: 0px;
+		}
+		.instantanswer
+		{
+			width: 100%;
+			padding:0px;
+		}
+		.instantanswer form
+		{
+			padding: 16px;
+		}
+		.talkbar
+		{
+			width:100%;
+		}
+		.responsive.header
+		{
+			display: block;
+		}
+		.aboutContainer
+		{
+			width: 100%;
+		}
+		.sbAlpha
+		{
+			display: none;
+
+		}
+		.profile_sidebar .profileImage
+		{
+			width: 100px !important;
+			height: 100px !important;
+			border-radius: 10000px;
+			background-size: cover;
+			margin: 0px auto;
+		}
+		.profileTabs
+		{
+			display: none;
+		}
+		.profile_sidebar
+		{
+			width: auto;
+			float:none;
+			position: relative;
+			height: auto;
+			margin-left: 0px;
+
+		}
+		#colorbg, #whitebg, #greybg
+		{
+			display: none;
+		}
+		#page3
+		{
+			margin-right: 0px !important;
+			margin-left: 0px !important;
+		}
+		.containerAll
+		{
+			width: 100%;
+		}
+		.sbBetaCont
+		{
+			margin-left: 0px;
+			width: 100%;
+			border-right: 0;
+			float: none;
+		}
+		.page_content
+		{
+			width: 100% !important;
+			margin-left: 0px !important;
+			margin-top: 64px;
+		}
+		.postcomments .comment
+		{
+			width: 100%;
+		}
+		.onlyResponsive
+		{
+			display: block;
+		}
+		span.onlyResponsive {
+			display: inline;
+		}
+		.onlyNoResponsive
+		{
+			display: none !important;
+		}
+		#form_signup .signupfield {
+			width: 100%;
+		}
+		#form_signup label {
+			display: block;
+			width: 100%;
+			color: gray;
+			text-align: left;
+			text-transform: uppercase;
+			margin-bottom: 8px;
+		}
+		.talkbarbg
+		{
+			display: none;
+		}
+		.talkbar.inactive
+		{
+			display: none;
+		}
+
+		.sbBeta
+		{
+			position: fixed;
+			top: 64px;
+			background-color: #444 !important;
+			z-index: 1000;
+			display: none;
+			width: 100%;
+		}
+		.sbBeta ul li a
+		{
+			color: #fff;
+		}
+		.actionBar
+		{
+				background-color: #444 !important;
+		}
+		.commentBox input
+		{
+			width: 100% !important;
+		}
+		.messageDetails
+		{
+			display: none;
+		}
+		.messageDetails.active
+		{
+			display: block;
+		}
+		.actionBar
+		{
+			height: auto;
+			margin-bottom: 8px;
+		}
+		.sbBeta a.actionButton.vector
+		{
+			font-size: 16px;
+			border:1px #fff solid;
+			border-radius: 500px;
+			margin: 8px;
+		}
+		.sbBeta a.actionButton.vector:active
+		{
+			background-color:#000;
+		}
+		.sbBeta a.actionButton.vector i
+		{
+			color:#fff;
+			position: relative;
+			top:-3px;
+		}
+	}

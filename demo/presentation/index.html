@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Charme</title>
+
+		<meta name="description" content="A distributed social network with end-to-end encryption">
+		<meta name="author" content="Manuel Schultheiss">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<style>
+		.slides img{border:0; opacity:1; background: transparent; }
+.reveal section img {
+border:0; opacity:1; background: transparent;
+box-shadow:  none;
+
+}
+.l {
+	text-align: left;
+}
+red {
+	color: #FF6C00;
+}
+h2 {
+	border-bottom:3px #333 solid !important;
+	padding-bottom: 20px !important;
+	margin-bottom: 10px;
+}
+
+h2.title {
+	border-bottom: 0px !important;
+	padding-bottom: 20px !important;
+	margin-bottom: 10px;
+	margin-top: 30%;
+
+}
+.reveal {
+	color: #bbb;
+}
+y {
+	color: #fff;
+	font-weight: bold;
+}
+z {
+	color: #444;
+	text-transform: uppercase;
+}
+
+ul li {
+	padding: 8px 0px !important;
+}
+
+		</style>
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<br><br><br>
+					<h1>Charme</h1>
+					<h3>A distributed social network with end-to-end encryption</h3>
+					<p>
+						<small>A short introduction by <a href="http://mschultheiss.com">Manuel Schultheiss</a></small>
+					</p>
+				</section>
+
+
+
+
+
+								<section>
+									<h2>What is Charme</h2>
+
+									A distributed social network with end-to-end encryption.
+								<br><br>
+
+								<ul><li>	<i>Distributed</i> means you can choose a provider hosting your data (like in email).</li>
+
+								<li>	Messages, profile information and posts can only be decrypted by the people you choose (not even the provider!).</li>
+							</ul>
+
+								</section>
+
+
+
+				<section>
+					<h2>Agenda</h2>
+
+						<ul  style="font-size:70%;">
+							<li>Motivation<ul>
+							<li>Decentralization</li>
+							<li>Encryption</li>
+							<li>Sharing Economy</li></ul>
+							</li>
+							<li>Technology<ul>
+							<li>Backend</li>
+							<li>Frontend</li></ul></li>
+							<li>Future Work</li>
+						</ul>
+
+				</section>
+
+
+
+				<section>
+					<h2>The Three Pillars of Charme</h2>
+<img src="img/pillar.png"><br>
+<ol>
+		<li>				Decentralization	</li>
+					<li>			Encryption	</li>
+					<li>			Sharing Economy	</li>
+
+						</ol>
+
+				</section>
+
+
+				<section  data-background="img/dec.png" data-state="img-right">
+					<h2 class="title">Why Decentralization?</h2>
+
+				</section>
+			<section >
+				<br><br>	<br><br>
+				Decentralization means that there is no central server hosting all users, but rather many small servers hosting some users. The main reason for this is to
+			<br>
+
+			<y>	avoid monopolies</y>.
+
+				</section>
+				<section>
+					<h2>Why Decentralization?</h2>
+
+				What we know about online social networks:<br>				<ul style="padding:16px;">
+						<li>Most people do not want to pay</li>
+						<li>Success depends on number of users</li>
+
+					</ul> <br>
+						&#8594; As hosting requires money, ads have become the standard business model for online services, but:
+					<blockquote>
+						You are not the customer, you are the product.
+						<blockquote>
+				</section>
+
+				<section>
+				<h2>Why Decentralization?</h2>
+
+					<p>
+					But how can the hosting of a social network be financed? Some competing ideas:
+				</p>
+
+				<img src="img/idea.png" style="width: 60px;"><br>
+					<ol>
+							<li>Everybody pays for himself</li>
+							<li>Bill Gates pays for everyone</li>
+							<li>Friends pay for friends</li>
+
+
+						</ol>
+		<p style="text-align:left;">
+And: Development can be funded by donations. (Or let's hope so)
+</p>
+				</section>
+
+
+
+				<section>
+				<h2>Why Decentralization?</h2>
+
+				<div style="font-size:90%;">
+
+
+				<p class="l">You can either</p>
+				<ul>
+				<li>setup your own server (Charme is even running on Raspberry Pi with good performance!)</li>
+				<li>be hosted on a friends server</li>
+				<li>or pay for it.</li>
+			</ul>
+					<p class="l">while</p>
+					<ul>
+				<li><y>Ad display</y> in messages or posts is inhibited by RSA signatures and <y>user data aquisition</y> is inhibited by end-to-end encryption.	</li>
+				<li>Host servers <y>do not have access</y> to the front-end client.	</li>
+			</ul>
+
+
+			</div>
+				</section>
+
+
+
+				<section>
+				<h2>Why Decentralization?</h2>
+<h3>Before</h3>
+<img style="max-width:300px" src="img/classic.png">
+
+
+				</section>
+
+				<section>
+				<h2>Why Decentralization?</h2>
+
+<h3>After</h3>
+<img src="img/new.png" style="max-width:600px" >
+				</section>
+
+				<section>
+						<h2>Why Decentralization?</h2>
+						<blockquote>
+							"Dude, that graphic looks like the diaspora logo!"
+
+
+						</blockquote>
+		<a href="https://diasporafoundation.org/">Diaspora</a>
+								 is a really great piece of software. But we need  end-to-end encryption to avoid companies and friends reading your messages or private posts.
+
+				</section>
+
+
+								<section  data-background="img/enc.jpg" data-state="img-right">
+									<h2 class="title">Encrpytion</h2>
+								</section>
+
+								<section>
+									<h2>Encrpytion</h2>
+				<u>	Why do we need encryption?</u><br>
+
+						<ol>
+						<li>				To protect data from an evil server admin	</li>
+									<li>			To protect data from attackers	</li>
+	<li>			To protect data from ad agencies (and other agencies)	</li>
+
+										</ol>
+										<hr>
+										<p class="l">
+														<img src="img/idea.png" style="width: 60px; float:left; margin-bottom: 150px; margin-right:30px;">
+
+										Even if the server is hacked, your data is not exposed.
+										An attacker would have to overtake your device too. This way we ensure that one can not obtain 10000 data sets by hacking a single server for example.
+										Client Software and server software are strongly seperated.
+								</p>
+
+								</section>
+
+
+
+								<section >
+									<h2>Public Key Cryptography</h2>
+									In order to hide data from the server we need end-to-end encryption.
+									<br><br>
+									<ul>
+										<li>
+								<u>	The good thing</u>
+									<br>
+									Only people communicating can read the messages.
+								</li>
+
+									<li>	<u>	The bad thing</u>				<br>
+									The public key must be checked, what requires some action from the user.			</li>
+</ul>
+								</section>
+
+
+								<section >
+
+									<h2>		Verifying public keys</h2> <br>
+								<img src="img/fingerprint.png">
+								</section>
+
+								<section >
+									<h2>Encryption Scheme</h2>
+
+								<img src="img/flow2.svg" style="width:100%;">
+								<hr>
+								Secret Information can be the public key directory or message keys for example.
+								</section>
+
+
+
+
+
+							<section >
+										<h2>Public Key Cryptography</h2>
+
+<ul><li>
+										We have to people:  <y>Bob</y> and <y>Alice</y>.<br> Both have a <y>public key</y> (visible to everybody) and a <y>private key</y> (Visible only to themselves).
+		</li>	<li>
+										If Alice wants to send a message to Bob, she can use his public key to <y>encrypt</y> it. Bob (and only Bob) can then use his private key to <y>decrypt</y> it.
+</li><li>
+										As everybody between the two can read and modify data, the public keys have to be <y>verified over a secure channel</y> (Meet in person, ask a friend etc.)
+</li>
+</ul>
+														</section>
+
+				<section  data-background="img/city.jpg" data-state="img-right">
+						<h2 class="title">A Sharing Economy</h2>
+
+				</section>
+
+				<section   >
+					<h2 style="border: 0 !important;">A Sharing Economy</h2>
+					<div style="font-size:90%; ">
+						<hr>
+					<z style="color: white; ">Current status:</z>
+					<br>
+					People buy stuff online from the other side of the world.
+						<hr>		<br>
+					<ul>
+
+
+					<li>Buy stuff from people <y>near you</y>. This may be more expensive in the first case, but <y>saves a lot of resources</y>.
+						Also the people you pay will spend the money in your town/your friend circle etc. later. If you buy stuff from far away the money is gone (At least if your local economy is not balancing the minus.)
+
+					</li>
+						<li>Do not always buy new things: <y>Lend things</y> from your friends!</li>
+					</div>
+				</section>
+
+				<section  data-background="img/sharing.jpg" >
+
+					<br><br><br><br><red>FACT</red><br>
+Social networks are the ideal backbone for a sharing economy. Because people share with people they know or people nearby.
+
+
+</section>
+
+<section >
+	<h2>A Sharing Economy</h2>
+	Example queries:
+<ul>
+	<li>Who of my friends is traveling from Munich to somewhere this weekend with a car and has 2 seats free?</li>
+	<li>Who of the people in my neighbourhood go cycling this weekend?</li>
+	<li>Who can lend me a car in a 10km radius?</li>
+</ul>
+<p style="text-align:left; color: #FF6C00">
+&#8594;  Data can be provided by users and existing web services!
+</p>
+				</section>
+
+
+				<section >
+					<h2>A Sharing Economy</h2>
+
+				<ul>
+				<li>	In Charme, a <i>context</i> is an action that requires two or more people</li>
+				<li> You can either provide a context or search for a context.</li>
+				<li>Some examples: Events, travel routes, activities, meal sharing, selling things, reviews...</li>
+	<li>Charme has a generic scheme to manage context.</li>
+			</ul>
+
+								</section>
+
+
+								<section >
+									<h2>A Sharing Economy</h2>
+
+									Context can be defined by a generic scheme:
+									<pre><code data-trim>
+'move': {
+	name: "Move from A to B"
+	attributes: [
+		{
+			id: "startLocation"
+			type: "location"
+			name: "Start"
+			filter: "location"
+		},
+		{
+			id: "seats"
+			type: "int"
+			name: "Seats"
+			filter: "range"
+		}
+		// ...
+</code></pre>
+
+</section>
+
+
+
+				<section >
+
+				<img src="img/context.png">
+				</section>
+
+
+				<section  data-background="img/tech.jpg" >
+					<h2 class="title">TECHNOLOGY</h2>
+
+
+			</section>
+
+			<section  >
+				<h2>What is new in the frontend?</h2>
+
+<ul>
+	<li><u>Collections:</u> Users do not have a single wall anymore, but rather a set of collections which can be subscribed by other users indiviudally.
+		So you can follow your friends "Music Collection",  but not the "Holiday Photo Collection" for example.
+		</li>
+
+		<li><u>Contextual Posts:</u> As described before
+			</li>
+
+			<li><u>A minimalistic design:</u> To avoid distraction
+				</li>
+</ul>
+
+
+
+		</section>
+
+
+		<section  >
+			<h2>The Backend</h2>
+
+<blockquote>
+	The backends retrieves and return JSON data and manages data in the database.</blockquote>
+	<ul>
+	<li>Mostly written in PHP. It was favoured over node.js as it already contains most functions needed. For node we would have had to many
+		dependencies from a lot of libraries, from which we do not know how long they are supported.
+	</li>
+
+	<li>The database in use is MongoDB, mainly, because we can store JSON from the frontend easily and it is called scalable.
+		</li>
+
+
+	</ul>
+
+	</section>
+
+
+	<section  >
+		<h2>The Backend</h2>
+
+	<ul>
+	<li>The Gearman library is used to send out messages.
+	</li>
+
+	<li>To provide WebRTC support to the frontend, we use ZeroMQ.
+	</li>
+
+	<li>For Push Notifications on Android, we use Google Cloud Messaging. Google can not read the messages however, as we only inform the device
+		that there are new messages on the server.
+	</li>
+
+
+
+	</ul>
+
+	</section>
+
+
+
+
+	<section  >
+		<h2>The Backend</h2>
+
+	<ul>
+	<li>Fedora and Debian are the operating systems Charme can run on right now
+	</li>
+
+	<li>Background services for WebRTC and Gearman (<i>"bg_events.php"</i> and <i>"bg_hydra.php"</i>)
+	</li>
+
+	<li>Administration via console. To check status run "admin/status.sh"</i> and to start background services run <i>"admin/startbg.sh"</i>.
+	</li>
+
+
+	</ul>
+
+	</section>
+
+
+
+
+		<section  >
+			<h2>Future Work / Roadmap</h2>
+
+
+		<u>Until June 2016:</u> Fix most of security stuff, release Beta version.
+		<hr>
+Afterwards:<br>
+		<ul>
+		<li>Improve cross server search using Distributed Hash Tables</li>
+		<li><u>API:</u> Allows developers to create own applications using the Charme user data</li>
+		<li>iOS App</li>
+
+
+	</ul>
+
+		</section>
+
+
+		<section  >
+			<h2>Further information</h2>
+			<ul>
+				<li><a href="http://ww.github.com/mschultheiss/Charme">Github</a></li>
+				<li><a href="TODO">The paper</a></li>
+
+			</ul>
+		</section>
+
+
+
+
+<section  >
+	<div style="padding-top:300px">
+	THE END (FINALLY!)</div>
+</section>
+
+
+				<section>
+					<h2>Sources</h2>
+					Hipster background images from unsplash.com:
+					<div style="font-size: 80%;"
+					<p>
+
+						<ul>
+					<li>	<a href="https://images.unsplash.com/photo-1431538510849-b719825bf08b?q=80&fm=jpg&s=6fd7a983e3b43e66d2b6062856b9df66">
+							Image 1
+						</a>
+						<li>	<a href="https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?q=80&fm=jpg&s=b979de40396023d0bc6640cbe3ed9652">
+							Image 2
+						</a>
+						<li>	<a href="https://images.unsplash.com/45/ZLSw0SXxThSrkXRIiCdT_DSC_0345.jpg?q=80&fm=jpg&s=06a10eca594675f97c583d7f2806b03b">
+							Image 3
+						</a>
+					</li>
+						<li>	<a href="https://images.unsplash.com/photo-1430132594682-16e1185b17c5?q=80&fm=jpg&s=a70abbfff85382d11b03b9bbc71649c3">
+							Image 4
+						</a>
+					</li>
+					</ul>
+
+
+					</p>
+				</div>
+
+				</section>
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: false,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

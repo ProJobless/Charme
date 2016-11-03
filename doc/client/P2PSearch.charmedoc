@@ -1,0 +1,11 @@
+/***
+	Name:
+	TEXT: P2P Search
+
+	Info:
+	When we think about search, it is obviously that we can not send a request to every server within the Charme network to search for a certain item. Therefore every server has to cache items of other server for the search index.
+
+	Some links first
+	
+	- http://www.quora.com/Could-a-decentralized-P2P-search-engine-be-created
+*/

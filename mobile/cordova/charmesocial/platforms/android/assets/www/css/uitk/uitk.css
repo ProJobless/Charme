@@ -1,0 +1,195 @@
+@font-face {
+    font-family: 'fira_sans_otbold';
+    src: url('lib/fira/Fira Sans WOFF/FiraSans-Bold.woff') format('woff');
+
+ 	font-weight:  normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'fira_sans_otlight';
+    src: url('lib/fira/Fira Sans WOFF/FiraSans-Light.woff') format('woff');
+
+}
+@font-face {
+    font-family: 'fira_sans_regular';
+    src: url('lib/fira/Fira Sans WOFF/FiraSans-Regular.woff') format('woff');
+
+}
+body
+{
+font-family: "fira_sans_regular";
+background-color: #eee;
+padding: 0px;margin:0px;
+-webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    cursor:default;
+    line-height: 20px;
+
+}
+h1,h2,h3
+{
+	font-family: "fira_sans_otlight";
+}
+h1
+{
+	padding: 16px 0;
+		font-size: 130%;
+	margin: 0;
+}
+h1:first-child,h2:first-child,h3:first-child
+{
+	padding-top: 0px;
+}
+
+h2
+{
+	padding: 16px 0;
+	font-size: 120%;
+	margin: 0;
+}
+h3
+{
+	padding: 16px 0;
+	font-size: 110%;
+	margin: 0;
+}
+
+.cui_mbutton
+{
+	padding: 8px;
+	border-left: 1px #ccc solid;
+	display: inline-block;
+	float:left;
+color:gray;
+
+}
+.cui_imgbutton:hover
+{
+	color:gray !important;
+}
+.cui_imgbutton, .cui_imgbutton:hover
+{
+	font-size: 14px;
+border:1px transparent solid;
+	color:silver;
+
+	border-radius: 2px;
+	padding: 9px 7px 6px 7px;
+	position: relative;
+
+}
+.cui_imgbutton:active
+ {
+ 	color:silver;
+ 	border:1px #efefef solid !important;
+ 	background-color: #efefef;
+ }
+.cui_mbutton:first-child
+{
+	border-left: 0;
+}
+.cui_mbutton:active
+{
+	background-color: #efefef;
+}
+.cui_menu
+{
+	background-color: #fff;
+	border-bottom:1px #ccc solid;
+
+
+}
+.cui_p1
+{
+	padding: 32px;
+}
+.cui_p2
+{
+	padding: 16px;
+}
+input, textarea, .selectable {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+    font-family: "fira_sans_regular";
+    font-size: 14px;
+}
+input[type=text], .box
+{
+	border:1px #ccc solid;
+
+	border-radius: 2px;
+	padding: 7px;
+margin:0px;
+
+}
+.button.gray:active,.button.light:active
+{
+	border-color: #000;
+	color:#000;
+	background-color: transparent;
+
+}
+.button:hover
+{
+	color:#fff;
+
+}
+
+.button.gray
+{
+	border:1px silver solid;
+	background-color: transparent;
+	color:gray;
+	padding: 6px;
+}
+.button.light
+{
+	border:1px #1A3C87 solid;
+	background-color: transparent;
+	color:#1A3C87;
+	padding: 6px;
+}
+
+select
+{
+	border:1px #efefef solid;
+	 padding: 7px 6px 5px 6px;
+	 background-color: transparent;
+	 border-radius: 2px;
+    outline:none;
+    background-color: #efefef;
+    display: inline-block;
+
+    cursor:pointer;
+}
+
+.button
+{
+
+
+	background-color: #1A3C87;
+	border-radius: 2px;
+	cursor: default;
+	color:#fff;
+	letter-spacing: 1px;
+	font-size: 15px;
+	position: relative;
+	top:-2px;
+	padding: 7px;
+	text-transform: uppercase;
+	font-weight:normal;
+font-family: "fira_sans_otlight";
+	display: inline-block;
+}
+.button:active
+{
+	background-color: #000;
+	color:#fff;
+
+}

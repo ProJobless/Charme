@@ -1,0 +1,93 @@
+<!--
+Type:
+See server/charme/Lib/Counter/Notify.php
+
+
+#: not implemented yet
+-->
+ <% if (rc.notifications_get.length == 0)  { %>
+<div class='item'>
+  No notifications there yet...
+  </div>
+
+     <% } %>
+
+  <% _.each( rc.notifications_get, function(item){ %>
+
+
+
+ <% if (item.type == 4)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.adder) %>'><%- item.name %></a>
+added you to the lists.
+</div>
+
+
+  <% } %>
+
+
+
+
+
+ <% if (item.type == 3)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.follower) %>'><%- item.name %></a>
+follows your
+<a href='#user/<%- encodeURIComponent(item.owner) %>/collections/<%- item.collectionId %>'><%- item.collectionName %> collection.</a>
+</div>
+
+
+  <% } %>
+
+
+ <% if (item.type == 5)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.liker) %>'><%- item.name %></a>
+likes your
+<a href='#user/<%- encodeURIComponent(item.owner) %>/post/<%- item.postId %>'>status</a>
+</div>
+
+
+  <% } %>
+
+
+ <% if (item.type == 7)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.keyOwner) %>'><%- item.name %></a>
+ has a new Public Key. Please verify it.
+</div>
+
+
+  <% } %>
+
+
+
+ <% if (item.type == 6)  { %>
+
+
+<div class='item'>
+<a href='#user/<%- encodeURIComponent(item.userId) %>'><%- item.name %></a>
+commented your
+<a href='#user/<%- encodeURIComponent(item.postowner) %>/post/<%- item.postId %>'>status</a>
+</div>
+
+
+  <% } %>
+
+
+
+
+
+
+
+
+
+  <% }); %>

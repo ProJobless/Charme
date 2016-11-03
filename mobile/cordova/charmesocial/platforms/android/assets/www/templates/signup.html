@@ -1,0 +1,146 @@
+<!--
+Use HTML5 tag "pattern" with regex to validate forms.
+and make sure it matches with server Validation
+-->
+
+<div style='padding:32px;border-bottom:1px silver solid; background-color:#fff'>
+
+	<a href='#welcome'>&laquo; Home</a>
+</div>
+
+<div style='background-color:#fff; padding:32px'>
+
+	<div class='infobox' style='margin: 0; margin-top:0px; margin-bottom:32px'>
+		WARNING: This is Charme Beta. Do not provide any personal or private data. This is for testing purposes only!
+	</div>
+	<div id="prompt_server">
+		<div style="margin-bottom:16px; ">
+		First, you need to tell me your host server, where your data is hosted on:
+	</div>	<div>
+		<label for="vorn">Server:</label>	<input type="text" id="input_hostserver" class="box" placeholder="yourserver.com">
+			</div>
+			<br>
+	<label for="vorn" class="onlyNoResponsive">&nbsp;</label><a id='but_hostok' class='button'>Continue</a>
+	</div>
+
+
+
+	<form id='form_signup' style="display:none">
+		<div class='formDiv'>
+			<div>
+				<label for="vorn">Username:</label>
+				<input id='inp_username' name='username' style='width:150px' placeholder="username" class='box'> @
+				<div class="onlyResponsive" style="height:8px; padding:0px;"></div>
+				<input name='server' style='width:150px' value='' id='inp_server'  class='box'>
+
+			</div>
+
+
+
+			<!--
+			This is a feature that could be added later to avoid everybody can  sign up on a server
+			<div>
+				<label for="vorn">Registration Code:</label>
+				<input class='signupfield box' name='regcode' placeholder="XXXXXXXXXXX">
+			</div>
+
+		-->
+		</div>
+
+		<label for="vorn">Certificate:</label>
+		<div style='padding-bottom:16px; display:inline-block; max-width:300px;'>
+
+
+
+
+			<div id='template_certhint' style=" padding-top:8px;">
+				A keypair is needed for encrypted communication. Click on create Keypair to create a keypair.
+				<br>
+				<br>
+
+
+				<a id='but_makecert' class='button'>Create Keypair</a>
+			</div>
+
+			<div style='display: none; padding-top:8px;' id='template_certok'>
+
+
+				Your certificate Key is:
+
+				<!-- Do not change this div to an input field as it should be ignored by jQuerys form serializer. The certificate key is not allowed to be submitted to the server!!!!!!! -->
+				<div class="selectable" style='padding:16px; margin:16px 0; background:#515151; color:#fff; text-align:center; border-radius:2px; ' id='template_certkey'>Error creating key
+				</div>
+
+
+
+				<b>Warning: The keypair can not be restored if you loose the passphrase. Save it somewhere where nobody but you can find it.</b>
+
+
+				<input name='rsa' id='rsa' type='hidden' value=''>
+				<input name='pubkey' id='pubkey' type='hidden' value=''>
+				<input name='pemkey' id='pemkey' type='hidden' value=''>
+
+			</div>
+		</div>
+
+		<br style="clear: both" />
+		<div class='formDiv'>
+			<div>
+				<label for="vorn">First Name:</label>
+				<input placeholder="" name='firstname' class='box signupfield'>
+			</div>
+			<div>
+				<label for="vorn">Last Name: </label>
+				<input placeholder="" class='box signupfield' name='lastname'>
+			</div>
+
+			<!-- email disabled for security
+			<div>
+				<label for="vorn">Email:</label>
+				<input placeholder="" class='box signupfield' disabled="disabled" value="EMAIL NOT NEEDED" name='email'>
+			</div>
+		-->
+
+			<div>
+				<label for="vorn">Password: </label>
+				<input placeholder="" id="inp_pass" type='password' class='box signupfield' name='password'>
+			</div>
+			<div>
+				<label for="vorn">Repeat Password:</label>
+				<input placeholder="" id="inp_pass2" type='password' class='box signupfield' name='password2'>
+			</div>
+			<div>
+				<label for="vorn" class="onlyNoResponsive">&nbsp;</label><a id='but_signupok' class='button'>Submit</a>
+			</div>
+
+		</div>
+
+		<div class='infobox' id='box_errors' style='margin: 0; margin-top:16px; marign-bottom:0'>
+
+			<div id='error1'>Invalid Registration Code</div>
+			<div id='error2'>Invalid characters in username</div>
+			<div id='error3'>Username lenght must be between 2 and 30 characters</div>
+
+			<div id='error4'>Password lenght must be between 10 and 30 characters</div>
+			<div id='error5'>Password contains illegal characters</div>
+			<div id='error6'>Please create a certificate</div>
+
+			<div id='error7'>Invalid mail address</div>
+
+			<div id='error8'>Invalid server</div>
+
+			<div id='error9'>Name must have between 2 and 30 characters and should not contain special characters</div>
+
+			<div id='error10'>Please accept the terms.</div>
+			<div id='error11'>Outdated Charme Client Version. Please update your client software.</div>
+			<div id='error12'>Password do not match</div>
+			<div id='error13'>Public key does not exist. (This error should not happen)</div>
+
+			<div id='error13'>Name lenght must be between 2 and 30 character</div>
+
+
+	</form>
+	</div>
+
+</div>
+<div class="lightLink"><a href="#about">About</a> </div>

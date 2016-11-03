@@ -1,0 +1,81 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Prologue}{3}{section.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Introduction}{4}{section.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Existing work}{5}{section.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Encryption and Security}{6}{section.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.1}Formal Notation used in this paper}{6}{subsection.4.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {4.1.1}Reach}{6}{subsubsection.4.1.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2}Cryptographic Primitives}{6}{subsection.4.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {4.2.1}AES-CBC }{6}{subsubsection.4.2.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {4.2.2}RSA}{7}{subsubsection.4.2.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {4.2.3}Further reading}{8}{subsubsection.4.2.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3}Used Libraries}{8}{subsection.4.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Implementation}{9}{section.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1}Backend Technology Stack}{9}{subsection.5.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.2}Separation of Client and Server}{9}{subsection.5.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.3}Public Keys Verification}{10}{subsection.5.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.4}Encryption}{12}{subsection.5.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.4.1}Edgekeys}{13}{subsubsection.5.4.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.4.2}Post Encryption}{13}{subsubsection.5.4.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.4.3}Message Encryption}{13}{subsubsection.5.4.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.4.4}Encryption of Personal Information}{13}{subsubsection.5.4.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.5}Key Updates}{14}{subsection.5.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.6}Primary Attack Vectors}{14}{subsection.5.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.6.1}Data Integrity}{14}{subsubsection.5.6.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.6.2}MITM on Client Software}{15}{subsubsection.5.6.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.6.3}New Conversations with malicious userId/Name pair}{15}{subsubsection.5.6.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.6.4}XSS}{16}{subsubsection.5.6.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.6.5}Anonymity of Search Request and Profile Visits}{16}{subsubsection.5.6.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.6.6}Other Attacks}{16}{subsubsection.5.6.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Protocol Specification }{17}{section.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.1}Login}{17}{subsection.6.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.2}Search}{17}{subsection.6.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.3}Add public key to keydirectory}{17}{subsection.6.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.4}Recryption of data}{18}{subsection.6.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.5}Signup}{18}{subsection.6.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.6}Init Conversation}{19}{subsection.6.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.7}Add People to Conversation}{20}{subsection.6.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.8}Write message}{20}{subsection.6.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7}Future Work}{22}{section.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {8}Terminology}{23}{section.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {9}Sources}{24}{section.9}

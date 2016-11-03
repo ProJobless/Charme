@@ -1,0 +1,15 @@
+ <div class='p32'>
+
+ <% _.each( rc.piece_request_list.items, function(item2){ %>
+    
+<div>
+    <a  href='#user/<%- item2.invader %>'><%- item2.invader %></a> asks <%- item2.key %>
+
+    <div  data-key="<%- item2.key %>" data-invader="<%- item2.invader %>" style='padding:8px 0;'>
+    <a class='button btnAccept' >Accept</a> or <a class='btnDecline' >Decline</a>
+      </div>
+<br>
+    </div>
+  <% }); %>
+
+  </div>

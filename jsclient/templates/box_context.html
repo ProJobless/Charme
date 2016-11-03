@@ -1,0 +1,57 @@
+<div style='width:400px; width:100%;'>
+
+
+
+<div id='contextContainer' style='width:400px; position: relative;overflow:hidden;'>
+
+<div class="scroller">
+	<div style="float:left; width:384px;padding:8px; ">
+	<a href='javascript:void(0);'  data-type="move" title="Move" class="contextItem">Move</a>
+	<a  href='javascript:void(0);' data-type="offer"  title="Sell"  class="contextItem" style="background-position:-70px 0px;">Sell</a>
+	<a  href='javascript:void(0);' data-type="review"  title="Review" class="contextItem" style="background-position:-140px 0px;">Review</a>
+	<a  href='javascript:void(0);' data-type="publicevent" title="Event" class="acb contextItem" style="background-position:-210px 0px;">Event</a>
+
+		<a  href='javascript:void(0);' data-type="activity" title="Activity" class="acb contextItem" style="background-position:-280px 0px;">Activity</a>
+
+			<a  href='javascript:void(0);' data-type="service" title="Service" class="acb contextItem" style="background-position:-350px 0px;">Service</a>
+			<a  href='javascript:void(0);' data-type="meal" title="Meal" class="acb contextItem" style="background-position:-420px 0px;">Meal</a>
+			<a  href='javascript:void(0);' data-type="lend" title="Lend Something" class="acb contextItem" style="background-position:-490px 0px;">Lend Something</a>
+
+	</div>
+
+	<div style="float:left; left:400px; width:344px;padding:32px;">
+		<a id="but_goback">Go Back</a>
+		<hr style="border:1px silver dotted;">
+
+		<form id='contextDetails'>
+
+
+		</form>
+
+			<div style='padding:8px 0px; font-weight:bold;'>Audience</div>
+			<select id="audienceSelector">
+					<option value="0">World (Everybody on the planet)</option>
+				<% _.each( rc.userlists, function(item2){ %>
+					<option name="audience" value="<%- item2._id.$id  %>"><%- item2.name %></option>
+				<% }); %>
+			</select>
+			<% if ( rc.userlists.length == 0)  { %>
+				<div style="margin-top: 8px;">
+				<b>Hint:</b> Create lists to limit the audience.
+				</div>
+			<% } %>
+
+
+	</div>
+	<br style="clear:both;">
+</div>
+
+
+<br style="clear:both;">
+</div>
+<div class='boxMargin'>
+
+<a id="but_addContext" style='display:none' class='button' >Add Context</a>
+<a id='box_info_ok' href='javascript:ui_closeBox();' class='button gray' style='margin-left:8px;'>Close</a>
+
+</div></div>

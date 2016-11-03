@@ -1,7 +1,0 @@
-Changes:
-@WideImage, File: Image.php:
-- Changed echo to return at output function ...and removed header 
-
-@Latex2ML
-- Removed document complete functions at bottom, call translate() in function initPAge in page.js
-- Add AMtranslated=true in translate(), because otherwise funciton is called only once per document complete.

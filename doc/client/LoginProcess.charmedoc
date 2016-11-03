@@ -1,0 +1,15 @@
+/***
+	Name:
+	TEXT: Login Process
+
+	Info:
+	The `login()` function is located in `routes.js`. After having read out username and password,
+	we send a `user_login` we either decrypt the passphrase with the password first.
+	Then we need to get the salt value for the user by sending the request `reg_salt_get` to  the server.
+	We hash the password with this value and send it to the server by calling `user_login`.
+	Then we get the encrypted keyring which contains all private and public keys of the user and decrypt it with the passphrase.
+
+	Graph:
+	graph TB
+	TODO --> TODO
+*/

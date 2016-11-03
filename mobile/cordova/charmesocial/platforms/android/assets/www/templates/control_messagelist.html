@@ -1,0 +1,20 @@
+
+
+ <% _.each( rc.messages, function(item){ %>
+    <li 
+    <% if (!item.read)  { %>class='new'
+     <% } %>
+     >
+
+
+    	<a data-messageid='<%- item.messageData.conversationId %>' href='#talks/<%- item.messageData.conversationId %>'>&raquo; <%- item.messageTitle %><div><%- item.messagePreview %>
+   
+    </div></a></li>
+
+
+
+  <% }); %>
+
+  <a class='more' id='moremsg' style='margin:16px;'>
+ MORE
+  </a>

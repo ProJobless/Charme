@@ -1,0 +1,24 @@
+
+<div class='mediaview'>
+
+<a id='but_downloadimgs'>Download Images as ZIP Archiv</a>
+ <% _.each( rc.messages, function(item){ %>
+
+
+
+
+
+ <% if (item.fileId)  { %>
+ <div>
+<span data-revision='<%- item.message.object.msgKeyRevision %>'  class=' imageid' style='height:100px; display:inline-block; width:100px;' data-location='http://<%- item.message.object.sender.split("@")[1] %>/charme/fs.php?cache=true&enc=1&id=<%- item.fileId %>'></span>
+</div>
+ <% } %>
+
+
+<%- item.msg %>
+
+
+
+
+  <% }); %>
+</div>

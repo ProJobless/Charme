@@ -1,0 +1,32 @@
+
+
+
+<div style='max-width:400px'>
+<div style='padding:16px;'>
+  <%- rc.simpleMessage %>
+  <br>  <br>
+  <a onclick="$('#errorDetails').show(); $(this).hide();">Details</a>
+  <div id="errorDetails" style="display:none;">
+<%- rc.errorMessage %>
+</div>
+
+
+
+
+
+
+
+ <% if (rc.allowLogoutOnError)  { %>
+   <div><br>
+   If this  server has been shut down completly, you can perform a <a href="javascript:logout(undefined, true)">complete logout</a> and login as another user.
+   </div>
+
+  <% } %>
+
+
+
+</div>
+<div class='boxMargin'>
+
+<a onclick="ui_closeBox()" class='button' >Close</a>
+</div></div>

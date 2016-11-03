@@ -1,32 +1,84 @@
-math /* Increase MAthML font size*/
+.requiredBg {
+  background-color: #ffcccc;
+}
+.smiliebox a
 {
-	font-size: 14px;
+ width:32px;
+ height: 32px;
+ 	background-image:url(smilies.png);
+	display: inline-block;
+	margin: 4px;
+
+}
+.smiliebox
+{
+	height: 200px;
+	overflow: auto;
+}
+.smiliebox a:active
+{
+-webkit-filter: brightness(0.5) ;
+
+}
+.smiliearea img
+{
+width:32px;
+ height: 32px;
+ 	background-image:url(smilies.png);
+	display: inline-block;
+	border:0;
+	margin: 1px;
+
+}
+.smilie
+{
+	width:32px;
+ height: 32px;
+ 	background-image:url(smilies.png);
+	display: inline-block;
+	border:0;
+	margin: 1px;
+}
+.button32 a
+{
+	background-image:url(buttons.png);
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	opacity: .5;
+	margin-left: 8px;
+}
+.button32 a:active
+{
+	opacity: 1.0;
 }
 .more
 {
 
 	display: block;
-	border:1px silver solid;
+
 	padding:16px;
 	text-align: center;
-	border-radius: 2px;
+	box-shadow:   0 0 1px #ccc;
+
+	color: #000;
 	-webkit-user-select: none;
-    -moz-user-select: none; 
-    -khtml-user-select: none; 
+    -moz-user-select: none;
+    -khtml-user-select: none;
     background-color: #fff;
 }
 .more:active
 {
-
+box-shadow:   0 0 1px #aaa;
 	background-color: #efefef;
 }
 
 .attachmentContainer div
-{ 
+{
 	padding:8px;
 	padding-right: 0;
 	border-bottom: 1px silver solid;
-	
+
 
 
 }
@@ -88,7 +140,7 @@ position: relative;
 }
 .switcher
 {
-	
+
 	display: inline-block;
 	height:30px;
 	background-color: #dedede;
@@ -105,70 +157,94 @@ position: relative;
 	background-color: #fff;
 	padding: 16px;
 		box-shadow:   0 0 3px #aaa;
-		
+
 }
 .actionIcon
 {
-
-width: 48px;
-height: 48px;
-
-	background-image:url(actions2.png);
-
+	width: 48px;
+	height: 48px;
+	background-image:url(actions2.svg);
 	display:inline-block;
 	cursor:pointer;
-
-
 }
 
 .uiBlock
 {
-		position:fixed;
-		width:100%;
-		height:100%;
-		display:none;
-		background-color:#efefef;
-		z-index:9998;
-		
-		
+	position:fixed;
+	width:100%;
+	height:100%;
+  overflow-y: auto;
+	display:none;
+	background-color:#efefef;
+	z-index:9998;
 }
 .boxMargin
 {
 	padding: 16px;
-			background-color:#efefef;
-			border-top:1px silver solid;
-			text-align: right;
+	background-color:#efefef;
+	border-top:1px silver solid;
+	text-align: right;
 }
+.imagePreview .close
+{
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	font-size: 20px;
+	border:1px #fff solid;
+	color:#fff;
+	border-radius: 100px;
+	padding: 6px 8px;
+}
+.imagePreview img{
+  -webkit-box-align:center;
+  -webkit-box-pack:center;
+  display:-webkit-box;
+}
+.imagePreview
+{
+	overflow: auto;
+	position:fixed;
+		z-index:9999;
+		left:0;
+		top:0;
+		background-color: #000;
+		width:100%;
+		height:100%
+}
+
 .fixedBox
 {
-	position:fixed;
-	
+	position:relative;
+
 	background-color:#fff;
 	border:1px silver solid;
 	margin: 0 auto;
+	width: 100%;
+
 	left:50%;
-	margin-left:-150px;
+
 	z-index:9999;
 	box-shadow: 0px 0px 3px rgb(170, 170, 170);
-	
-	
+
+
 }
 
 .collection .square
 {
-	
+
 	width:100px;
 	height:100px;
 	background-color:red;
 	margin: 8px;
 	float:left;
-	
+
 }
 
 
 .tdinfo
 {
-	
+
 width:120px;
 vertical-align:top;
 padding-top: 12px;
@@ -196,7 +272,7 @@ h1
 }
 h1:first-child
 {
-	
+
 margin-top:0;
 padding-top:0;
 }
@@ -206,15 +282,16 @@ padding-top:0;
 	list-style-type:none;
 
 	margin:0;
-	
+
 }
 .tabBar ul li A
 {
-	display:block;padding:8px; cursor:pointer;
+	display:block;padding:8px;
 	color:#fff;
 	font-weight: normal;
 	letter-spacing: 1px;
 	text-transform: uppercase;
+	cursor:  default;
 }
 .tabBar ul li a
 {
@@ -242,25 +319,19 @@ box-shadow:  inset 0 0 3px #000;
 	overflow:auto;
 }
 .p16
-{	
+{
 	padding:16px;
 	overflow:auto;
 }.p24
-{	
+{
 	padding:24px;
 	overflow:auto;
 }
 
-.box
-{
-	
-padding:4px;
-border:1px silver solid;
-border-radius:2px;margin:0;
-}
+
 .profilePic
 {
-	
+
 float:left;
 margin-right:16px;
 border-radius: 150px;
@@ -279,53 +350,30 @@ textarea
 }
 a:hover
 {
-	
+
 color:#000;
 }
-a 
+a
 {
-	
+
 	color:#1A3C87;
-	cursor:pointer;
+
 	text-decoration:none;
 	font-weight:bold;
 }
 .lightLink a
 {
-	color:#333;
+	color:#aaa;
 	text-decoration:none;
 	font-weight:normal;
 }
-.button {
-
-    padding:8px;
-    position:relative;
-margin:0;
-    text-decoration:none;
-    color:#fff;
-    background-color: #1A3C87;
-
-font-family: OpenSansLight;
-
-    border-radius: 2px;
-    text-transform: uppercase;
-   letter-spacing: 1px;
-
-
-   
-	display:inline-block;
-	cursor:pointer;
-	font-weight:bold;
-
+.lightLink a:hover
+{
+	color:#888;
+	text-decoration: none;
 }
- 
- .button:active {background-color: #000614;  box-shadow: inset 0 0 10px #000;}
-
-.button:hover {
-
-   color:#fff;
-
-
+.lightLink {
+	text-align:right; padding:16px 0px;
 }
 
 
@@ -362,25 +410,25 @@ Plugins
   visibility: visible;
 }
 .nano > .pane {
-  background : rgba(0,0,0,.25);
+  background : rgba(0,0,0,.1);
   position   : absolute;
   width      : 10px;
   right      : 0;
   top        : 0;
   bottom     : 0;
   visibility : hidden\9; /* Target only IE7 and IE8 with this hack */
-  opacity    : .01; 
+  opacity    : .01;
   -webkit-transition    : .2s;
   -moz-transition       : .2s;
   -o-transition         : .2s;
   transition            : .2s;
-  
+
 }
 .nano > .pane > .slider {
   background: rgba(255,255,255,.99);
   position              : relative;
-  margin                : 0 1px;
- 
+  margin                : 1px 1px;
+
 }
 .nano:hover > .pane, .pane.active, .pane.flashed {
   visibility : visible\9; /* Target only IE7 and IE8 with this hack */

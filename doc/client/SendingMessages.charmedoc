@@ -1,0 +1,54 @@
+/***
+	Name:
+	TEXT: Sending Messages
+
+	Info:
+	When sending `messages`, the files play a *significant role*:
+
+	- talks.js - UI Logic
+	- req.php - The server component
+	- hydra.php - message distribution via Gearman
+
+	The message answer action is triggered by `$('#but_instantsend').click`. First we get the key for the current conversation and define `msgKey` with it. The Message is encrypted with that key and send to the server with `message_distribute_answer`. The request is then parsed on the server in req.php with action `message_receive`.
+
+	Graph:
+	graph TB
+		subgraph Client
+	    A[Action] --> B>New Conversation]
+	    B --> K[TODO]
+	    A[Action] --> C>Answer to Conversation] 
+	    C --> D[but_instantsend]
+	    end
+	   
+	    D -- Request to Server A, the senders server  --> E[message_distribute_answer]
+	     subgraph Server
+	    E --> F[hydra.php process forwards message to receiver servers]
+	    F --> H[message_receive on Server A]
+	    F --> G[message_receive on Server B]
+	    F --> J[message_receive on Server C]
+	    F --> M[...]
+	    end
+
+	    style D fill:#BDEDE3;
+	    style H fill:#BDEDE3;
+	    style G fill:#EDDBBD;
+	    style J fill:#EDDBBD;
+	    style M fill:#EDDBBD;
+
+*/
+
+/***
+	Name:
+	TEXT: Encrypting Messages
+
+	Info:
+	Messages are encrypted with public key cryptography. When adding a users key to a key directory, an asymmetric AES **edgekey** is established from user A to user B. This is done for performance reasons. The edgekeys are obtained via request action `edgekeys_byUserIds`.
+
+	Graph:
+	graph TB
+	A[1. Get edgekeys for all receivers] --> C[4. Encrypt messagekey with edgekey for each user]
+	B[2. Generate unique 32 byte message key] --> C
+	C --> D[4. Encrypt message with messagekey]
+	D --> E[5. Sign message with private key]
+	E --> F[6. message_distribute request to server]
+*/ 

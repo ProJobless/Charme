@@ -1,4 +1,4 @@
-<?
+<?php
 namespace App\Users;
 
 
@@ -9,23 +9,31 @@ class UserRegistration implements \App\Models\Action
 	{
 		$this->data = ($d);
 
-	} 
+	}
 	function execute()
 	{
 		global $CHARME_SETTINGS;
 		// Access Attributes over $_GET[formname]
-	
+
 		$data = $this->data;
 
 		/*$m = new Mongo();
 		$db = $m->charme;
 		$collection = $db->users;
 
-	
+
 		$collection->insert($obj);
 		*/
 		$arr= array("test" => true);
-		
+
+
+
+	 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			    $randomString = '';
+			    for ($i = 0; $i < 32; $i++) {
+			        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+			    }
+
 
 
 
@@ -55,11 +63,7 @@ class UserRegistration implements \App\Models\Action
 		* Validation part:
 		*/
 
-		if ($data["password"] != $data["password2"])
-			$arr["error"] = 12;
-		else if (strlen($data["password"]) < 4 || strlen($data["password"]) >30)
-			$arr["error"] = 4;
-		else if (strlen($data["username"]) < 2 || strlen($data["username"]) >30)
+		 if (strlen($data["username"]) < 2 || strlen($data["username"]) >30)
 			$arr["error"] = 3;
 		else if ($data["rsa"] == "" || !isset($data["rsa"] ))
 			$arr["error"] = 6;
@@ -69,20 +73,49 @@ class UserRegistration implements \App\Models\Action
 		{
 			// Insert user into database...
 			$arr["success"] = 1; // Registration was successful!
-	
+
 			$obj = array(
 			"username" => $data["username"],
-			"password"=>hash('sha256',$CHARME_SETTINGS["passwordSalt"].$data["password"]),
+			"password"=>$data["hashpass"],
 			"userid" => $data["username"]."@".$data["server"],
 			"email" => $data["email"],
 			"firstname" => $data["firstname"],
+			"signedData" => $data["signedData"],
 			"lastname" =>$data["lastname"],
-			"pubKey" => $data["pubkey"],
-			"rsa" => $data["rsa"]
+			"name" => $data["firstname"]." ".$data["lastname"],
+			"salt" => $randomString,
+			"publickey" => json_decode($data["pubkey"], true), // Unencrypted public key
+			"keyring" => $data["rsa"] // Encrypted AES keyring
 		);
 			$col = \App\DB\Get::Collection();
 
 			$col->users->insert($obj);
+
+			$col->localkeydirectory->insert(
+				array(
+					"userid" => $data["username"]."@".$data["server"],
+					"publicKey" =>  json_decode($data["pubkey"], true),
+					"revision" => 1,
+					"pemkey" => $data["pemkey"]
+					));
+
+			// Set session Id
+			$_SESSION["charme_userid"] =  $data["username"]."@".$data["server"];
+
+			// Create some default lists
+			$friendListId = \App\CRUD\Lists::CreateList("Friends",$_SESSION["charme_userid"] );
+			clog("frid list".$friendListId);
+
+			$colleagues = \App\CRUD\Lists::CreateList("Colleagues",$_SESSION["charme_userid"] );
+			$fellow = \App\CRUD\Lists::CreateList("Fellow students",$_SESSION["charme_userid"] );
+
+			\App\CRUD\Filter::CreateFilterWithList($_SESSION["charme_userid"] , "offer", "Local Shop", array($friendListId, 	$colleagues, 	$fellow), "This filter shows things your friends and colleagues give away. You can create your own filters by clicking on the plus symbol. ");
+			\App\CRUD\Filter::CreateFilterWithList($_SESSION["charme_userid"] , "activities", "Activities", array($friendListId),"This filter shows your friends activities. You can create your own filters by clicking on the plus symbol. ");
+
+			\App\CRUD\Collections::Insert($_SESSION["charme_userid"] , "Things about me (Public)", "Selfies, Stories and mor of me");
+			\App\CRUD\Collections::Insert($_SESSION["charme_userid"] , "Music and Videos I like (Public)", "Stuff I like so far...");
+
+
 		}
 
 

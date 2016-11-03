@@ -1,8 +1,0 @@
-<?
-function attach_store()
-{
-
-
-}
-
-?>

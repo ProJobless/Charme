@@ -1,32 +1,34 @@
+<div style='background-color: #fff; '>
+
+
+<div  class='loggedOutOnly' style='padding:32px;border-bottom:1px silver solid; background-color:#fff' >
+<a href='#welcome'>&laquo; Home</a>
+</div>
+
+
 
 <!-- THE FOLLOWING COPYRIGHT NOTICE SHALL NOT BE REMOVED (See license.txt for more information)-->
-	<div class="p32" style='float:right; width:200px; background-color:#efefef; margin:32px;'>
+	<div class="p32 respColumn" style='float:right; width:240px;  ' >
 	<h3 style='margin-top:0'>About Charme</h3>
-	This social network is based on Charme.
-	You can find more information about Charme on <a href="www.charmeproject.com">www.charmeproject.com</a>.
 
+	Developed by <a href="http://www.mschultheiss.com">Manuel Schultheiß</a>. <a href="http://mschultheiss.com/?page_id=9">Imprint</a>
+	<br><br>&bull;  <a href="http://mschultheiss.github.io/Charme">More information</a><br>&bull; <a href='https://github.om/mschultheiss/Charme/blob/master/doc/libraries.md'>Used libraries</a>
 
-	<h3>Credits</h3>
-	Developed by <a href="http://www.mschultheiss.com">Manuel Schultheiß</a>. <br/><br/>
+	<h3>Contributors</h3>
+<ul>
+<li>Florian Scheibner: Hosting and Testing</li>
+</ul>
+	If you contributed something and want to read your name here, please write me an email.
+	Thanks to all beta testers!
 
-
-	<b>Cryptography:</b><br/>  Stefan <br/>
-	<b>Beta Test:</b><br/> Isa, Michi<br/> 
-
-	
+	<h3>Bugs</h3>
+	Thank you so much for participating in the Charme Beta program. Please report all bugs you can find on <a href='https://github.com/mschultheiss/Charme/issues'>GitHub</a>.
 
 <!--<br/><br/>
-	A lot of thanks for advices, help and reviews go to 
+	A lot of thanks for advices, help and reviews go to
 -->
 
 
-	<h3>Libraries</h3>
-There are a lot of third party libraries used in Charme. You can find 
-a list <a href='https://github.com/mschultheiss/Charme/blob/master/web/readme.md#libraries'>here</a>. A special thanks go to the developers of these libraries.
-
-	<h3>Feedback</h3>
-
-	Please report bugs!
 
 	</div>
 <!-- THE ABOVE COPYRIGHT NOTICE SHALL NOT BE REMOVED (See license.txt for more information) -->
@@ -35,30 +37,53 @@ a list <a href='https://github.com/mschultheiss/Charme/blob/master/web/readme.md
 <!--
 Here you can provide information about your server. This part can be modified
 -->
-	<div style='margin-right:264px; padding-right:0;' class='p32'>
+	<div style='margin-right:304px;' class='p32 respColumn'>
+
+
+<!-- Paypal Feature: Will be included if i need money for new laptop
+
+ If you like the software you can <b>pay an amount of your choice</b> to support development:<br><br>	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="SQWD35UU4ZBR4">
+<table style="margin: 0px auto;">
+<tr><td><input type="hidden" name="on0" value="Amount">Amount</td></tr><tr><td><select name="os0">
+	<option value="1 EUR">1 EUR €1,00 EUR</option>
+	<option value="5 EUR">5 EUR €5,00 EUR</option>
+	<option value="10 EUR">10 EUR €10,00 EUR</option>
+	<option value="15 EUR">15 EUR €15,00 EUR</option>
+	<option value="20 EUR">20 EUR €20,00 EUR</option>
+	<option value="25 EUR">25 EUR €25,00 EUR</option>
+	<option value="50 EUR">50 EUR €50,00 EUR</option>
+	<option value="100 EUR">100 EUR €100,00 EUR</option>
+	<option value="150 EUR">150 EUR €150,00 EUR</option>
+	<option value="500 EUR">500 EUR €500,00 EUR</option>
+</select> </td></tr>
+</table>
+<input type="hidden" name="currency_code" value="EUR">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" width="1" height="1">
+</form>-->
 
 
 
-	<div class='infobox' style='margin:0;'>
-	<b>Warning: </B>This is a Charme beta version for testing purposes only. Do not provide any critical personal data.
-	However, your email address and password is secure.</div>
-
-	
-	<h1>Bugs</h1>
-	Thank you so much for participating in the Charme Beta program. Please repost all bugs you can find on <a href='https://github.com/mschultheiss/Charme/issues'>GitHub</a>. Here is a list of bugs we already know about:
 
 
 
-	<h1>Upcoming Features</h1>
-	<ul>
-		<li>Post and comment delete</li>
-		<li>Visibility Control for Collections</li>
-		<li>Pictures for Collections</li>
-		<li>Name Change</li>
-		<li>Password Change</li>
-		<li>File Attachments</li>
-		<li>	<a href='https://github.com/mschultheiss/Charme'>More information on GitHub</a></li>
-	</ul>
+<h3>Imprint</h3>
+In contrast to classical websites, client and server are seperated. You can find
+ <% if (rc.imprinturl != "")  { %>
+the server administrators imprint <a href="<%- rc.imprinturl %>">here</a>, the server administrators terms of use <a href="<%- rc.termsurl %>">here</a>,  and
+<% } %>
+the developers imprint <a href="http://mschultheiss.com/?page_id=9">here</a>. The Software itself is licensed under
+the <a href="http://www.gnu.org/licenses/gpl-3.0.de.html">GNU GENERAL PUBLIC LICENSE (Version 3)</a>.
 
-		</div>
-<!-- -->
+
+
+
+
+
+
+
+
+		</div><br style="clear:both">
+<!-- --></div>

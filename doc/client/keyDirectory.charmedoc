@@ -1,0 +1,20 @@
+/***
+	Name:
+	TEXT: Key Directory
+
+	Info:
+	Each user has a key directory. It contains the public keys of other users
+  and also the symmetric edgekeys, which can be used for faster
+  encryption.
+
+  The mongoDB collection is called `keydirectory`. Each entry contains the following JSON fields:
+
+  * owner - The owner of the key directory
+  * userId - the userId of the public key owner
+  * pubKeyRevision - Revision of the public key. It is needed for decrypting the rsaEncEdgekey
+  * fkrevision - fastkey revision
+  * fkEncEdgekey - The edgekey for the key directory owner encrypted with the  symmetric fastkey
+  * rsaEncEdgekey - The edgekey for the person in the key directory
+  * value - The public key encrypted
+
+*/
